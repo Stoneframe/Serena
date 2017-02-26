@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_edit_duty"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="stoneframe.chorelist.gui.EditDutyActivity">
+
+    <TextView
+        android:id="@+id/nextTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/descriptionTextView"
+        android:text="Next"
+        android:layout_marginTop="12dp"
+        />
+
+    <EditText
+        android:id="@+id/nextEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/nextTextView"
+        android:layout_alignStart="@+id/nextTextView"
+        android:layout_alignEnd="@+id/effortEditText"
+        android:ems="10"
+        />
+
+    <TextView
+        android:id="@+id/descriptionTextView"
+        android:text="Description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="18dp"
+        android:layout_below="@+id/nextEditText"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:id="@+id/descriptionEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_below="@+id/descriptionTextView"
+        android:layout_alignStart="@+id/descriptionTextView"
+        android:layout_alignEnd="@+id/nextEditText" />
+
+    <TextView
+        android:id="@+id/priorityTextView"
+        android:text="Priority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/descriptionEditText"
+        android:layout_alignStart="@+id/descriptionEditText"
+        android:layout_marginTop="23dp"
+        />
+
+    <EditText
+        android:id="@+id/priorityEditText"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:layout_below="@+id/priorityTextView"
+        android:layout_alignStart="@+id/priorityTextView" />
+
+    <TextView
+        android:id="@+id/effortTextView"
+        android:layout_above="@+id/priorityEditText"
+        android:text="Effort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="102dp"
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:id="@+id/effortEditText"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:layout_below="@+id/effortTextView"
+        android:layout_alignStart="@+id/effortTextView" />
+
+    <TextView
+        android:text="Periodicity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:id="@+id/periodicityTextView"
+        android:layout_below="@+id/priorityEditText"
+        android:layout_alignStart="@+id/priorityEditText" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/periodicitySpinner"
+        android:layout_below="@+id/periodicityTextView"
+        android:layout_alignStart="@+id/periodicityTextView"
+        android:layout_alignEnd="@+id/effortEditText"
+        android:layout_above="@+id/dayTextView"></Spinner>
+
+    <TextView
+        android:id="@+id/frequencyTextView"
+        android:text="Frequency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/periodicityTextView"
+        android:layout_alignStart="@+id/periodicitySpinner"
+        android:layout_marginTop="55dp" />
+
+    <EditText
+        android:id="@+id/frequencyEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:layout_below="@+id/frequencyTextView"
+        android:layout_alignStart="@+id/frequencyTextView"
+        android:layout_alignEnd="@+id/priorityEditText" />
+
+    <TextView
+        android:id="@+id/dayTextView"
+        android:text="Day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/frequencyEditText"
+        android:layout_alignStart="@+id/effortEditText" />
+
+    <EditText
+        android:id="@+id/dayEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:layout_below="@+id/dayTextView"
+        android:layout_alignStart="@+id/dayTextView"
+        android:layout_alignEnd="@+id/periodicitySpinner" />
+
+    <Button
+        android:id="@+id/okButton"
+        android:text="OK"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/dayEditText"
+        android:onClick="okClick"/>
+
+    <Button
+        android:id="@+id/cancelButton"
+        android:text="Cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@+id/dayEditText"
+        android:onClick="cancelClick"/>
+
+</RelativeLayout>

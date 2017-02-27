@@ -34,7 +34,7 @@
             android:text="Add"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:onClick="addDutyClick"
+            android:onClick="addTaskClick"
             android:visibility="invisible"/>
 
     </RelativeLayout>

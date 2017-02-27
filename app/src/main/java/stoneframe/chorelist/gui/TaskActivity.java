@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -17,7 +15,7 @@ import org.joda.time.DateTime;
 
 import stoneframe.chorelist.R;
 
-public class EditDutyActivity extends AppCompatActivity {
+public class TaskActivity extends AppCompatActivity {
 
     private DateTime next;
     private String description;
@@ -25,7 +23,6 @@ public class EditDutyActivity extends AppCompatActivity {
     private int effort;
     private int periodicity;
     private int frequency;
-    private int day;
 
     private DatePickerDialog datePickerDialog;
 
@@ -35,12 +32,11 @@ public class EditDutyActivity extends AppCompatActivity {
     private EditText effortEditText;
     private Spinner periodicitySpinner;
     private EditText frequencyEditText;
-    private EditText dayEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_duty);
+        setContentView(R.layout.activity_task);
 
         Intent intent = getIntent();
 
@@ -50,7 +46,6 @@ public class EditDutyActivity extends AppCompatActivity {
         effort = intent.getIntExtra("Effort", 1);
         periodicity = intent.getIntExtra("Periodicity", 1);
         frequency = intent.getIntExtra("Frequency", 1);
-        day = intent.getIntExtra("Day", 1);
 
         datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -66,7 +61,6 @@ public class EditDutyActivity extends AppCompatActivity {
         effortEditText = (EditText) findViewById(R.id.effortEditText);
         periodicitySpinner = (Spinner) findViewById(R.id.periodicitySpinner);
         frequencyEditText = (EditText) findViewById(R.id.frequencyEditText);
-        dayEditText = (EditText) findViewById(R.id.dayEditText);
 
         periodicitySpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
                 new String[]{"Daily", "Weekly", "Monthly", "Yearly"}));
@@ -77,7 +71,6 @@ public class EditDutyActivity extends AppCompatActivity {
         effortEditText.setText(Integer.toString(effort), TextView.BufferType.EDITABLE);
         periodicitySpinner.setSelection(periodicity);
         frequencyEditText.setText(Integer.toString(frequency), TextView.BufferType.EDITABLE);
-        dayEditText.setText(Integer.toString(day), TextView.BufferType.EDITABLE);
 
         nextEditText.setInputType(InputType.TYPE_NULL);
         nextEditText.setOnClickListener(new View.OnClickListener() {
@@ -94,7 +87,6 @@ public class EditDutyActivity extends AppCompatActivity {
         effort = Integer.parseInt(effortEditText.getText().toString());
         periodicity = (int)periodicitySpinner.getSelectedItemId();
         frequency = Integer.parseInt(frequencyEditText.getText().toString());
-        day = Integer.parseInt(dayEditText.getText().toString());
 
         Intent intent = new Intent();
         intent.putExtra("Next", next);
@@ -103,7 +95,6 @@ public class EditDutyActivity extends AppCompatActivity {
         intent.putExtra("Effort", effort);
         intent.putExtra("Periodicity", periodicity);
         intent.putExtra("Frequency", frequency);
-        intent.putExtra("Day", day);
 
         setResult(RESULT_OK, intent);
         finish();

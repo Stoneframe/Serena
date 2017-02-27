@@ -5,20 +5,18 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import stoneframe.chorelist.model.EffortTracker;
-import stoneframe.chorelist.model.SimpleEffortTracker;
-import stoneframe.chorelist.model.SimpleTaskSelector;
+import stoneframe.chorelist.model.Schedule;
 import stoneframe.chorelist.model.TaskSelector;
-import stoneframe.chorelist.model.ToDoList;
 
-public class TodoListToJsonConverter {
+public class ScheduleToJsonConverter {
 
-    public static String convertToJson(ToDoList todoList) {
+    public static String convertToJson(Schedule schedule) {
         Gson gson = Converters.registerDateTime(new GsonBuilder()).create();
 
-        return gson.toJson(todoList);
+        return gson.toJson(schedule);
     }
 
-    public static ToDoList convertFromJson(String json,
+    public static Schedule convertFromJson(String json,
                                            TaskSelectorConverter taskSelectorConverter,
                                            EffortTrackerConverter effortTrackerConverter) {
         GsonBuilder gsonBuilder = Converters.registerDateTime(new GsonBuilder());
@@ -28,7 +26,7 @@ public class TodoListToJsonConverter {
 
         Gson gson = gsonBuilder.create();
 
-        return gson.fromJson(json, ToDoList.class);
+        return gson.fromJson(json, Schedule.class);
     }
 
 }

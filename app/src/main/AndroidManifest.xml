@@ -18,8 +18,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".gui.EditDutyActivity"
-            android:screenOrientation="portrait"></activity>
+            android:name=".gui.TaskActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".gui.EffortActivity"></activity>
     </application>
 
 </manifest>

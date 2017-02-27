@@ -39,4 +39,5 @@ public class SimpleEffortTracker implements EffortTracker {
                 && d1.getMonthOfYear() == d2.getMonthOfYear()
                 && d1.getDayOfMonth() == d2.getDayOfMonth();
     }
+
 }

@@ -71,7 +71,7 @@ public class Test_Duty_reschedule {
 
     @Test
     public void test_monthly_freq_2_day_5() {
-        Duty duty = new Duty("", 0, 0, TestUtils.createDateTime(2017, 1, 5), Duty.MONTLY, 2, 5);
+        Duty duty = new Duty("", 0, 0, TestUtils.createDateTime(2017, 1, 5), Duty.MONTHLY, 2, 5);
 
         duty.reschedule(TestUtils.createDateTime(2017, 2, 5));
 
@@ -83,7 +83,7 @@ public class Test_Duty_reschedule {
 
     @Test
     public void test_monthly_freq_3_day_23() {
-        Duty duty = new Duty("", 0, 0, TestUtils.createDateTime(2017, 1, 23), Duty.MONTLY, 3, 23);
+        Duty duty = new Duty("", 0, 0, TestUtils.createDateTime(2017, 1, 23), Duty.MONTHLY, 3, 23);
 
         duty.reschedule(TestUtils.createDateTime(2017, 2, 5));
 

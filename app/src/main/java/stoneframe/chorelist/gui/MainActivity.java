@@ -2,41 +2,44 @@ package stoneframe.chorelist.gui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
 import org.joda.time.DateTime;
 
 import stoneframe.chorelist.R;
-import stoneframe.chorelist.json.SimpleEffortTrackerConverter;
 import stoneframe.chorelist.json.SimpleTaskSelectorConverter;
-import stoneframe.chorelist.model.Duty;
-import stoneframe.chorelist.model.Schedule;
-import stoneframe.chorelist.model.SimpleEffortTracker;
-import stoneframe.chorelist.model.SimpleTaskSelector;
+import stoneframe.chorelist.json.WeeklyEffortTrackerConverter;
 import stoneframe.chorelist.model.Task;
-import stoneframe.chorelist.model.ToDoList;
-import stoneframe.chorelist.json.TodoListToJsonConverter;
+import stoneframe.chorelist.model.Schedule;
+import stoneframe.chorelist.model.SimpleTaskSelector;
+import stoneframe.chorelist.json.ScheduleToJsonConverter;
+import stoneframe.chorelist.model.WeeklyEffortTracker;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int ADD_DUTY = 0;
-    private static final int EDIT_DUTY = 1;
+    private static final int ACTIVITY_ADD_TASK = 0;
+    private static final int ACTIVITY_EDIT_TASK = 1;
+    private static final int ACTIVITY_EDIT_EFFORT = 2;
 
-    private TaskHandler taskHandler;
-    private DutyHandler dutyHandler;
+    private ArrayAdapter<Task> taskAdapter;
+    private ArrayAdapter<Task> dutyAdapter;
+    private ArrayAdapter<String> menuAdapter;
 
     private ListView taskList;
     private ListView dutyList;
     private ListView menuList;
+    private Button addButton;
 
-    private ToDoList todoList;
+    private Schedule schedule;
 
-    private Duty dutyUnderEdit;
+    private Task taskUnderEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,118 +48,172 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences settings = getPreferences(0);
 
-        final String todoJson = settings.getString("ToDoList", null);
+        String todoJson = settings.getString("Schedule", null);
         if (todoJson == null) {
-            todoList = createToDoList();
+            schedule = createToDoList();
         } else {
-            todoList = TodoListToJsonConverter.convertFromJson(todoJson,
-                    new SimpleTaskSelectorConverter(), new SimpleEffortTrackerConverter());
+            schedule = ScheduleToJsonConverter.convertFromJson(todoJson,
+                    new SimpleTaskSelectorConverter(), new WeeklyEffortTrackerConverter());
         }
 
-        taskHandler = new TaskHandler(this, android.R.layout.simple_list_item_1, todoList);
+        taskAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         taskList = (ListView) findViewById(R.id.tasks);
-        taskList.setAdapter(taskHandler);
-        taskList.setOnItemClickListener(taskHandler);
+        taskList.setAdapter(taskAdapter);
+        taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Task task = taskAdapter.getItem(position);
+                taskAdapter.remove(task);
+                schedule.complete(task);
+                dutyAdapter.clear();
+                dutyAdapter.addAll(schedule.getAllTasks());
+            }
+        });
         taskList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Task task = todoList.getTasks(DateTime.now()).get(position);
-                todoList.skip(task);
-                taskHandler.update();
+                Task task = schedule.getTasks().get(position);
+                schedule.skip(task);
+                taskAdapter.remove(task);
+                taskAdapter.clear();
+                taskAdapter.addAll(schedule.getTasks());
                 return true;
             }
         });
 
-        dutyHandler = new DutyHandler(this, android.R.layout.simple_list_item_1, todoList.getSchedule());
+        dutyAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         dutyList = (ListView) findViewById(R.id.duties);
-        dutyList.setAdapter(dutyHandler);
+        dutyList.setAdapter(dutyAdapter);
         dutyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Duty duty = todoList.getSchedule().getDuties().get(position);
-                startDutyEditor(duty, EDIT_DUTY);
+                Task duty = schedule.getAllTasks().get(position);
+                startTaskEditor(duty, ACTIVITY_EDIT_TASK);
             }
         });
         dutyList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Duty duty = todoList.getSchedule().getDuties().get(position);
-                todoList.getSchedule().removeDuty(duty);
-                dutyHandler.update();
-                taskHandler.update();
+                Task task = dutyAdapter.getItem(position);
+                dutyAdapter.remove(task);
+                schedule.removeTask(task);
+                taskAdapter.clear();
+                taskAdapter.addAll(schedule.getTasks());
                 return true;
             }
         });
 
-        Button addButton = (Button) findViewById(R.id.add);
+        addButton = (Button) findViewById(R.id.add);
 
-        MenuHandler menuHandler = new MenuHandler(this, android.R.layout.simple_list_item_1);
-        menuHandler.addView(0, taskList);
-        menuHandler.addView(1, dutyList);
-        menuHandler.addView(1, addButton);
+        menuAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
+                new String[]{"Today's Tasks", "Schedule", "Effort"});
         menuList = (ListView) findViewById(R.id.menu);
-        menuList.setAdapter(menuHandler);
-        menuList.setOnItemClickListener(menuHandler);
+        menuList.setAdapter(menuAdapter);
+        menuList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        taskList.setVisibility(View.VISIBLE);
+                        dutyList.setVisibility(View.INVISIBLE);
+                        addButton.setVisibility(View.INVISIBLE);
+                        break;
+                    case 1:
+                        taskList.setVisibility(View.INVISIBLE);
+                        dutyList.setVisibility(View.VISIBLE);
+                        addButton.setVisibility(View.VISIBLE);
+                        break;
+                    case 2:
+                        startEffortEditor();
+                        break;
+                }
+
+                ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
+            }
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        taskHandler.update();
-        dutyHandler.update();
+        taskAdapter.addAll(schedule.getTasks());
+        dutyAdapter.addAll(schedule.getAllTasks());
     }
 
     @Override
     protected void onStop() {
         super.onStop();
 
+        taskAdapter.clear();
+        dutyAdapter.clear();
+
         SharedPreferences settings = getPreferences(0);
         SharedPreferences.Editor editor = settings.edit();
 
-        editor.putString("ToDoList", TodoListToJsonConverter.convertToJson(todoList));
+        editor.putString("Schedule", ScheduleToJsonConverter.convertToJson(schedule));
 
         editor.commit();
     }
 
-    private static void writeToIntent(Duty duty, Intent intent) {
-        intent.putExtra("Next", duty.getNext());
-        intent.putExtra("Description", duty.getDescription());
-        intent.putExtra("Priority", duty.getPriority());
-        intent.putExtra("Effort", duty.getEffort());
-        intent.putExtra("Periodicity", duty.getPeriodicity());
-        intent.putExtra("Frequency", duty.getFrequency());
-        intent.putExtra("Day", duty.getDay());
+    public void addTaskClick(View view) {
+        Task duty = new Task("", 1, 1, DateTime.now().withTimeAtStartOfDay(), Task.DAILY, 1);
+        startTaskEditor(duty, ACTIVITY_ADD_TASK);
     }
 
-    private static void readFromIntent(Duty duty, Intent intent) {
-        DateTime next = (DateTime) intent.getSerializableExtra("Next");
-        String description = intent.getStringExtra("Description");
-        int priority = intent.getIntExtra("Priority", 1);
-        int effort = intent.getIntExtra("Effort", 1);
-        int periodicity = intent.getIntExtra("Periodicity", 1);
-        int frequency = intent.getIntExtra("Frequency", 1);
-        int day = intent.getIntExtra("Day", 1);
+    private void startTaskEditor(Task task, int mode) {
+        taskUnderEdit = task;
 
-        duty.setNext(next);
-        duty.setDescription(description);
-        duty.setPriority(priority);
-        duty.setEffort(effort);
-        duty.setPeriodicity(periodicity);
-        duty.setFrequency(frequency);
-        duty.setDay(day);
-    }
+        Intent intent = new Intent(this, TaskActivity.class);
+        intent.putExtra("Next", task.getNext());
+        intent.putExtra("Description", task.getDescription());
+        intent.putExtra("Priority", task.getPriority());
+        intent.putExtra("Effort", task.getEffort());
+        intent.putExtra("Periodicity", task.getPeriodicity());
+        intent.putExtra("Frequency", task.getFrequency());
 
-    public void addDutyClick(View view) {
-        Duty duty = new Duty("", 1, 1, DateTime.now().withTimeAtStartOfDay(), Duty.DAILY, 1);
-        startDutyEditor(duty, ADD_DUTY);
-    }
-
-    private void startDutyEditor(Duty duty, int mode) {
-        dutyUnderEdit = duty;
-        Intent intent = new Intent(this, EditDutyActivity.class);
-        writeToIntent(duty, intent);
         startActivityForResult(intent, mode);
+    }
+
+    private void handleTaskEditorResult(Intent data) {
+        Task duty = taskUnderEdit;
+
+        duty.setNext((DateTime) data.getSerializableExtra("Next"));
+        duty.setDescription(data.getStringExtra("Description"));
+        duty.setPriority(data.getIntExtra("Priority", 1));
+        duty.setEffort(data.getIntExtra("Effort", 1));
+        duty.setPeriodicity(data.getIntExtra("Periodicity", 1));
+        duty.setFrequency(data.getIntExtra("Frequency", 1));
+
+        schedule.addTask(duty);
+    }
+
+    private void startEffortEditor() {
+        WeeklyEffortTracker effortTracker = (WeeklyEffortTracker) schedule.getEffortTracker();
+
+        Intent intent = new Intent(this, EffortActivity.class);
+
+        intent.putExtra("Monday", effortTracker.getMonday());
+        intent.putExtra("Tuesday", effortTracker.getTuesday());
+        intent.putExtra("Wednesday", effortTracker.getWednesday());
+        intent.putExtra("Thursday", effortTracker.getThursday());
+        intent.putExtra("Friday", effortTracker.getFriday());
+        intent.putExtra("Saturday", effortTracker.getSaturday());
+        intent.putExtra("Sunday", effortTracker.getSunday());
+
+        startActivityForResult(intent, ACTIVITY_EDIT_EFFORT);
+    }
+
+    private void handleEffortEditorResult(Intent data) {
+        WeeklyEffortTracker effortTracker = (WeeklyEffortTracker) schedule.getEffortTracker();
+
+        effortTracker.setMonday(data.getIntExtra("Monday", 0));
+        effortTracker.setTuesday(data.getIntExtra("Tuesday", 0));
+        effortTracker.setWednesday(data.getIntExtra("Wednesday", 0));
+        effortTracker.setThursday(data.getIntExtra("Thursday", 0));
+        effortTracker.setFriday(data.getIntExtra("Friday", 0));
+        effortTracker.setSaturday(data.getIntExtra("Saturday", 0));
+        effortTracker.setSunday(data.getIntExtra("Sunday", 0));
     }
 
     @Override
@@ -164,54 +221,54 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            Duty duty = dutyUnderEdit;
-            readFromIntent(duty, data);
-
-            if (requestCode == ADD_DUTY) {
-                todoList.getSchedule().addDuty(duty);
+            switch (requestCode) {
+                case ACTIVITY_ADD_TASK:
+                    handleTaskEditorResult(data);
+                    break;
+                case ACTIVITY_EDIT_EFFORT:
+                    handleEffortEditorResult(data);
+                    break;
             }
         }
     }
 
-    private ToDoList createToDoList() {
-        Schedule schedule = new Schedule();
+    private Schedule createToDoList() {
+        Schedule schedule = new Schedule(
+                new WeeklyEffortTracker(15, 15, 15, 15, 15, 30, 30), new SimpleTaskSelector());
 
         DateTime now = DateTime.now().withTimeAtStartOfDay();
 
         // Skrivbord
-        schedule.addDuty(new Duty("Skrivbord: Rensa", 5, 2, now, Duty.DAILY, 2));
-        schedule.addDuty(new Duty("Skrivbord: Torka", 4, 3, now.plusDays(1), Duty.DAILY, 5));
-        schedule.addDuty(new Duty("Skrivbord: Dammsuga", 3, 5, now.plusDays(1), Duty.WEEKLY, 1));
+        schedule.addTask(new Task("Skrivbord: Rensa", 5, 2, now, Task.DAILY, 2));
+        schedule.addTask(new Task("Skrivbord: Torka", 4, 3, now.plusDays(1), Task.DAILY, 5));
+        schedule.addTask(new Task("Skrivbord: Dammsuga", 3, 5, now.plusDays(1), Task.WEEKLY, 1));
 
         // Soffa och TV
-        schedule.addDuty(new Duty("Soffa och TV: Rensa", 6, 2, now, Duty.DAILY, 4));
-        schedule.addDuty(new Duty("Soffa och TV: Torka", 5, 4, now.plusDays(1), Duty.DAILY, 6));
-        schedule.addDuty(new Duty("Soffa och TV: Dammsuga", 4, 4, now.plusDays(2), Duty.DAILY, 9));
+        schedule.addTask(new Task("Soffa och TV: Rensa", 6, 2, now, Task.DAILY, 4));
+        schedule.addTask(new Task("Soffa och TV: Torka", 5, 4, now.plusDays(1), Task.DAILY, 6));
+        schedule.addTask(new Task("Soffa och TV: Dammsuga", 4, 4, now.plusDays(2), Task.DAILY, 9));
 
         // Golv
-        schedule.addDuty(new Duty("Golv: Rensa", 6, 4, now, Duty.DAILY, 2));
-        schedule.addDuty(new Duty("Golv: Dammsuga", 4, 10, now.plusDays(2), Duty.DAILY, 9));
+        schedule.addTask(new Task("Golv: Rensa", 6, 4, now, Task.DAILY, 2));
+        schedule.addTask(new Task("Golv: Dammsuga", 4, 10, now.plusDays(2), Task.DAILY, 9));
 
         // Säng
-        schedule.addDuty(new Duty("Säng: Rensa", 7, 2, now, Duty.WEEKLY, 2));
-        schedule.addDuty(new Duty("Säng: Torka", 6, 1, now.plusDays(1), Duty.WEEKLY, 1));
-        schedule.addDuty(new Duty("Säng: Dammsuga", 6, 5, now.plusDays(2), Duty.WEEKLY, 2));
+        schedule.addTask(new Task("Säng: Rensa", 7, 2, now, Task.WEEKLY, 2));
+        schedule.addTask(new Task("Säng: Torka", 6, 1, now.plusDays(1), Task.WEEKLY, 1));
+        schedule.addTask(new Task("Säng: Dammsuga", 6, 5, now.plusDays(2), Task.WEEKLY, 2));
 
         // Hall
-        schedule.addDuty(new Duty("Hall: Rensa", 6, 4, now, Duty.DAILY, 2));
-        schedule.addDuty(new Duty("Hall: Dammsuga", 4, 5, now.plusDays(2), Duty.DAILY, 5));
+        schedule.addTask(new Task("Hall: Rensa", 6, 4, now, Task.DAILY, 2));
+        schedule.addTask(new Task("Hall: Dammsuga", 4, 5, now.plusDays(2), Task.DAILY, 5));
 
         // Kök
-        schedule.addDuty(new Duty("Kök: Diska", 4, 10, now, Duty.DAILY, 3));
-        schedule.addDuty(new Duty("Kök: Rensa kylskåp", 2, 10, now.plusDays(3), Duty.MONTLY, 1));
+        schedule.addTask(new Task("Kök: Diska", 4, 10, now, Task.DAILY, 3));
+        schedule.addTask(new Task("Kök: Rensa kylskåp", 2, 10, now.plusDays(3), Task.MONTHLY, 1));
 
         // Badrum
-        schedule.addDuty(new Duty("Badrum: Städa", 4, 10, now.withDayOfWeek(6), Duty.WEEKLY, 3));
+        schedule.addTask(new Task("Badrum: Städa", 4, 10, now.withDayOfWeek(6), Task.WEEKLY, 3));
 
-        ToDoList todoList = new ToDoList(schedule,
-                new SimpleTaskSelector(), new SimpleEffortTracker(15));
-
-        return todoList;
+        return schedule;
     }
 
 }

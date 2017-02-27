@@ -19,7 +19,7 @@ public class Test_Schedule_getTasks {
 
         Schedule schedule = new Schedule();
 
-        schedule.addDuty(d1);
+        schedule.addTask(d1);
 
         List<Task> exptected = new LinkedList<Task>();
         exptected.add(new Task(TestUtils.MOCK_NOW, "", 1, 1));
@@ -36,8 +36,8 @@ public class Test_Schedule_getTasks {
 
         Schedule schedule = new Schedule();
 
-        schedule.addDuty(d1);
-        schedule.addDuty(d2);
+        schedule.addTask(d1);
+        schedule.addTask(d2);
 
         List<Task> exptected = new LinkedList<Task>();
         exptected.add(new Task(TestUtils.MOCK_NOW, "", 1, 1));
@@ -51,8 +51,8 @@ public class Test_Schedule_getTasks {
     public void add_two_duties_list_two_tasks() {
         Schedule schedule = new Schedule();
 
-        schedule.addDuty(new Duty("Duty1", 1, 1, TestUtils.MOCK_NOW, Duty.DAILY, 1));
-        schedule.addDuty(new Duty("Duty2", 1, 1, TestUtils.MOCK_NOW.plusDays(3), Duty.DAILY, 3));
+        schedule.addTask(new Duty("Duty1", 1, 1, TestUtils.MOCK_NOW, Duty.DAILY, 1));
+        schedule.addTask(new Duty("Duty2", 1, 1, TestUtils.MOCK_NOW.plusDays(3), Duty.DAILY, 3));
 
         List<Task> exptected = new LinkedList<Task>();
         exptected.add(new Task(TestUtils.createDateTime(2017, 2, 5), "Duty1", 1, 1));

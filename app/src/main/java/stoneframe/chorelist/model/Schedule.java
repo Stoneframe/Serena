@@ -60,7 +60,7 @@ public class Schedule {
             }
         }
 
-        list = taskSelector.selectTasks(tasks, effort);
+        list = taskSelector.selectTasks(list, effort);
 
         return Collections.unmodifiableList(list);
     }

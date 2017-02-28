@@ -16,26 +16,38 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         tools:context="stoneframe.chorelist.gui.MainActivity">
 
+        <TextView
+            android:id="@+id/tabTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#000000"
+            android:paddingBottom="1dp"
+            android:paddingLeft="5dp"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp" />
+
         <ListView
             android:id="@+id/tasks"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></ListView>
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tabTextView" />
 
         <ListView
             android:id="@+id/duties"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="invisible"></ListView>
+            android:layout_below="@id/tabTextView"
+            android:visibility="invisible" />
 
         <Button
             android:id="@+id/add"
             android:layout_width="70dp"
             android:layout_height="50dp"
-            android:text="Add"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:onClick="addTaskClick"
-            android:visibility="invisible"/>
+            android:text="Add"
+            android:visibility="invisible" />
 
     </RelativeLayout>
 

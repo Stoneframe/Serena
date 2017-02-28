@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 
 import java.util.Comparator;
 
-public class Task implements Comparable<Task> {
+public class Task {
 
     public static final int DAILY = 0;
     public static final int WEEKLY = 1;
@@ -105,20 +105,6 @@ public class Task implements Comparable<Task> {
     }
 
     @Override
-    public int compareTo(Task other) {
-        if (this.equals(other)) {
-            return 0;
-        }
-
-        int i;
-        if ((i = this.next.compareTo(other.next)) != 0) return i;
-        if ((i = Integer.compare(this.priority, other.priority)) != 0) return i;
-        if ((i = Integer.compare(this.effort, other.effort)) != 0) return i;
-
-        return this.description.compareTo(other.description);
-    }
-
-    @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Task)) {
             return false;
@@ -131,7 +117,7 @@ public class Task implements Comparable<Task> {
 
     @Override
     public String toString() {
-        return description;
+        return "- " + description;
     }
 
     public static class DutyComparator implements Comparator<Task> {

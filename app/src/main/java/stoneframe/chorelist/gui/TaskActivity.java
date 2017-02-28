@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -53,7 +54,7 @@ public class TaskActivity extends AppCompatActivity {
                 next = new DateTime(year, month + 1, dayOfMonth, 0, 0);
                 nextEditText.setText(next.toString("yyyy-MM-dd"));
             }
-        }, next.getYear(), next.getMonthOfYear(), next.getDayOfMonth());
+        }, next.getYear(), next.getMonthOfYear() - 1, next.getDayOfMonth());
 
         nextEditText = (EditText) findViewById(R.id.nextEditText);
         descriptionEditText = (EditText) findViewById(R.id.descriptionEditText);
@@ -85,7 +86,7 @@ public class TaskActivity extends AppCompatActivity {
         description = descriptionEditText.getText().toString();
         priority = Integer.parseInt(priorityEditText.getText().toString());
         effort = Integer.parseInt(effortEditText.getText().toString());
-        periodicity = (int)periodicitySpinner.getSelectedItemId();
+        periodicity = (int) periodicitySpinner.getSelectedItemId();
         frequency = Integer.parseInt(frequencyEditText.getText().toString());
 
         Intent intent = new Intent();

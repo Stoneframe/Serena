@@ -17,8 +17,7 @@ public class ScheduleToJsonConverter {
     }
 
     public static Schedule convertFromJson(String json,
-                                           TaskSelectorConverter taskSelectorConverter,
-                                           EffortTrackerConverter effortTrackerConverter) {
+                                           EffortTrackerConverter effortTrackerConverter, TaskSelectorConverter taskSelectorConverter) {
         GsonBuilder gsonBuilder = Converters.registerDateTime(new GsonBuilder());
 
         gsonBuilder.registerTypeAdapter(TaskSelector.class, taskSelectorConverter);

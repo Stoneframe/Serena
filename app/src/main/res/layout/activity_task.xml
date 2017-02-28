@@ -54,7 +54,10 @@
                 <EditText
                     android:id="@+id/descriptionEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:nextFocusDown="@+id/priorityEditText" />
 
             </LinearLayout>
         </TableRow>
@@ -76,15 +79,16 @@
 
                 <TextView
                     android:id="@+id/priorityTextView"
-                    android:layout_width="match_parent"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:text="Priority" />
 
                 <EditText
                     android:id="@+id/priorityEditText"
-                    android:layout_width="match_parent"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
-                    android:inputType="number" />
+                    android:inputType="number"
+                    android:nextFocusDown="@+id/effortEditText" />
 
             </LinearLayout>
 
@@ -94,15 +98,15 @@
 
                 <TextView
                     android:id="@+id/effortTextView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:text="Effort" />
 
                 <EditText
                     android:id="@+id/effortEditText"
-                    android:layout_width="match_parent"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
-                    android:inputType="number" />
+                    android:inputType="number"/>
 
             </LinearLayout>
         </TableRow>
@@ -115,13 +119,13 @@
 
                 <TextView
                     android:id="@+id/periodicityTextView"
-                    android:layout_width="match_parent"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:text="Periodicity" />
 
                 <Spinner
                     android:id="@+id/periodicitySpinner"
-                    android:layout_width="match_parent"
+                    android:layout_width="140dp"
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
@@ -131,13 +135,13 @@
 
                 <TextView
                     android:id="@+id/frequencyTextView"
-                    android:layout_width="match_parent"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:text="Frequency" />
 
                 <EditText
                     android:id="@+id/frequencyEditText"
-                    android:layout_width="match_parent"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:inputType="number" />
 

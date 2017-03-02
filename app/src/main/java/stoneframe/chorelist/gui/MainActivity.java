@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         SharedPreferences settings = getPreferences(0);
 
         String json = settings.getString(SCHEDULE_SAVE_NAME, null);
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity
                     new WeeklyEffortTrackerConverter(), new SimpleTaskSelectorConverter());
         }
 
-        GlobalState globalState = (GlobalState)getApplication();
+        GlobalState globalState = (GlobalState) getApplication();
         globalState.setSchedule(schedule);
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -80,13 +79,20 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onStart() {
+        super.onStart();
+    }
 
-        String json = ScheduleToJsonConverter.convertToJson(schedule);
+    @Override
+    protected void onStop() {
+        super.onStop();
 
         SharedPreferences settings = getPreferences(0);
+        SharedPreferences.Editor editor = settings.edit();
 
+        editor.putString(SCHEDULE_SAVE_NAME, ScheduleToJsonConverter.convertToJson(schedule));
+
+        editor.commit();
     }
 
     @Override
@@ -135,7 +141,7 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK && requestCode == ACTIVITY_EDIT_EFFORT) {
             WeeklyEffortTracker effortTracker = (WeeklyEffortTracker) schedule.getEffortTracker();
 
             effortTracker.setMonday(data.getIntExtra("Monday", 0));

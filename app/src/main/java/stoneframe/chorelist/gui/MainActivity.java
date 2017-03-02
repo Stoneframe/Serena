@@ -252,28 +252,26 @@ public class MainActivity extends AppCompatActivity {
 
         DateTime now = DateTime.now().withTimeAtStartOfDay();
 
-        // Skrivbord
-        schedule.addTask(new Task("Skrivbord: Rensa", 7, 2, now, Task.DAILY, 2));
-        schedule.addTask(new Task("Skrivbord: Torka", 6, 3, now.plusDays(1), Task.DAILY, 5));
-        schedule.addTask(new Task("Skrivbord: Dammsuga", 5, 5, now.plusDays(1), Task.WEEKLY, 1));
-        schedule.addTask(new Task("Skrivbord: Moppa", 4, 15, now.withDayOfWeek(DateTimeConstants.SATURDAY), Task.WEEKLY, 6));
+        // Badrum
+        schedule.addTask(new Task("Badrum: Städa", 6, 10, now.withDayOfWeek(6), Task.WEEKLY, 3));
 
-        // Soffa och TV
-        schedule.addTask(new Task("Soffa och TV: Rensa", 8, 2, now, Task.DAILY, 4));
-        schedule.addTask(new Task("Soffa och TV: Torka", 7, 4, now.plusDays(1), Task.DAILY, 6));
-        schedule.addTask(new Task("Soffa och TV: Dammsuga", 6, 4, now.plusDays(2), Task.DAILY, 9));
-        schedule.addTask(new Task("Soffa och TV: Moppa", 5, 15, now.plusWeeks(1).withDayOfWeek(DateTimeConstants.SATURDAY), Task.WEEKLY, 6));
+        // Boka
+        schedule.addTask(new Task("Boka: Klipptid", 3, 1, now.withDayOfMonth(1), Task.MONTHLY, 2));
+        schedule.addTask(new Task("Boka: Synundersökning", 3, 1, now.withMonthOfYear(3).withDayOfMonth(1), Task.YEARLY, 1));
+
+        // Födelsedagar
+        schedule.addTask(new Task("Födelsedag: Jonathan Karlsson", 1, 0, now.withMonthOfYear(9).withDayOfMonth(2), Task.YEARLY, 1));
+        schedule.addTask(new Task("Födelsedag: Jonathan Lundholm", 1, 0, now.withMonthOfYear(11).withDayOfMonth(3), Task.YEARLY, 1));
+        schedule.addTask(new Task("Födelsedag: Kajsa Binder", 1, 0, now.withMonthOfYear(12).withDayOfMonth(23), Task.YEARLY, 1));
+
+        // Fönsterkarm
+        schedule.addTask(new Task("Fönsterkarm: Rensa", 8, 2, now, Task.WEEKLY, 1));
+        schedule.addTask(new Task("Fönsterkarm: Torka", 7, 3, now.plusDays(1), Task.WEEKLY, 1));
 
         // Golv
         schedule.addTask(new Task("Golv: Rensa", 8, 4, now, Task.DAILY, 2));
         schedule.addTask(new Task("Golv: Dammsuga", 6, 10, now.plusDays(2), Task.DAILY, 9));
         schedule.addTask(new Task("Golv: Moppa", 5, 10, now.plusWeeks(2).withDayOfWeek(DateTimeConstants.SATURDAY), Task.WEEKLY, 6));
-
-        // Säng
-        schedule.addTask(new Task("Säng: Rensa", 9, 2, now, Task.WEEKLY, 2));
-        schedule.addTask(new Task("Säng: Torka", 8, 1, now.plusDays(1), Task.WEEKLY, 1));
-        schedule.addTask(new Task("Säng: Dammsuga", 7, 5, now.plusDays(2), Task.WEEKLY, 2));
-        schedule.addTask(new Task("Säng: Moppa", 6, 15, now.plusWeeks(3).withDayOfWeek(DateTimeConstants.SATURDAY), Task.WEEKLY, 6));
 
         // Hall
         schedule.addTask(new Task("Hall: Rensa", 8, 4, now, Task.DAILY, 2));
@@ -284,15 +282,26 @@ public class MainActivity extends AppCompatActivity {
         schedule.addTask(new Task("Kök: Diska", 6, 10, now, Task.DAILY, 3));
         schedule.addTask(new Task("Kök: Rensa kylskåp", 4, 10, now.plusDays(3), Task.MONTHLY, 1));
 
-        // Badrum
-        schedule.addTask(new Task("Badrum: Städa", 6, 10, now.withDayOfWeek(6), Task.WEEKLY, 3));
-
-        // Fönsterkarm
-        schedule.addTask(new Task("Fönstarkarm: Rensa", 8, 2, now, Task.WEEKLY, 1));
-        schedule.addTask(new Task("Fönstarkarm: Torka", 7, 3, now.plusDays(1), Task.WEEKLY, 1));
-
         // Lådor
         schedule.addTask(new Task("Lådor: Torka", 7, 5, now, Task.WEEKLY, 2));
+
+        // Skrivbord
+        schedule.addTask(new Task("Skrivbord: Rensa", 7, 2, now, Task.DAILY, 1));
+        schedule.addTask(new Task("Skrivbord: Torka", 6, 3, now.plusDays(1), Task.DAILY, 5));
+        schedule.addTask(new Task("Skrivbord: Dammsuga", 5, 5, now.plusDays(1), Task.WEEKLY, 1));
+        schedule.addTask(new Task("Skrivbord: Moppa", 4, 15, now.withDayOfWeek(DateTimeConstants.SATURDAY), Task.WEEKLY, 6));
+
+        // Soffa och TV
+        schedule.addTask(new Task("Soffa och TV: Rensa", 8, 2, now, Task.DAILY, 4));
+        schedule.addTask(new Task("Soffa och TV: Torka", 7, 4, now.plusDays(1), Task.DAILY, 6));
+        schedule.addTask(new Task("Soffa och TV: Dammsuga", 6, 4, now.plusDays(2), Task.DAILY, 9));
+        schedule.addTask(new Task("Soffa och TV: Moppa", 5, 15, now.plusWeeks(1).withDayOfWeek(DateTimeConstants.SATURDAY), Task.WEEKLY, 6));
+
+        // Säng
+        schedule.addTask(new Task("Säng: Rensa", 9, 2, now, Task.WEEKLY, 2));
+        schedule.addTask(new Task("Säng: Torka", 8, 1, now.plusDays(1), Task.WEEKLY, 1));
+        schedule.addTask(new Task("Säng: Dammsuga", 7, 5, now.plusDays(2), Task.WEEKLY, 2));
+        schedule.addTask(new Task("Säng: Moppa", 6, 15, now.plusWeeks(3).withDayOfWeek(DateTimeConstants.SATURDAY), Task.WEEKLY, 6));
 
         return schedule;
     }

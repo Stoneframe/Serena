@@ -28,7 +28,7 @@ public class TodaysTasks extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_todays_tasks, container, false);
 
-        taskAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
+        taskAdapter = new ArrayAdapter<>(getActivity().getBaseContext(),
                 android.R.layout.simple_list_item_1);
         taskList = (ListView) view.findViewById(R.id.todays_tasks);
         taskList.setAdapter(taskAdapter);
@@ -36,10 +36,8 @@ public class TodaysTasks extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Task task = taskAdapter.getItem(position);
-                taskAdapter.remove(task);
                 schedule.complete(task);
-                taskAdapter.clear();
-                taskAdapter.addAll(schedule.getTasks());
+                taskAdapter.remove(task);
             }
         });
         taskList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -47,7 +45,6 @@ public class TodaysTasks extends Fragment {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Task task = schedule.getTasks().get(position);
                 schedule.skip(task);
-                taskAdapter.remove(task);
                 taskAdapter.clear();
                 taskAdapter.addAll(schedule.getTasks());
                 return true;

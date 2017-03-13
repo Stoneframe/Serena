@@ -40,7 +40,7 @@ public class AllTasks extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_all_tasks, container, false);
 
-        taskAdapter = new ArrayAdapter<Task>(getActivity().getApplicationContext(),
+        taskAdapter = new ArrayAdapter<Task>(getActivity().getBaseContext(),
                 android.R.layout.simple_list_item_1);
         taskList = (ListView) view.findViewById(R.id.all_tasks);
         taskList.setAdapter(taskAdapter);
@@ -57,8 +57,6 @@ public class AllTasks extends Fragment {
                 Task task = taskAdapter.getItem(position);
                 taskAdapter.remove(task);
                 schedule.removeTask(task);
-                taskAdapter.clear();
-                taskAdapter.addAll(schedule.getAllTasks());
                 return true;
             }
         });

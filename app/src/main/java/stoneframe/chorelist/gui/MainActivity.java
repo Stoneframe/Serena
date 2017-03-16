@@ -29,7 +29,7 @@ import stoneframe.chorelist.model.WeeklyEffortTracker;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String SCHEDULE_SAVE_NAME = "Schedule2";
+    private static final String SCHEDULE_SAVE_NAME = Schedule.class.getName();
     private static final int ACTIVITY_EDIT_EFFORT = 0;
 
     private Schedule schedule;
@@ -44,6 +44,11 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences settings = getPreferences(0);
 
         String json = settings.getString(SCHEDULE_SAVE_NAME, null);
+
+        if (json == null) {
+            json = settings.getString("Schedule2", null);
+        }
+
         if (json == null) {
             schedule = new Schedule(new WeeklyEffortTracker(15, 15, 15, 15, 15, 30, 30),
                     new SimpleTaskSelector());

@@ -8,6 +8,9 @@
         <item
             android:id="@+id/nav_all_tasks"
             android:title="Manage Tasks" />
+        <item
+            android:id="@+id/nav_shopping_list"
+            android:title="Shopping List" />
     </group>
 
 </menu>

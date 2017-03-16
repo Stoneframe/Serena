@@ -87,7 +87,7 @@ public class Task {
         while (!next.isAfter(now)) {
             switch (periodicity) {
                 case DAILY:
-                    next = next.plusDays(frequency);
+                    next = now.plusDays(frequency);
                     break;
                 case WEEKLY:
                     next = next.plusWeeks(frequency);

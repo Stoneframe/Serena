@@ -1,14 +1,17 @@
 package stoneframe.chorelist.gui;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
 import stoneframe.chorelist.R;
 
-public class EffortActivity extends AppCompatActivity {
+public class EffortActivity extends AppCompatActivity
+{
 
     private EditText mondayEditText;
     private EditText tuesdayEditText;
@@ -19,7 +22,8 @@ public class EffortActivity extends AppCompatActivity {
     private EditText sundayEditText;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_effort);
 
@@ -42,7 +46,8 @@ public class EffortActivity extends AppCompatActivity {
         sundayEditText.setText(Integer.toString(intent.getIntExtra("Sunday", 0)));
     }
 
-    public void onOkClick(View view) {
+    public void onOkClick(View view)
+    {
         int monday = Integer.parseInt(mondayEditText.getText().toString());
         int tuesday = Integer.parseInt(tuesdayEditText.getText().toString());
         int wednesday = Integer.parseInt(wednesdayEditText.getText().toString());
@@ -64,7 +69,8 @@ public class EffortActivity extends AppCompatActivity {
         finish();
     }
 
-    public void onCancelClick(View view) {
+    public void onCancelClick(View view)
+    {
         setResult(RESULT_CANCELED);
         finish();
     }

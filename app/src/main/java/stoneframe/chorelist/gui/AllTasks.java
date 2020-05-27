@@ -2,7 +2,6 @@ package stoneframe.chorelist.gui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+
+import androidx.fragment.app.Fragment;
 
 import org.joda.time.DateTime;
 
@@ -19,8 +20,8 @@ import stoneframe.chorelist.model.Task;
 
 import static android.app.Activity.RESULT_OK;
 
-public class AllTasks extends Fragment {
-
+public class AllTasks extends Fragment
+{
     private static final int ACTIVITY_ADD_TASK = 0;
     private static final int ACTIVITY_EDIT_TASK = 1;
 
@@ -33,27 +34,35 @@ public class AllTasks extends Fragment {
     private Task taskUnderEdit;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        GlobalState globalState = (GlobalState) getActivity().getApplication();
+    public View onCreateView(
+        LayoutInflater inflater,
+        ViewGroup container,
+        Bundle savedInstanceState)
+    {
+        GlobalState globalState = (GlobalState)getActivity().getApplication();
         schedule = globalState.getSchedule();
 
         View view = inflater.inflate(R.layout.fragment_all_tasks, container, false);
 
-        taskAdapter = new ArrayAdapter<Task>(getActivity().getBaseContext(),
-                android.R.layout.simple_list_item_1);
-        taskList = (ListView) view.findViewById(R.id.all_tasks);
+        taskAdapter = new ArrayAdapter<Task>(
+            getActivity().getBaseContext(),
+            android.R.layout.simple_list_item_1);
+        taskList = (ListView)view.findViewById(R.id.all_tasks);
         taskList.setAdapter(taskAdapter);
-        taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        taskList.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
                 Task task = taskAdapter.getItem(position);
                 startTaskEditor(task, ACTIVITY_EDIT_TASK);
             }
         });
-        taskList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        taskList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+        {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
+            {
                 Task task = taskAdapter.getItem(position);
                 taskAdapter.remove(task);
                 schedule.removeTask(task);
@@ -62,10 +71,18 @@ public class AllTasks extends Fragment {
         });
 
         addButton = (Button)view.findViewById(R.id.add_button);
-        addButton.setOnClickListener(new View.OnClickListener() {
+        addButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                Task duty = new Task("", 1, 1, DateTime.now().withTimeAtStartOfDay(), Task.DAILY, 1);
+            public void onClick(View v)
+            {
+                Task duty = new Task(
+                    "",
+                    1,
+                    1,
+                    DateTime.now().withTimeAtStartOfDay(),
+                    Task.DAILY,
+                    1);
                 startTaskEditor(duty, ACTIVITY_ADD_TASK);
             }
         });
@@ -74,20 +91,23 @@ public class AllTasks extends Fragment {
     }
 
     @Override
-    public void onStart() {
+    public void onStart()
+    {
         super.onStart();
 
         taskAdapter.addAll(schedule.getAllTasks());
     }
 
     @Override
-    public void onStop() {
+    public void onStop()
+    {
         super.onStop();
 
         taskAdapter.clear();
     }
 
-    private void startTaskEditor(Task task, int mode) {
+    private void startTaskEditor(Task task, int mode)
+    {
         taskUnderEdit = task;
 
         Intent intent = new Intent(getActivity(), TaskActivity.class);
@@ -102,20 +122,23 @@ public class AllTasks extends Fragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK)
+        {
             Task duty = taskUnderEdit;
 
-            duty.setNext((DateTime) data.getSerializableExtra("Next"));
+            duty.setNext((DateTime)data.getSerializableExtra("Next"));
             duty.setDescription(data.getStringExtra("Description"));
             duty.setPriority(data.getIntExtra("Priority", 1));
             duty.setEffort(data.getIntExtra("Effort", 1));
             duty.setPeriodicity(data.getIntExtra("Periodicity", 1));
             duty.setFrequency(data.getIntExtra("Frequency", 1));
 
-            if (requestCode == ACTIVITY_ADD_TASK) {
+            if (requestCode == ACTIVITY_ADD_TASK)
+            {
                 schedule.addTask(duty);
             }
         }

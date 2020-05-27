@@ -1,7 +1,9 @@
 package stoneframe.chorelist.gui;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +15,8 @@ import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.Schedule;
 import stoneframe.chorelist.model.Task;
 
-public class TodaysTasks extends Fragment {
+public class TodaysTasks extends Fragment
+{
 
     private Schedule schedule;
 
@@ -21,28 +24,35 @@ public class TodaysTasks extends Fragment {
     private ListView taskList;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        GlobalState globalState = (GlobalState) getActivity().getApplication();
+    public View onCreateView(
+        LayoutInflater inflater, ViewGroup container,
+        Bundle savedInstanceState)
+    {
+        GlobalState globalState = (GlobalState)getActivity().getApplication();
         schedule = globalState.getSchedule();
 
         View view = inflater.inflate(R.layout.fragment_todays_tasks, container, false);
 
-        taskAdapter = new ArrayAdapter<>(getActivity().getBaseContext(),
-                android.R.layout.simple_list_item_1);
-        taskList = (ListView) view.findViewById(R.id.todays_tasks);
+        taskAdapter = new ArrayAdapter<>(
+            getActivity().getBaseContext(),
+            android.R.layout.simple_list_item_1);
+        taskList = (ListView)view.findViewById(R.id.todays_tasks);
         taskList.setAdapter(taskAdapter);
-        taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        taskList.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
                 Task task = taskAdapter.getItem(position);
                 schedule.complete(task);
                 taskAdapter.remove(task);
             }
         });
-        taskList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        taskList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+        {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
+            {
                 Task task = schedule.getTasks().get(position);
                 schedule.skip(task);
                 taskAdapter.clear();
@@ -55,14 +65,16 @@ public class TodaysTasks extends Fragment {
     }
 
     @Override
-    public void onStart() {
+    public void onStart()
+    {
         super.onStart();
 
         taskAdapter.addAll(schedule.getTasks());
     }
 
     @Override
-    public void onStop() {
+    public void onStop()
+    {
         super.onStop();
 
         taskAdapter.clear();

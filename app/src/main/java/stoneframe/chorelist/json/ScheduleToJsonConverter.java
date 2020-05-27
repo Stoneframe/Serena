@@ -8,16 +8,20 @@ import stoneframe.chorelist.model.EffortTracker;
 import stoneframe.chorelist.model.Schedule;
 import stoneframe.chorelist.model.TaskSelector;
 
-public class ScheduleToJsonConverter {
+public class ScheduleToJsonConverter
+{
 
-    public static String convertToJson(Schedule schedule) {
+    public static String convertToJson(Schedule schedule)
+    {
         Gson gson = Converters.registerDateTime(new GsonBuilder()).create();
 
         return gson.toJson(schedule);
     }
 
-    public static Schedule convertFromJson(String json,
-                                           EffortTrackerConverter effortTrackerConverter, TaskSelectorConverter taskSelectorConverter) {
+    public static Schedule convertFromJson(
+        String json,
+        EffortTrackerConverter effortTrackerConverter, TaskSelectorConverter taskSelectorConverter)
+    {
         GsonBuilder gsonBuilder = Converters.registerDateTime(new GsonBuilder());
 
         gsonBuilder.registerTypeAdapter(TaskSelector.class, taskSelectorConverter);

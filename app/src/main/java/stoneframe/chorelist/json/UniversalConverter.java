@@ -7,17 +7,20 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-public class UniversalConverter<FROM, TO> implements JsonDeserializer<FROM> {
+public class UniversalConverter<FROM, TO> implements JsonDeserializer<FROM>
+{
 
     private Class<TO> clazz;
 
-    public UniversalConverter(Class<TO> clazz) {
+    public UniversalConverter(Class<TO> clazz)
+    {
         this.clazz = clazz;
     }
 
     @Override
     public FROM deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-            throws JsonParseException {
+        throws JsonParseException
+    {
         return context.deserialize(json, clazz);
     }
 

@@ -4,7 +4,8 @@ import org.joda.time.DateTime;
 
 import java.util.Comparator;
 
-public class Task {
+public class Task
+{
 
     public static final int DAILY = 0;
     public static final int WEEKLY = 1;
@@ -20,8 +21,10 @@ public class Task {
     private int periodicity;
     private int frequency;
 
-    public Task(String description, int priority, int effort,
-                DateTime next, int periodicity, int frequency) {
+    public Task(
+        String description, int priority, int effort,
+        DateTime next, int periodicity, int frequency)
+    {
         this.description = description;
         this.priority = priority;
         this.effort = effort;
@@ -31,61 +34,77 @@ public class Task {
         this.frequency = frequency;
     }
 
-    public DateTime getNext() {
+    public DateTime getNext()
+    {
         return new DateTime(next);
     }
 
-    public void setNext(DateTime next) {
+    public void setNext(DateTime next)
+    {
         this.next = next;
     }
 
-    public String getDescription() {
+    public String getDescription()
+    {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(String description)
+    {
         this.description = description;
     }
 
-    public int getPriority() {
+    public int getPriority()
+    {
         return priority;
     }
 
-    public void setPriority(int priority) {
+    public void setPriority(int priority)
+    {
         this.priority = priority;
     }
 
-    public int getEffort() {
+    public int getEffort()
+    {
         return effort;
     }
 
-    public void setEffort(int effort) {
+    public void setEffort(int effort)
+    {
         this.effort = effort;
     }
 
-    public int getPeriodicity() {
+    public int getPeriodicity()
+    {
         return periodicity;
     }
 
-    public void setPeriodicity(int periodicity) {
+    public void setPeriodicity(int periodicity)
+    {
         this.periodicity = periodicity;
     }
 
-    public int getFrequency() {
+    public int getFrequency()
+    {
         return frequency;
     }
 
-    public void setFrequency(int frequency) {
+    public void setFrequency(int frequency)
+    {
         this.frequency = frequency;
     }
 
-    public void reschedule(DateTime now) {
-        if (next == null) {
+    public void reschedule(DateTime now)
+    {
+        if (next == null)
+        {
             next = now;
         }
 
-        while (!next.isAfter(now)) {
-            switch (periodicity) {
+        while (!next.isAfter(now))
+        {
+            switch (periodicity)
+            {
                 case DAILY:
                     next = now.plusDays(frequency);
                     break;
@@ -105,36 +124,45 @@ public class Task {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Task)) {
+    public boolean equals(Object obj)
+    {
+        if (!(obj instanceof Task))
+        {
             return false;
         }
 
-        Task other = (Task) obj;
+        Task other = (Task)obj;
 
         return this.description.equals(other.description);
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "- " + description;
     }
 
-    public static class DutyComparator implements Comparator<Task> {
+    public static class DutyComparator implements Comparator<Task>
+    {
 
         private DateTime now;
 
-        public DutyComparator(DateTime now) {
+        public DutyComparator(DateTime now)
+        {
             this.now = now;
         }
 
         @Override
-        public int compare(Task o1, Task o2) {
+        public int compare(Task o1, Task o2)
+        {
             int i;
 
-            if (o1.next.isAfter(now) || o2.next.isAfter(now)) {
+            if (o1.next.isAfter(now) || o2.next.isAfter(now))
+            {
                 if ((i = o1.next.compareTo(o2.next)) != 0) return i;
-            } else {
+            }
+            else
+            {
                 if ((i = Integer.compare(o1.priority, o2.priority)) != 0) return i;
                 if ((i = Integer.compare(o1.effort, o2.effort)) != 0) return i;
             }

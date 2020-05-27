@@ -9,11 +9,16 @@ import java.lang.reflect.Type;
 import stoneframe.chorelist.model.SimpleTaskSelector;
 import stoneframe.chorelist.model.TaskSelector;
 
-public class SimpleTaskSelectorConverter implements TaskSelectorConverter {
+public class SimpleTaskSelectorConverter implements TaskSelectorConverter
+{
 
     @Override
-    public TaskSelector deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-            throws JsonParseException {
+    public TaskSelector deserialize(
+        JsonElement json,
+        Type typeOfT,
+        JsonDeserializationContext context)
+        throws JsonParseException
+    {
         return context.deserialize(json, SimpleTaskSelector.class);
     }
 

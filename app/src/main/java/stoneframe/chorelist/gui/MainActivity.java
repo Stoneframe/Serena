@@ -3,14 +3,18 @@ package stoneframe.chorelist.gui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
+import com.google.android.material.navigation.NavigationView;
+
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -27,7 +31,8 @@ import stoneframe.chorelist.model.Task;
 import stoneframe.chorelist.model.WeeklyEffortTracker;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+    implements NavigationView.OnNavigationItemSelectedListener
+{
 
     private static final String SCHEDULE_SAVE_NAME = Schedule.class.getName();
     private static final int ACTIVITY_EDIT_EFFORT = 0;
@@ -35,40 +40,57 @@ public class MainActivity extends AppCompatActivity
     private Schedule schedule;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         SharedPreferences settings = getPreferences(0);
 
         String json = settings.getString(SCHEDULE_SAVE_NAME, null);
 
-        if (json == null) {
+        if (json == null)
+        {
             json = settings.getString("Schedule2", null);
         }
 
-        if (json == null) {
-            schedule = new Schedule(new WeeklyEffortTracker(15, 15, 15, 15, 15, 30, 30),
-                    new SimpleTaskSelector());
-            schedule.addTask(new Task("Write ToDo List", 1, 30,
-                    DateTime.now().withTimeAtStartOfDay(), Task.DAILY, 1));
-        } else {
-            schedule = ScheduleToJsonConverter.convertFromJson(json,
-                    new WeeklyEffortTrackerConverter(), new SimpleTaskSelectorConverter());
+        if (json == null)
+        {
+            schedule = new Schedule(
+                new WeeklyEffortTracker(15, 15, 15, 15, 15, 30, 30),
+                new SimpleTaskSelector());
+            schedule.addTask(new Task(
+                "Write ToDo List",
+                1,
+                30,
+                DateTime.now().withTimeAtStartOfDay(),
+                Task.DAILY,
+                1));
+        }
+        else
+        {
+            schedule = ScheduleToJsonConverter.convertFromJson(
+                json,
+                new WeeklyEffortTrackerConverter(),
+                new SimpleTaskSelectorConverter());
         }
 
-        GlobalState globalState = (GlobalState) getApplication();
+        GlobalState globalState = (GlobalState)getApplication();
         globalState.setSchedule(schedule);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            this,
+            drawer,
+            toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         navigationView.getMenu().getItem(0).setChecked(true);
@@ -76,12 +98,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onStart() {
+    protected void onStart()
+    {
         super.onStart();
     }
 
     @Override
-    protected void onStop() {
+    protected void onStop()
+    {
         super.onStop();
 
         SharedPreferences settings = getPreferences(0);
@@ -93,28 +117,35 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+    public void onBackPressed()
+    {
+        DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START))
+        {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        }
+        else
+        {
             super.onBackPressed();
         }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         int id = item.getItemId();
 
-        if (id == R.id.action_effort) {
-            WeeklyEffortTracker effortTracker = (WeeklyEffortTracker) schedule.getEffortTracker();
+        if (id == R.id.action_effort)
+        {
+            WeeklyEffortTracker effortTracker = (WeeklyEffortTracker)schedule.getEffortTracker();
 
             Intent intent = new Intent(this, EffortActivity.class);
 
@@ -135,11 +166,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK && requestCode == ACTIVITY_EDIT_EFFORT) {
-            WeeklyEffortTracker effortTracker = (WeeklyEffortTracker) schedule.getEffortTracker();
+        if (resultCode == RESULT_OK && requestCode == ACTIVITY_EDIT_EFFORT)
+        {
+            WeeklyEffortTracker effortTracker = (WeeklyEffortTracker)schedule.getEffortTracker();
 
             effortTracker.setMonday(data.getIntExtra("Monday", 0));
             effortTracker.setTuesday(data.getIntExtra("Tuesday", 0));
@@ -152,11 +185,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(MenuItem item)
+    {
         Fragment fragment;
         Class fragmentClass;
 
-        switch (item.getItemId()) {
+        switch (item.getItemId())
+        {
             case R.id.nav_all_tasks:
                 fragmentClass = AllTasks.class;
                 break;
@@ -165,9 +200,11 @@ public class MainActivity extends AppCompatActivity
                 fragmentClass = TodaysTasks.class;
         }
 
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
+        try
+        {
+            fragment = (Fragment)fragmentClass.newInstance();
+        } catch (Exception e)
+        {
             e.printStackTrace();
             return false;
         }
@@ -176,7 +213,7 @@ public class MainActivity extends AppCompatActivity
         fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
 
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
         setTitle(item.getTitle());
@@ -184,9 +221,10 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private Schedule createSchedule() {
+    private Schedule createSchedule()
+    {
         Schedule schedule = new Schedule(
-                new WeeklyEffortTracker(15, 15, 15, 15, 15, 30, 30), new SimpleTaskSelector());
+            new WeeklyEffortTracker(15, 15, 15, 15, 15, 30, 30), new SimpleTaskSelector());
 
         DateTime now = DateTime.now().withTimeAtStartOfDay();
 
@@ -195,12 +233,16 @@ public class MainActivity extends AppCompatActivity
 
         // Boka
         schedule.addTask(new Task("Boka: Klipptid", 3, 1, now.withDayOfMonth(1), Task.MONTHLY, 2));
-        schedule.addTask(new Task("Boka: Synundersökning", 3, 1, now.withMonthOfYear(3).withDayOfMonth(1), Task.YEARLY, 1));
+        schedule.addTask(new Task("Boka: Synundersökning", 3, 1, now.withMonthOfYear(3)
+            .withDayOfMonth(1), Task.YEARLY, 1));
 
         // Födelsedagar
-        schedule.addTask(new Task("Födelsedag: Jonathan Karlsson", 1, 0, now.withMonthOfYear(9).withDayOfMonth(2), Task.YEARLY, 1));
-        schedule.addTask(new Task("Födelsedag: Jonathan Lundholm", 1, 0, now.withMonthOfYear(11).withDayOfMonth(3), Task.YEARLY, 1));
-        schedule.addTask(new Task("Födelsedag: Kajsa Binder", 1, 0, now.withMonthOfYear(12).withDayOfMonth(23), Task.YEARLY, 1));
+        schedule.addTask(new Task("Födelsedag: Jonathan Karlsson", 1, 0, now.withMonthOfYear(9)
+            .withDayOfMonth(2), Task.YEARLY, 1));
+        schedule.addTask(new Task("Födelsedag: Jonathan Lundholm", 1, 0, now.withMonthOfYear(11)
+            .withDayOfMonth(3), Task.YEARLY, 1));
+        schedule.addTask(new Task("Födelsedag: Kajsa Binder", 1, 0, now.withMonthOfYear(12)
+            .withDayOfMonth(23), Task.YEARLY, 1));
 
         // Fönsterkarm
         schedule.addTask(new Task("Fönsterkarm: Rensa", 8, 2, now, Task.WEEKLY, 1));
@@ -209,12 +251,14 @@ public class MainActivity extends AppCompatActivity
         // Golv
         schedule.addTask(new Task("Golv: Rensa", 8, 4, now, Task.DAILY, 2));
         schedule.addTask(new Task("Golv: Dammsuga", 6, 10, now.plusDays(2), Task.DAILY, 9));
-        schedule.addTask(new Task("Golv: Moppa", 5, 10, now.plusWeeks(2).withDayOfWeek(DateTimeConstants.SATURDAY), Task.WEEKLY, 6));
+        schedule.addTask(new Task("Golv: Moppa", 5, 10, now.plusWeeks(2)
+            .withDayOfWeek(DateTimeConstants.SATURDAY), Task.WEEKLY, 6));
 
         // Hall
         schedule.addTask(new Task("Hall: Rensa", 8, 4, now, Task.DAILY, 2));
         schedule.addTask(new Task("Hall: Dammsuga", 6, 5, now.plusDays(2), Task.DAILY, 5));
-        schedule.addTask(new Task("Hall: Moppa", 5, 15, now.plusWeeks(4).withDayOfWeek(DateTimeConstants.SATURDAY), Task.WEEKLY, 6));
+        schedule.addTask(new Task("Hall: Moppa", 5, 15, now.plusWeeks(4)
+            .withDayOfWeek(DateTimeConstants.SATURDAY), Task.WEEKLY, 6));
 
         // Kök
         schedule.addTask(new Task("Kök: Diska", 6, 10, now, Task.DAILY, 3));
@@ -227,19 +271,27 @@ public class MainActivity extends AppCompatActivity
         schedule.addTask(new Task("Skrivbord: Rensa", 7, 2, now, Task.DAILY, 1));
         schedule.addTask(new Task("Skrivbord: Torka", 6, 3, now.plusDays(1), Task.DAILY, 5));
         schedule.addTask(new Task("Skrivbord: Dammsuga", 5, 5, now.plusDays(1), Task.WEEKLY, 1));
-        schedule.addTask(new Task("Skrivbord: Moppa", 4, 15, now.withDayOfWeek(DateTimeConstants.SATURDAY), Task.WEEKLY, 6));
+        schedule.addTask(new Task(
+            "Skrivbord: Moppa",
+            4,
+            15,
+            now.withDayOfWeek(DateTimeConstants.SATURDAY),
+            Task.WEEKLY,
+            6));
 
         // Soffa och TV
         schedule.addTask(new Task("Soffa och TV: Rensa", 8, 2, now, Task.DAILY, 4));
         schedule.addTask(new Task("Soffa och TV: Torka", 7, 4, now.plusDays(1), Task.DAILY, 6));
         schedule.addTask(new Task("Soffa och TV: Dammsuga", 6, 4, now.plusDays(2), Task.DAILY, 9));
-        schedule.addTask(new Task("Soffa och TV: Moppa", 5, 15, now.plusWeeks(1).withDayOfWeek(DateTimeConstants.SATURDAY), Task.WEEKLY, 6));
+        schedule.addTask(new Task("Soffa och TV: Moppa", 5, 15, now.plusWeeks(1)
+            .withDayOfWeek(DateTimeConstants.SATURDAY), Task.WEEKLY, 6));
 
         // Säng
         schedule.addTask(new Task("Säng: Rensa", 9, 2, now, Task.WEEKLY, 2));
         schedule.addTask(new Task("Säng: Torka", 8, 1, now.plusDays(1), Task.WEEKLY, 1));
         schedule.addTask(new Task("Säng: Dammsuga", 7, 5, now.plusDays(2), Task.WEEKLY, 2));
-        schedule.addTask(new Task("Säng: Moppa", 6, 15, now.plusWeeks(3).withDayOfWeek(DateTimeConstants.SATURDAY), Task.WEEKLY, 6));
+        schedule.addTask(new Task("Säng: Moppa", 6, 15, now.plusWeeks(3)
+            .withDayOfWeek(DateTimeConstants.SATURDAY), Task.WEEKLY, 6));
 
         return schedule;
     }

@@ -4,15 +4,18 @@ import android.app.Application;
 
 import stoneframe.chorelist.model.Schedule;
 
-public class GlobalState extends Application {
+public class GlobalState extends Application
+{
 
     private Schedule schedule;
 
-    public Schedule getSchedule() {
+    public Schedule getSchedule()
+    {
         return schedule;
     }
 
-    public void setSchedule(Schedule schedule) {
+    public void setSchedule(Schedule schedule)
+    {
         this.schedule = schedule;
     }
 

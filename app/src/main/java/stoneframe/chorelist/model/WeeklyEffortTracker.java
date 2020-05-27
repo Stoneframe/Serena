@@ -3,7 +3,8 @@ package stoneframe.chorelist.model;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 
-public class WeeklyEffortTracker implements EffortTracker {
+public class WeeklyEffortTracker implements EffortTracker
+{
 
     private DateTime previous;
 
@@ -17,7 +18,8 @@ public class WeeklyEffortTracker implements EffortTracker {
 
     private int remaining;
 
-    public WeeklyEffortTracker(int mon, int tue, int wed, int thu, int fri, int sat, int sun) {
+    public WeeklyEffortTracker(int mon, int tue, int wed, int thu, int fri, int sat, int sun)
+    {
         this.mon = mon;
         this.tue = tue;
         this.wed = wed;
@@ -27,88 +29,112 @@ public class WeeklyEffortTracker implements EffortTracker {
         this.sun = sun;
     }
 
-    public int getMonday() {
+    public int getMonday()
+    {
         return mon;
     }
 
-    public void setMonday(int mon) {
+    public void setMonday(int mon)
+    {
         this.mon = mon;
-        if (previous.getDayOfWeek() == DateTimeConstants.MONDAY) {
+        if (previous.getDayOfWeek() == DateTimeConstants.MONDAY)
+        {
             remaining = mon;
         }
     }
 
-    public int getTuesday() {
+    public int getTuesday()
+    {
         return tue;
     }
 
-    public void setTuesday(int tue) {
+    public void setTuesday(int tue)
+    {
         this.tue = tue;
-        if (previous.getDayOfWeek() == DateTimeConstants.TUESDAY) {
+        if (previous.getDayOfWeek() == DateTimeConstants.TUESDAY)
+        {
             remaining = tue;
         }
     }
 
-    public int getWednesday() {
+    public int getWednesday()
+    {
         return wed;
     }
 
-    public void setWednesday(int wed) {
+    public void setWednesday(int wed)
+    {
         this.wed = wed;
-        if (previous.getDayOfWeek() == DateTimeConstants.WEDNESDAY) {
+        if (previous.getDayOfWeek() == DateTimeConstants.WEDNESDAY)
+        {
             remaining = wed;
         }
     }
 
-    public int getThursday() {
+    public int getThursday()
+    {
         return thu;
     }
 
-    public void setThursday(int thu) {
+    public void setThursday(int thu)
+    {
         this.thu = thu;
-        if (previous.getDayOfWeek() == DateTimeConstants.THURSDAY) {
+        if (previous.getDayOfWeek() == DateTimeConstants.THURSDAY)
+        {
             remaining = thu;
         }
     }
 
-    public int getFriday() {
+    public int getFriday()
+    {
         return fri;
     }
 
-    public void setFriday(int fri) {
+    public void setFriday(int fri)
+    {
         this.fri = fri;
-        if (previous.getDayOfWeek() == DateTimeConstants.FRIDAY) {
+        if (previous.getDayOfWeek() == DateTimeConstants.FRIDAY)
+        {
             remaining = fri;
         }
     }
 
-    public int getSaturday() {
+    public int getSaturday()
+    {
         return sat;
     }
 
-    public void setSaturday(int sat) {
+    public void setSaturday(int sat)
+    {
         this.sat = sat;
-        if (previous.getDayOfWeek() == DateTimeConstants.SATURDAY) {
+        if (previous.getDayOfWeek() == DateTimeConstants.SATURDAY)
+        {
             remaining = sat;
         }
     }
 
-    public int getSunday() {
+    public int getSunday()
+    {
         return sun;
     }
 
-    public void setSunday(int sun) {
+    public void setSunday(int sun)
+    {
         this.sun = sun;
-        if (previous.getDayOfWeek() == DateTimeConstants.SUNDAY) {
+        if (previous.getDayOfWeek() == DateTimeConstants.SUNDAY)
+        {
             remaining = mon;
         }
     }
 
     @Override
-    public int getTodaysEffort(DateTime now) {
-        if (!isSameDay(previous, now)) {
+    public int getTodaysEffort(DateTime now)
+    {
+        if (!isSameDay(previous, now))
+        {
             previous = now;
-            switch (now.getDayOfWeek()) {
+            switch (now.getDayOfWeek())
+            {
                 case DateTimeConstants.MONDAY:
                     remaining = mon;
                     break;
@@ -137,19 +163,24 @@ public class WeeklyEffortTracker implements EffortTracker {
     }
 
     @Override
-    public void spend(int effort) {
-        if (effort > remaining) {
+    public void spend(int effort)
+    {
+        if (effort > remaining)
+        {
             remaining = 0;
-        } else {
+        }
+        else
+        {
             remaining -= effort;
         }
     }
 
-    private boolean isSameDay(DateTime d1, DateTime d2) {
+    private boolean isSameDay(DateTime d1, DateTime d2)
+    {
         return d1 != null && d2 != null
-                && d1.getYear() == d2.getYear()
-                && d1.getMonthOfYear() == d2.getMonthOfYear()
-                && d1.getDayOfMonth() == d2.getDayOfMonth();
+            && d1.getYear() == d2.getYear()
+            && d1.getMonthOfYear() == d2.getMonthOfYear()
+            && d1.getDayOfMonth() == d2.getDayOfMonth();
     }
 
 }

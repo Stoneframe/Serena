@@ -12,6 +12,7 @@ import stoneframe.chorelist.model.EffortTracker;
 /**
  * Created by PC on 2017-02-17.
  */
-public interface EffortTrackerConverter extends JsonDeserializer<EffortTracker> {
+public interface EffortTrackerConverter extends JsonDeserializer<EffortTracker>
+{
 
 }

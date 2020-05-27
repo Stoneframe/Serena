@@ -29,6 +29,9 @@
         <activity
             android:name=".gui.EffortActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".gui.ScheduleActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

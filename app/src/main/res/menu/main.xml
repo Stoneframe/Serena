@@ -6,4 +6,10 @@
         android:orderInCategory="100"
         android:title="Effort"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/activity_schedule"
+        android:orderInCategory="100"
+        android:title="Schedule"
+        app:showAsAction="never" />
 </menu>

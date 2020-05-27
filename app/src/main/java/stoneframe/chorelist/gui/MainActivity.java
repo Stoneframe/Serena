@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final String SCHEDULE_SAVE_NAME = Schedule.class.getName();
     private static final int ACTIVITY_EDIT_EFFORT = 0;
+    private static final int ACTIVITY_EDIT_SCHEDULE = 1;
 
     private Schedule schedule;
 
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         SharedPreferences settings = getPreferences(0);
@@ -162,6 +163,19 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
 
+        if (id == R.id.activity_schedule)
+        {
+            String json = ScheduleToJsonConverter.convertToJson(schedule);
+
+            Intent intent = new Intent(this, ScheduleActivity.class);
+
+            intent.putExtra("Schedule", json);
+
+            startActivityForResult(intent, ACTIVITY_EDIT_SCHEDULE);
+
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -181,6 +195,19 @@ public class MainActivity extends AppCompatActivity
             effortTracker.setFriday(data.getIntExtra("Friday", 0));
             effortTracker.setSaturday(data.getIntExtra("Saturday", 0));
             effortTracker.setSunday(data.getIntExtra("Sunday", 0));
+        }
+
+        if (resultCode == RESULT_OK && requestCode == ACTIVITY_EDIT_SCHEDULE)
+        {
+            String json = data.getStringExtra("Schedule");
+
+            schedule = ScheduleToJsonConverter.convertFromJson(
+                json,
+                new WeeklyEffortTrackerConverter(),
+                new SimpleTaskSelectorConverter());
+
+            GlobalState globalState = (GlobalState)getApplication();
+            globalState.setSchedule(schedule);
         }
     }
 

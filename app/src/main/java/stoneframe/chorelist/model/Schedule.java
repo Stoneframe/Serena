@@ -9,11 +9,10 @@ import java.util.List;
 
 public class Schedule
 {
+    private final EffortTracker effortTracker;
+    private final TaskSelector taskSelector;
 
-    private EffortTracker effortTracker;
-    private TaskSelector taskSelector;
-
-    private List<Task> tasks = new LinkedList<>();
+    private final List<Task> tasks = new LinkedList<>();
 
     public Schedule(EffortTracker effortTracker, TaskSelector taskSelector)
     {
@@ -38,14 +37,7 @@ public class Schedule
 
     public List<Task> getAllTasks()
     {
-        Collections.sort(tasks, new Comparator<Task>()
-        {
-            @Override
-            public int compare(Task o1, Task o2)
-            {
-                return o1.getDescription().compareTo(o2.getDescription());
-            }
-        });
+        tasks.sort(Comparator.comparing(Task::getDescription));
         return Collections.unmodifiableList(tasks);
     }
 
@@ -56,7 +48,7 @@ public class Schedule
 
     public List<Task> getTasks(DateTime now)
     {
-        Collections.sort(tasks, new Task.DutyComparator(now));
+        tasks.sort(new Task.DutyComparator(now));
 
         int effort = effortTracker.getTodaysEffort(now);
 
@@ -112,5 +104,4 @@ public class Schedule
 
         return this.tasks.equals(other.tasks);
     }
-
 }

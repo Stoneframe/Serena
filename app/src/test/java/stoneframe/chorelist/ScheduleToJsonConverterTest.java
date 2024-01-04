@@ -12,9 +12,8 @@ import stoneframe.chorelist.model.Task;
 
 import static junit.framework.Assert.assertEquals;
 
-public class Test_ScheduleToJsonConverter
+public class ScheduleToJsonConverterTest
 {
-
     @Test
     public void convert_ToDoList_to_json_and_back_to_TodoList()
     {
@@ -42,5 +41,4 @@ public class Test_ScheduleToJsonConverter
 
         assertEquals(schedule1, schedule2);
     }
-
 }

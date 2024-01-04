@@ -7,9 +7,8 @@ import stoneframe.chorelist.model.Task;
 
 import static org.junit.Assert.*;
 
-public class Test_TaskComparator_compare
+public class TaskComparatorTest
 {
-
     private Task.DutyComparator comparator;
 
     @Before
@@ -113,5 +112,4 @@ public class Test_TaskComparator_compare
 
         assertEquals(expected, actual);
     }
-
 }

@@ -7,30 +7,29 @@ import stoneframe.chorelist.model.Task;
 
 import static org.junit.Assert.*;
 
-public class Test_Task_reschedule
+public class TaskTest
 {
-
     @Test
-    public void test_daliy_freq_3()
+    public void test_daily_freq_3()
     {
         Task task = new Task("", 0, 0, TestUtils.createDateTime(2017, 2, 4), Task.DAILY, 3);
 
         task.reschedule(TestUtils.createDateTime(2017, 2, 5));
 
-        DateTime expected = TestUtils.createDateTime(2017, 2, 7);
+        DateTime expected = TestUtils.createDateTime(2017, 2, 8);
         DateTime actual = task.getNext();
 
         assertEquals(expected, actual);
     }
 
     @Test
-    public void test_daliy_freq_5()
+    public void test_daily_freq_5()
     {
         Task task = new Task("", 0, 0, TestUtils.createDateTime(2017, 2, 4), Task.DAILY, 5);
 
         task.reschedule(TestUtils.createDateTime(2017, 2, 5));
 
-        DateTime expected = TestUtils.createDateTime(2017, 2, 9);
+        DateTime expected = TestUtils.createDateTime(2017, 2, 10);
         DateTime actual = task.getNext();
 
         assertEquals(expected, actual);
@@ -43,7 +42,7 @@ public class Test_Task_reschedule
 
         task.reschedule(TestUtils.createDateTime(2017, 2, 5));
 
-        DateTime expected = TestUtils.createDateTime(2017, 2, 8);
+        DateTime expected = TestUtils.createDateTime(2017, 2, 10);
         DateTime actual = task.getNext();
 
         assertEquals(expected, actual);
@@ -126,5 +125,4 @@ public class Test_Task_reschedule
 
         assertEquals(expected, actual);
     }
-
 }

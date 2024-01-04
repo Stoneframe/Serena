@@ -2,14 +2,10 @@ package stoneframe.chorelist.model;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SimpleTaskSelector implements TaskSelector
 {
-
-    public SimpleTaskSelector()
-    {
-    }
-
     @Override
     public List<Task> selectTasks(List<Task> tasks, int effort)
     {
@@ -17,7 +13,7 @@ public class SimpleTaskSelector implements TaskSelector
 
         if (effort <= 0)
         {
-            return selectedTasks;
+            return tasks.stream().filter(t -> t.getEffort() == 0).collect(Collectors.toList());
         }
 
         int currEffort = 0;
@@ -33,5 +29,4 @@ public class SimpleTaskSelector implements TaskSelector
 
         return selectedTasks;
     }
-
 }

@@ -4,11 +4,11 @@ import org.joda.time.DateTime;
 
 public class SimpleEffortTracker implements EffortTracker
 {
+    private final int maxEffort;
+
+    private int remainingEffort;
 
     private DateTime previous;
-
-    private int maxEffort;
-    private int remainingEffort;
 
     public SimpleEffortTracker(int effort)
     {
@@ -48,5 +48,4 @@ public class SimpleEffortTracker implements EffortTracker
             && d1.getMonthOfYear() == d2.getMonthOfYear()
             && d1.getDayOfMonth() == d2.getDayOfMonth();
     }
-
 }

@@ -11,7 +11,6 @@ import stoneframe.chorelist.model.WeeklyEffortTracker;
 
 public class WeeklyEffortTrackerConverter implements EffortTrackerConverter
 {
-
     @Override
     public EffortTracker deserialize(
         JsonElement json, Type typeOfT,

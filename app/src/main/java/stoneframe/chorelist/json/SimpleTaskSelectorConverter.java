@@ -11,7 +11,6 @@ import stoneframe.chorelist.model.TaskSelector;
 
 public class SimpleTaskSelectorConverter implements TaskSelectorConverter
 {
-
     @Override
     public TaskSelector deserialize(
         JsonElement json,
@@ -21,5 +20,4 @@ public class SimpleTaskSelectorConverter implements TaskSelectorConverter
     {
         return context.deserialize(json, SimpleTaskSelector.class);
     }
-
 }

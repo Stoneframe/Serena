@@ -10,7 +10,6 @@ import stoneframe.chorelist.model.TaskSelector;
 
 public class ScheduleToJsonConverter
 {
-
     public static String convertToJson(Schedule schedule)
     {
         Gson gson = Converters.registerDateTime(new GsonBuilder()).create();
@@ -31,5 +30,4 @@ public class ScheduleToJsonConverter
 
         return gson.fromJson(json, Schedule.class);
     }
-
 }

@@ -11,7 +11,6 @@ import stoneframe.chorelist.model.SimpleEffortTracker;
 
 public class SimpleEffortTrackerConverter implements EffortTrackerConverter
 {
-
     @Override
     public EffortTracker deserialize(
         JsonElement json,
@@ -21,5 +20,4 @@ public class SimpleEffortTrackerConverter implements EffortTrackerConverter
     {
         return context.deserialize(json, SimpleEffortTracker.class);
     }
-
 }

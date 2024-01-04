@@ -6,5 +6,4 @@ import stoneframe.chorelist.model.TaskSelector;
 
 public interface TaskSelectorConverter extends JsonDeserializer<TaskSelector>
 {
-
 }

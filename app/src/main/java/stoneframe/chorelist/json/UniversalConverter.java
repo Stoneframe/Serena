@@ -9,8 +9,7 @@ import java.lang.reflect.Type;
 
 public class UniversalConverter<FROM, TO> implements JsonDeserializer<FROM>
 {
-
-    private Class<TO> clazz;
+    private final Class<TO> clazz;
 
     public UniversalConverter(Class<TO> clazz)
     {
@@ -23,5 +22,4 @@ public class UniversalConverter<FROM, TO> implements JsonDeserializer<FROM>
     {
         return context.deserialize(json, clazz);
     }
-
 }

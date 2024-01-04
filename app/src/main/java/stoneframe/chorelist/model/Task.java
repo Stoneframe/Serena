@@ -1,12 +1,13 @@
 package stoneframe.chorelist.model;
 
+import androidx.annotation.NonNull;
+
 import org.joda.time.DateTime;
 
 import java.util.Comparator;
 
 public class Task
 {
-
     public static final int DAILY = 0;
     public static final int WEEKLY = 1;
     public static final int MONTHLY = 2;
@@ -136,6 +137,7 @@ public class Task
         return this.description.equals(other.description);
     }
 
+    @NonNull
     @Override
     public String toString()
     {
@@ -144,8 +146,7 @@ public class Task
 
     public static class DutyComparator implements Comparator<Task>
     {
-
-        private DateTime now;
+        private final DateTime now;
 
         public DutyComparator(DateTime now)
         {
@@ -170,5 +171,4 @@ public class Task
             return o1.description.compareTo(o2.description);
         }
     }
-
 }

@@ -5,7 +5,6 @@ import org.joda.time.DateTimeConstants;
 
 public class WeeklyEffortTracker implements EffortTracker
 {
-
     private DateTime previous;
 
     private int mon;
@@ -182,5 +181,4 @@ public class WeeklyEffortTracker implements EffortTracker
             && d1.getMonthOfYear() == d2.getMonthOfYear()
             && d1.getDayOfMonth() == d2.getDayOfMonth();
     }
-
 }

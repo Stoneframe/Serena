@@ -21,11 +21,11 @@ import org.joda.time.DateTimeConstants;
 
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.json.ScheduleToJsonConverter;
-import stoneframe.chorelist.json.SimpleTaskSelectorConverter;
+import stoneframe.chorelist.json.SimpleChoreSelectorConverter;
 import stoneframe.chorelist.json.WeeklyEffortTrackerConverter;
 import stoneframe.chorelist.model.Schedule;
-import stoneframe.chorelist.model.SimpleTaskSelector;
-import stoneframe.chorelist.model.Task;
+import stoneframe.chorelist.model.SimpleChoreSelector;
+import stoneframe.chorelist.model.Chore;
 import stoneframe.chorelist.model.WeeklyEffortTracker;
 
 public class MainActivity extends AppCompatActivity
@@ -58,13 +58,13 @@ public class MainActivity extends AppCompatActivity
         {
             schedule = new Schedule(
                 new WeeklyEffortTracker(15, 15, 15, 15, 15, 30, 30),
-                new SimpleTaskSelector());
-            schedule.addTask(new Task(
+                new SimpleChoreSelector());
+            schedule.addChore(new Chore(
                 "Write ToDo List",
                 1,
                 30,
                 DateTime.now().withTimeAtStartOfDay(),
-                Task.DAILY,
+                Chore.DAILY,
                 1));
         }
         else
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity
             schedule = ScheduleToJsonConverter.convertFromJson(
                 json,
                 new WeeklyEffortTrackerConverter(),
-                new SimpleTaskSelectorConverter());
+                new SimpleChoreSelectorConverter());
         }
 
         GlobalState globalState = (GlobalState)getApplication();
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity
             schedule = ScheduleToJsonConverter.convertFromJson(
                 json,
                 new WeeklyEffortTrackerConverter(),
-                new SimpleTaskSelectorConverter());
+                new SimpleChoreSelectorConverter());
 
             GlobalState globalState = (GlobalState)getApplication();
             globalState.setSchedule(schedule);
@@ -216,12 +216,12 @@ public class MainActivity extends AppCompatActivity
 
         switch (item.getItemId())
         {
-            case R.id.nav_all_tasks:
-                fragmentClass = AllTasks.class;
+            case R.id.nav_all_chores:
+                fragmentClass = AllChores.class;
                 break;
-            case R.id.nav_todays_tasks:
+            case R.id.nav_todays_chores:
             default:
-                fragmentClass = TodaysTasks.class;
+                fragmentClass = TodaysChores.class;
         }
 
         try
@@ -249,74 +249,74 @@ public class MainActivity extends AppCompatActivity
     private Schedule createSchedule()
     {
         Schedule schedule = new Schedule(
-            new WeeklyEffortTracker(15, 15, 15, 15, 15, 30, 30), new SimpleTaskSelector());
+            new WeeklyEffortTracker(15, 15, 15, 15, 15, 30, 30), new SimpleChoreSelector());
 
         DateTime now = DateTime.now().withTimeAtStartOfDay();
 
         // Badrum
-        schedule.addTask(new Task("Badrum: Städa", 6, 10, now.withDayOfWeek(6), Task.WEEKLY, 3));
+        schedule.addChore(new Chore("Badrum: Städa", 6, 10, now.withDayOfWeek(6), Chore.WEEKLY, 3));
 
         // Boka
-        schedule.addTask(new Task("Boka: Klipptid", 3, 1, now.withDayOfMonth(1), Task.MONTHLY, 2));
-        schedule.addTask(new Task("Boka: Synundersökning", 3, 1, now.withMonthOfYear(3)
-            .withDayOfMonth(1), Task.YEARLY, 1));
+        schedule.addChore(new Chore("Boka: Klipptid", 3, 1, now.withDayOfMonth(1), Chore.MONTHLY, 2));
+        schedule.addChore(new Chore("Boka: Synundersökning", 3, 1, now.withMonthOfYear(3)
+            .withDayOfMonth(1), Chore.YEARLY, 1));
 
         // Födelsedagar
-        schedule.addTask(new Task("Födelsedag: Jonathan Karlsson", 1, 0, now.withMonthOfYear(9)
-            .withDayOfMonth(2), Task.YEARLY, 1));
-        schedule.addTask(new Task("Födelsedag: Jonathan Lundholm", 1, 0, now.withMonthOfYear(11)
-            .withDayOfMonth(3), Task.YEARLY, 1));
-        schedule.addTask(new Task("Födelsedag: Kajsa Binder", 1, 0, now.withMonthOfYear(12)
-            .withDayOfMonth(23), Task.YEARLY, 1));
+        schedule.addChore(new Chore("Födelsedag: Jonathan Karlsson", 1, 0, now.withMonthOfYear(9)
+            .withDayOfMonth(2), Chore.YEARLY, 1));
+        schedule.addChore(new Chore("Födelsedag: Jonathan Lundholm", 1, 0, now.withMonthOfYear(11)
+            .withDayOfMonth(3), Chore.YEARLY, 1));
+        schedule.addChore(new Chore("Födelsedag: Kajsa Binder", 1, 0, now.withMonthOfYear(12)
+            .withDayOfMonth(23), Chore.YEARLY, 1));
 
         // Fönsterkarm
-        schedule.addTask(new Task("Fönsterkarm: Rensa", 8, 2, now, Task.WEEKLY, 1));
-        schedule.addTask(new Task("Fönsterkarm: Torka", 7, 3, now.plusDays(1), Task.WEEKLY, 1));
+        schedule.addChore(new Chore("Fönsterkarm: Rensa", 8, 2, now, Chore.WEEKLY, 1));
+        schedule.addChore(new Chore("Fönsterkarm: Torka", 7, 3, now.plusDays(1), Chore.WEEKLY, 1));
 
         // Golv
-        schedule.addTask(new Task("Golv: Rensa", 8, 4, now, Task.DAILY, 2));
-        schedule.addTask(new Task("Golv: Dammsuga", 6, 10, now.plusDays(2), Task.DAILY, 9));
-        schedule.addTask(new Task("Golv: Moppa", 5, 10, now.plusWeeks(2)
-            .withDayOfWeek(DateTimeConstants.SATURDAY), Task.WEEKLY, 6));
+        schedule.addChore(new Chore("Golv: Rensa", 8, 4, now, Chore.DAILY, 2));
+        schedule.addChore(new Chore("Golv: Dammsuga", 6, 10, now.plusDays(2), Chore.DAILY, 9));
+        schedule.addChore(new Chore("Golv: Moppa", 5, 10, now.plusWeeks(2)
+            .withDayOfWeek(DateTimeConstants.SATURDAY), Chore.WEEKLY, 6));
 
         // Hall
-        schedule.addTask(new Task("Hall: Rensa", 8, 4, now, Task.DAILY, 2));
-        schedule.addTask(new Task("Hall: Dammsuga", 6, 5, now.plusDays(2), Task.DAILY, 5));
-        schedule.addTask(new Task("Hall: Moppa", 5, 15, now.plusWeeks(4)
-            .withDayOfWeek(DateTimeConstants.SATURDAY), Task.WEEKLY, 6));
+        schedule.addChore(new Chore("Hall: Rensa", 8, 4, now, Chore.DAILY, 2));
+        schedule.addChore(new Chore("Hall: Dammsuga", 6, 5, now.plusDays(2), Chore.DAILY, 5));
+        schedule.addChore(new Chore("Hall: Moppa", 5, 15, now.plusWeeks(4)
+            .withDayOfWeek(DateTimeConstants.SATURDAY), Chore.WEEKLY, 6));
 
         // Kök
-        schedule.addTask(new Task("Kök: Diska", 6, 10, now, Task.DAILY, 3));
-        schedule.addTask(new Task("Kök: Rensa kylskåp", 4, 10, now.plusDays(3), Task.MONTHLY, 1));
+        schedule.addChore(new Chore("Kök: Diska", 6, 10, now, Chore.DAILY, 3));
+        schedule.addChore(new Chore("Kök: Rensa kylskåp", 4, 10, now.plusDays(3), Chore.MONTHLY, 1));
 
         // Lådor
-        schedule.addTask(new Task("Lådor: Torka", 7, 5, now, Task.WEEKLY, 2));
+        schedule.addChore(new Chore("Lådor: Torka", 7, 5, now, Chore.WEEKLY, 2));
 
         // Skrivbord
-        schedule.addTask(new Task("Skrivbord: Rensa", 7, 2, now, Task.DAILY, 1));
-        schedule.addTask(new Task("Skrivbord: Torka", 6, 3, now.plusDays(1), Task.DAILY, 5));
-        schedule.addTask(new Task("Skrivbord: Dammsuga", 5, 5, now.plusDays(1), Task.WEEKLY, 1));
-        schedule.addTask(new Task(
+        schedule.addChore(new Chore("Skrivbord: Rensa", 7, 2, now, Chore.DAILY, 1));
+        schedule.addChore(new Chore("Skrivbord: Torka", 6, 3, now.plusDays(1), Chore.DAILY, 5));
+        schedule.addChore(new Chore("Skrivbord: Dammsuga", 5, 5, now.plusDays(1), Chore.WEEKLY, 1));
+        schedule.addChore(new Chore(
             "Skrivbord: Moppa",
             4,
             15,
             now.withDayOfWeek(DateTimeConstants.SATURDAY),
-            Task.WEEKLY,
+            Chore.WEEKLY,
             6));
 
         // Soffa och TV
-        schedule.addTask(new Task("Soffa och TV: Rensa", 8, 2, now, Task.DAILY, 4));
-        schedule.addTask(new Task("Soffa och TV: Torka", 7, 4, now.plusDays(1), Task.DAILY, 6));
-        schedule.addTask(new Task("Soffa och TV: Dammsuga", 6, 4, now.plusDays(2), Task.DAILY, 9));
-        schedule.addTask(new Task("Soffa och TV: Moppa", 5, 15, now.plusWeeks(1)
-            .withDayOfWeek(DateTimeConstants.SATURDAY), Task.WEEKLY, 6));
+        schedule.addChore(new Chore("Soffa och TV: Rensa", 8, 2, now, Chore.DAILY, 4));
+        schedule.addChore(new Chore("Soffa och TV: Torka", 7, 4, now.plusDays(1), Chore.DAILY, 6));
+        schedule.addChore(new Chore("Soffa och TV: Dammsuga", 6, 4, now.plusDays(2), Chore.DAILY, 9));
+        schedule.addChore(new Chore("Soffa och TV: Moppa", 5, 15, now.plusWeeks(1)
+            .withDayOfWeek(DateTimeConstants.SATURDAY), Chore.WEEKLY, 6));
 
         // Säng
-        schedule.addTask(new Task("Säng: Rensa", 9, 2, now, Task.WEEKLY, 2));
-        schedule.addTask(new Task("Säng: Torka", 8, 1, now.plusDays(1), Task.WEEKLY, 1));
-        schedule.addTask(new Task("Säng: Dammsuga", 7, 5, now.plusDays(2), Task.WEEKLY, 2));
-        schedule.addTask(new Task("Säng: Moppa", 6, 15, now.plusWeeks(3)
-            .withDayOfWeek(DateTimeConstants.SATURDAY), Task.WEEKLY, 6));
+        schedule.addChore(new Chore("Säng: Rensa", 9, 2, now, Chore.WEEKLY, 2));
+        schedule.addChore(new Chore("Säng: Torka", 8, 1, now.plusDays(1), Chore.WEEKLY, 1));
+        schedule.addChore(new Chore("Säng: Dammsuga", 7, 5, now.plusDays(2), Chore.WEEKLY, 2));
+        schedule.addChore(new Chore("Säng: Moppa", 6, 15, now.plusWeeks(3)
+            .withDayOfWeek(DateTimeConstants.SATURDAY), Chore.WEEKLY, 6));
 
         return schedule;
     }

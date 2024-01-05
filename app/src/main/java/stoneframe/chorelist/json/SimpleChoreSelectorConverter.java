@@ -6,18 +6,18 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-import stoneframe.chorelist.model.SimpleTaskSelector;
-import stoneframe.chorelist.model.TaskSelector;
+import stoneframe.chorelist.model.SimpleChoreSelector;
+import stoneframe.chorelist.model.ChoreSelector;
 
-public class SimpleTaskSelectorConverter implements TaskSelectorConverter
+public class SimpleChoreSelectorConverter implements ChoreSelectorConverter
 {
     @Override
-    public TaskSelector deserialize(
+    public ChoreSelector deserialize(
         JsonElement json,
         Type typeOfT,
         JsonDeserializationContext context)
         throws JsonParseException
     {
-        return context.deserialize(json, SimpleTaskSelector.class);
+        return context.deserialize(json, SimpleChoreSelector.class);
     }
 }

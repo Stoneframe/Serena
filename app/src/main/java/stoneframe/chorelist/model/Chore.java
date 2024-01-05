@@ -6,7 +6,7 @@ import org.joda.time.DateTime;
 
 import java.util.Comparator;
 
-public class Task
+public class Chore
 {
     public static final int DAILY = 0;
     public static final int WEEKLY = 1;
@@ -22,7 +22,7 @@ public class Task
     private int periodicity;
     private int frequency;
 
-    public Task(
+    public Chore(
         String description, int priority, int effort,
         DateTime next, int periodicity, int frequency)
     {
@@ -127,12 +127,12 @@ public class Task
     @Override
     public boolean equals(Object obj)
     {
-        if (!(obj instanceof Task))
+        if (!(obj instanceof Chore))
         {
             return false;
         }
 
-        Task other = (Task)obj;
+        Chore other = (Chore)obj;
 
         return this.description.equals(other.description);
     }
@@ -144,7 +144,7 @@ public class Task
         return "- " + description;
     }
 
-    public static class DutyComparator implements Comparator<Task>
+    public static class DutyComparator implements Comparator<Chore>
     {
         private final DateTime now;
 
@@ -154,7 +154,7 @@ public class Task
         }
 
         @Override
-        public int compare(Task o1, Task o2)
+        public int compare(Chore o1, Chore o2)
         {
             int i;
 

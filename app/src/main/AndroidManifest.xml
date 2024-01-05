@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".gui.TaskActivity"
+            android:name=".gui.ChoreActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".gui.EffortActivity"

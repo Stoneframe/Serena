@@ -18,20 +18,20 @@ import org.joda.time.DateTime;
 
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.Schedule;
-import stoneframe.chorelist.model.Task;
+import stoneframe.chorelist.model.Chore;
 
-public class AllTasks extends Fragment
+public class AllChores extends Fragment
 {
-    private static final int ACTIVITY_ADD_TASK = 0;
-    private static final int ACTIVITY_EDIT_TASK = 1;
+    private static final int ACTIVITY_ADD_CHORE = 0;
+    private static final int ACTIVITY_EDIT_CHORE = 1;
 
     private Schedule schedule;
 
-    private ArrayAdapter<Task> taskAdapter;
-    private ListView taskList;
+    private ArrayAdapter<Chore> choreAdapter;
+    private ListView choreList;
     private Button addButton;
 
-    private Task taskUnderEdit;
+    private Chore choreUnderEdit;
 
     @Override
     public View onCreateView(
@@ -42,30 +42,30 @@ public class AllTasks extends Fragment
         GlobalState globalState = (GlobalState)getActivity().getApplication();
         schedule = globalState.getSchedule();
 
-        View view = inflater.inflate(R.layout.fragment_all_tasks, container, false);
+        View view = inflater.inflate(R.layout.fragment_all_chores, container, false);
 
-        taskAdapter = new ArrayAdapter<Task>(
+        choreAdapter = new ArrayAdapter<Chore>(
             getActivity().getBaseContext(),
             android.R.layout.simple_list_item_1);
-        taskList = (ListView)view.findViewById(R.id.all_tasks);
-        taskList.setAdapter(taskAdapter);
-        taskList.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        choreList = (ListView)view.findViewById(R.id.all_chores);
+        choreList.setAdapter(choreAdapter);
+        choreList.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                Task task = taskAdapter.getItem(position);
-                startTaskEditor(task, ACTIVITY_EDIT_TASK);
+                Chore chore = choreAdapter.getItem(position);
+                startChoreEditor(chore, ACTIVITY_EDIT_CHORE);
             }
         });
-        taskList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+        choreList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
         {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
             {
-                Task task = taskAdapter.getItem(position);
-                taskAdapter.remove(task);
-                schedule.removeTask(task);
+                Chore chore = choreAdapter.getItem(position);
+                choreAdapter.remove(chore);
+                schedule.removeChore(chore);
                 return true;
             }
         });
@@ -76,14 +76,14 @@ public class AllTasks extends Fragment
             @Override
             public void onClick(View v)
             {
-                Task duty = new Task(
+                Chore duty = new Chore(
                     "",
                     1,
                     1,
                     DateTime.now().withTimeAtStartOfDay(),
-                    Task.DAILY,
+                    Chore.DAILY,
                     1);
-                startTaskEditor(duty, ACTIVITY_ADD_TASK);
+                startChoreEditor(duty, ACTIVITY_ADD_CHORE);
             }
         });
 
@@ -95,7 +95,7 @@ public class AllTasks extends Fragment
     {
         super.onStart();
 
-        taskAdapter.addAll(schedule.getAllTasks());
+        choreAdapter.addAll(schedule.getAllChores());
     }
 
     @Override
@@ -103,20 +103,20 @@ public class AllTasks extends Fragment
     {
         super.onStop();
 
-        taskAdapter.clear();
+        choreAdapter.clear();
     }
 
-    private void startTaskEditor(Task task, int mode)
+    private void startChoreEditor(Chore chore, int mode)
     {
-        taskUnderEdit = task;
+        choreUnderEdit = chore;
 
-        Intent intent = new Intent(getActivity(), TaskActivity.class);
-        intent.putExtra("Next", task.getNext());
-        intent.putExtra("Description", task.getDescription());
-        intent.putExtra("Priority", task.getPriority());
-        intent.putExtra("Effort", task.getEffort());
-        intent.putExtra("Periodicity", task.getPeriodicity());
-        intent.putExtra("Frequency", task.getFrequency());
+        Intent intent = new Intent(getActivity(), ChoreActivity.class);
+        intent.putExtra("Next", chore.getNext());
+        intent.putExtra("Description", chore.getDescription());
+        intent.putExtra("Priority", chore.getPriority());
+        intent.putExtra("Effort", chore.getEffort());
+        intent.putExtra("Periodicity", chore.getPeriodicity());
+        intent.putExtra("Frequency", chore.getFrequency());
 
         startActivityForResult(intent, mode);
     }
@@ -128,7 +128,7 @@ public class AllTasks extends Fragment
 
         if (resultCode == RESULT_OK)
         {
-            Task duty = taskUnderEdit;
+            Chore duty = choreUnderEdit;
 
             duty.setNext((DateTime)data.getSerializableExtra("Next"));
             duty.setDescription(data.getStringExtra("Description"));
@@ -137,9 +137,9 @@ public class AllTasks extends Fragment
             duty.setPeriodicity(data.getIntExtra("Periodicity", 1));
             duty.setFrequency(data.getIntExtra("Frequency", 1));
 
-            if (requestCode == ACTIVITY_ADD_TASK)
+            if (requestCode == ACTIVITY_ADD_CHORE)
             {
-                schedule.addTask(duty);
+                schedule.addChore(duty);
             }
         }
     }

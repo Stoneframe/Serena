@@ -6,7 +6,7 @@ import com.google.gson.GsonBuilder;
 
 import stoneframe.chorelist.model.EffortTracker;
 import stoneframe.chorelist.model.Schedule;
-import stoneframe.chorelist.model.TaskSelector;
+import stoneframe.chorelist.model.ChoreSelector;
 
 public class ScheduleToJsonConverter
 {
@@ -19,11 +19,11 @@ public class ScheduleToJsonConverter
 
     public static Schedule convertFromJson(
         String json,
-        EffortTrackerConverter effortTrackerConverter, TaskSelectorConverter taskSelectorConverter)
+        EffortTrackerConverter effortTrackerConverter, ChoreSelectorConverter choreSelectorConverter)
     {
         GsonBuilder gsonBuilder = Converters.registerDateTime(new GsonBuilder());
 
-        gsonBuilder.registerTypeAdapter(TaskSelector.class, taskSelectorConverter);
+        gsonBuilder.registerTypeAdapter(ChoreSelector.class, choreSelectorConverter);
         gsonBuilder.registerTypeAdapter(EffortTracker.class, effortTrackerConverter);
 
         Gson gson = gsonBuilder.create();

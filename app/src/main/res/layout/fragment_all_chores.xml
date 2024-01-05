@@ -2,14 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="stoneframe.chorelist.gui.AllTasks">
+    tools:context="stoneframe.chorelist.gui.AllChores">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ListView
-            android:id="@+id/all_tasks"
+            android:id="@+id/all_chores"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

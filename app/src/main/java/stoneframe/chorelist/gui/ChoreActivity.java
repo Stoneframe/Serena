@@ -16,7 +16,7 @@ import org.joda.time.DateTime;
 
 import stoneframe.chorelist.R;
 
-public class TaskActivity extends AppCompatActivity
+public class ChoreActivity extends AppCompatActivity
 {
     private DateTime next;
     private String description;
@@ -38,7 +38,7 @@ public class TaskActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_task);
+        setContentView(R.layout.activity_chore);
 
         Intent intent = getIntent();
 

@@ -10,14 +10,14 @@ import java.util.List;
 public class Schedule
 {
     private final EffortTracker effortTracker;
-    private final TaskSelector taskSelector;
+    private final ChoreSelector choreSelector;
 
-    private final List<Task> tasks = new LinkedList<>();
+    private final List<Chore> chores = new LinkedList<>();
 
-    public Schedule(EffortTracker effortTracker, TaskSelector taskSelector)
+    public Schedule(EffortTracker effortTracker, ChoreSelector choreSelector)
     {
         this.effortTracker = effortTracker;
-        this.taskSelector = taskSelector;
+        this.choreSelector = choreSelector;
     }
 
     public EffortTracker getEffortTracker()
@@ -25,71 +25,71 @@ public class Schedule
         return effortTracker;
     }
 
-    public void addTask(Task task)
+    public void addChore(Chore chore)
     {
-        tasks.add(task);
+        chores.add(chore);
     }
 
-    public void removeTask(Task task)
+    public void removeChore(Chore chore)
     {
-        tasks.remove(task);
+        chores.remove(chore);
     }
 
-    public List<Task> getAllTasks()
+    public List<Chore> getAllChores()
     {
-        tasks.sort(Comparator.comparing(Task::getDescription));
-        return Collections.unmodifiableList(tasks);
+        chores.sort(Comparator.comparing(Chore::getDescription));
+        return Collections.unmodifiableList(chores);
     }
 
-    public List<Task> getTasks()
+    public List<Chore> getChores()
     {
-        return getTasks(DateTime.now());
+        return getChores(DateTime.now());
     }
 
-    public List<Task> getTasks(DateTime now)
+    public List<Chore> getChores(DateTime now)
     {
-        tasks.sort(new Task.DutyComparator(now));
+        chores.sort(new Chore.DutyComparator(now));
 
         int effort = effortTracker.getTodaysEffort(now);
 
-        List<Task> list = new LinkedList<>();
+        List<Chore> list = new LinkedList<>();
 
-        for (Task task : tasks)
+        for (Chore chore : chores)
         {
-            if (task.getNext().isAfter(now))
+            if (chore.getNext().isAfter(now))
             {
                 break;
             }
             else
             {
-                list.add(task);
+                list.add(chore);
             }
         }
 
-        list = taskSelector.selectTasks(list, effort);
+        list = choreSelector.selectChores(list, effort);
 
         return Collections.unmodifiableList(list);
     }
 
-    public void complete(Task task)
+    public void complete(Chore chore)
     {
-        complete(task, DateTime.now());
+        complete(chore, DateTime.now());
     }
 
-    public void complete(Task task, DateTime now)
+    public void complete(Chore chore, DateTime now)
     {
-        task.reschedule(now);
-        effortTracker.spend(task.getEffort());
+        chore.reschedule(now);
+        effortTracker.spend(chore.getEffort());
     }
 
-    public void skip(Task task)
+    public void skip(Chore chore)
     {
-        skip(task, DateTime.now());
+        skip(chore, DateTime.now());
     }
 
-    public void skip(Task task, DateTime now)
+    public void skip(Chore chore, DateTime now)
     {
-        task.reschedule(now);
+        chore.reschedule(now);
     }
 
     @Override
@@ -102,6 +102,6 @@ public class Schedule
 
         Schedule other = (Schedule)obj;
 
-        return this.tasks.equals(other.tasks);
+        return this.chores.equals(other.chores);
     }
 }

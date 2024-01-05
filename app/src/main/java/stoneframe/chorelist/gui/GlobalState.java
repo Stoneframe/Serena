@@ -6,7 +6,6 @@ import stoneframe.chorelist.model.Schedule;
 
 public class GlobalState extends Application
 {
-
     private Schedule schedule;
 
     public Schedule getSchedule()
@@ -18,5 +17,4 @@ public class GlobalState extends Application
     {
         this.schedule = schedule;
     }
-
 }

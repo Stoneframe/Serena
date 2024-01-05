@@ -1,5 +1,7 @@
 package stoneframe.chorelist.gui;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,8 +19,6 @@ import org.joda.time.DateTime;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.Schedule;
 import stoneframe.chorelist.model.Task;
-
-import static android.app.Activity.RESULT_OK;
 
 public class AllTasks extends Fragment
 {

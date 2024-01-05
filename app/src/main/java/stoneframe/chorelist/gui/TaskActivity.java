@@ -2,9 +2,6 @@ package stoneframe.chorelist.gui;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -13,13 +10,14 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import org.joda.time.DateTime;
 
 import stoneframe.chorelist.R;
 
 public class TaskActivity extends AppCompatActivity
 {
-
     private DateTime next;
     private String description;
     private int priority;
@@ -118,5 +116,4 @@ public class TaskActivity extends AppCompatActivity
         setResult(RESULT_CANCELED);
         finish();
     }
-
 }

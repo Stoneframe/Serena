@@ -1,9 +1,6 @@
 package stoneframe.chorelist.gui;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +8,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.fragment.app.Fragment;
+
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.Schedule;
 import stoneframe.chorelist.model.Task;
 
 public class TodaysTasks extends Fragment
 {
-
     private Schedule schedule;
 
     private ArrayAdapter<Task> taskAdapter;
@@ -79,5 +77,4 @@ public class TodaysTasks extends Fragment
 
         taskAdapter.clear();
     }
-
 }

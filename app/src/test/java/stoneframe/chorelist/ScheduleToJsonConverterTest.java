@@ -19,25 +19,12 @@ public class ScheduleToJsonConverterTest
     {
         Schedule schedule1 = new Schedule(new SimpleEffortTracker(20), new SimpleTaskSelector());
 
-        schedule1.addTask(new Task(
-            "Test1",
-            1,
-            10,
-            TestUtils.createDateTime(2017, 2, 9),
-            Task.DAILY,
-            3));
-        schedule1.addTask(new Task(
-            "Test2",
-            3,
-            2,
-            TestUtils.createDateTime(2017, 2, 9),
-            Task.DAILY,
-            1));
+        schedule1.addTask(new Task("Test1", 1, 10, TestUtils.createDateTime(2017, 2, 9), Task.DAILY, 3));
+        schedule1.addTask(new Task("Test2", 3, 2, TestUtils.createDateTime(2017, 2, 9), Task.DAILY, 1));
 
         String json = ScheduleToJsonConverter.convertToJson(schedule1);
 
-        Schedule schedule2 = ScheduleToJsonConverter.convertFromJson(json,
-            new SimpleEffortTrackerConverter(), new SimpleTaskSelectorConverter());
+        Schedule schedule2 = ScheduleToJsonConverter.convertFromJson(json, new SimpleEffortTrackerConverter(), new SimpleTaskSelectorConverter());
 
         assertEquals(schedule1, schedule2);
     }

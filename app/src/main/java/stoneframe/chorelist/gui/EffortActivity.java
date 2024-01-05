@@ -1,18 +1,16 @@
 package stoneframe.chorelist.gui;
 
 import android.content.Intent;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import stoneframe.chorelist.R;
 
 public class EffortActivity extends AppCompatActivity
 {
-
     private EditText mondayEditText;
     private EditText tuesdayEditText;
     private EditText wednesdayEditText;
@@ -74,5 +72,4 @@ public class EffortActivity extends AppCompatActivity
         setResult(RESULT_CANCELED);
         finish();
     }
-
 }

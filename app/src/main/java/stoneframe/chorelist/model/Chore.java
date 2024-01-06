@@ -107,7 +107,7 @@ public class Chore
             switch (periodicity)
             {
                 case DAILY:
-                    next = now.plusDays(frequency);
+                    next = now.plusDays(frequency).withTimeAtStartOfDay();
                     break;
                 case WEEKLY:
                     next = next.plusWeeks(frequency);

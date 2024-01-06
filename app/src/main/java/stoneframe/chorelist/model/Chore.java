@@ -111,7 +111,7 @@ public class Chore
             switch (intervalUnit)
             {
                 case DAILY:
-                    next = now.plusDays(intervalLength);
+                    next = now.plusDays(intervalLength).withTimeAtStartOfDay();
                     break;
                 case WEEKLY:
                     next = next.plusWeeks(intervalLength);

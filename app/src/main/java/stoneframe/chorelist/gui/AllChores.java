@@ -115,8 +115,8 @@ public class AllChores extends Fragment
         intent.putExtra("Description", chore.getDescription());
         intent.putExtra("Priority", chore.getPriority());
         intent.putExtra("Effort", chore.getEffort());
-        intent.putExtra("Periodicity", chore.getPeriodicity());
-        intent.putExtra("Frequency", chore.getFrequency());
+        intent.putExtra("IntervalUnit", chore.getIntervalUnit());
+        intent.putExtra("IntervalLength", chore.getIntervalLength());
 
         startActivityForResult(intent, mode);
     }
@@ -134,8 +134,8 @@ public class AllChores extends Fragment
             duty.setDescription(data.getStringExtra("Description"));
             duty.setPriority(data.getIntExtra("Priority", 1));
             duty.setEffort(data.getIntExtra("Effort", 1));
-            duty.setPeriodicity(data.getIntExtra("Periodicity", 1));
-            duty.setFrequency(data.getIntExtra("Frequency", 1));
+            duty.setIntervalUnit(data.getIntExtra("IntervalUnit", 1));
+            duty.setIntervalLength(data.getIntExtra("IntervalLength", 1));
 
             if (requestCode == ACTIVITY_ADD_CHORE)
             {

@@ -19,20 +19,24 @@ public class Chore
     private int priority;
     private int effort;
 
-    private int periodicity;
-    private int frequency;
+    private int intervalUnit;
+    private int intervalLength;
 
     public Chore(
-        String description, int priority, int effort,
-        DateTime next, int periodicity, int frequency)
+        String description,
+        int priority,
+        int effort,
+        DateTime next,
+        int intervalUnit,
+        int intervalLength)
     {
         this.description = description;
         this.priority = priority;
         this.effort = effort;
 
         this.next = next;
-        this.periodicity = periodicity;
-        this.frequency = frequency;
+        this.intervalUnit = intervalUnit;
+        this.intervalLength = intervalLength;
     }
 
     public DateTime getNext()
@@ -75,24 +79,24 @@ public class Chore
         this.effort = effort;
     }
 
-    public int getPeriodicity()
+    public int getIntervalUnit()
     {
-        return periodicity;
+        return intervalUnit;
     }
 
-    public void setPeriodicity(int periodicity)
+    public void setIntervalUnit(int intervalUnit)
     {
-        this.periodicity = periodicity;
+        this.intervalUnit = intervalUnit;
     }
 
-    public int getFrequency()
+    public int getIntervalLength()
     {
-        return frequency;
+        return intervalLength;
     }
 
-    public void setFrequency(int frequency)
+    public void setIntervalLength(int intervalLength)
     {
-        this.frequency = frequency;
+        this.intervalLength = intervalLength;
     }
 
     public void reschedule(DateTime now)
@@ -104,19 +108,19 @@ public class Chore
 
         while (!next.isAfter(now))
         {
-            switch (periodicity)
+            switch (intervalUnit)
             {
                 case DAILY:
-                    next = now.plusDays(frequency);
+                    next = now.plusDays(intervalLength);
                     break;
                 case WEEKLY:
-                    next = next.plusWeeks(frequency);
+                    next = next.plusWeeks(intervalLength);
                     break;
                 case MONTHLY:
-                    next = next.plusMonths(frequency);
+                    next = next.plusMonths(intervalLength);
                     break;
                 case YEARLY:
-                    next = next.plusYears(frequency);
+                    next = next.plusYears(intervalLength);
                     break;
                 default:
                     return;

@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 import stoneframe.chorelist.model.Chore;
 import stoneframe.chorelist.model.SimpleChoreSelector;
 import stoneframe.chorelist.model.SimpleEffortTracker;
+import stoneframe.chorelist.model.TimeService;
 
 public class ChoreListTest
 {
@@ -32,7 +33,12 @@ public class ChoreListTest
     @Before
     public void before()
     {
-        choreList = new ChoreList(new SimpleEffortTracker(MAX_EFFORT), new SimpleChoreSelector());
+        MockTimeService timeService = new MockTimeService(TODAY);
+
+        choreList = new ChoreList(
+            timeService,
+            new SimpleEffortTracker(MAX_EFFORT),
+            new SimpleChoreSelector());
     }
 
     @Test
@@ -60,42 +66,42 @@ public class ChoreListTest
     @Test
     public void GetTodaysChores_NoChoresAdded_ReturnEmptyList()
     {
-        assertTodaysChoresIsEmpty(TODAY);
+        assertTodaysChoresIsEmpty();
     }
 
     @Test
     public void GetTodaysChores_ChoreAddedWithTodaysDate_TodaysChoresContainsAddedChore()
     {
         addChore("ChoreForToday", TODAY);
-        assertTodaysChoresContains(TODAY, "ChoreForToday");
+        assertTodaysChoresContains("ChoreForToday");
     }
 
     @Test
     public void GetTodaysChores_ChoreAddedWithYesterdaysDate_TodaysChoresContainsAddedChore()
     {
         addChore("choreForYesterday", YESTERDAY);
-        assertTodaysChoresContains(TODAY, "choreForYesterday");
+        assertTodaysChoresContains("choreForYesterday");
     }
 
     @Test
     public void GetTodaysChores_ChoreAddedWithTomorrowsDate_TodaysChoresContainsAddedChore()
     {
         addChore("choreForTomorrow", TOMORROW);
-        assertTodaysChoresIsEmpty(TODAY);
+        assertTodaysChoresIsEmpty();
     }
 
     @Test
     public void ChoreDone_ChoreForEveryDay_RescheduleChoreForTomorrow()
     {
         addChore("everydayChore", TODAY, 1, Chore.DAYS);
-        completeChore("everydayChore", TODAY);
+        completeChore("everydayChore");
         assertChore("everydayChore", c -> c.getNext().equals(TOMORROW));
     }
 
     @Test
     public void GetRemainingEffort_NoChoreDone_ReturnMaxEffort()
     {
-        assertRemainingEffortIs(MAX_EFFORT, TODAY);
+        assertRemainingEffortIs(MAX_EFFORT);
     }
 
     @Test
@@ -104,8 +110,8 @@ public class ChoreListTest
         final int choreEffort = 5;
 
         addChore("Chore", TODAY, choreEffort);
-        completeChore("Chore", TODAY);
-        assertRemainingEffortIs(MAX_EFFORT - choreEffort, TODAY);
+        completeChore("Chore");
+        assertRemainingEffortIs(MAX_EFFORT - choreEffort);
     }
 
     private void addChore(String description, DateTime next)
@@ -155,11 +161,11 @@ public class ChoreListTest
         return choreOptional.get();
     }
 
-    private void completeChore(String description, DateTime now)
+    private void completeChore(String description)
     {
         Chore chore = getChore(description);
 
-        choreList.choreDone(chore, now);
+        choreList.choreDone(chore);
     }
 
     private void assertAllChoresIsEmpty()
@@ -180,16 +186,16 @@ public class ChoreListTest
         assertTrue(expectedDescriptions.containsAll(actualDescriptions));
     }
 
-    private void assertTodaysChoresIsEmpty(DateTime now)
+    private void assertTodaysChoresIsEmpty()
     {
-        assertTodaysChoresContains(now);
+        assertTodaysChoresContains();
     }
 
-    private void assertTodaysChoresContains(DateTime now, String... descriptions)
+    private void assertTodaysChoresContains(String... descriptions)
     {
         List<String> expectedDescriptions = Arrays.asList(descriptions);
 
-        List<String> actualDescriptions = choreList.getTodaysChores(now)
+        List<String> actualDescriptions = choreList.getTodaysChores()
             .stream()
             .map(Chore::getDescription)
             .collect(Collectors.toList());
@@ -198,9 +204,9 @@ public class ChoreListTest
         assertTrue(expectedDescriptions.containsAll(actualDescriptions));
     }
 
-    private void assertRemainingEffortIs(int expectedRemainingEffort, DateTime now)
+    private void assertRemainingEffortIs(int expectedRemainingEffort)
     {
-        assertEquals(expectedRemainingEffort, choreList.getRemainingEffort(now));
+        assertEquals(expectedRemainingEffort, choreList.getRemainingEffort());
     }
 
     private void assertChore(String description, Predicate<Chore> predicate)
@@ -208,5 +214,28 @@ public class ChoreListTest
         Chore chore = getChore(description);
 
         assertTrue(predicate.test(chore));
+    }
+
+    private static class MockTimeService implements TimeService
+    {
+        @NonNull
+        private DateTime now;
+
+        public MockTimeService(@NonNull DateTime now)
+        {
+            this.now = now;
+        }
+
+        @NonNull
+        @Override
+        public DateTime getNow()
+        {
+            return now;
+        }
+
+        public void setNow(@NonNull DateTime now)
+        {
+            this.now = now;
+        }
     }
 }

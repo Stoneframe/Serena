@@ -8,14 +8,20 @@ import stoneframe.chorelist.model.Chore;
 import stoneframe.chorelist.model.ChoreSelector;
 import stoneframe.chorelist.model.EffortTracker;
 import stoneframe.chorelist.model.Schedule;
-import stoneframe.chorelist.model.SimpleChoreSelector;
+import stoneframe.chorelist.model.TimeService;
 
 public class ChoreList
 {
+    private final TimeService timeService;
     private final Schedule schedule;
 
-    public ChoreList(EffortTracker effortTracker, ChoreSelector choreSelector)
+    public ChoreList(
+        TimeService timeService,
+        EffortTracker effortTracker,
+        ChoreSelector choreSelector)
     {
+        this.timeService = timeService;
+
         schedule = new Schedule(effortTracker, choreSelector);
     }
 
@@ -34,18 +40,18 @@ public class ChoreList
         schedule.removeChore(chore);
     }
 
-    public List<Chore> getTodaysChores(DateTime now)
+    public List<Chore> getTodaysChores()
     {
-        return schedule.getChores(now);
+        return schedule.getChores(timeService.getNow());
     }
 
-    public void choreDone(Chore chore, DateTime now)
+    public void choreDone(Chore chore)
     {
-        schedule.complete(chore, now);
+        schedule.complete(chore, timeService.getNow());
     }
 
-    public int getRemainingEffort(DateTime now)
+    public int getRemainingEffort()
     {
-        return schedule.getEffortTracker().getTodaysEffort(now);
+        return schedule.getEffortTracker().getTodaysEffort(timeService.getNow());
     }
 }

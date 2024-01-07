@@ -51,8 +51,29 @@ public class ChoreListTest
     @Test
     public void AddChore_AddSingleChore_GetAllChoresContainsChore()
     {
-        addChore("Chore1", TODAY);
-        assertAllChoresContains("Chore1");
+        addChore("Chore", TODAY);
+        assertAllChoresContains("Chore");
+    }
+
+    @Test
+    public void AddChore_ChoreAddedWithTodaysDate_TodaysChoresContainsAddedChore()
+    {
+        addChore("ChoreForToday", TODAY);
+        assertTodaysChoresContains("ChoreForToday");
+    }
+
+    @Test
+    public void AddChore_ChoreAddedWithYesterdaysDate_TodaysChoresContainsAddedChore()
+    {
+        addChore("ChoreForYesterday", YESTERDAY);
+        assertTodaysChoresContains("ChoreForYesterday");
+    }
+
+    @Test
+    public void AddChore_ChoreAddedWithTomorrowsDate_TodaysChoresContainsAddedChore()
+    {
+        addChore("ChoreForTomorrow", TOMORROW);
+        assertTodaysChoresIsEmpty();
     }
 
     @Test
@@ -67,27 +88,6 @@ public class ChoreListTest
     @Test
     public void GetTodaysChores_NoChoresAdded_ReturnEmptyList()
     {
-        assertTodaysChoresIsEmpty();
-    }
-
-    @Test
-    public void GetTodaysChores_ChoreAddedWithTodaysDate_TodaysChoresContainsAddedChore()
-    {
-        addChore("ChoreForToday", TODAY);
-        assertTodaysChoresContains("ChoreForToday");
-    }
-
-    @Test
-    public void GetTodaysChores_ChoreAddedWithYesterdaysDate_TodaysChoresContainsAddedChore()
-    {
-        addChore("choreForYesterday", YESTERDAY);
-        assertTodaysChoresContains("choreForYesterday");
-    }
-
-    @Test
-    public void GetTodaysChores_ChoreAddedWithTomorrowsDate_TodaysChoresContainsAddedChore()
-    {
-        addChore("choreForTomorrow", TOMORROW);
         assertTodaysChoresIsEmpty();
     }
 
@@ -151,11 +151,20 @@ public class ChoreListTest
     }
 
     @Test
-    public void ChoreDone_ChoreForEveryWeek_RescheduleChoreNextWeek()
+    public void ChoreDone_ChoreForEveryWeek_RescheduleChoreForNextWeek()
     {
         addChore("everyWeekChore", TODAY, 1, Chore.WEEKS);
         completeChore("everyWeekChore");
         assertChore("everyWeekChore", c -> c.getNext().equals(TODAY.plusWeeks(1)));
+    }
+
+    @Test
+    public void ChoreDone_OneChoreDone_ReturnLessRemainingEffort()
+    {
+        setRemainingEffort(10);
+        addChore("Chore", TODAY, 5);
+        completeChore("Chore");
+        assertRemainingEffortIs(5);
     }
 
     @Test
@@ -194,22 +203,13 @@ public class ChoreListTest
     }
 
     @Test
-    public void GetRemainingEffort_OneChoreDone_ReturnLessRemainingEffort()
-    {
-        setRemainingEffort(10);
-        addChore("Chore", TODAY, 5);
-        completeChore("Chore");
-        assertRemainingEffortIs(5);
-    }
-
-    @Test
     public void GetAllTasks_NoTasksAdded_ReturnEmptyList()
     {
         assertAllTasksIsEmpty();
     }
 
     @Test
-    public void GetAllTasks_AddSingleChore_GetAllTasksContainsTask()
+    public void AddTask_AddSingleChore_GetAllTasksContainsTask()
     {
         addTask("Task");
         assertAllTasksContains("Task");

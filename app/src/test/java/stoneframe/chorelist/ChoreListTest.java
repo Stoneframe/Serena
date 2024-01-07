@@ -29,8 +29,10 @@ public class ChoreListTest
     @Test
     public void GetAllChores_NoChoresAdded_ReturnEmptyList()
     {
+        // ACT
         List<Chore> allChores = choreList.getAllChores();
 
+        // ASSERT
         assertTrue(allChores.isEmpty());
     }
 
@@ -150,5 +152,23 @@ public class ChoreListTest
 
         // ASSERT
         assertEquals(MAX_EFFORT, remainingEffort);
+    }
+
+    @Test
+    public void GetRemainingEffort_OneChoreDone_ReturnLessRemainingEffort()
+    {
+        final int choreEffort = 5;
+
+        // ARRANGE
+        Chore chore = new Chore("", 1, choreEffort, TestUtils.MOCK_NOW, Chore.DAILY, 1);
+
+        choreList.addChore(chore);
+        choreList.choreDone(chore, TestUtils.MOCK_NOW);
+
+        // ACT
+        int remainingEffort = choreList.getRemainingEffort(TestUtils.MOCK_NOW);
+
+        // ASSERT
+        assertEquals(MAX_EFFORT - choreEffort, remainingEffort);
     }
 }

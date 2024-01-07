@@ -19,6 +19,8 @@ public class SimpleEffortTracker implements EffortTracker
     @Override
     public int getTodaysEffort(DateTime now)
     {
+        if (previous == null) previous = now;
+
         if (!isSameDay(previous, now))
         {
             previous = now;

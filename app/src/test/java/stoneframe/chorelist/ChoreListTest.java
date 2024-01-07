@@ -158,6 +158,35 @@ public class ChoreListTest
     }
 
     @Test
+    public void ChoreSkip_SkipChore_TodaysChoreDoesNotContainSkippedChore()
+    {
+        addChore("Chore1", TODAY);
+        addChore("Chore2", TODAY);
+        skipChore("Chore1");
+        assertTodaysChoresContains("Chore2");
+    }
+
+    @Test
+    public void ChoreSkip_SkipChore_RemainingEffortIsUnchanged()
+    {
+        setRemainingEffort(10);
+        addChore("Chore1", TODAY, 5);
+        addChore("Chore2", TODAY, 5);
+        skipChore("Chore2");
+        assertRemainingEffortIs(10);
+    }
+
+    @Test
+    public void ChoreSkip_SkipChore_ChoreRescheduled()
+    {
+        setRemainingEffort(10);
+        addChore("Chore1", TODAY, 3, Chore.DAYS);
+        addChore("Chore2", TODAY);
+        skipChore("Chore1");
+        assertChore("Chore1", c -> c.getNext().equals(TODAY.plusDays(3)));
+    }
+
+    @Test
     public void GetRemainingEffort_NoChoreDone_ReturnMaxEffort()
     {
         assertRemainingEffortIs(MAX_EFFORT);
@@ -166,11 +195,10 @@ public class ChoreListTest
     @Test
     public void GetRemainingEffort_OneChoreDone_ReturnLessRemainingEffort()
     {
-        final int choreEffort = 5;
-
-        addChore("Chore", TODAY, choreEffort);
+        setRemainingEffort(10);
+        addChore("Chore", TODAY, 5);
         completeChore("Chore");
-        assertRemainingEffortIs(MAX_EFFORT - choreEffort);
+        assertRemainingEffortIs(5);
     }
 
     private void setRemainingEffort(int remainingEffort)
@@ -234,6 +262,13 @@ public class ChoreListTest
         choreList.choreDone(chore);
     }
 
+    private void skipChore(String description)
+    {
+        Chore chore = getChore(description);
+
+        choreList.choreSkip(chore);
+    }
+
     private void assertAllChoresIsEmpty()
     {
         assertAllChoresContains();
@@ -279,7 +314,7 @@ public class ChoreListTest
     {
         Chore chore = getChore(description);
 
-        assertTrue(predicate.test(chore));
+        assertTrue(chore.toString(), predicate.test(chore));
     }
 
     private static class MockTimeService implements TimeService

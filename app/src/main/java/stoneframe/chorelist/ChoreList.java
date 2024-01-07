@@ -48,6 +48,11 @@ public class ChoreList
         schedule.complete(chore, timeService.getNow());
     }
 
+    public void choreSkip(Chore chore)
+    {
+        schedule.skip(chore, timeService.getNow());
+    }
+
     public int getRemainingEffort()
     {
         return schedule.getEffortTracker().getTodaysEffort(timeService.getNow());

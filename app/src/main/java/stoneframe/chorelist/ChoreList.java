@@ -1,7 +1,5 @@
 package stoneframe.chorelist;
 
-import org.joda.time.DateTime;
-
 import java.util.List;
 
 import stoneframe.chorelist.model.Chore;
@@ -53,5 +51,10 @@ public class ChoreList
     public int getRemainingEffort()
     {
         return schedule.getEffortTracker().getTodaysEffort(timeService.getNow());
+    }
+
+    public EffortTracker getEffortTracker()
+    {
+        return schedule.getEffortTracker();
     }
 }

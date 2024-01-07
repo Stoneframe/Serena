@@ -30,6 +30,11 @@ public class SimpleEffortTracker implements EffortTracker
         return remainingEffort;
     }
 
+    public void setTodaysEffort(int effort)
+    {
+        remainingEffort = effort;
+    }
+
     @Override
     public void spend(int effort)
     {

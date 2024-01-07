@@ -91,11 +91,70 @@ public class ChoreListTest
     }
 
     @Test
+    public void GetTodaysChore_MoreChoresThanEffort_ReturnChoresThatMatchEffort1()
+    {
+        setRemainingEffort(7);
+        addChore("Chore1", TODAY, 5);
+        addChore("Chore2", TODAY, 5);
+        addChore("Chore3", TODAY, 5);
+        assertTodaysChoresContains("Chore1", "Chore2");
+    }
+
+    @Test
+    public void GetTodaysChore_MoreChoresThanEffort_ReturnChoresThatMatchEffort2()
+    {
+        setRemainingEffort(10);
+        addChore("Chore1", TODAY, 5);
+        addChore("Chore2", TODAY, 5);
+        addChore("Chore3", TODAY, 5);
+        assertTodaysChoresContains("Chore1", "Chore2");
+    }
+
+    @Test
+    public void GetTodaysChore_MoreChoresThanEffort_ReturnChoresThatMatchEffort3()
+    {
+        setRemainingEffort(13);
+        addChore("Chore1", TODAY, 5);
+        addChore("Chore2", TODAY, 5);
+        addChore("Chore3", TODAY, 5);
+        assertTodaysChoresContains("Chore1", "Chore2", "Chore3");
+    }
+
+    @Test
+    public void GetTodaysChores_OneChoreTomorrowAndOneChoreCompletedAndOneChoreRemoved_ReturnSingleRemainingChore()
+    {
+        setRemainingEffort(10);
+        addChore("Chore1", YESTERDAY, 3);
+        addChore("Chore2", TODAY, 3);
+        addChore("Chore3", TODAY, 3);
+        addChore("Chore4", TOMORROW, 3);
+        completeChore("Chore1");
+        removeChore("Chore3");
+        assertTodaysChoresContains("Chore2");
+    }
+
+    @Test
     public void ChoreDone_ChoreForEveryDay_RescheduleChoreForTomorrow()
     {
-        addChore("everydayChore", TODAY, 1, Chore.DAYS);
-        completeChore("everydayChore");
-        assertChore("everydayChore", c -> c.getNext().equals(TOMORROW));
+        addChore("everyDayChore", TODAY, 1, Chore.DAYS);
+        completeChore("everyDayChore");
+        assertChore("everyDayChore", c -> c.getNext().equals(TOMORROW));
+    }
+
+    @Test
+    public void ChoreDone_ChoreForEveryOtherDay_RescheduleChoreForTheDayAfterTomorrow()
+    {
+        addChore("everyOtherDayChore", TODAY, 2, Chore.DAYS);
+        completeChore("everyOtherDayChore");
+        assertChore("everyOtherDayChore", c -> c.getNext().equals(TOMORROW.plusDays(1)));
+    }
+
+    @Test
+    public void ChoreDone_ChoreForEveryWeek_RescheduleChoreNextWeek()
+    {
+        addChore("everyWeekChore", TODAY, 1, Chore.WEEKS);
+        completeChore("everyWeekChore");
+        assertChore("everyWeekChore", c -> c.getNext().equals(TODAY.plusWeeks(1)));
     }
 
     @Test
@@ -112,6 +171,13 @@ public class ChoreListTest
         addChore("Chore", TODAY, choreEffort);
         completeChore("Chore");
         assertRemainingEffortIs(MAX_EFFORT - choreEffort);
+    }
+
+    private void setRemainingEffort(int remainingEffort)
+    {
+        SimpleEffortTracker effortTracker = (SimpleEffortTracker)choreList.getEffortTracker();
+
+        effortTracker.setTodaysEffort(remainingEffort);
     }
 
     private void addChore(String description, DateTime next)
@@ -219,7 +285,7 @@ public class ChoreListTest
     private static class MockTimeService implements TimeService
     {
         @NonNull
-        private DateTime now;
+        private final DateTime now;
 
         public MockTimeService(@NonNull DateTime now)
         {
@@ -231,11 +297,6 @@ public class ChoreListTest
         public DateTime getNow()
         {
             return now;
-        }
-
-        public void setNow(@NonNull DateTime now)
-        {
-            this.now = now;
         }
     }
 }

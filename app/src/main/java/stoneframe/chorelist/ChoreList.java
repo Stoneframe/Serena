@@ -1,17 +1,22 @@
 package stoneframe.chorelist;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import stoneframe.chorelist.model.Chore;
 import stoneframe.chorelist.model.ChoreSelector;
 import stoneframe.chorelist.model.EffortTracker;
 import stoneframe.chorelist.model.Schedule;
+import stoneframe.chorelist.model.Task;
 import stoneframe.chorelist.model.TimeService;
+import stoneframe.chorelist.model.TodoList;
 
 public class ChoreList
 {
     private final TimeService timeService;
     private final Schedule schedule;
+    private final TodoList todoList;
 
     public ChoreList(
         TimeService timeService,
@@ -21,6 +26,7 @@ public class ChoreList
         this.timeService = timeService;
 
         schedule = new Schedule(effortTracker, choreSelector);
+        todoList = new TodoList();
     }
 
     public List<Chore> getAllChores()
@@ -61,5 +67,15 @@ public class ChoreList
     public EffortTracker getEffortTracker()
     {
         return schedule.getEffortTracker();
+    }
+
+    public List<Task> getAllTasks()
+    {
+        return todoList.getAllTasks();
+    }
+
+    public void addTask(Task task)
+    {
+        todoList.addTask(task);
     }
 }

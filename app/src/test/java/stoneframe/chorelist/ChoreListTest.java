@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 import stoneframe.chorelist.model.Chore;
 import stoneframe.chorelist.model.SimpleChoreSelector;
 import stoneframe.chorelist.model.SimpleEffortTracker;
+import stoneframe.chorelist.model.Task;
 import stoneframe.chorelist.model.TimeService;
 
 public class ChoreListTest
@@ -201,6 +202,19 @@ public class ChoreListTest
         assertRemainingEffortIs(5);
     }
 
+    @Test
+    public void GetAllTasks_NoTasksAdded_ReturnEmptyList()
+    {
+        assertAllTasksIsEmpty();
+    }
+
+    @Test
+    public void GetAllTasks_AddSingleChore_GetAllTasksContainsTask()
+    {
+        addTask("Task");
+        assertAllTasksContains("Task");
+    }
+
     private void setRemainingEffort(int remainingEffort)
     {
         SimpleEffortTracker effortTracker = (SimpleEffortTracker)choreList.getEffortTracker();
@@ -269,6 +283,13 @@ public class ChoreListTest
         choreList.choreSkip(chore);
     }
 
+    private void addTask(String description)
+    {
+        Task task = new Task(description);
+
+        choreList.addTask(task);
+    }
+
     private void assertAllChoresIsEmpty()
     {
         assertAllChoresContains();
@@ -283,8 +304,7 @@ public class ChoreListTest
             .map(Chore::getDescription)
             .collect(Collectors.toList());
 
-        assertEquals(expectedDescriptions.size(), actualDescriptions.size());
-        assertTrue(expectedDescriptions.containsAll(actualDescriptions));
+        assertEquals(expectedDescriptions, actualDescriptions);
     }
 
     private void assertTodaysChoresIsEmpty()
@@ -301,8 +321,7 @@ public class ChoreListTest
             .map(Chore::getDescription)
             .collect(Collectors.toList());
 
-        assertEquals(expectedDescriptions.size(), actualDescriptions.size());
-        assertTrue(expectedDescriptions.containsAll(actualDescriptions));
+        assertEquals(expectedDescriptions, actualDescriptions);
     }
 
     private void assertRemainingEffortIs(int expectedRemainingEffort)
@@ -315,6 +334,23 @@ public class ChoreListTest
         Chore chore = getChore(description);
 
         assertTrue(chore.toString(), predicate.test(chore));
+    }
+
+    private void assertAllTasksIsEmpty()
+    {
+        assertAllTasksContains();
+    }
+
+    private void assertAllTasksContains(String... descriptions)
+    {
+        List<String> expectedDescriptions = Arrays.asList(descriptions);
+
+        List<String> actualDescriptions = choreList.getAllTasks()
+            .stream()
+            .map(Task::getDescription)
+            .collect(Collectors.toList());
+
+        assertEquals(expectedDescriptions, actualDescriptions);
     }
 
     private static class MockTimeService implements TimeService

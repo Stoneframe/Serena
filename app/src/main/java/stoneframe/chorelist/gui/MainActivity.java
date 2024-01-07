@@ -64,8 +64,8 @@ public class MainActivity extends AppCompatActivity
                 1,
                 30,
                 DateTime.now().withTimeAtStartOfDay(),
-                Chore.DAILY,
-                1));
+                1, Chore.DAYS
+            ));
         }
         else
         {
@@ -254,69 +254,69 @@ public class MainActivity extends AppCompatActivity
         DateTime now = DateTime.now().withTimeAtStartOfDay();
 
         // Badrum
-        schedule.addChore(new Chore("Badrum: Städa", 6, 10, now.withDayOfWeek(6), Chore.WEEKLY, 3));
+        schedule.addChore(new Chore("Badrum: Städa", 6, 10, now.withDayOfWeek(6), 3, Chore.WEEKS));
 
         // Boka
-        schedule.addChore(new Chore("Boka: Klipptid", 3, 1, now.withDayOfMonth(1), Chore.MONTHLY, 2));
+        schedule.addChore(new Chore("Boka: Klipptid", 3, 1, now.withDayOfMonth(1), 2, Chore.MONTHS));
         schedule.addChore(new Chore("Boka: Synundersökning", 3, 1, now.withMonthOfYear(3)
-            .withDayOfMonth(1), Chore.YEARLY, 1));
+            .withDayOfMonth(1), 1, Chore.YEARS));
 
         // Födelsedagar
         schedule.addChore(new Chore("Födelsedag: Jonathan Karlsson", 1, 0, now.withMonthOfYear(9)
-            .withDayOfMonth(2), Chore.YEARLY, 1));
+            .withDayOfMonth(2), 1, Chore.YEARS));
         schedule.addChore(new Chore("Födelsedag: Jonathan Lundholm", 1, 0, now.withMonthOfYear(11)
-            .withDayOfMonth(3), Chore.YEARLY, 1));
+            .withDayOfMonth(3), 1, Chore.YEARS));
         schedule.addChore(new Chore("Födelsedag: Kajsa Binder", 1, 0, now.withMonthOfYear(12)
-            .withDayOfMonth(23), Chore.YEARLY, 1));
+            .withDayOfMonth(23), 1, Chore.YEARS));
 
         // Fönsterkarm
-        schedule.addChore(new Chore("Fönsterkarm: Rensa", 8, 2, now, Chore.WEEKLY, 1));
-        schedule.addChore(new Chore("Fönsterkarm: Torka", 7, 3, now.plusDays(1), Chore.WEEKLY, 1));
+        schedule.addChore(new Chore("Fönsterkarm: Rensa", 8, 2, now, 1, Chore.WEEKS));
+        schedule.addChore(new Chore("Fönsterkarm: Torka", 7, 3, now.plusDays(1), 1, Chore.WEEKS));
 
         // Golv
-        schedule.addChore(new Chore("Golv: Rensa", 8, 4, now, Chore.DAILY, 2));
-        schedule.addChore(new Chore("Golv: Dammsuga", 6, 10, now.plusDays(2), Chore.DAILY, 9));
+        schedule.addChore(new Chore("Golv: Rensa", 8, 4, now, 2, Chore.DAYS));
+        schedule.addChore(new Chore("Golv: Dammsuga", 6, 10, now.plusDays(2), 9, Chore.DAYS));
         schedule.addChore(new Chore("Golv: Moppa", 5, 10, now.plusWeeks(2)
-            .withDayOfWeek(DateTimeConstants.SATURDAY), Chore.WEEKLY, 6));
+            .withDayOfWeek(DateTimeConstants.SATURDAY), 6, Chore.WEEKS));
 
         // Hall
-        schedule.addChore(new Chore("Hall: Rensa", 8, 4, now, Chore.DAILY, 2));
-        schedule.addChore(new Chore("Hall: Dammsuga", 6, 5, now.plusDays(2), Chore.DAILY, 5));
+        schedule.addChore(new Chore("Hall: Rensa", 8, 4, now, 2, Chore.DAYS));
+        schedule.addChore(new Chore("Hall: Dammsuga", 6, 5, now.plusDays(2), 5, Chore.DAYS));
         schedule.addChore(new Chore("Hall: Moppa", 5, 15, now.plusWeeks(4)
-            .withDayOfWeek(DateTimeConstants.SATURDAY), Chore.WEEKLY, 6));
+            .withDayOfWeek(DateTimeConstants.SATURDAY), 6, Chore.WEEKS));
 
         // Kök
-        schedule.addChore(new Chore("Kök: Diska", 6, 10, now, Chore.DAILY, 3));
-        schedule.addChore(new Chore("Kök: Rensa kylskåp", 4, 10, now.plusDays(3), Chore.MONTHLY, 1));
+        schedule.addChore(new Chore("Kök: Diska", 6, 10, now, 3, Chore.DAYS));
+        schedule.addChore(new Chore("Kök: Rensa kylskåp", 4, 10, now.plusDays(3), 1, Chore.MONTHS));
 
         // Lådor
-        schedule.addChore(new Chore("Lådor: Torka", 7, 5, now, Chore.WEEKLY, 2));
+        schedule.addChore(new Chore("Lådor: Torka", 7, 5, now, 2, Chore.WEEKS));
 
         // Skrivbord
-        schedule.addChore(new Chore("Skrivbord: Rensa", 7, 2, now, Chore.DAILY, 1));
-        schedule.addChore(new Chore("Skrivbord: Torka", 6, 3, now.plusDays(1), Chore.DAILY, 5));
-        schedule.addChore(new Chore("Skrivbord: Dammsuga", 5, 5, now.plusDays(1), Chore.WEEKLY, 1));
+        schedule.addChore(new Chore("Skrivbord: Rensa", 7, 2, now, 1, Chore.DAYS));
+        schedule.addChore(new Chore("Skrivbord: Torka", 6, 3, now.plusDays(1), 5, Chore.DAYS));
+        schedule.addChore(new Chore("Skrivbord: Dammsuga", 5, 5, now.plusDays(1), 1, Chore.WEEKS));
         schedule.addChore(new Chore(
             "Skrivbord: Moppa",
             4,
             15,
             now.withDayOfWeek(DateTimeConstants.SATURDAY),
-            Chore.WEEKLY,
-            6));
+            6, Chore.WEEKS
+        ));
 
         // Soffa och TV
-        schedule.addChore(new Chore("Soffa och TV: Rensa", 8, 2, now, Chore.DAILY, 4));
-        schedule.addChore(new Chore("Soffa och TV: Torka", 7, 4, now.plusDays(1), Chore.DAILY, 6));
-        schedule.addChore(new Chore("Soffa och TV: Dammsuga", 6, 4, now.plusDays(2), Chore.DAILY, 9));
+        schedule.addChore(new Chore("Soffa och TV: Rensa", 8, 2, now, 4, Chore.DAYS));
+        schedule.addChore(new Chore("Soffa och TV: Torka", 7, 4, now.plusDays(1), 6, Chore.DAYS));
+        schedule.addChore(new Chore("Soffa och TV: Dammsuga", 6, 4, now.plusDays(2), 9, Chore.DAYS));
         schedule.addChore(new Chore("Soffa och TV: Moppa", 5, 15, now.plusWeeks(1)
-            .withDayOfWeek(DateTimeConstants.SATURDAY), Chore.WEEKLY, 6));
+            .withDayOfWeek(DateTimeConstants.SATURDAY), 6, Chore.WEEKS));
 
         // Säng
-        schedule.addChore(new Chore("Säng: Rensa", 9, 2, now, Chore.WEEKLY, 2));
-        schedule.addChore(new Chore("Säng: Torka", 8, 1, now.plusDays(1), Chore.WEEKLY, 1));
-        schedule.addChore(new Chore("Säng: Dammsuga", 7, 5, now.plusDays(2), Chore.WEEKLY, 2));
+        schedule.addChore(new Chore("Säng: Rensa", 9, 2, now, 2, Chore.WEEKS));
+        schedule.addChore(new Chore("Säng: Torka", 8, 1, now.plusDays(1), 1, Chore.WEEKS));
+        schedule.addChore(new Chore("Säng: Dammsuga", 7, 5, now.plusDays(2), 2, Chore.WEEKS));
         schedule.addChore(new Chore("Säng: Moppa", 6, 15, now.plusWeeks(3)
-            .withDayOfWeek(DateTimeConstants.SATURDAY), Chore.WEEKLY, 6));
+            .withDayOfWeek(DateTimeConstants.SATURDAY), 6, Chore.WEEKS));
 
         return schedule;
     }

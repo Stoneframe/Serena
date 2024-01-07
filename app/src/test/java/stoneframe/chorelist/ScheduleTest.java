@@ -17,8 +17,8 @@ public class ScheduleTest
     @Test
     public void two_chores_scheduled_for_before_now()
     {
-        Chore t1 = new Chore("Chore1", 5, 5, TestUtils.MOCK_NOW.minusDays(2), Chore.DAILY, 1);
-        Chore t2 = new Chore("Chore2", 3, 8, TestUtils.MOCK_NOW.minusDays(1), Chore.DAILY, 1);
+        Chore t1 = new Chore("Chore1", 5, 5, TestUtils.MOCK_NOW.minusDays(2), 1, Chore.DAYS);
+        Chore t2 = new Chore("Chore2", 3, 8, TestUtils.MOCK_NOW.minusDays(1), 1, Chore.DAYS);
 
         Schedule schedule = new Schedule(new SimpleEffortTracker(15), new SimpleChoreSelector());
 

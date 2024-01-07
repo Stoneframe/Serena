@@ -8,10 +8,10 @@ import java.util.Comparator;
 
 public class Chore
 {
-    public static final int DAILY = 0;
-    public static final int WEEKLY = 1;
-    public static final int MONTHLY = 2;
-    public static final int YEARLY = 3;
+    public static final int DAYS = 0;
+    public static final int WEEKS = 1;
+    public static final int MONTHS = 2;
+    public static final int YEARS = 3;
 
     private DateTime next;
 
@@ -27,8 +27,7 @@ public class Chore
         int priority,
         int effort,
         DateTime next,
-        int intervalUnit,
-        int intervalLength)
+        int intervalLength, int intervalUnit)
     {
         this.description = description;
         this.priority = priority;
@@ -110,16 +109,16 @@ public class Chore
         {
             switch (intervalUnit)
             {
-                case DAILY:
+                case DAYS:
                     next = now.plusDays(intervalLength).withTimeAtStartOfDay();
                     break;
-                case WEEKLY:
+                case WEEKS:
                     next = next.plusWeeks(intervalLength);
                     break;
-                case MONTHLY:
+                case MONTHS:
                     next = next.plusMonths(intervalLength);
                     break;
-                case YEARLY:
+                case YEARS:
                     next = next.plusYears(intervalLength);
                     break;
                 default:

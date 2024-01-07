@@ -81,8 +81,8 @@ public class AllChores extends Fragment
                     1,
                     1,
                     DateTime.now().withTimeAtStartOfDay(),
-                    Chore.DAILY,
-                    1);
+                    1, Chore.DAYS
+                );
                 startChoreEditor(duty, ACTIVITY_ADD_CHORE);
             }
         });

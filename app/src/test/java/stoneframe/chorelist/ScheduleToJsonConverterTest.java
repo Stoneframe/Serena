@@ -19,8 +19,12 @@ public class ScheduleToJsonConverterTest
     {
         Schedule schedule1 = new Schedule(new SimpleEffortTracker(20), new SimpleChoreSelector());
 
-        schedule1.addChore(new Chore("Test1", 1, 10, TestUtils.createDateTime(2017, 2, 9), Chore.DAILY, 3));
-        schedule1.addChore(new Chore("Test2", 3, 2, TestUtils.createDateTime(2017, 2, 9), Chore.DAILY, 1));
+        schedule1.addChore(new Chore("Test1", 1, 10, TestUtils.createDateTime(2017, 2, 9),
+            3,
+            Chore.DAYS));
+        schedule1.addChore(new Chore("Test2", 3, 2, TestUtils.createDateTime(2017, 2, 9),
+            1,
+            Chore.DAYS));
 
         String json = ScheduleToJsonConverter.convertToJson(schedule1);
 

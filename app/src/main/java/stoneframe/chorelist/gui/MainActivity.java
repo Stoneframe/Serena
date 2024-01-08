@@ -202,11 +202,11 @@ public class MainActivity extends AppCompatActivity
         switch (item.getItemId())
         {
             case R.id.nav_all_chores:
-                fragmentClass = AllChores.class;
+                fragmentClass = AllChoresFragment.class;
                 break;
             case R.id.nav_todays_chores:
             default:
-                fragmentClass = TodaysChores.class;
+                fragmentClass = TodayFragment.class;
         }
 
         try

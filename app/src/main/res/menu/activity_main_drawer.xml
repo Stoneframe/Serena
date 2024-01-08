@@ -4,7 +4,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_todays_chores"
-            android:title="Today's Chores" />
+            android:title="Today" />
         <item
             android:id="@+id/nav_all_chores"
             android:title="Manage Chores" />

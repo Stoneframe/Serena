@@ -15,7 +15,7 @@ import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.Chore;
 
-public class TodaysChores extends Fragment
+public class TodayFragment extends Fragment
 {
     private ChoreList choreList;
 
@@ -30,12 +30,12 @@ public class TodaysChores extends Fragment
             .getApplication();
         choreList = globalState.getChoreList();
 
-        View view = inflater.inflate(R.layout.fragment_todays_chores, container, false);
+        View view = inflater.inflate(R.layout.fragment_today, container, false);
 
         choreAdapter = new ArrayAdapter<>(
             getActivity().getBaseContext(),
             android.R.layout.simple_list_item_1);
-        ListView choreListView = view.findViewById(R.id.todays_chores);
+        ListView choreListView = view.findViewById(R.id.today);
         choreListView.setAdapter(choreAdapter);
         choreListView.setOnItemClickListener((parent, view1, position, id) ->
         {

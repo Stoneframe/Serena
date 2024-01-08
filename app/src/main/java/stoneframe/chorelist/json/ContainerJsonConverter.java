@@ -1,9 +1,6 @@
 package stoneframe.chorelist.json;
 
-import androidx.annotation.NonNull;
-
 import com.fatboyindustrial.gsonjodatime.Converters;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import stoneframe.chorelist.model.ChoreSelector;
@@ -30,5 +27,4 @@ public class ContainerJsonConverter
             .create()
             .fromJson(json, Container.class);
     }
-
 }

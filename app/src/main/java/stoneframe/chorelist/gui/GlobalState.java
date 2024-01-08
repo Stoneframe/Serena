@@ -2,19 +2,19 @@ package stoneframe.chorelist.gui;
 
 import android.app.Application;
 
-import stoneframe.chorelist.model.Schedule;
+import stoneframe.chorelist.model.ChoreManager;
 
 public class GlobalState extends Application
 {
-    private Schedule schedule;
+    private ChoreManager choreManager;
 
-    public Schedule getSchedule()
+    public ChoreManager getSchedule()
     {
-        return schedule;
+        return choreManager;
     }
 
-    public void setSchedule(Schedule schedule)
+    public void setSchedule(ChoreManager choreManager)
     {
-        this.schedule = schedule;
+        this.choreManager = choreManager;
     }
 }

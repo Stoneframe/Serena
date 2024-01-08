@@ -11,12 +11,12 @@ import android.widget.ListView;
 import androidx.fragment.app.Fragment;
 
 import stoneframe.chorelist.R;
-import stoneframe.chorelist.model.Schedule;
+import stoneframe.chorelist.model.ChoreManager;
 import stoneframe.chorelist.model.Chore;
 
 public class TodaysChores extends Fragment
 {
-    private Schedule schedule;
+    private ChoreManager choreManager;
 
     private ArrayAdapter<Chore> choreAdapter;
     private ListView choreList;
@@ -27,7 +27,7 @@ public class TodaysChores extends Fragment
         Bundle savedInstanceState)
     {
         GlobalState globalState = (GlobalState)getActivity().getApplication();
-        schedule = globalState.getSchedule();
+        choreManager = globalState.getSchedule();
 
         View view = inflater.inflate(R.layout.fragment_todays_chores, container, false);
 
@@ -42,7 +42,7 @@ public class TodaysChores extends Fragment
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
                 Chore chore = choreAdapter.getItem(position);
-                schedule.complete(chore);
+                choreManager.complete(chore);
                 choreAdapter.remove(chore);
             }
         });
@@ -51,10 +51,10 @@ public class TodaysChores extends Fragment
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
             {
-                Chore chore = schedule.getChores().get(position);
-                schedule.skip(chore);
+                Chore chore = choreManager.getChores().get(position);
+                choreManager.skip(chore);
                 choreAdapter.clear();
-                choreAdapter.addAll(schedule.getChores());
+                choreAdapter.addAll(choreManager.getChores());
                 return true;
             }
         });
@@ -67,7 +67,7 @@ public class TodaysChores extends Fragment
     {
         super.onStart();
 
-        choreAdapter.addAll(schedule.getChores());
+        choreAdapter.addAll(choreManager.getChores());
     }
 
     @Override

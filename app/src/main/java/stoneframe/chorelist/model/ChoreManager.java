@@ -7,14 +7,14 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Schedule
+public class ChoreManager
 {
     private final EffortTracker effortTracker;
     private final ChoreSelector choreSelector;
 
     private final List<Chore> chores = new LinkedList<>();
 
-    public Schedule(EffortTracker effortTracker, ChoreSelector choreSelector)
+    public ChoreManager(EffortTracker effortTracker, ChoreSelector choreSelector)
     {
         this.effortTracker = effortTracker;
         this.choreSelector = choreSelector;
@@ -95,12 +95,12 @@ public class Schedule
     @Override
     public boolean equals(Object obj)
     {
-        if (!(obj instanceof Schedule))
+        if (!(obj instanceof ChoreManager))
         {
             return false;
         }
 
-        Schedule other = (Schedule)obj;
+        ChoreManager other = (ChoreManager)obj;
 
         return this.chores.equals(other.chores);
     }

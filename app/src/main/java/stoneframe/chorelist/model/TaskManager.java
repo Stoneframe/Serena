@@ -8,16 +8,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TodoList
+public class TaskManager
 {
     private final List<Task> tasks = new LinkedList<>();
-
-    private final TimeService timeService;
-
-    public TodoList(TimeService timeService)
-    {
-        this.timeService = timeService;
-    }
 
     public List<Task> getAllTasks(boolean includeCompleted)
     {
@@ -39,10 +32,8 @@ public class TodoList
         tasks.remove(task);
     }
 
-    public List<Task> getTodaysTasks()
+    public List<Task> getTodaysTasks(DateTime now)
     {
-        DateTime now = timeService.getNow();
-
         return getAllTasks(false).stream()
             .filter(t -> t.getIgnoreBefore().isBefore(now) || t.getIgnoreBefore().isEqual(now))
             .collect(Collectors.toList());

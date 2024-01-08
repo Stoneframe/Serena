@@ -17,7 +17,7 @@ import androidx.fragment.app.Fragment;
 import org.joda.time.DateTime;
 
 import stoneframe.chorelist.R;
-import stoneframe.chorelist.model.Schedule;
+import stoneframe.chorelist.model.ChoreManager;
 import stoneframe.chorelist.model.Chore;
 
 public class AllChores extends Fragment
@@ -25,7 +25,7 @@ public class AllChores extends Fragment
     private static final int ACTIVITY_ADD_CHORE = 0;
     private static final int ACTIVITY_EDIT_CHORE = 1;
 
-    private Schedule schedule;
+    private ChoreManager choreManager;
 
     private ArrayAdapter<Chore> choreAdapter;
     private ListView choreList;
@@ -40,7 +40,7 @@ public class AllChores extends Fragment
         Bundle savedInstanceState)
     {
         GlobalState globalState = (GlobalState)getActivity().getApplication();
-        schedule = globalState.getSchedule();
+        choreManager = globalState.getSchedule();
 
         View view = inflater.inflate(R.layout.fragment_all_chores, container, false);
 
@@ -65,7 +65,7 @@ public class AllChores extends Fragment
             {
                 Chore chore = choreAdapter.getItem(position);
                 choreAdapter.remove(chore);
-                schedule.removeChore(chore);
+                choreManager.removeChore(chore);
                 return true;
             }
         });
@@ -95,7 +95,7 @@ public class AllChores extends Fragment
     {
         super.onStart();
 
-        choreAdapter.addAll(schedule.getAllChores());
+        choreAdapter.addAll(choreManager.getAllChores());
     }
 
     @Override
@@ -139,7 +139,7 @@ public class AllChores extends Fragment
 
             if (requestCode == ACTIVITY_ADD_CHORE)
             {
-                schedule.addChore(duty);
+                choreManager.addChore(duty);
             }
         }
     }

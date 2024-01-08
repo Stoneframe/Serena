@@ -5,19 +5,19 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import stoneframe.chorelist.model.EffortTracker;
-import stoneframe.chorelist.model.Schedule;
+import stoneframe.chorelist.model.ChoreManager;
 import stoneframe.chorelist.model.ChoreSelector;
 
 public class ScheduleToJsonConverter
 {
-    public static String convertToJson(Schedule schedule)
+    public static String convertToJson(ChoreManager choreManager)
     {
         Gson gson = Converters.registerDateTime(new GsonBuilder()).create();
 
-        return gson.toJson(schedule);
+        return gson.toJson(choreManager);
     }
 
-    public static Schedule convertFromJson(
+    public static ChoreManager convertFromJson(
         String json,
         EffortTrackerConverter effortTrackerConverter, ChoreSelectorConverter choreSelectorConverter)
     {
@@ -28,6 +28,6 @@ public class ScheduleToJsonConverter
 
         Gson gson = gsonBuilder.create();
 
-        return gson.fromJson(json, Schedule.class);
+        return gson.fromJson(json, ChoreManager.class);
     }
 }

@@ -8,8 +8,8 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/activity_schedule"
+        android:id="@+id/activity_storage"
         android:orderInCategory="100"
-        android:title="Schedule"
+        android:title="Storage"
         app:showAsAction="never" />
 </menu>

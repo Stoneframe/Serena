@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener
 {
     private static final int ACTIVITY_EDIT_EFFORT = 0;
-    private static final int ACTIVITY_EDIT_SCHEDULE = 1;
+    private static final int ACTIVITY_EDIT_STORAGE = 1;
 
     private ChoreList choreList;
     private Storage storage;
@@ -141,17 +141,17 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
 
-        if (id == R.id.activity_schedule)
+        if (id == R.id.activity_storage)
         {
             choreList.save();
 
             String json = ContainerJsonConverter.toJson(storage.load());
 
-            Intent intent = new Intent(this, ScheduleActivity.class);
+            Intent intent = new Intent(this, StorageActivity.class);
 
-            intent.putExtra("Schedule", json);
+            intent.putExtra("Storage", json);
 
-            startActivityForResult(intent, ACTIVITY_EDIT_SCHEDULE);
+            startActivityForResult(intent, ACTIVITY_EDIT_STORAGE);
 
             return true;
         }
@@ -177,9 +177,9 @@ public class MainActivity extends AppCompatActivity
             effortTracker.setSunday(data.getIntExtra("Sunday", 0));
         }
 
-        if (resultCode == RESULT_OK && requestCode == ACTIVITY_EDIT_SCHEDULE)
+        if (resultCode == RESULT_OK && requestCode == ACTIVITY_EDIT_STORAGE)
         {
-            String json = data.getStringExtra("Schedule");
+            String json = data.getStringExtra("Storage");
 
             Container container = ContainerJsonConverter.fromJson(
                 json,

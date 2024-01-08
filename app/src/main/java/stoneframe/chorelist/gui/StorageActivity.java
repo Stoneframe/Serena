@@ -9,27 +9,27 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import stoneframe.chorelist.R;
 
-public class ScheduleActivity extends AppCompatActivity
+public class StorageActivity extends AppCompatActivity
 {
-    private EditText scheduleText;
+    private EditText storageText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_schedule);
+        setContentView(R.layout.activity_storage);
 
         Intent intent = getIntent();
 
-        scheduleText = findViewById(R.id.scheduleText);
-        scheduleText.setText(intent.getStringExtra("Schedule"));
+        storageText = findViewById(R.id.storageText);
+        storageText.setText(intent.getStringExtra("Storage"));
     }
 
     public void onSaveClick(View view)
     {
         Intent intent = new Intent();
 
-        intent.putExtra("Schedule", scheduleText.getText().toString());
+        intent.putExtra("Storage", storageText.getText().toString());
 
         setResult(RESULT_OK, intent);
         finish();

@@ -29,7 +29,7 @@
             android:name=".gui.EffortActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".gui.ScheduleActivity"
+            android:name=".gui.StorageActivity"
             android:screenOrientation="portrait" />
     </application>
 

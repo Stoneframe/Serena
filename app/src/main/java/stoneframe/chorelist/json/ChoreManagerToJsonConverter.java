@@ -8,7 +8,7 @@ import stoneframe.chorelist.model.EffortTracker;
 import stoneframe.chorelist.model.ChoreManager;
 import stoneframe.chorelist.model.ChoreSelector;
 
-public class ScheduleToJsonConverter
+public class ChoreManagerToJsonConverter
 {
     public static String convertToJson(ChoreManager choreManager)
     {

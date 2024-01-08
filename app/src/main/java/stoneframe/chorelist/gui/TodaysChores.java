@@ -4,59 +4,52 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
 
+import java.util.Objects;
+
+import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
-import stoneframe.chorelist.model.ChoreManager;
 import stoneframe.chorelist.model.Chore;
 
 public class TodaysChores extends Fragment
 {
-    private ChoreManager choreManager;
+    private ChoreList choreList;
 
     private ArrayAdapter<Chore> choreAdapter;
-    private ListView choreList;
 
     @Override
     public View onCreateView(
         LayoutInflater inflater, ViewGroup container,
         Bundle savedInstanceState)
     {
-        GlobalState globalState = (GlobalState)getActivity().getApplication();
-        choreManager = globalState.getSchedule();
+        GlobalState globalState = (GlobalState)Objects.requireNonNull(getActivity())
+            .getApplication();
+        choreList = globalState.getChoreList();
 
         View view = inflater.inflate(R.layout.fragment_todays_chores, container, false);
 
         choreAdapter = new ArrayAdapter<>(
             getActivity().getBaseContext(),
             android.R.layout.simple_list_item_1);
-        choreList = (ListView)view.findViewById(R.id.todays_chores);
-        choreList.setAdapter(choreAdapter);
-        choreList.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        ListView choreListView = view.findViewById(R.id.todays_chores);
+        choreListView.setAdapter(choreAdapter);
+        choreListView.setOnItemClickListener((parent, view1, position, id) ->
         {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
-                Chore chore = choreAdapter.getItem(position);
-                choreManager.complete(chore);
-                choreAdapter.remove(chore);
-            }
+            Chore chore = choreAdapter.getItem(position);
+            choreList.choreDone(chore);
+            choreAdapter.remove(chore);
         });
-        choreList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+        choreListView.setOnItemLongClickListener((parent, view12, position, id) ->
         {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
-            {
-                Chore chore = choreManager.getChores().get(position);
-                choreManager.skip(chore);
-                choreAdapter.clear();
-                choreAdapter.addAll(choreManager.getChores());
-                return true;
-            }
+            Chore chore = choreList.getTodaysChores().get(position);
+            choreList.choreSkip(chore);
+            choreAdapter.clear();
+            choreAdapter.addAll(choreList.getTodaysChores());
+            return true;
         });
 
         return view;
@@ -67,7 +60,7 @@ public class TodaysChores extends Fragment
     {
         super.onStart();
 
-        choreAdapter.addAll(choreManager.getChores());
+        choreAdapter.addAll(choreList.getTodaysChores());
     }
 
     @Override

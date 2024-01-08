@@ -7,7 +7,7 @@ import stoneframe.chorelist.json.SimpleChoreSelectorConverter;
 import stoneframe.chorelist.model.ChoreManager;
 import stoneframe.chorelist.model.efforttrackers.SimpleEffortTracker;
 import stoneframe.chorelist.model.choreselectors.SimpleChoreSelector;
-import stoneframe.chorelist.json.ScheduleToJsonConverter;
+import stoneframe.chorelist.json.ChoreManagerToJsonConverter;
 import stoneframe.chorelist.model.Chore;
 
 import static junit.framework.Assert.assertEquals;
@@ -26,9 +26,9 @@ public class ChoreManagerToJsonConverterTest
             1,
             Chore.DAYS));
 
-        String json = ScheduleToJsonConverter.convertToJson(choreManager1);
+        String json = ChoreManagerToJsonConverter.convertToJson(choreManager1);
 
-        ChoreManager choreManager2 = ScheduleToJsonConverter.convertFromJson(json, new SimpleEffortTrackerConverter(), new SimpleChoreSelectorConverter());
+        ChoreManager choreManager2 = ChoreManagerToJsonConverter.convertFromJson(json, new SimpleEffortTrackerConverter(), new SimpleChoreSelectorConverter());
 
         assertEquals(choreManager1, choreManager2);
     }

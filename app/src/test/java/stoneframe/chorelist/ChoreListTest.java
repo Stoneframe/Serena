@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -16,10 +17,12 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import stoneframe.chorelist.model.Chore;
-import stoneframe.chorelist.model.choreselectors.SimpleChoreSelector;
-import stoneframe.chorelist.model.efforttrackers.SimpleEffortTracker;
+import stoneframe.chorelist.model.Container;
+import stoneframe.chorelist.model.Storage;
 import stoneframe.chorelist.model.Task;
 import stoneframe.chorelist.model.TimeService;
+import stoneframe.chorelist.model.choreselectors.SimpleChoreSelector;
+import stoneframe.chorelist.model.efforttrackers.SimpleEffortTracker;
 
 @SuppressWarnings("SameParameterValue")
 public class ChoreListTest
@@ -38,9 +41,12 @@ public class ChoreListTest
         MockTimeService timeService = new MockTimeService(TODAY);
 
         choreList = new ChoreList(
+            new MockStorage(),
             timeService,
             new SimpleEffortTracker(MAX_EFFORT),
             new SimpleChoreSelector());
+
+        choreList.load();
     }
 
     @Test
@@ -310,11 +316,7 @@ public class ChoreListTest
     }
 
     private void addChore(
-        String description,
-        DateTime next,
-        int intervalLength,
-        int intervalUnit,
-        int effort)
+        String description, DateTime next, int intervalLength, int intervalUnit, int effort)
     {
         Chore chore = new Chore(description, 1, effort, next, intervalLength, intervalUnit);
 
@@ -494,6 +496,22 @@ public class ChoreListTest
         public DateTime getNow()
         {
             return now;
+        }
+    }
+
+    private static class MockStorage implements Storage
+    {
+        @Nullable
+        @Override
+        public Container load()
+        {
+            return null;
+        }
+
+        @Override
+        public void save(@NonNull Container container)
+        {
+
         }
     }
 }

@@ -5,26 +5,59 @@ import java.util.List;
 import stoneframe.chorelist.model.Chore;
 import stoneframe.chorelist.model.ChoreManager;
 import stoneframe.chorelist.model.ChoreSelector;
+import stoneframe.chorelist.model.Container;
 import stoneframe.chorelist.model.EffortTracker;
+import stoneframe.chorelist.model.Storage;
 import stoneframe.chorelist.model.Task;
 import stoneframe.chorelist.model.TaskManager;
 import stoneframe.chorelist.model.TimeService;
 
 public class ChoreList
 {
+    private final Storage storage;
     private final TimeService timeService;
-    private final ChoreManager choreManager;
-    private final TaskManager taskManager;
+
+    private final EffortTracker effortTracker;
+    private final ChoreSelector choreSelector;
+
+    private ChoreManager choreManager;
+    private TaskManager taskManager;
 
     public ChoreList(
+        Storage storage,
         TimeService timeService,
         EffortTracker effortTracker,
         ChoreSelector choreSelector)
     {
+        this.storage = storage;
         this.timeService = timeService;
+        this.effortTracker = effortTracker;
+        this.choreSelector = choreSelector;
+    }
 
-        choreManager = new ChoreManager(effortTracker, choreSelector);
-        taskManager = new TaskManager();
+    public void load()
+    {
+        Container container;
+        if ((container = storage.load()) != null)
+        {
+            choreManager = container.ChoreManager;
+            taskManager = container.TaskManager;
+        }
+        else
+        {
+            choreManager = new ChoreManager(effortTracker, choreSelector);
+            taskManager = new TaskManager();
+        }
+    }
+
+    public void save()
+    {
+        Container container = new Container();
+
+        container.ChoreManager = choreManager;
+        container.TaskManager = taskManager;
+
+        storage.save(container);
     }
 
     public List<Chore> getAllChores()

@@ -21,6 +21,7 @@ import stoneframe.chorelist.model.SimpleEffortTracker;
 import stoneframe.chorelist.model.Task;
 import stoneframe.chorelist.model.TimeService;
 
+@SuppressWarnings("SameParameterValue")
 public class ChoreListTest
 {
     private final int MAX_EFFORT = 10;
@@ -49,24 +50,33 @@ public class ChoreListTest
     }
 
     @Test
+    public void GetAllChores_ChoresAddedInNonAlphabeticOrder_GetAllChoresReturnsInAlphabeticOrder()
+    {
+        addChore("C Chore", TODAY);
+        addChore("A Chore", TODAY);
+        addChore("B Chore", TODAY);
+        assertAllChoresEquals("A Chore", "B Chore", "C Chore");
+    }
+
+    @Test
     public void AddChore_AddSingleChore_GetAllChoresContainsChore()
     {
         addChore("Chore", TODAY);
-        assertAllChoresContains("Chore");
+        assertAllChoresEquals("Chore");
     }
 
     @Test
     public void AddChore_ChoreAddedWithTodaysDate_TodaysChoresContainsAddedChore()
     {
         addChore("ChoreForToday", TODAY);
-        assertTodaysChoresContains("ChoreForToday");
+        assertTodaysChoresEquals("ChoreForToday");
     }
 
     @Test
     public void AddChore_ChoreAddedWithYesterdaysDate_TodaysChoresContainsAddedChore()
     {
         addChore("ChoreForYesterday", YESTERDAY);
-        assertTodaysChoresContains("ChoreForYesterday");
+        assertTodaysChoresEquals("ChoreForYesterday");
     }
 
     @Test
@@ -82,7 +92,7 @@ public class ChoreListTest
         addChore("Chore1", TODAY);
         addChore("Chore2", TODAY);
         removeChore("Chore1");
-        assertAllChoresContains("Chore2");
+        assertAllChoresEquals("Chore2");
     }
 
     @Test
@@ -98,7 +108,7 @@ public class ChoreListTest
         addChore("Chore1", TODAY, 5);
         addChore("Chore2", TODAY, 5);
         addChore("Chore3", TODAY, 5);
-        assertTodaysChoresContains("Chore1", "Chore2");
+        assertTodaysChoresEquals("Chore1", "Chore2");
     }
 
     @Test
@@ -108,7 +118,7 @@ public class ChoreListTest
         addChore("Chore1", TODAY, 5);
         addChore("Chore2", TODAY, 5);
         addChore("Chore3", TODAY, 5);
-        assertTodaysChoresContains("Chore1", "Chore2");
+        assertTodaysChoresEquals("Chore1", "Chore2");
     }
 
     @Test
@@ -118,7 +128,7 @@ public class ChoreListTest
         addChore("Chore1", TODAY, 5);
         addChore("Chore2", TODAY, 5);
         addChore("Chore3", TODAY, 5);
-        assertTodaysChoresContains("Chore1", "Chore2", "Chore3");
+        assertTodaysChoresEquals("Chore1", "Chore2", "Chore3");
     }
 
     @Test
@@ -131,7 +141,7 @@ public class ChoreListTest
         addChore("Chore4", TOMORROW, 3);
         completeChore("Chore1");
         removeChore("Chore3");
-        assertTodaysChoresContains("Chore2");
+        assertTodaysChoresEquals("Chore2");
     }
 
     @Test
@@ -173,7 +183,7 @@ public class ChoreListTest
         addChore("Chore1", TODAY);
         addChore("Chore2", TODAY);
         skipChore("Chore1");
-        assertTodaysChoresContains("Chore2");
+        assertTodaysChoresEquals("Chore2");
     }
 
     @Test
@@ -209,10 +219,72 @@ public class ChoreListTest
     }
 
     @Test
+    public void GetAllTasks_TasksAddedInNonDeadlineOrder_GetAllTasksReturnsInDeadlineOrder()
+    {
+        addTask("A Task", TOMORROW);
+        addTask("B Task", YESTERDAY);
+        addTask("C Task", TODAY);
+        assertAllTasksEquals(false, "B Task", "C Task", "A Task");
+    }
+
+    @Test
+    public void GetAllTasks_TaskCompletedAndDoNotIncludeCompletedTasks_GetAllTasksDoesNotContainCompletedTasks()
+    {
+        addTask("A Task", YESTERDAY);
+        addTask("B Task", TODAY);
+        addTask("C Task", TOMORROW);
+        completeTask("C Task");
+        assertAllTasksEquals(false, "A Task", "B Task");
+    }
+
+    @Test
     public void AddTask_AddSingleChore_GetAllTasksContainsTask()
     {
         addTask("Task");
-        assertAllTasksContains("Task");
+        assertAllTasksEquals(false, "Task");
+    }
+
+    @Test
+    public void RemoveTask_RemoveExistingTask_GetAllTasksDoesNotContainRemovedTask()
+    {
+        addTask("Task1");
+        addTask("Task2");
+        removeTask("Task1");
+        assertAllTasksEquals(false, "Task2");
+    }
+
+    @Test
+    public void GetTodaysTasks_NoTasksAdded_ReturnsEmptyList()
+    {
+        assertTodaysTasksIsEmpty();
+    }
+
+    @Test
+    public void GetTodaysTasks_TasksAddedInNonDeadlineOrder_GetTodaysTasksReturnsInDeadlineOrder()
+    {
+        addTask("A Task", TOMORROW);
+        addTask("B Task", YESTERDAY);
+        addTask("C Task", TODAY);
+        assertTodaysTasksEquals("B Task", "C Task", "A Task");
+    }
+
+    @Test
+    public void GetTodaysTasks_TasksWithIgnoreBefore_GetTodaysTasksDoesNotContainIgnoredTask()
+    {
+        addTask("A Task", YESTERDAY, YESTERDAY);
+        addTask("B Task", TODAY, TODAY);
+        addTask("C Task", TOMORROW, TOMORROW);
+        assertTodaysTasksEquals("A Task", "B Task");
+    }
+
+    @Test
+    public void GetTodaysTasks_CompletedTask_GetTodaysTasksDoesNotContainCompletedTask()
+    {
+        addTask("A Task", YESTERDAY);
+        addTask("B Task", TODAY);
+        addTask("C Task", TOMORROW);
+        completeTask("B Task");
+        assertTodaysTasksEquals("A Task", "C Task");
     }
 
     private void setRemainingEffort(int remainingEffort)
@@ -283,19 +355,61 @@ public class ChoreListTest
         choreList.choreSkip(chore);
     }
 
+    @NonNull
+    private Task getTask(String description)
+    {
+        Optional<Task> taskOptional = choreList.getAllTasks(true)
+            .stream()
+            .filter(t -> t.getDescription().equals(description))
+            .findFirst();
+
+        assertTrue(taskOptional.isPresent());
+
+        return taskOptional.get();
+    }
+
     private void addTask(String description)
     {
-        Task task = new Task(description);
+        addTask(description, null);
+    }
+
+    private void addTask(String description, DateTime deadline)
+    {
+        addTask(description, deadline, null);
+    }
+
+    private void addTask(String description, DateTime deadline, DateTime ignoreBefore)
+    {
+        Task task = new Task(description, deadline, ignoreBefore);
 
         choreList.addTask(task);
     }
 
-    private void assertAllChoresIsEmpty()
+    private void removeTask(String description)
     {
-        assertAllChoresContains();
+        Task task = getTask(description);
+
+        choreList.removeTask(task);
     }
 
-    private void assertAllChoresContains(String... descriptions)
+    private void completeTask(String description)
+    {
+        Task task = getTask(description);
+
+        choreList.taskDone(task);
+    }
+
+    private void assertAllChoresIsEmpty()
+    {
+        assertAllChoresEquals();
+    }
+
+    private void assertTodaysChoresIsEmpty()
+    {
+        assertTodaysChoresEquals();
+    }
+
+    private void assertAllChoresEquals(String... descriptions)
     {
         List<String> expectedDescriptions = Arrays.asList(descriptions);
 
@@ -307,12 +421,7 @@ public class ChoreListTest
         assertEquals(expectedDescriptions, actualDescriptions);
     }
 
-    private void assertTodaysChoresIsEmpty()
-    {
-        assertTodaysChoresContains();
-    }
-
-    private void assertTodaysChoresContains(String... descriptions)
+    private void assertTodaysChoresEquals(String... descriptions)
     {
         List<String> expectedDescriptions = Arrays.asList(descriptions);
 
@@ -338,14 +447,31 @@ public class ChoreListTest
 
     private void assertAllTasksIsEmpty()
     {
-        assertAllTasksContains();
+        assertAllTasksEquals(false);
     }
 
-    private void assertAllTasksContains(String... descriptions)
+    private void assertTodaysTasksIsEmpty()
+    {
+        assertTodaysTasksEquals();
+    }
+
+    private void assertAllTasksEquals(boolean includeCompleted, String... descriptions)
     {
         List<String> expectedDescriptions = Arrays.asList(descriptions);
 
-        List<String> actualDescriptions = choreList.getAllTasks()
+        List<String> actualDescriptions = choreList.getAllTasks(includeCompleted)
+            .stream()
+            .map(Task::getDescription)
+            .collect(Collectors.toList());
+
+        assertEquals(expectedDescriptions, actualDescriptions);
+    }
+
+    private void assertTodaysTasksEquals(String... descriptions)
+    {
+        List<String> expectedDescriptions = Arrays.asList(descriptions);
+
+        List<String> actualDescriptions = choreList.getTodaysTasks()
             .stream()
             .map(Task::getDescription)
             .collect(Collectors.toList());

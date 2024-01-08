@@ -21,7 +21,7 @@ import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.Chore;
 
-public class AllChoresFragment extends Fragment
+public class AllChores extends Fragment
 {
     private static final int ACTIVITY_ADD_CHORE = 0;
     private static final int ACTIVITY_EDIT_CHORE = 1;

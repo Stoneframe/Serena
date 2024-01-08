@@ -6,7 +6,7 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-import stoneframe.chorelist.model.SimpleChoreSelector;
+import stoneframe.chorelist.model.choreselectors.SimpleChoreSelector;
 import stoneframe.chorelist.model.ChoreSelector;
 
 public class SimpleChoreSelectorConverter implements ChoreSelectorConverter

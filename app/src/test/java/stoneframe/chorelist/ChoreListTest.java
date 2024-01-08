@@ -16,8 +16,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import stoneframe.chorelist.model.Chore;
-import stoneframe.chorelist.model.SimpleChoreSelector;
-import stoneframe.chorelist.model.SimpleEffortTracker;
+import stoneframe.chorelist.model.choreselectors.SimpleChoreSelector;
+import stoneframe.chorelist.model.efforttrackers.SimpleEffortTracker;
 import stoneframe.chorelist.model.Task;
 import stoneframe.chorelist.model.TimeService;
 

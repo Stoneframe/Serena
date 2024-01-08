@@ -24,9 +24,9 @@ import stoneframe.chorelist.json.ScheduleToJsonConverter;
 import stoneframe.chorelist.json.SimpleChoreSelectorConverter;
 import stoneframe.chorelist.json.WeeklyEffortTrackerConverter;
 import stoneframe.chorelist.model.ChoreManager;
-import stoneframe.chorelist.model.SimpleChoreSelector;
+import stoneframe.chorelist.model.choreselectors.SimpleChoreSelector;
 import stoneframe.chorelist.model.Chore;
-import stoneframe.chorelist.model.WeeklyEffortTracker;
+import stoneframe.chorelist.model.efforttrackers.WeeklyEffortTracker;
 
 public class MainActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener

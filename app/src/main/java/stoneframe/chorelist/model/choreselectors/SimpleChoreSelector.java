@@ -1,8 +1,11 @@
-package stoneframe.chorelist.model;
+package stoneframe.chorelist.model.choreselectors;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import stoneframe.chorelist.model.Chore;
+import stoneframe.chorelist.model.ChoreSelector;
 
 public class SimpleChoreSelector implements ChoreSelector
 {

@@ -1,6 +1,8 @@
-package stoneframe.chorelist.model;
+package stoneframe.chorelist.model.efforttrackers;
 
 import org.joda.time.DateTime;
+
+import stoneframe.chorelist.model.EffortTracker;
 
 public class SimpleEffortTracker implements EffortTracker
 {

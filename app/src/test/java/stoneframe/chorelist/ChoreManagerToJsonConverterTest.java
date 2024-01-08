@@ -5,8 +5,8 @@ import org.junit.Test;
 import stoneframe.chorelist.json.SimpleEffortTrackerConverter;
 import stoneframe.chorelist.json.SimpleChoreSelectorConverter;
 import stoneframe.chorelist.model.ChoreManager;
-import stoneframe.chorelist.model.SimpleEffortTracker;
-import stoneframe.chorelist.model.SimpleChoreSelector;
+import stoneframe.chorelist.model.efforttrackers.SimpleEffortTracker;
+import stoneframe.chorelist.model.choreselectors.SimpleChoreSelector;
 import stoneframe.chorelist.json.ScheduleToJsonConverter;
 import stoneframe.chorelist.model.Chore;
 

@@ -9,8 +9,8 @@ import java.util.List;
 
 import stoneframe.chorelist.model.Chore;
 import stoneframe.chorelist.model.ChoreManager;
-import stoneframe.chorelist.model.SimpleChoreSelector;
-import stoneframe.chorelist.model.SimpleEffortTracker;
+import stoneframe.chorelist.model.choreselectors.SimpleChoreSelector;
+import stoneframe.chorelist.model.efforttrackers.SimpleEffortTracker;
 
 public class ChoreManagerTest
 {

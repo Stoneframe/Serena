@@ -41,6 +41,6 @@ public class TaskManager
 
     public void complete(Task task)
     {
-        task.markAsDone();
+        task.setDone(true);
     }
 }

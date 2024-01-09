@@ -21,7 +21,7 @@ import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.Chore;
 
-public class AllChores extends Fragment
+public class AllChoresFragment extends Fragment
 {
     private static final int ACTIVITY_ADD_CHORE = 0;
     private static final int ACTIVITY_EDIT_CHORE = 1;
@@ -46,7 +46,7 @@ public class AllChores extends Fragment
         choreAdapter = new ArrayAdapter<>(
             getActivity().getBaseContext(),
             android.R.layout.simple_list_item_1);
-        ListView choreListView = view.findViewById(R.id.all_chores);
+        ListView choreListView = view.findViewById(R.id.all_tasks);
         choreListView.setAdapter(choreAdapter);
         choreListView.setOnItemClickListener((parent, view1, position, id) ->
         {
@@ -65,14 +65,14 @@ public class AllChores extends Fragment
         Button addButton = view.findViewById(R.id.add_button);
         addButton.setOnClickListener(v ->
         {
-            Chore duty = new Chore(
+            Chore chore = new Chore(
                 "",
                 1,
                 1,
                 DateTime.now().withTimeAtStartOfDay(),
                 1, Chore.DAYS
             );
-            startChoreEditor(duty, ACTIVITY_ADD_CHORE);
+            startChoreEditor(chore, ACTIVITY_ADD_CHORE);
         });
 
         return view;
@@ -116,18 +116,18 @@ public class AllChores extends Fragment
 
         if (resultCode == RESULT_OK)
         {
-            Chore duty = choreUnderEdit;
+            Chore chore = choreUnderEdit;
 
-            duty.setNext((DateTime)data.getSerializableExtra("Next"));
-            duty.setDescription(data.getStringExtra("Description"));
-            duty.setPriority(data.getIntExtra("Priority", 1));
-            duty.setEffort(data.getIntExtra("Effort", 1));
-            duty.setIntervalUnit(data.getIntExtra("IntervalUnit", 1));
-            duty.setIntervalLength(data.getIntExtra("IntervalLength", 1));
+            chore.setNext((DateTime)data.getSerializableExtra("Next"));
+            chore.setDescription(data.getStringExtra("Description"));
+            chore.setPriority(data.getIntExtra("Priority", 1));
+            chore.setEffort(data.getIntExtra("Effort", 1));
+            chore.setIntervalUnit(data.getIntExtra("IntervalUnit", 1));
+            chore.setIntervalLength(data.getIntExtra("IntervalLength", 1));
 
             if (requestCode == ACTIVITY_ADD_CHORE)
             {
-                choreList.addChore(duty);
+                choreList.addChore(chore);
             }
         }
     }

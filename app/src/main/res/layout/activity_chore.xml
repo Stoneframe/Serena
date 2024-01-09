@@ -46,13 +46,13 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/descriptionTextView"
+                    android:id="@+id/choreDescriptionTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Description" />
 
                 <EditText
-                    android:id="@+id/descriptionEditText"
+                    android:id="@+id/choreDescriptionEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
@@ -118,15 +118,17 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/periodicityTextView"
-                    android:layout_width="80dp"
+                    android:id="@+id/intervalLengthTextView"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Periodicity" />
+                    android:text="Interval Length" />
 
-                <Spinner
-                    android:id="@+id/periodicitySpinner"
-                    android:layout_width="140dp"
-                    android:layout_height="wrap_content" />
+                <EditText
+                    android:id="@+id/intervalLengthEditText"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -134,17 +136,15 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/frequencyTextView"
+                    android:id="@+id/intervalUnitTextView"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
-                    android:text="Frequency" />
+                    android:text="Interval Unit" />
 
-                <EditText
-                    android:id="@+id/frequencyEditText"
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:inputType="number" />
-
+                <Spinner
+                    android:id="@+id/intervalUnitSpinner"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </TableRow>
 

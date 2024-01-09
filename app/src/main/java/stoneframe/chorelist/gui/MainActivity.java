@@ -202,9 +202,12 @@ public class MainActivity extends AppCompatActivity
         switch (item.getItemId())
         {
             case R.id.nav_all_chores:
-                fragmentClass = AllChores.class;
+                fragmentClass = AllChoresFragment.class;
                 break;
-            case R.id.nav_todays_chores:
+            case R.id.nav_all_tasks:
+                fragmentClass = AllTasksFragment.class;
+                break;
+            case R.id.nav_todays:
             default:
                 fragmentClass = TodayFragment.class;
         }
@@ -221,7 +224,6 @@ public class MainActivity extends AppCompatActivity
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
-
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

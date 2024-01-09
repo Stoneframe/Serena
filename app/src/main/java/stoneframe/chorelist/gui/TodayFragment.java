@@ -9,17 +9,20 @@ import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
 
+import java.util.List;
 import java.util.Objects;
 
 import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.Chore;
+import stoneframe.chorelist.model.Task;
 
 public class TodayFragment extends Fragment
 {
     private ChoreList choreList;
 
     private ArrayAdapter<Chore> choreAdapter;
+    private ArrayAdapter<Task> taskAdapter;
 
     @Override
     public View onCreateView(
@@ -35,7 +38,7 @@ public class TodayFragment extends Fragment
         choreAdapter = new ArrayAdapter<>(
             getActivity().getBaseContext(),
             android.R.layout.simple_list_item_1);
-        ListView choreListView = view.findViewById(R.id.today);
+        ListView choreListView = view.findViewById(R.id.todays_chores);
         choreListView.setAdapter(choreAdapter);
         choreListView.setOnItemClickListener((parent, view1, position, id) ->
         {
@@ -52,6 +55,18 @@ public class TodayFragment extends Fragment
             return true;
         });
 
+        taskAdapter = new ArrayAdapter<>(
+            getActivity().getBaseContext(),
+            android.R.layout.simple_list_item_1);
+        ListView taskListView = view.findViewById(R.id.todays_tasks);
+        taskListView.setAdapter(taskAdapter);
+        taskListView.setOnItemClickListener((parent, view1, position, id) ->
+        {
+            Task task = taskAdapter.getItem(position);
+            choreList.taskDone(task);
+            taskAdapter.remove(task);
+        });
+
         return view;
     }
 
@@ -61,6 +76,8 @@ public class TodayFragment extends Fragment
         super.onStart();
 
         choreAdapter.addAll(choreList.getTodaysChores());
+        List<Task> todaysTasks = choreList.getTodaysTasks();
+        taskAdapter.addAll(todaysTasks);
     }
 
     @Override
@@ -69,5 +86,6 @@ public class TodayFragment extends Fragment
         super.onStop();
 
         choreAdapter.clear();
+        taskAdapter.clear();
     }
 }

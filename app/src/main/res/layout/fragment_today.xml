@@ -4,9 +4,76 @@
     android:layout_height="match_parent"
     tools:context="stoneframe.chorelist.gui.TodayFragment">
 
-    <ListView
-        android:id="@+id/today"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:weightSum="1.0">
 
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="#000000"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp"
+                        android:text="Chores"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20dp" />
+                </RelativeLayout>
+
+                <ListView
+                    android:id="@+id/todays_chores"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dip" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="#000000"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp"
+                        android:text="Tasks"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20dp" />
+                </RelativeLayout>
+
+                <ListView
+                    android:id="@+id/todays_tasks"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dip" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
 </FrameLayout>

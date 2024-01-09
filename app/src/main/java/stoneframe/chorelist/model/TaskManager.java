@@ -16,7 +16,7 @@ public class TaskManager
     {
         List<Task> sortedTasks = tasks.stream()
             .filter(t -> !t.isDone() || includeCompleted)
-            .sorted(Comparator.comparing(Task::getDeadline))
+            .sorted(Comparator.comparing(Task::isDone).thenComparing(Task::getDeadline))
             .collect(Collectors.toList());
 
         return Collections.unmodifiableList(sortedTasks);

@@ -9,12 +9,12 @@ import static org.junit.Assert.*;
 
 public class ChoreComparatorTest
 {
-    private Chore.DutyComparator comparator;
+    private Chore.ChoreComparator comparator;
 
     @Before
     public void setUp()
     {
-        comparator = new Chore.DutyComparator(TestUtils.MOCK_NOW);
+        comparator = new Chore.ChoreComparator(TestUtils.MOCK_NOW);
     }
 
     @Test

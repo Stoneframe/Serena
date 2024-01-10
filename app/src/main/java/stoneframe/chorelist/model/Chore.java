@@ -147,11 +147,11 @@ public class Chore
         return description;
     }
 
-    public static class DutyComparator implements Comparator<Chore>
+    public static class ChoreComparator implements Comparator<Chore>
     {
         private final DateTime now;
 
-        public DutyComparator(DateTime now)
+        public ChoreComparator(DateTime now)
         {
             this.now = now;
         }

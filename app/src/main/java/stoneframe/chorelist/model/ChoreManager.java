@@ -48,7 +48,7 @@ public class ChoreManager
 
     public List<Chore> getChores(DateTime now)
     {
-        chores.sort(new Chore.DutyComparator(now));
+        chores.sort(new Chore.ChoreComparator(now));
 
         int effort = effortTracker.getTodaysEffort(now);
 

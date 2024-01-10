@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
@@ -26,7 +27,8 @@ public class TodayFragment extends Fragment
 
     @Override
     public View onCreateView(
-        LayoutInflater inflater, ViewGroup container,
+        LayoutInflater inflater,
+        ViewGroup container,
         Bundle savedInstanceState)
     {
         GlobalState globalState = (GlobalState)Objects.requireNonNull(getActivity())
@@ -37,7 +39,7 @@ public class TodayFragment extends Fragment
 
         choreAdapter = new ArrayAdapter<>(
             getActivity().getBaseContext(),
-            android.R.layout.simple_list_item_1);
+            android.R.layout.simple_list_item_checked);
         ListView choreListView = view.findViewById(R.id.todays_chores);
         choreListView.setAdapter(choreAdapter);
         choreListView.setOnItemClickListener((parent, view1, position, id) ->
@@ -57,11 +59,19 @@ public class TodayFragment extends Fragment
 
         taskAdapter = new ArrayAdapter<>(
             getActivity().getBaseContext(),
-            android.R.layout.simple_list_item_1);
+            android.R.layout.simple_list_item_checked);
         ListView taskListView = view.findViewById(R.id.todays_tasks);
         taskListView.setAdapter(taskAdapter);
         taskListView.setOnItemClickListener((parent, view1, position, id) ->
         {
+            try
+            {
+                TimeUnit.SECONDS.sleep(1);
+            }
+            catch (InterruptedException ie)
+            {
+                Thread.currentThread().interrupt();
+            }
             Task task = taskAdapter.getItem(position);
             choreList.taskDone(task);
             taskAdapter.remove(task);

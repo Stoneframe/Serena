@@ -144,7 +144,7 @@ public class Chore
     @Override
     public String toString()
     {
-        return "- " + description;
+        return description;
     }
 
     public static class DutyComparator implements Comparator<Chore>

@@ -62,6 +62,6 @@ public class Task
     @Override
     public String toString()
     {
-        return (isDone ? "X" : "O") + " - " + description;
+        return description;
     }
 }

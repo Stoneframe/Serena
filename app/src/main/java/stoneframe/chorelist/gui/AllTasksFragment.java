@@ -44,9 +44,7 @@ public class AllTasksFragment extends Fragment
 
         View view = inflater.inflate(R.layout.fragment_all_tasks, container, false);
 
-        taskAdapter = new ArrayAdapter<>(
-            getActivity().getBaseContext(),
-            android.R.layout.simple_list_item_1);
+        taskAdapter = new TaskArrayAdapter(getActivity().getBaseContext());
         ListView choreListView = view.findViewById(R.id.all_tasks);
         choreListView.setAdapter(taskAdapter);
         choreListView.setOnItemClickListener((parent, view1, position, id) ->
@@ -91,6 +89,14 @@ public class AllTasksFragment extends Fragment
         super.onStop();
 
         taskAdapter.clear();
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        taskAdapter.notifyDataSetChanged();
     }
 
     private void startTaskEditor(Task task, int mode)

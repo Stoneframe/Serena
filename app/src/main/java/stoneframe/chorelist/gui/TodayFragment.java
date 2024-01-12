@@ -100,8 +100,7 @@ public class TodayFragment extends Fragment
         super.onStart();
 
         choreAdapter.addAll(choreList.getTodaysChores());
-        List<Task> todaysTasks = choreList.getTodaysTasks();
-        taskAdapter.addAll(todaysTasks);
+        taskAdapter.addAll(choreList.getTodaysTasks());
     }
 
     @Override

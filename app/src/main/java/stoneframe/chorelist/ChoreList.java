@@ -124,4 +124,9 @@ public class ChoreList
     {
         taskManager.complete(task);
     }
+
+    public void taskUndone(Task task)
+    {
+        taskManager.undo(task);
+    }
 }

@@ -43,4 +43,9 @@ public class TaskManager
     {
         task.setDone(true);
     }
+
+    public void undo(Task task)
+    {
+        task.setDone(false);
+    }
 }

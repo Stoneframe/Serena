@@ -53,7 +53,7 @@ public class Task
         return isDone;
     }
 
-    public void setDone(boolean done)
+    void setDone(boolean done)
     {
         isDone = done;
     }

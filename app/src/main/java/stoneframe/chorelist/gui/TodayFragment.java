@@ -10,7 +10,6 @@ import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 

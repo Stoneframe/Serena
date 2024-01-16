@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -28,7 +27,7 @@ public class AllTasksFragment extends Fragment
 
     private ChoreList choreList;
 
-    private ArrayAdapter<Task> taskAdapter;
+    private TaskArrayAdapter taskAdapter;
 
     private Task taskUnderEdit;
 
@@ -45,6 +44,18 @@ public class AllTasksFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_all_tasks, container, false);
 
         taskAdapter = new TaskArrayAdapter(getActivity().getBaseContext());
+        taskAdapter.setCheckboxChangedListener((task, isChecked) ->
+        {
+            if (isChecked)
+            {
+                choreList.taskDone(task);
+            }
+            else
+            {
+                choreList.taskUndone(task);
+            }
+        });
+
         ListView choreListView = view.findViewById(R.id.all_tasks);
         choreListView.setAdapter(taskAdapter);
         choreListView.setOnItemClickListener((parent, view1, position, id) ->
@@ -124,11 +135,23 @@ public class AllTasksFragment extends Fragment
             task.setDescription(data.getStringExtra("Description"));
             task.setDeadline((DateTime)data.getSerializableExtra("Deadline"));
             task.setIgnoreBefore((DateTime)data.getSerializableExtra("IgnoreBefore"));
-            task.setDone(data.getBooleanExtra("IsDone", false));
 
             if (requestCode == ACTIVITY_ADD_TASK)
             {
                 choreList.addTask(task);
+            }
+
+            boolean isDone = data.getBooleanExtra("IsDone", false);
+
+            if (isDone == task.isDone()) return;
+
+            if (isDone)
+            {
+                choreList.taskDone(task);
+            }
+            else
+            {
+                choreList.taskUndone(task);
             }
         }
     }

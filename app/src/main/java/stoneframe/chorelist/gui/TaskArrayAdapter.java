@@ -19,6 +19,8 @@ public class TaskArrayAdapter extends ArrayAdapter<Task>
 {
     private final Context context;
 
+    private CheckboxCheckedChangeListener checkboxCheckedChangeListener;
+
     public TaskArrayAdapter(@NonNull Context context)
     {
         super(context, R.layout.list_item_check_box);
@@ -60,14 +62,30 @@ public class TaskArrayAdapter extends ArrayAdapter<Task>
         return convertView;
     }
 
+    public void setCheckboxChangedListener(CheckboxCheckedChangeListener listener)
+    {
+        this.checkboxCheckedChangeListener = listener;
+    }
+
     private void onCheckBoxClicked(View view)
     {
         Holder holder = (Holder)view.getTag();
 
-        holder.item.setDone(holder.checkBox.isChecked());
+//        holder.item.setDone(holder.checkBox.isChecked());
         holder.textView.setTextColor(holder.item.isDone() ? Color.LTGRAY : Color.BLACK);
 
+        notifyCheckboxCheckedChanged(holder);
         notifyDataSetChanged();
+    }
+
+    private void notifyCheckboxCheckedChanged(Holder holder)
+    {
+        if (checkboxCheckedChangeListener != null)
+        {
+            checkboxCheckedChangeListener.onCheckboxChanged(
+                holder.item,
+                holder.checkBox.isChecked());
+        }
     }
 
     private static class Holder
@@ -75,5 +93,10 @@ public class TaskArrayAdapter extends ArrayAdapter<Task>
         public CheckBox checkBox;
         public TextView textView;
         public Task item;
+    }
+
+    public interface CheckboxCheckedChangeListener
+    {
+        void onCheckboxChanged(Task task, boolean isChecked);
     }
 }

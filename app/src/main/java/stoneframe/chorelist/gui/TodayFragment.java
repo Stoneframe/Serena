@@ -5,13 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckedTextView;
 import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
 
+import org.joda.time.DateTime;
+
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
@@ -37,27 +37,24 @@ public class TodayFragment extends Fragment
 
         View rootView = inflater.inflate(R.layout.fragment_today, container, false);
 
-        choreAdapter = new ArrayAdapter<>(
+        choreAdapter = new SimpleCheckboxArrayAdapter<>(
             getActivity().getBaseContext(),
-            android.R.layout.simple_list_item_checked);
+            Chore::getDescription,
+            chore -> chore.getNext().isAfter(DateTime.now()));
         ListView choreListView = rootView.findViewById(R.id.todays_chores);
         choreListView.setAdapter(choreAdapter);
         choreListView.setOnItemClickListener((parent, view, position, id) ->
         {
-            CheckedTextView checkedTextView = (CheckedTextView)view;
+            Chore chore = choreAdapter.getItem(position);
+            choreList.choreDone(chore);
 
-            checkedTextView.setChecked(true);
+            choreAdapter.notifyDataSetChanged();
 
             new Thread(() ->
-                getActivity().runOnUiThread(() ->
-                {
-                    waitOneSecond();
-                    Chore chore = choreAdapter.getItem(position);
-                    choreList.choreDone(chore);
-                    choreAdapter.remove(chore);
-                    checkedTextView.setChecked(false);
-                })).start();
-
+            {
+                waitOneSecond();
+                getActivity().runOnUiThread(() -> choreAdapter.remove(chore));
+            }).start();
         });
         choreListView.setOnItemLongClickListener((parent, view, position, id) ->
         {
@@ -68,26 +65,24 @@ public class TodayFragment extends Fragment
             return true;
         });
 
-        taskAdapter = new ArrayAdapter<>(
+        taskAdapter = new SimpleCheckboxArrayAdapter<>(
             getActivity().getBaseContext(),
-            android.R.layout.simple_list_item_checked);
+            Task::getDescription,
+            Task::isDone);
         ListView taskListView = rootView.findViewById(R.id.todays_tasks);
         taskListView.setAdapter(taskAdapter);
         taskListView.setOnItemClickListener((parent, view, position, id) ->
         {
-            CheckedTextView checkedTextView = (CheckedTextView)view;
+            Task task = taskAdapter.getItem(position);
+            choreList.taskDone(task);
 
-            checkedTextView.setChecked(true);
+            taskAdapter.notifyDataSetChanged();
 
             new Thread(() ->
-                getActivity().runOnUiThread(() ->
-                {
-                    waitOneSecond();
-                    Task task = taskAdapter.getItem(position);
-                    choreList.taskDone(task);
-                    taskAdapter.remove(task);
-                    checkedTextView.setChecked(false);
-                })).start();
+            {
+                waitOneSecond();
+                getActivity().runOnUiThread(() -> taskAdapter.remove(task));
+            }).start();
         });
 
         return rootView;
@@ -115,7 +110,7 @@ public class TodayFragment extends Fragment
     {
         try
         {
-            TimeUnit.SECONDS.sleep(1);
+            Thread.sleep(2_000);
         }
         catch (InterruptedException ie)
         {

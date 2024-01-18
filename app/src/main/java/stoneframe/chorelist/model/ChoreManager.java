@@ -41,11 +41,6 @@ public class ChoreManager
         return Collections.unmodifiableList(chores);
     }
 
-    public List<Chore> getChores()
-    {
-        return getChores(DateTime.now());
-    }
-
     public List<Chore> getChores(DateTime now)
     {
         chores.sort(new Chore.ChoreComparator(now));
@@ -71,20 +66,10 @@ public class ChoreManager
         return Collections.unmodifiableList(list);
     }
 
-    public void complete(Chore chore)
-    {
-        complete(chore, DateTime.now());
-    }
-
     public void complete(Chore chore, DateTime now)
     {
         chore.reschedule(now);
         effortTracker.spend(chore.getEffort());
-    }
-
-    public void skip(Chore chore)
-    {
-        skip(chore, DateTime.now());
     }
 
     public void skip(Chore chore, DateTime now)

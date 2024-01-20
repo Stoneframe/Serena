@@ -49,13 +49,13 @@
                     android:id="@+id/choreDescriptionTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Description" />
+                    android:text="Description"/>
 
                 <EditText
                     android:id="@+id/choreDescriptionEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
+                    android:inputType="textCapSentences"
                     android:maxLines="1"
                     android:nextFocusDown="@+id/priorityEditText" />
 

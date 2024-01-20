@@ -46,8 +46,13 @@ public class TodayFragment extends Fragment
         choreListView.setOnItemClickListener((parent, view, position, id) ->
         {
             Chore chore = choreAdapter.getItem(position);
-            choreList.choreDone(chore);
 
+            if (chore == null || chore.getNext().isAfter(DateTime.now()))
+            {
+                return;
+            }
+
+            choreList.choreDone(chore);
             choreAdapter.notifyDataSetChanged();
 
             new Thread(() ->
@@ -74,8 +79,13 @@ public class TodayFragment extends Fragment
         taskListView.setOnItemClickListener((parent, view, position, id) ->
         {
             Task task = taskAdapter.getItem(position);
-            choreList.taskDone(task);
 
+            if (task == null || task.isDone())
+            {
+                return;
+            }
+
+            choreList.taskDone(task);
             taskAdapter.notifyDataSetChanged();
 
             new Thread(() ->

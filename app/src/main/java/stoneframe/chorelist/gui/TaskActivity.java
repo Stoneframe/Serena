@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
@@ -16,6 +17,12 @@ import stoneframe.chorelist.R;
 
 public class TaskActivity extends AppCompatActivity
 {
+    public static final int TASK_ACTION_ADD = 0;
+    public static final int TASK_ACTION_EDIT = 1;
+
+    public static final int TASK_RESULT_SAVE = 0;
+    public static final int TASK_RESULT_REMOVE = 1;
+
     private String description;
     private DateTime deadline;
     private DateTime ignoreBefore;
@@ -36,6 +43,11 @@ public class TaskActivity extends AppCompatActivity
         setContentView(R.layout.activity_task);
 
         Intent intent = getIntent();
+
+        int action = intent.getIntExtra("ACTION", -1);
+
+        Button button = findViewById(R.id.removeButton);
+        button.setVisibility(action == TASK_ACTION_EDIT ? Button.VISIBLE : Button.INVISIBLE);
 
         description = intent.getStringExtra("Description");
         deadline = (DateTime)intent.getSerializableExtra("Deadline");
@@ -71,12 +83,13 @@ public class TaskActivity extends AppCompatActivity
         ignoreBeforeEditText.setOnClickListener(view -> ignoreBeforePickerDialog.show());
     }
 
-    public void okClick(View view)
+    public void saveClick(View view)
     {
         description = descriptionEditText.getText().toString();
         isDone = isDoneCheckBox.isChecked();
 
         Intent intent = new Intent();
+        intent.putExtra("RESULT", TASK_RESULT_SAVE);
         intent.putExtra("Description", description);
         intent.putExtra("Deadline", deadline);
         intent.putExtra("IgnoreBefore", ignoreBefore);
@@ -89,6 +102,15 @@ public class TaskActivity extends AppCompatActivity
     public void cancelClick(View view)
     {
         setResult(RESULT_CANCELED);
+        finish();
+    }
+
+    public void removeClick(View view)
+    {
+        Intent intent = new Intent();
+        intent.putExtra("RESULT", TASK_RESULT_REMOVE);
+
+        setResult(RESULT_OK, intent);
         finish();
     }
 }

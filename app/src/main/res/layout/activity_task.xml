@@ -101,6 +101,24 @@
     </TableLayout>
 
     <Button
+        android:id="@+id/removeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:onClick="removeClick"
+        android:text="Remove" />
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@id/cancelButton"
+        android:onClick="saveClick"
+        android:text="Save" />
+
+    <Button
         android:id="@+id/cancelButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -108,14 +126,5 @@
         android:layout_alignParentBottom="true"
         android:onClick="cancelClick"
         android:text="Cancel" />
-
-    <Button
-        android:id="@+id/okButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@id/cancelButton"
-        android:onClick="okClick"
-        android:text="OK" />
 
 </RelativeLayout>

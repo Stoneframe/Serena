@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -18,6 +19,12 @@ import stoneframe.chorelist.R;
 
 public class ChoreActivity extends AppCompatActivity
 {
+    public static final int CHORE_ACTION_ADD = 0;
+    public static final int CHORE_ACTION_EDIT = 1;
+
+    public static final int CHORE_RESULT_SAVE = 0;
+    public static final int CHORE_RESULT_REMOVE = 1;
+
     private DateTime next;
     private String description;
     private int priority;
@@ -41,6 +48,11 @@ public class ChoreActivity extends AppCompatActivity
         setContentView(R.layout.activity_chore);
 
         Intent intent = getIntent();
+
+        int action = intent.getIntExtra("ACTION", -1);
+
+        Button button = findViewById(R.id.removeButton);
+        button.setVisibility(action == CHORE_ACTION_EDIT ? Button.VISIBLE : Button.INVISIBLE);
 
         next = (DateTime)intent.getSerializableExtra("Next");
         description = intent.getStringExtra("Description");
@@ -78,7 +90,9 @@ public class ChoreActivity extends AppCompatActivity
         priorityEditText.setText(Integer.toString(priority), TextView.BufferType.EDITABLE);
         effortEditText.setText(Integer.toString(effort), TextView.BufferType.EDITABLE);
         intervalUnitSpinner.setSelection(intervalUnit);
-        intervalLengthEditText.setText(Integer.toString(intervalLength), TextView.BufferType.EDITABLE);
+        intervalLengthEditText.setText(
+            Integer.toString(intervalLength),
+            TextView.BufferType.EDITABLE);
 
         nextEditText.setInputType(InputType.TYPE_NULL);
         nextEditText.setOnClickListener(new View.OnClickListener()
@@ -91,7 +105,7 @@ public class ChoreActivity extends AppCompatActivity
         });
     }
 
-    public void okClick(View view)
+    public void saveClick(View view)
     {
         description = descriptionEditText.getText().toString();
         priority = Integer.parseInt(priorityEditText.getText().toString());
@@ -100,6 +114,8 @@ public class ChoreActivity extends AppCompatActivity
         intervalLength = Integer.parseInt(intervalLengthEditText.getText().toString());
 
         Intent intent = new Intent();
+
+        intent.putExtra("RESULT", CHORE_RESULT_SAVE);
         intent.putExtra("Next", next);
         intent.putExtra("Description", description);
         intent.putExtra("Priority", priority);
@@ -114,6 +130,16 @@ public class ChoreActivity extends AppCompatActivity
     public void cancelClick(View view)
     {
         setResult(RESULT_CANCELED);
+        finish();
+    }
+
+    public void removeClick(View view)
+    {
+        Intent intent = new Intent();
+
+        intent.putExtra("RESULT", CHORE_RESULT_REMOVE);
+
+        setResult(RESULT_OK, intent);
         finish();
     }
 }

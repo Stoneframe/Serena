@@ -1,11 +1,14 @@
 package stoneframe.chorelist.gui;
 
+import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
@@ -25,6 +28,8 @@ public class TodayFragment extends Fragment
     private ArrayAdapter<Chore> choreAdapter;
     private ArrayAdapter<Task> taskAdapter;
 
+    private View rootView;
+
     @Override
     public View onCreateView(
         LayoutInflater inflater,
@@ -35,12 +40,13 @@ public class TodayFragment extends Fragment
             .getApplication();
         choreList = globalState.getChoreList();
 
-        View rootView = inflater.inflate(R.layout.fragment_today, container, false);
+        rootView = inflater.inflate(R.layout.fragment_today, container, false);
 
         choreAdapter = new SimpleCheckboxArrayAdapter<>(
             getActivity().getBaseContext(),
             Chore::getDescription,
             chore -> chore.getNext().isAfter(DateTime.now()));
+        choreAdapter.registerDataSetObserver(new TodayDataSetObserver());
         ListView choreListView = rootView.findViewById(R.id.todays_chores);
         choreListView.setAdapter(choreAdapter);
         choreListView.setOnItemClickListener((parent, view, position, id) ->
@@ -57,7 +63,7 @@ public class TodayFragment extends Fragment
 
             new Thread(() ->
             {
-                waitOneSecond();
+                waitTwoSeconds();
                 getActivity().runOnUiThread(() -> choreAdapter.remove(chore));
             }).start();
         });
@@ -74,6 +80,7 @@ public class TodayFragment extends Fragment
             getActivity().getBaseContext(),
             Task::getDescription,
             Task::isDone);
+        taskAdapter.registerDataSetObserver(new TodayDataSetObserver());
         ListView taskListView = rootView.findViewById(R.id.todays_tasks);
         taskListView.setAdapter(taskAdapter);
         taskListView.setOnItemClickListener((parent, view, position, id) ->
@@ -90,12 +97,32 @@ public class TodayFragment extends Fragment
 
             new Thread(() ->
             {
-                waitOneSecond();
+                waitTwoSeconds();
                 getActivity().runOnUiThread(() -> taskAdapter.remove(task));
             }).start();
         });
 
         return rootView;
+    }
+
+    private void updateColors()
+    {
+        updateColorsOf(choreAdapter, rootView.findViewById(R.id.chores_text));
+        updateColorsOf(taskAdapter, rootView.findViewById(R.id.tasks_text));
+    }
+
+    private void updateColorsOf(ArrayAdapter<?> adapter, TextView textView)
+    {
+        final int darkGreen = Color.parseColor("#228C22");
+
+        if (adapter.isEmpty())
+        {
+            textView.setBackgroundColor(darkGreen);
+        }
+        else
+        {
+            textView.setBackgroundColor(Color.BLACK);
+        }
     }
 
     @Override
@@ -116,7 +143,7 @@ public class TodayFragment extends Fragment
         taskAdapter.clear();
     }
 
-    private static void waitOneSecond()
+    private static void waitTwoSeconds()
     {
         try
         {
@@ -125,6 +152,15 @@ public class TodayFragment extends Fragment
         catch (InterruptedException ie)
         {
             Thread.currentThread().interrupt();
+        }
+    }
+
+    private class TodayDataSetObserver extends DataSetObserver
+    {
+        @Override
+        public void onChanged()
+        {
+            updateColors();
         }
     }
 }

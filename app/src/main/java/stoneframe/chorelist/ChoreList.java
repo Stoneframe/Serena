@@ -7,6 +7,9 @@ import stoneframe.chorelist.model.ChoreManager;
 import stoneframe.chorelist.model.ChoreSelector;
 import stoneframe.chorelist.model.Container;
 import stoneframe.chorelist.model.EffortTracker;
+import stoneframe.chorelist.model.Procedure;
+import stoneframe.chorelist.model.Routine;
+import stoneframe.chorelist.model.RoutineManager;
 import stoneframe.chorelist.model.Storage;
 import stoneframe.chorelist.model.Task;
 import stoneframe.chorelist.model.TaskManager;
@@ -22,6 +25,7 @@ public class ChoreList
 
     private ChoreManager choreManager;
     private TaskManager taskManager;
+    private RoutineManager routineManager;
 
     public ChoreList(
         Storage storage,
@@ -48,6 +52,8 @@ public class ChoreList
             choreManager = new ChoreManager(effortTracker, choreSelector);
             taskManager = new TaskManager();
         }
+
+        routineManager = new RoutineManager(timeService);
     }
 
     public void save()
@@ -128,5 +134,30 @@ public class ChoreList
     public void taskUndone(Task task)
     {
         taskManager.undo(task);
+    }
+
+    public List<Routine> getAllRoutines()
+    {
+        return routineManager.getAllRoutines();
+    }
+
+    public void addRoutine(Routine routine)
+    {
+        routineManager.addRoutine(routine);
+    }
+
+    public void removeRoutine(Routine routine)
+    {
+        routineManager.removeRoutine(routine);
+    }
+
+    public Procedure getNextRoutineProcedure()
+    {
+        return routineManager.getNextProcedure();
+    }
+
+    public Procedure getPreviousRoutineProcedure()
+    {
+        return routineManager.getPreviousProcedure();
     }
 }

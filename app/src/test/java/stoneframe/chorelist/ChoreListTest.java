@@ -1,12 +1,14 @@
 package stoneframe.chorelist;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,6 +20,8 @@ import java.util.stream.Collectors;
 
 import stoneframe.chorelist.model.Chore;
 import stoneframe.chorelist.model.Container;
+import stoneframe.chorelist.model.Procedure;
+import stoneframe.chorelist.model.Routine;
 import stoneframe.chorelist.model.Storage;
 import stoneframe.chorelist.model.Task;
 import stoneframe.chorelist.model.TimeService;
@@ -33,13 +37,13 @@ public class ChoreListTest
     private static final DateTime YESTERDAY = TODAY.minusDays(1);
     private static final DateTime TOMORROW = TODAY.plusDays(1);
 
+    private final MockTimeService timeService = new MockTimeService(TODAY);
+
     private ChoreList choreList;
 
     @Before
     public void before()
     {
-        MockTimeService timeService = new MockTimeService(TODAY);
-
         choreList = new ChoreList(
             new MockStorage(),
             timeService,
@@ -50,13 +54,13 @@ public class ChoreListTest
     }
 
     @Test
-    public void GetAllChores_NoChoresAdded_ReturnEmptyList()
+    public void getAllChores_noChoresAdded_returnEmptyList()
     {
         assertAllChoresIsEmpty();
     }
 
     @Test
-    public void GetAllChores_ChoresAddedInNonAlphabeticOrder_GetAllChoresReturnsInAlphabeticOrder()
+    public void getAllChores_choresAddedInNonAlphabeticOrder_getAllChoresReturnsInAlphabeticOrder()
     {
         addChore("C Chore", TODAY);
         addChore("A Chore", TODAY);
@@ -65,35 +69,35 @@ public class ChoreListTest
     }
 
     @Test
-    public void AddChore_AddSingleChore_GetAllChoresContainsChore()
+    public void addChore_addSingleChore_getAllChoresContainsChore()
     {
         addChore("Chore", TODAY);
         assertAllChoresEquals("Chore");
     }
 
     @Test
-    public void AddChore_ChoreAddedWithTodaysDate_TodaysChoresContainsAddedChore()
+    public void addChore_choreAddedWithTodaysDate_todaysChoresContainsAddedChore()
     {
         addChore("ChoreForToday", TODAY);
         assertTodaysChoresEquals("ChoreForToday");
     }
 
     @Test
-    public void AddChore_ChoreAddedWithYesterdaysDate_TodaysChoresContainsAddedChore()
+    public void addChore_choreAddedWithYesterdaysDate_todaysChoresContainsAddedChore()
     {
         addChore("ChoreForYesterday", YESTERDAY);
         assertTodaysChoresEquals("ChoreForYesterday");
     }
 
     @Test
-    public void AddChore_ChoreAddedWithTomorrowsDate_TodaysChoresContainsAddedChore()
+    public void addChore_choreAddedWithTomorrowsDate_todaysChoresContainsAddedChore()
     {
         addChore("ChoreForTomorrow", TOMORROW);
         assertTodaysChoresIsEmpty();
     }
 
     @Test
-    public void RemoveChore_RemoveExistingChore_GetAllChoresDoesNotContainChore()
+    public void removeChore_removeExistingChore_getAllChoresDoesNotContainChore()
     {
         addChore("Chore1", TODAY);
         addChore("Chore2", TODAY);
@@ -102,13 +106,13 @@ public class ChoreListTest
     }
 
     @Test
-    public void GetTodaysChores_NoChoresAdded_ReturnEmptyList()
+    public void getTodaysChores_noChoresAdded_returnEmptyList()
     {
         assertTodaysChoresIsEmpty();
     }
 
     @Test
-    public void GetTodaysChore_MoreChoresThanEffort_ReturnChoresThatMatchEffort1()
+    public void getTodaysChore_moreChoresThanEffort_returnChoresThatMatchEffort1()
     {
         setRemainingEffort(7);
         addChore("Chore1", TODAY, 5);
@@ -118,7 +122,7 @@ public class ChoreListTest
     }
 
     @Test
-    public void GetTodaysChore_MoreChoresThanEffort_ReturnChoresThatMatchEffort2()
+    public void getTodaysChore_moreChoresThanEffort_returnChoresThatMatchEffort2()
     {
         setRemainingEffort(10);
         addChore("Chore1", TODAY, 5);
@@ -128,7 +132,7 @@ public class ChoreListTest
     }
 
     @Test
-    public void GetTodaysChore_MoreChoresThanEffort_ReturnChoresThatMatchEffort3()
+    public void getTodaysChore_moreChoresThanEffort_returnChoresThatMatchEffort3()
     {
         setRemainingEffort(13);
         addChore("Chore1", TODAY, 5);
@@ -138,7 +142,7 @@ public class ChoreListTest
     }
 
     @Test
-    public void GetTodaysChores_OneChoreTomorrowAndOneChoreCompletedAndOneChoreRemoved_ReturnSingleRemainingChore()
+    public void getTodaysChores_oneChoreTomorrowAndOneChoreCompletedAndOneChoreRemoved_returnSingleRemainingChore()
     {
         setRemainingEffort(10);
         addChore("Chore1", YESTERDAY, 3);
@@ -151,7 +155,7 @@ public class ChoreListTest
     }
 
     @Test
-    public void ChoreDone_ChoreForEveryDay_RescheduleChoreForTomorrow()
+    public void choreDone_choreForEveryDay_rescheduleChoreForTomorrow()
     {
         addChore("everyDayChore", TODAY, 1, Chore.DAYS);
         completeChore("everyDayChore");
@@ -159,7 +163,7 @@ public class ChoreListTest
     }
 
     @Test
-    public void ChoreDone_ChoreForEveryOtherDay_RescheduleChoreForTheDayAfterTomorrow()
+    public void choreDone_choreForEveryOtherDay_rescheduleChoreForTheDayAfterTomorrow()
     {
         addChore("everyOtherDayChore", TODAY, 2, Chore.DAYS);
         completeChore("everyOtherDayChore");
@@ -167,7 +171,7 @@ public class ChoreListTest
     }
 
     @Test
-    public void ChoreDone_ChoreForEveryWeek_RescheduleChoreForNextWeek()
+    public void choreDone_choreForEveryWeek_rescheduleChoreForNextWeek()
     {
         addChore("everyWeekChore", TODAY, 1, Chore.WEEKS);
         completeChore("everyWeekChore");
@@ -175,7 +179,7 @@ public class ChoreListTest
     }
 
     @Test
-    public void ChoreDone_OneChoreDone_ReturnLessRemainingEffort()
+    public void choreDone_oneChoreDone_returnLessRemainingEffort()
     {
         setRemainingEffort(10);
         addChore("Chore", TODAY, 5);
@@ -184,7 +188,7 @@ public class ChoreListTest
     }
 
     @Test
-    public void ChoreSkip_SkipChore_TodaysChoreDoesNotContainSkippedChore()
+    public void choreSkip_skipChore_todaysChoreDoesNotContainSkippedChore()
     {
         addChore("Chore1", TODAY);
         addChore("Chore2", TODAY);
@@ -193,7 +197,7 @@ public class ChoreListTest
     }
 
     @Test
-    public void ChoreSkip_SkipChore_RemainingEffortIsUnchanged()
+    public void choreSkip_skipChore_remainingEffortIsUnchanged()
     {
         setRemainingEffort(10);
         addChore("Chore1", TODAY, 5);
@@ -203,7 +207,7 @@ public class ChoreListTest
     }
 
     @Test
-    public void ChoreSkip_SkipChore_ChoreRescheduled()
+    public void choreSkip_skipChore_choreRescheduled()
     {
         setRemainingEffort(10);
         addChore("Chore1", TODAY, 3, Chore.DAYS);
@@ -213,19 +217,19 @@ public class ChoreListTest
     }
 
     @Test
-    public void GetRemainingEffort_NoChoreDone_ReturnMaxEffort()
+    public void getRemainingEffort_noChoreDone_returnMaxEffort()
     {
         assertRemainingEffortIs(MAX_EFFORT);
     }
 
     @Test
-    public void GetAllTasks_NoTasksAdded_ReturnEmptyList()
+    public void getAllTasks_noTasksAdded_returnEmptyList()
     {
         assertAllTasksIsEmpty();
     }
 
     @Test
-    public void GetAllTasks_TasksAddedInNonDeadlineOrder_GetAllTasksReturnsInDeadlineOrder()
+    public void getAllTasks_tasksAddedInNonDeadlineOrder_getAllTasksReturnsInDeadlineOrder()
     {
         addTask("A Task", TOMORROW);
         addTask("B Task", YESTERDAY);
@@ -234,7 +238,7 @@ public class ChoreListTest
     }
 
     @Test
-    public void GetAllTasks_TaskCompletedAndDoNotIncludeCompletedTasks_GetAllTasksDoesNotContainCompletedTasks()
+    public void getAllTasks_taskCompletedAndDoNotIncludeCompletedTasks_getAllTasksDoesNotContainCompletedTasks()
     {
         addTask("A Task", YESTERDAY);
         addTask("B Task", TODAY);
@@ -244,14 +248,14 @@ public class ChoreListTest
     }
 
     @Test
-    public void AddTask_AddSingleChore_GetAllTasksContainsTask()
+    public void addTask_addSingleChore_getAllTasksContainsTask()
     {
         addTask("Task");
         assertAllTasksEquals(false, "Task");
     }
 
     @Test
-    public void RemoveTask_RemoveExistingTask_GetAllTasksDoesNotContainRemovedTask()
+    public void removeTask_removeExistingTask_getAllTasksDoesNotContainRemovedTask()
     {
         addTask("Task1");
         addTask("Task2");
@@ -260,13 +264,13 @@ public class ChoreListTest
     }
 
     @Test
-    public void GetTodaysTasks_NoTasksAdded_ReturnsEmptyList()
+    public void getTodaysTasks_noTasksAdded_returnsEmptyList()
     {
         assertTodaysTasksIsEmpty();
     }
 
     @Test
-    public void GetTodaysTasks_TasksAddedInNonDeadlineOrder_GetTodaysTasksReturnsInDeadlineOrder()
+    public void getTodaysTasks_tasksAddedInNonDeadlineOrder_getTodaysTasksReturnsInDeadlineOrder()
     {
         addTask("A Task", TOMORROW);
         addTask("B Task", YESTERDAY);
@@ -275,7 +279,7 @@ public class ChoreListTest
     }
 
     @Test
-    public void GetTodaysTasks_TasksWithIgnoreBefore_GetTodaysTasksDoesNotContainIgnoredTask()
+    public void getTodaysTasks_tasksWithIgnoreBefore_getTodaysTasksDoesNotContainIgnoredTask()
     {
         addTask("A Task", YESTERDAY, YESTERDAY);
         addTask("B Task", TODAY, TODAY);
@@ -284,13 +288,95 @@ public class ChoreListTest
     }
 
     @Test
-    public void GetTodaysTasks_CompletedTask_GetTodaysTasksDoesNotContainCompletedTask()
+    public void getTodaysTasks_completedTask_getTodaysTasksDoesNotContainCompletedTask()
     {
         addTask("A Task", YESTERDAY);
         addTask("B Task", TODAY);
         addTask("C Task", TOMORROW);
         completeTask("B Task");
         assertTodaysTasksEquals("A Task", "C Task");
+    }
+
+    @Test
+    public void getAllRoutines_noRoutinesAdded_returnEmptyList()
+    {
+        assertAllRoutinesIsEmpty();
+    }
+
+    @Test
+    public void addRoutine_routineAdded_getAllRoutinesContainsAddedRoutine()
+    {
+        addRoutine("A Routine");
+        assertAllRoutinesEquals("A Routine");
+    }
+
+    @Test
+    public void removeRoutine_removeExistingRoutine_getAllRoutinesDoesNotContainRoutine()
+    {
+        addRoutine("A Routine");
+        removeRoutine("A Routine");
+        assertAllRoutinesIsEmpty();
+    }
+
+    @Test
+    public void getNextRoutineProcedure_singleRoutineWithProcedureInFuture_returnProcedure()
+    {
+        addRoutine("Routine", new Procedure("Procedure", new LocalTime(18, 0)));
+        setCurrentTimeTo(TODAY.plusHours(12));
+        assertNextRoutineProcedureIs("Routine", "Procedure");
+    }
+
+    @Test
+    public void getNextRoutineProcedure_singleRoutineWithTwoProcedureInFuture_returnFirstProcedure()
+    {
+        addRoutine(
+            "Routine",
+            new Procedure("Procedure 1", new LocalTime(18, 0)),
+            new Procedure("Procedure 2", new LocalTime(21, 0)));
+        setCurrentTimeTo(TODAY.plusHours(12));
+        assertNextRoutineProcedureIs("Routine", "Procedure 1");
+    }
+
+    @Test
+    public void getNextRoutineProcedure_twoRoutinesWithOneProcedureEachInFuture_returnFirstProcedure()
+    {
+        addRoutine("Routine 1", new Procedure("Procedure 1", new LocalTime(21, 0)));
+        addRoutine("Routine 2", new Procedure("Procedure 1", new LocalTime(18, 0)));
+        setCurrentTimeTo(TODAY.plusHours(12));
+        assertNextRoutineProcedureIs("Routine 2", "Procedure 1");
+    }
+
+    @Test
+    public void getPreviousRoutineProcedure_singleRoutineWithProcedureInPast_returnProcedure()
+    {
+        addRoutine("Routine", new Procedure("Procedure", new LocalTime(6, 0)));
+        setCurrentTimeTo(TODAY.plusHours(12));
+        assertPreviousRoutineProcedureIs("Routine", "Procedure");
+    }
+
+    @Test
+    public void getPreviousRoutineProcedure_singleRoutineWithTwoProcedureInPast_returnLatestProcedure()
+    {
+        addRoutine(
+            "Routine",
+            new Procedure("Procedure 1", new LocalTime(6, 0)),
+            new Procedure("Procedure 2", new LocalTime(9, 0)));
+        setCurrentTimeTo(TODAY.plusHours(12));
+        assertPreviousRoutineProcedureIs("Routine", "Procedure 2");
+    }
+
+    @Test
+    public void getPreviousRoutineProcedure_twoRoutinesWithOneProcedureEachInPast_returnLatestProcedure()
+    {
+        addRoutine("Routine 1", new Procedure("Procedure 1", new LocalTime(9, 0)));
+        addRoutine("Routine 2", new Procedure("Procedure 1", new LocalTime(6, 0)));
+        setCurrentTimeTo(TODAY.plusHours(12));
+        assertPreviousRoutineProcedureIs("Routine 1", "Procedure 1");
+    }
+
+    private void setCurrentTimeTo(DateTime now)
+    {
+        timeService.setNow(now);
     }
 
     private void setRemainingEffort(int remainingEffort)
@@ -316,7 +402,11 @@ public class ChoreListTest
     }
 
     private void addChore(
-        String description, DateTime next, int intervalLength, int intervalUnit, int effort)
+        String description,
+        DateTime next,
+        int intervalLength,
+        int intervalUnit,
+        int effort)
     {
         Chore chore = new Chore(description, 1, effort, next, intervalLength, intervalUnit);
 
@@ -401,6 +491,34 @@ public class ChoreListTest
         choreList.taskDone(task);
     }
 
+    private Routine getRoutine(String name)
+    {
+        Optional<Routine> routineOptional = choreList.getAllRoutines()
+            .stream()
+            .filter(r -> r.getName().equals(name))
+            .findFirst();
+
+        assertTrue(routineOptional.isPresent());
+
+        return routineOptional.get();
+    }
+
+    private void addRoutine(String name, Procedure... procedures)
+    {
+        Routine routine = new Routine(name, new LocalTime(0));
+
+        Arrays.stream(procedures).forEach(routine::addProcedure);
+
+        choreList.addRoutine(routine);
+    }
+
+    private void removeRoutine(String name)
+    {
+        Routine routine = getRoutine(name);
+
+        choreList.removeRoutine(routine);
+    }
+
     private void assertAllChoresIsEmpty()
     {
         assertAllChoresEquals();
@@ -481,10 +599,45 @@ public class ChoreListTest
         assertEquals(expectedDescriptions, actualDescriptions);
     }
 
+    private void assertAllRoutinesIsEmpty()
+    {
+        assertAllRoutinesEquals();
+    }
+
+    private void assertAllRoutinesEquals(String... names)
+    {
+        List<String> expectedNames = Arrays.asList(names);
+
+        List<String> actualNames = choreList.getAllRoutines()
+            .stream()
+            .map(Routine::getName)
+            .collect(Collectors.toList());
+
+        assertEquals(expectedNames, actualNames);
+    }
+
+    private void assertNextRoutineProcedureIs(String routine, String procedure)
+    {
+        Procedure nextProcedure = choreList.getNextRoutineProcedure();
+
+        assertNotNull(nextProcedure);
+        assertEquals(routine, nextProcedure.getRoutine().getName());
+        assertEquals(procedure, nextProcedure.getDescription());
+    }
+
+    private void assertPreviousRoutineProcedureIs(String routine, String procedure)
+    {
+        Procedure previousProcedure = choreList.getPreviousRoutineProcedure();
+
+        assertNotNull(previousProcedure);
+        assertEquals(routine, previousProcedure.getRoutine().getName());
+        assertEquals(procedure, previousProcedure.getDescription());
+    }
+
     private static class MockTimeService implements TimeService
     {
         @NonNull
-        private final DateTime now;
+        private DateTime now;
 
         public MockTimeService(@NonNull DateTime now)
         {
@@ -496,6 +649,11 @@ public class ChoreListTest
         public DateTime getNow()
         {
             return now;
+        }
+
+        public void setNow(@NonNull DateTime now)
+        {
+            this.now = now;
         }
     }
 

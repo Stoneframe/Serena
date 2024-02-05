@@ -2,7 +2,6 @@ package stoneframe.chorelist.gui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +16,8 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.navigation.NavigationView;
 
+import org.joda.time.DateTime;
+
 import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.json.ContainerJsonConverter;
@@ -29,8 +30,7 @@ import stoneframe.chorelist.model.efforttrackers.WeeklyEffortTracker;
 import stoneframe.chorelist.model.storages.SharedPreferencesStorage;
 import stoneframe.chorelist.model.timeservices.RealTimeService;
 
-public class MainActivity extends AppCompatActivity
-    implements NavigationView.OnNavigationItemSelectedListener
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
     private static final int ACTIVITY_EDIT_EFFORT = 0;
     private static final int ACTIVITY_EDIT_STORAGE = 1;
@@ -46,10 +46,8 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        SharedPreferences settings = getPreferences(0);
-
         storage = new SharedPreferencesStorage(
-            settings,
+            this,
             new SimpleChoreSelectorConverter(),
             new WeeklyEffortTrackerConverter());
 
@@ -79,6 +77,9 @@ public class MainActivity extends AppCompatActivity
 
         navigationView.getMenu().getItem(0).setChecked(true);
         onNavigationItemSelected(navigationView.getMenu().getItem(0));
+
+        RoutineNotifier.setupNotificationChannel(this);
+        RoutineNotifier.scheduleRoutineAlarm(this, DateTime.now().plusSeconds(10));
     }
 
     @Override

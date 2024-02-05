@@ -1,5 +1,6 @@
 package stoneframe.chorelist.model.storages;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
@@ -20,11 +21,11 @@ public class SharedPreferencesStorage implements Storage
     private final EffortTrackerConverter effortTrackerConverter;
 
     public SharedPreferencesStorage(
-        SharedPreferences sharedPreferences,
+        Context context,
         ChoreSelectorConverter choreSelectorConverter,
         EffortTrackerConverter effortTrackerConverter)
     {
-        this.sharedPreferences = sharedPreferences;
+        this.sharedPreferences = context.getSharedPreferences(SAVE_NAME, 0);
         this.choreSelectorConverter = choreSelectorConverter;
         this.effortTrackerConverter = effortTrackerConverter;
     }

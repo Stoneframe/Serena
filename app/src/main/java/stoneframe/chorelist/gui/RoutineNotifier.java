@@ -35,9 +35,27 @@ public class RoutineNotifier
             pendingIntent);
     }
 
+    public static void cancelRoutineAlarm(Context context)
+    {
+        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+            context,
+            0,
+            new Intent(context, RoutineNotifierReceiver.class),
+            PendingIntent.FLAG_UPDATE_CURRENT);
+
+        alarmManager.cancel(pendingIntent);
+    }
+
     public static void setupNotificationChannel(Context context)
     {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+
+        if (notificationManager.getNotificationChannel(CHANNEL_ID) != null)
+        {
+            return;
+        }
 
         NotificationChannel channel = new NotificationChannel(
             CHANNEL_ID,

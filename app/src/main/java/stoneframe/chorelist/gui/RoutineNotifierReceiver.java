@@ -6,11 +6,14 @@ import android.content.Intent;
 
 import androidx.annotation.NonNull;
 
-import org.joda.time.DateTime;
+import java.security.acl.Group;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.json.SimpleChoreSelectorConverter;
 import stoneframe.chorelist.json.WeeklyEffortTrackerConverter;
+import stoneframe.chorelist.model.Procedure;
 import stoneframe.chorelist.model.Storage;
 import stoneframe.chorelist.model.choreselectors.SimpleChoreSelector;
 import stoneframe.chorelist.model.efforttrackers.WeeklyEffortTracker;
@@ -24,10 +27,14 @@ public class RoutineNotifierReceiver extends BroadcastReceiver
     {
         ChoreList choreList = getChoreList(context);
 
-        String notificationText = "Number of chores: " + choreList.getAllChores().size();
+        List<Procedure> procedures = choreList.getPendingProcedures();
 
-        RoutineNotifier.showRoutineNotification(context, notificationText, "");
-        RoutineNotifier.scheduleRoutineAlarm(context, DateTime.now().plusSeconds(10));
+        String notificationText = procedures.stream()
+            .map(Procedure::toString)
+            .collect(Collectors.joining(System.lineSeparator()));
+
+        RoutineNotifier.showRoutineNotification(context, notificationText, "Routine");
+        RoutineNotifier.scheduleRoutineAlarm(context, choreList.getNextRoutineProcedureTime());
     }
 
     @NonNull

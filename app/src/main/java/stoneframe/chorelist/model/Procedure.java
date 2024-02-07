@@ -1,13 +1,14 @@
 package stoneframe.chorelist.model;
 
+import androidx.annotation.NonNull;
+
+import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
 
 public class Procedure implements Comparable<Procedure>
 {
     private final String description;
     private final LocalTime time;
-
-    private Routine routine;
 
     public Procedure(String description, LocalTime time)
     {
@@ -20,24 +21,21 @@ public class Procedure implements Comparable<Procedure>
         return description;
     }
 
+    public LocalTime getTime()
+    {
+        return time;
+    }
+
     @Override
     public int compareTo(Procedure other)
     {
         return this.time.compareTo(other.time);
     }
 
-    public LocalTime getTime()
+    @NonNull
+    @Override
+    public String toString()
     {
-        return time;
-    }
-
-    public Routine getRoutine()
-    {
-        return routine;
-    }
-
-    void setRoutine(Routine routine)
-    {
-        this.routine = routine;
+        return time.toString("HH:mm") + "\t" + description;
     }
 }

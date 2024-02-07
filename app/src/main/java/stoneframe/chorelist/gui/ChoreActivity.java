@@ -82,7 +82,9 @@ public class ChoreActivity extends AppCompatActivity
         intervalUnitSpinner = findViewById(R.id.intervalUnitSpinner);
         intervalLengthEditText = findViewById(R.id.intervalLengthEditText);
 
-        intervalUnitSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
+        intervalUnitSpinner.setAdapter(new ArrayAdapter<>(
+            this,
+            android.R.layout.simple_list_item_1,
             new String[]{"Daily", "Weekly", "Monthly", "Yearly"}));
 
         nextEditText.setText(next.toString("yyyy-MM-dd"));
@@ -95,14 +97,7 @@ public class ChoreActivity extends AppCompatActivity
             TextView.BufferType.EDITABLE);
 
         nextEditText.setInputType(InputType.TYPE_NULL);
-        nextEditText.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                datePickerDialog.show();
-            }
-        });
+        nextEditText.setOnClickListener(view -> datePickerDialog.show());
     }
 
     public void saveClick(View view)

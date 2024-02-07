@@ -29,6 +29,15 @@
             android:name=".gui.TaskActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".gui.DayRoutineActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".gui.WeekRoutineActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".gui.FortnightRoutineActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".gui.EffortActivity"
             android:screenOrientation="portrait" />
         <activity

@@ -19,12 +19,14 @@ import java.util.Objects;
 import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.Chore;
+import stoneframe.chorelist.model.Procedure;
 import stoneframe.chorelist.model.Task;
 
 public class TodayFragment extends Fragment
 {
     private ChoreList choreList;
 
+    private ArrayAdapter<Procedure> procedureAdapter;
     private ArrayAdapter<Chore> choreAdapter;
     private ArrayAdapter<Task> taskAdapter;
 
@@ -41,6 +43,31 @@ public class TodayFragment extends Fragment
         choreList = globalState.getChoreList();
 
         rootView = inflater.inflate(R.layout.fragment_today, container, false);
+
+        procedureAdapter = new SimpleCheckboxArrayAdapter<>(
+            getActivity().getBaseContext(),
+            Procedure::getDescription,
+            p -> !choreList.getPendingProcedures().contains(p));
+        procedureAdapter.registerDataSetObserver(new TodayDataSetObserver());
+        ListView procedureListView = rootView.findViewById(R.id.todays_routines);
+        procedureListView.setAdapter(procedureAdapter);
+        procedureListView.setOnItemClickListener((parent, view, position, id) ->
+        {
+            Procedure procedure = procedureAdapter.getItem(position);
+
+            choreList.procedureDone(procedure);
+            procedureAdapter.notifyDataSetChanged();
+
+            new Thread(() ->
+            {
+                waitTwoSeconds();
+                getActivity().runOnUiThread(() ->
+                {
+                    procedureAdapter.clear();
+                    procedureAdapter.addAll(choreList.getPendingProcedures());
+                });
+            }).start();
+        });
 
         choreAdapter = new SimpleCheckboxArrayAdapter<>(
             getActivity().getBaseContext(),
@@ -107,6 +134,7 @@ public class TodayFragment extends Fragment
 
     private void updateColors()
     {
+        updateColorsOf(procedureAdapter, rootView.findViewById(R.id.routines_text));
         updateColorsOf(choreAdapter, rootView.findViewById(R.id.chores_text));
         updateColorsOf(taskAdapter, rootView.findViewById(R.id.tasks_text));
     }
@@ -130,6 +158,7 @@ public class TodayFragment extends Fragment
     {
         super.onStart();
 
+        procedureAdapter.addAll(choreList.getPendingProcedures());
         choreAdapter.addAll(choreList.getTodaysChores());
         taskAdapter.addAll(choreList.getTodaysTasks());
     }
@@ -139,6 +168,7 @@ public class TodayFragment extends Fragment
     {
         super.onStop();
 
+        procedureAdapter.clear();
         choreAdapter.clear();
         taskAdapter.clear();
     }

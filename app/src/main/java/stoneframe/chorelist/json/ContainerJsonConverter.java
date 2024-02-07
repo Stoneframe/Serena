@@ -6,12 +6,13 @@ import com.google.gson.GsonBuilder;
 import stoneframe.chorelist.model.ChoreSelector;
 import stoneframe.chorelist.model.Container;
 import stoneframe.chorelist.model.EffortTracker;
+import stoneframe.chorelist.model.Routine;
 
 public class ContainerJsonConverter
 {
     public static String toJson(Container container)
     {
-        return Converters.registerDateTime(new GsonBuilder())
+        return Converters.registerAll(new GsonBuilder())
             .create()
             .toJson(container);
     }
@@ -21,9 +22,10 @@ public class ContainerJsonConverter
         ChoreSelectorConverter choreSelectorConverter,
         EffortTrackerConverter effortTrackerConverter)
     {
-        return Converters.registerDateTime(new GsonBuilder())
+        return Converters.registerAll(new GsonBuilder())
             .registerTypeAdapter(ChoreSelector.class, choreSelectorConverter)
             .registerTypeAdapter(EffortTracker.class, effortTrackerConverter)
+            .registerTypeAdapter(Routine.class, new RoutineConverter())
             .create()
             .fromJson(json, Container.class);
     }

@@ -1,5 +1,7 @@
 package stoneframe.chorelist;
 
+import org.joda.time.DateTime;
+
 import java.util.List;
 
 import stoneframe.chorelist.model.Chore;
@@ -46,14 +48,14 @@ public class ChoreList
         {
             choreManager = container.ChoreManager;
             taskManager = container.TaskManager;
+            routineManager = container.RoutineManager;
         }
         else
         {
             choreManager = new ChoreManager(effortTracker, choreSelector);
             taskManager = new TaskManager();
+            routineManager = new RoutineManager();
         }
-
-        routineManager = new RoutineManager(timeService);
     }
 
     public void save()
@@ -62,6 +64,7 @@ public class ChoreList
 
         container.ChoreManager = choreManager;
         container.TaskManager = taskManager;
+        container.RoutineManager = routineManager;
 
         storage.save(container);
     }
@@ -151,13 +154,28 @@ public class ChoreList
         routineManager.removeRoutine(routine);
     }
 
-    public Procedure getNextRoutineProcedure()
+//    public Procedure getNextRoutineProcedure()
+//    {
+//        return routineManager.getNextProcedure(timeService.getNow().toLocalTime());
+//    }
+
+    public DateTime getNextRoutineProcedureTime()
     {
-        return routineManager.getNextProcedure();
+        return routineManager.getNextProcedureTime(timeService.getNow());
     }
 
-    public Procedure getPreviousRoutineProcedure()
+//    public Procedure getPreviousRoutineProcedure()
+//    {
+//        return routineManager.getPreviousProcedure(timeService.getNow().toLocalTime());
+//    }
+
+    public List<Procedure> getPendingProcedures()
     {
-        return routineManager.getPreviousProcedure();
+        return routineManager.getPendingProcedures(timeService.getNow());
+    }
+
+    public void procedureDone(Procedure procedure)
+    {
+        routineManager.procedureDone(procedure, timeService.getNow());
     }
 }

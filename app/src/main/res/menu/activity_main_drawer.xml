@@ -6,6 +6,9 @@
             android:id="@+id/nav_todays"
             android:title="Today" />
         <item
+            android:id="@+id/nav_all_routines"
+            android:title="Manage Routines"/>
+        <item
             android:id="@+id/nav_all_chores"
             android:title="Manage Chores" />
 

@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -105,6 +106,7 @@ public class FortnightRoutineActivity extends AppCompatActivity
         setupDay(R.id.procedures_sunday_week2, 2, DateTimeConstants.SUNDAY);
 
         procedureTimeEditText = findViewById(R.id.week_procedure_time);
+        procedureTimeEditText.setInputType(InputType.TYPE_NULL);
         procedureTimeEditText.setOnClickListener(v -> showTimePicker());
 
         procedureWeekSpinner = findViewById(R.id.week_procedure_week);

@@ -3,6 +3,7 @@ package stoneframe.chorelist.gui;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -35,25 +36,8 @@ public class WeekRoutineActivity extends AppCompatActivity
     private WeekRoutine routine;
 
     private Map<Integer, ArrayAdapter<Procedure>> procedureListAdapters;
-    private Map<Integer, ListView> procedureLists;
-
-//    private ArrayAdapter<Procedure> mondayProcedureListAdapter;
-//    private ArrayAdapter<Procedure> tuesdayProcedureListAdapter;
-//    private ArrayAdapter<Procedure> wednesdayProcedureListAdapter;
-//    private ArrayAdapter<Procedure> thursdayProcedureListAdapter;
-//    private ArrayAdapter<Procedure> fridayProcedureListAdapter;
-//    private ArrayAdapter<Procedure> saturdayProcedureListAdapter;
-//    private ArrayAdapter<Procedure> sundayProcedureListAdapter;
 
     private EditText nameEditText;
-
-//    private ListView mondayProcedureListView;
-//    private ListView tuesdayProcedureListView;
-//    private ListView wednesdayProcedureListView;
-//    private ListView thursdayProcedureListView;
-//    private ListView fridayProcedureListView;
-//    private ListView saturdayProcedureListView;
-//    private ListView sundayProcedureListView;
 
     private EditText procedureTimeEditText;
     private EditText procedureDescriptionEditText;
@@ -75,7 +59,6 @@ public class WeekRoutineActivity extends AppCompatActivity
         button.setVisibility(action == ROUTINE_ACTION_EDIT ? Button.VISIBLE : Button.INVISIBLE);
 
         procedureListAdapters = new HashMap<>();
-        procedureLists = new HashMap<>();
 
         nameEditText = findViewById(R.id.fortnight_routine_name_edit);
 
@@ -87,44 +70,8 @@ public class WeekRoutineActivity extends AppCompatActivity
         setupDay(R.id.procedures_saturday, DateTimeConstants.SATURDAY);
         setupDay(R.id.procedures_sunday, DateTimeConstants.SUNDAY);
 
-//        mondayProcedureListAdapter = createProcedureListAdapter(DateTimeConstants.MONDAY);
-//        tuesdayProcedureListAdapter = createProcedureListAdapter(DateTimeConstants.TUESDAY);
-//        wednesdayProcedureListAdapter = createProcedureListAdapter(DateTimeConstants.WEDNESDAY);
-//        thursdayProcedureListAdapter = createProcedureListAdapter(DateTimeConstants.THURSDAY);
-//        fridayProcedureListAdapter = createProcedureListAdapter(DateTimeConstants.FRIDAY);
-//        saturdayProcedureListAdapter = createProcedureListAdapter(DateTimeConstants.SATURDAY);
-//        sundayProcedureListAdapter = createProcedureListAdapter(DateTimeConstants.SUNDAY);
-//
-//        mondayProcedureListView = setupProcedureListView(
-//            mondayProcedureListAdapter,
-//            R.id.procedures_monday,
-//            DateTimeConstants.MONDAY);
-//        tuesdayProcedureListView = setupProcedureListView(
-//            tuesdayProcedureListAdapter,
-//            R.id.procedures_tuesday,
-//            DateTimeConstants.TUESDAY);
-//        wednesdayProcedureListView = setupProcedureListView(
-//            wednesdayProcedureListAdapter,
-//            R.id.procedures_wednesday,
-//            DateTimeConstants.WEDNESDAY);
-//        thursdayProcedureListView = setupProcedureListView(
-//            thursdayProcedureListAdapter,
-//            R.id.procedures_thursday,
-//            DateTimeConstants.THURSDAY);
-//        fridayProcedureListView = setupProcedureListView(
-//            fridayProcedureListAdapter,
-//            R.id.procedures_friday,
-//            DateTimeConstants.FRIDAY);
-//        saturdayProcedureListView = setupProcedureListView(
-//            saturdayProcedureListAdapter,
-//            R.id.procedures_saturday,
-//            DateTimeConstants.SATURDAY);
-//        sundayProcedureListView = setupProcedureListView(
-//            sundayProcedureListAdapter,
-//            R.id.procedures_sunday,
-//            DateTimeConstants.SUNDAY);
-
         procedureTimeEditText = findViewById(R.id.week_procedure_time);
+        procedureTimeEditText.setInputType(InputType.TYPE_NULL);
         procedureTimeEditText.setOnClickListener(v -> showTimePicker());
 
         procedureDaySpinner = findViewById(R.id.week_procedure_day_of_week);
@@ -142,13 +89,12 @@ public class WeekRoutineActivity extends AppCompatActivity
     {
         ArrayAdapter<Procedure> adapter = createProcedureListAdapter(dayOfWeek);
 
-        ListView list = setupProcedureListView(adapter, procedureDayList, dayOfWeek);
+        setupProcedureListView(adapter, procedureDayList, dayOfWeek);
 
         procedureListAdapters.put(dayOfWeek, adapter);
-        procedureLists.put(dayOfWeek, list);
     }
 
-    private ListView setupProcedureListView(
+    private void setupProcedureListView(
         ArrayAdapter<Procedure> procedureArrayAdapter,
         int procedureList,
         int dayOfWeek)
@@ -158,8 +104,6 @@ public class WeekRoutineActivity extends AppCompatActivity
         procedureListView.setAdapter(procedureArrayAdapter);
         procedureListView.setOnItemLongClickListener((parent, view, position, id) ->
             removeProcedure(position, procedureArrayAdapter, dayOfWeek));
-
-        return procedureListView;
     }
 
     @NonNull

@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         onNavigationItemSelected(navigationView.getMenu().getItem(0));
 
         RoutineNotifier.setupNotificationChannel(this);
+        RoutineNotifier.scheduleRoutineAlarm(this, choreList.getNextRoutineProcedureTime());
     }
 
     @Override

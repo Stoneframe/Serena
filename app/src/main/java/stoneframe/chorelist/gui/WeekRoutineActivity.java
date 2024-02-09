@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -39,9 +40,58 @@ public class WeekRoutineActivity extends AppCompatActivity
 
     private EditText nameEditText;
 
+    private WeekRoutineListAdaptor routineProcedureListAdaptor;
+
     private EditText procedureTimeEditText;
     private EditText procedureDescriptionEditText;
     private Spinner procedureDaySpinner;
+
+    public void saveClick(View view)
+    {
+        routine.setName(nameEditText.getText().toString());
+
+        Intent intent = new Intent();
+
+        intent.putExtra("RESULT", ROUTINE_RESULT_SAVE);
+
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    public void cancelClick(View view)
+    {
+        setResult(RESULT_CANCELED);
+        finish();
+    }
+
+    public void removeClick(View view)
+    {
+        Intent intent = new Intent();
+
+        intent.putExtra("RESULT", ROUTINE_RESULT_REMOVE);
+
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    public void addProcedureClick(View view)
+    {
+        LocalTime time = LocalTime.parse(procedureTimeEditText.getText().toString());
+        String description = procedureDescriptionEditText.getText().toString();
+        int dayOfWeek = (int)procedureDaySpinner.getSelectedItemId() + 1;
+
+        Procedure procedure = new Procedure(description, time);
+
+        routine.getWeekDay(dayOfWeek).addProcedure(procedure);
+
+        ArrayAdapter<Procedure> procedureArrayAdapter = procedureListAdapters.get(dayOfWeek);
+
+        procedureArrayAdapter.add(procedure);
+        procedureArrayAdapter.sort(Procedure::compareTo);
+
+        procedureTimeEditText.setText("00:00");
+        procedureDescriptionEditText.setText("");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -61,6 +111,13 @@ public class WeekRoutineActivity extends AppCompatActivity
         procedureListAdapters = new HashMap<>();
 
         nameEditText = findViewById(R.id.fortnight_routine_name_edit);
+
+        routineProcedureListAdaptor = new WeekRoutineListAdaptor(
+            this,
+            GlobalState.getInstance(this).getChoreList());
+
+        ExpandableListView routineProcedureList = findViewById(R.id.routine_procedure_list);
+        routineProcedureList.setAdapter(routineProcedureListAdaptor);
 
         setupDay(R.id.procedures_monday, DateTimeConstants.MONDAY);
         setupDay(R.id.procedures_tuesday, DateTimeConstants.TUESDAY);
@@ -143,52 +200,5 @@ public class WeekRoutineActivity extends AppCompatActivity
             0,
             0,
             true).show();
-    }
-
-    public void saveClick(View view)
-    {
-        routine.setName(nameEditText.getText().toString());
-
-        Intent intent = new Intent();
-
-        intent.putExtra("RESULT", ROUTINE_RESULT_SAVE);
-
-        setResult(RESULT_OK, intent);
-        finish();
-    }
-
-    public void cancelClick(View view)
-    {
-        setResult(RESULT_CANCELED);
-        finish();
-    }
-
-    public void removeClick(View view)
-    {
-        Intent intent = new Intent();
-
-        intent.putExtra("RESULT", ROUTINE_RESULT_REMOVE);
-
-        setResult(RESULT_OK, intent);
-        finish();
-    }
-
-    public void addProcedureClick(View view)
-    {
-        LocalTime time = LocalTime.parse(procedureTimeEditText.getText().toString());
-        String description = procedureDescriptionEditText.getText().toString();
-        int dayOfWeek = (int)procedureDaySpinner.getSelectedItemId() + 1;
-
-        Procedure procedure = new Procedure(description, time);
-
-        routine.getWeekDay(dayOfWeek).addProcedure(procedure);
-
-        ArrayAdapter<Procedure> procedureArrayAdapter = procedureListAdapters.get(dayOfWeek);
-
-        procedureArrayAdapter.add(procedure);
-        procedureArrayAdapter.sort(Procedure::compareTo);
-
-        procedureTimeEditText.setText("00:00");
-        procedureDescriptionEditText.setText("");
     }
 }

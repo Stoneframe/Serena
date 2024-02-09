@@ -43,6 +43,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <ExpandableListView
+                android:id="@+id/routine_procedure_list"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
+                android:divider="@android:color/darker_gray"
+                android:dividerHeight="0.5dp" />
+
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

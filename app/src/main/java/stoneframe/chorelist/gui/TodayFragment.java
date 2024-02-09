@@ -6,13 +6,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.CheckedTextView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
-
-import org.joda.time.DateTime;
 
 import java.util.Objects;
 
@@ -26,9 +25,9 @@ public class TodayFragment extends Fragment
 {
     private ChoreList choreList;
 
-    private ArrayAdapter<Procedure> procedureAdapter;
-    private ArrayAdapter<Chore> choreAdapter;
-    private ArrayAdapter<Task> taskAdapter;
+    private SimpleCheckboxListAdapter<Procedure> procedureAdapter;
+    private SimpleCheckboxListAdapter<Chore> choreAdapter;
+    private SimpleCheckboxListAdapter<Task> taskAdapter;
 
     private View rootView;
 
@@ -44,92 +43,120 @@ public class TodayFragment extends Fragment
 
         rootView = inflater.inflate(R.layout.fragment_today, container, false);
 
-        procedureAdapter = new SimpleCheckboxArrayAdapter<>(
+        procedureAdapter = new SimpleCheckboxListAdapter<>(
             getActivity().getBaseContext(),
-            Procedure::getDescription,
-            p -> !choreList.getPendingProcedures().contains(p));
+            choreList::getPendingProcedures,
+            Procedure::getDescription);
         procedureAdapter.registerDataSetObserver(new TodayDataSetObserver());
         ListView procedureListView = rootView.findViewById(R.id.todays_routines);
         procedureListView.setAdapter(procedureAdapter);
         procedureListView.setOnItemClickListener((parent, view, position, id) ->
         {
-            Procedure procedure = procedureAdapter.getItem(position);
+            CheckedTextView checkedTextView = (CheckedTextView)view;
 
-            choreList.procedureDone(procedure);
-            procedureAdapter.notifyDataSetChanged();
+            if (checkedTextView.isChecked())
+            {
+                return;
+            }
+
+            checkedTextView.setChecked(true);
 
             new Thread(() ->
             {
                 waitTwoSeconds();
                 getActivity().runOnUiThread(() ->
                 {
-                    procedureAdapter.clear();
-                    procedureAdapter.addAll(choreList.getPendingProcedures());
+                    Procedure procedure = (Procedure)procedureAdapter.getItem(position);
+                    choreList.procedureDone(procedure);
+                    procedureAdapter.notifyDataSetChanged();
                 });
             }).start();
         });
 
-        choreAdapter = new SimpleCheckboxArrayAdapter<>(
+        choreAdapter = new SimpleCheckboxListAdapter<>(
             getActivity().getBaseContext(),
-            Chore::getDescription,
-            chore -> chore.getNext().isAfter(DateTime.now()));
+            choreList::getTodaysChores,
+            Chore::getDescription);
         choreAdapter.registerDataSetObserver(new TodayDataSetObserver());
         ListView choreListView = rootView.findViewById(R.id.todays_chores);
         choreListView.setAdapter(choreAdapter);
         choreListView.setOnItemClickListener((parent, view, position, id) ->
         {
-            Chore chore = choreAdapter.getItem(position);
+            CheckedTextView checkedTextView = (CheckedTextView)view;
 
-            if (chore == null || chore.getNext().isAfter(DateTime.now()))
+            if (checkedTextView.isChecked())
             {
                 return;
             }
 
-            choreList.choreDone(chore);
-            choreAdapter.notifyDataSetChanged();
+            checkedTextView.setChecked(true);
 
             new Thread(() ->
             {
                 waitTwoSeconds();
-                getActivity().runOnUiThread(() -> choreAdapter.remove(chore));
+                getActivity().runOnUiThread(() ->
+                {
+                    Chore chore = (Chore)choreAdapter.getItem(position);
+                    choreList.choreDone(chore);
+                    choreAdapter.notifyDataSetChanged();
+                });
             }).start();
         });
         choreListView.setOnItemLongClickListener((parent, view, position, id) ->
         {
             Chore chore = choreList.getTodaysChores().get(position);
             choreList.choreSkip(chore);
-            choreAdapter.clear();
-            choreAdapter.addAll(choreList.getTodaysChores());
+            choreAdapter.notifyDataSetChanged();
             return true;
         });
 
-        taskAdapter = new SimpleCheckboxArrayAdapter<>(
+        taskAdapter = new SimpleCheckboxListAdapter<>(
             getActivity().getBaseContext(),
-            Task::getDescription,
-            Task::isDone);
+            choreList::getTodaysTasks,
+            Task::getDescription);
         taskAdapter.registerDataSetObserver(new TodayDataSetObserver());
         ListView taskListView = rootView.findViewById(R.id.todays_tasks);
         taskListView.setAdapter(taskAdapter);
         taskListView.setOnItemClickListener((parent, view, position, id) ->
         {
-            Task task = taskAdapter.getItem(position);
+            CheckedTextView checkedTextView = (CheckedTextView)view;
 
-            if (task == null || task.isDone())
+            if (checkedTextView.isChecked())
             {
                 return;
             }
 
-            choreList.taskDone(task);
-            taskAdapter.notifyDataSetChanged();
+            checkedTextView.setChecked(true);
 
             new Thread(() ->
             {
                 waitTwoSeconds();
-                getActivity().runOnUiThread(() -> taskAdapter.remove(task));
+                getActivity().runOnUiThread(() ->
+                {
+                    Task task = (Task)taskAdapter.getItem(position);
+                    choreList.taskDone(task);
+                    taskAdapter.notifyDataSetChanged();
+                });
             }).start();
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+
+        procedureAdapter.notifyDataSetChanged();
+        choreAdapter.notifyDataSetChanged();
+        taskAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onStop()
+    {
+        super.onStop();
     }
 
     private void updateColors()
@@ -139,7 +166,7 @@ public class TodayFragment extends Fragment
         updateColorsOf(taskAdapter, rootView.findViewById(R.id.tasks_text));
     }
 
-    private void updateColorsOf(ArrayAdapter<?> adapter, TextView textView)
+    private void updateColorsOf(ListAdapter adapter, TextView textView)
     {
         final int darkGreen = Color.parseColor("#228C22");
 
@@ -151,26 +178,6 @@ public class TodayFragment extends Fragment
         {
             textView.setBackgroundColor(Color.BLACK);
         }
-    }
-
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-
-        procedureAdapter.addAll(choreList.getPendingProcedures());
-        choreAdapter.addAll(choreList.getTodaysChores());
-        taskAdapter.addAll(choreList.getTodaysTasks());
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-
-        procedureAdapter.clear();
-        choreAdapter.clear();
-        taskAdapter.clear();
     }
 
     private static void waitTwoSeconds()

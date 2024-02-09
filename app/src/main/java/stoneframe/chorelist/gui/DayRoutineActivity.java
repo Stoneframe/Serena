@@ -3,6 +3,7 @@ package stoneframe.chorelist.gui;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -69,7 +70,8 @@ public class DayRoutineActivity extends AppCompatActivity
             return true;
         });
 
-        procedureTimeEditText = findViewById(R.id.procedureTime);
+        procedureTimeEditText = findViewById(R.id.procedure_time);
+        procedureTimeEditText.setInputType(InputType.TYPE_NULL);
         procedureTimeEditText.setOnClickListener(v ->
             new TimePickerDialog(
                 this,

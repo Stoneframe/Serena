@@ -4,29 +4,50 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.CheckedTextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
-public class SimpleCheckboxArrayAdapter<T> extends ArrayAdapter<T>
+public class SimpleCheckboxListAdapter<T> extends BaseAdapter
 {
     private final Context context;
+    private final Supplier<List<T>> listFunction;
     private final Function<T, String> textFunction;
-    private final Function<T, Boolean> isCheckedFunction;
 
-    public SimpleCheckboxArrayAdapter(
+    public SimpleCheckboxListAdapter(
         @NonNull Context context,
-        Function<T, String> textFunction,
-        Function<T, Boolean> isCheckedFunction)
+        Supplier<List<T>> listFunction,
+        Function<T, String> textFunction)
     {
-        super(context, android.R.layout.simple_list_item_checked);
         this.context = context;
+        this.listFunction = listFunction;
         this.textFunction = textFunction;
-        this.isCheckedFunction = isCheckedFunction;
+
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public int getCount()
+    {
+        return listFunction.get().size();
+    }
+
+    @Override
+    public Object getItem(int position)
+    {
+        return listFunction.get().get(position);
+    }
+
+    @Override
+    public long getItemId(int position)
+    {
+        return listFunction.get().get(position).hashCode();
     }
 
     @NonNull
@@ -53,12 +74,11 @@ public class SimpleCheckboxArrayAdapter<T> extends ArrayAdapter<T>
             holder = (Holder)convertView.getTag();
         }
 
-        T item = getItem(position);
+        T item = (T)getItem(position);
 
         assert item != null;
 
         holder.checkedTextView.setText(textFunction.apply(item));
-        holder.checkedTextView.setChecked(isCheckedFunction.apply(item));
         holder.checkedTextView.setTag(holder);
         holder.item = item;
 

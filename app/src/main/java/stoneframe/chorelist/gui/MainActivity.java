@@ -39,64 +39,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Storage storage;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        storage = new SharedPreferencesStorage(
-            this,
-            new SimpleChoreSelectorConverter(),
-            new WeeklyEffortTrackerConverter());
-
-        choreList = new ChoreList(
-            storage,
-            new RealTimeService(),
-            new WeeklyEffortTracker(10, 10, 10, 10, 10, 30, 30),
-            new SimpleChoreSelector());
-
-        choreList.load();
-
-        GlobalState globalState = (GlobalState)getApplication();
-        globalState.setChoreList(choreList);
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-            this,
-            drawer,
-            toolbar,
-            R.string.navigation_drawer_open,
-            R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        navigationView.getMenu().getItem(0).setChecked(true);
-        onNavigationItemSelected(navigationView.getMenu().getItem(0));
-
-        RoutineNotifier.setupNotificationChannel(this);
-        RoutineNotifier.scheduleRoutineAlarm(this, choreList.getNextRoutineProcedureTime());
-    }
-
-    @Override
-    protected void onStart()
-    {
-        super.onStart();
-    }
-
-    @Override
-    protected void onStop()
-    {
-        super.onStop();
-
-        choreList.save();
-    }
-
-    @Override
     public void onBackPressed()
     {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -160,39 +102,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK && requestCode == ACTIVITY_EDIT_EFFORT)
-        {
-            WeeklyEffortTracker effortTracker = (WeeklyEffortTracker)choreList.getEffortTracker();
-
-            effortTracker.setMonday(data.getIntExtra("Monday", 0));
-            effortTracker.setTuesday(data.getIntExtra("Tuesday", 0));
-            effortTracker.setWednesday(data.getIntExtra("Wednesday", 0));
-            effortTracker.setThursday(data.getIntExtra("Thursday", 0));
-            effortTracker.setFriday(data.getIntExtra("Friday", 0));
-            effortTracker.setSaturday(data.getIntExtra("Saturday", 0));
-            effortTracker.setSunday(data.getIntExtra("Sunday", 0));
-        }
-
-        if (resultCode == RESULT_OK && requestCode == ACTIVITY_EDIT_STORAGE)
-        {
-            String json = data.getStringExtra("Storage");
-
-            Container container = ContainerJsonConverter.fromJson(
-                json,
-                new SimpleChoreSelectorConverter(),
-                new WeeklyEffortTrackerConverter());
-
-            storage.save(container);
-
-            choreList.load();
-        }
-    }
-
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(MenuItem item)
@@ -235,5 +144,102 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setTitle(item.getTitle());
 
         return true;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        storage = new SharedPreferencesStorage(
+            this,
+            new SimpleChoreSelectorConverter(),
+            new WeeklyEffortTrackerConverter());
+
+        choreList = new ChoreList(
+            storage,
+            new RealTimeService(),
+            new WeeklyEffortTracker(10, 10, 10, 10, 10, 30, 30),
+            new SimpleChoreSelector());
+
+        choreList.load();
+
+        GlobalState globalState = (GlobalState)getApplication();
+        globalState.setChoreList(choreList);
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+            this,
+            drawer,
+            toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        navigationView.getMenu().getItem(0).setChecked(true);
+        onNavigationItemSelected(navigationView.getMenu().getItem(0));
+
+        RoutineNotifier.setupNotificationChannel(this);
+
+        DateTime nextRoutineProcedureTime = choreList.getNextRoutineProcedureTime();
+
+        if (nextRoutineProcedureTime != null)
+        {
+            RoutineNotifier.scheduleRoutineAlarm(this, nextRoutineProcedureTime);
+        }
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+
+        choreList.save();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && requestCode == ACTIVITY_EDIT_EFFORT)
+        {
+            WeeklyEffortTracker effortTracker = (WeeklyEffortTracker)choreList.getEffortTracker();
+
+            effortTracker.setMonday(data.getIntExtra("Monday", 0));
+            effortTracker.setTuesday(data.getIntExtra("Tuesday", 0));
+            effortTracker.setWednesday(data.getIntExtra("Wednesday", 0));
+            effortTracker.setThursday(data.getIntExtra("Thursday", 0));
+            effortTracker.setFriday(data.getIntExtra("Friday", 0));
+            effortTracker.setSaturday(data.getIntExtra("Saturday", 0));
+            effortTracker.setSunday(data.getIntExtra("Sunday", 0));
+        }
+
+        if (resultCode == RESULT_OK && requestCode == ACTIVITY_EDIT_STORAGE)
+        {
+            String json = data.getStringExtra("Storage");
+
+            Container container = ContainerJsonConverter.fromJson(
+                json,
+                new SimpleChoreSelectorConverter(),
+                new WeeklyEffortTrackerConverter());
+
+            storage.save(container);
+
+            choreList.load();
+        }
     }
 }

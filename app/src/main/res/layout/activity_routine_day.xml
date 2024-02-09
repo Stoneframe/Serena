@@ -69,10 +69,9 @@
                         android:text="Time:" />
 
                     <EditText
-                        android:id="@+id/procedureTime"
+                        android:id="@+id/procedure_time"
                         android:layout_width="60dp"
                         android:layout_height="wrap_content"
-                        android:inputType="time"
                         android:text="00:00" />
 
                     <TextView

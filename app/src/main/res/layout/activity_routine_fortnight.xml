@@ -397,6 +397,7 @@
                 </LinearLayout>
             </ScrollView>
 
+            <!--Add procedure-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -404,7 +405,8 @@
                 android:layout_weight="0"
                 android:background="#FFFF66"
                 android:layoutDirection="ltr"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="10dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -429,7 +431,7 @@
 
                     <Spinner
                         android:id="@+id/week_procedure_day_of_week"
-                        android:layout_width="180dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
                 </LinearLayout>
@@ -457,7 +459,7 @@
 
                     <EditText
                         android:id="@+id/week_procedure_description"
-                        android:layout_width="200dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
                 </LinearLayout>
@@ -469,7 +471,7 @@
 
                     <Button
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_gravity="end"
                         android:onClick="addProcedureClick"
                         android:text="ADD" />

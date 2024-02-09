@@ -53,41 +53,55 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
+                android:background="#FFFF66"
                 android:layoutDirection="ltr"
-                android:orientation="horizontal"
-                android:background="#FFFF66">
+                android:orientation="vertical"
+                android:padding="10dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Time:" />
+
+                    <EditText
+                        android:id="@+id/procedureTime"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:inputType="time"
+                        android:text="00:00" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Description:" />
+
+                    <EditText
+                        android:id="@+id/procedureDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Time:" />
+                    android:layoutDirection="rtl">
 
-                <EditText
-                    android:id="@+id/procedureTime"
-                    android:layout_width="60dp"
-                    android:layout_height="wrap_content"
-                    android:text="00:00"
-                    android:inputType="time"/>
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="end"
+                        android:onClick="addProcedureClick"
+                        android:text="ADD" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Description:" />
-
-                <EditText
-                    android:id="@+id/procedureDescription"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content" />
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:text="ADD"
-                    android:onClick="addProcedureClick"/>
+                </LinearLayout>
 
             </LinearLayout>
-
 
         </LinearLayout>
 
@@ -106,18 +120,9 @@
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:onClick="saveClick"
         android:text="DONE" />
-
-<!--    <Button-->
-<!--        android:id="@+id/cancelButton"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentRight="true"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        android:onClick="cancelClick"-->
-<!--        android:text="CANCEL" />-->
 
 </RelativeLayout>

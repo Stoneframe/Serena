@@ -246,6 +246,5 @@ public class WeekRoutineActivity extends AppCompatActivity
 
         procedureTimeEditText.setText("00:00");
         procedureDescriptionEditText.setText("");
-        procedureDaySpinner.setSelection(0);
     }
 }

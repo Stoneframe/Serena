@@ -150,13 +150,12 @@ public class WeekRoutineActivity extends AppCompatActivity
 
                 weekDay.removeProcedure(procedure);
                 weekDay.addProcedure(newProcedure);
-                
+
                 weekExpandableListAdaptor.notifyDataSetChanged();
             },
             procedure.getTime().getHourOfDay(),
             procedure.getTime().getMinuteOfHour(),
             true).show();
-
 
         return true;
     }

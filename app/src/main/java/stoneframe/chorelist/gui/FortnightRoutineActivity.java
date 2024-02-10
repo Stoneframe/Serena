@@ -1,5 +1,6 @@
 package stoneframe.chorelist.gui;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -9,24 +10,20 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
 import android.widget.Spinner;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.FortnightRoutine;
 import stoneframe.chorelist.model.Procedure;
+import stoneframe.chorelist.model.Routine;
 
 public class FortnightRoutineActivity extends AppCompatActivity
 {
@@ -38,14 +35,14 @@ public class FortnightRoutineActivity extends AppCompatActivity
 
     private FortnightRoutine routine;
 
-    private Map<Integer, ArrayAdapter<Procedure>> week1ProcedureListAdapters;
-    private Map<Integer, ListView> week1ProcedureLists;
-
-    private Map<Integer, ArrayAdapter<Procedure>> week2ProcedureListAdapters;
-    private Map<Integer, ListView> week2ProcedureLists;
-
     private EditText nameEditText;
     private EditText startDateEditText;
+
+    private ExpandableListView week1ExpandableList;
+    private WeekExpandableListAdaptor week1ExpandableListAdaptor;
+
+    private ExpandableListView week2ExpandableList;
+    private WeekExpandableListAdaptor week2ExpandableListAdaptor;
 
     private Spinner procedureWeekSpinner;
     private Spinner procedureDaySpinner;
@@ -67,12 +64,6 @@ public class FortnightRoutineActivity extends AppCompatActivity
         Button button = findViewById(R.id.removeButton);
         button.setVisibility(action == ROUTINE_ACTION_EDIT ? Button.VISIBLE : Button.INVISIBLE);
 
-        week1ProcedureListAdapters = new HashMap<>();
-        week1ProcedureLists = new HashMap<>();
-
-        week2ProcedureListAdapters = new HashMap<>();
-        week2ProcedureLists = new HashMap<>();
-
         DatePickerDialog datePickerDialog = new DatePickerDialog(
             this,
             (DatePickerDialog.OnDateSetListener)(view1, year, month, dayOfMonth) ->
@@ -89,22 +80,31 @@ public class FortnightRoutineActivity extends AppCompatActivity
         startDateEditText.setText(routine.getStartDate().toString("yyyy-MM-dd"));
         startDateEditText.setOnClickListener(view -> datePickerDialog.show());
 
-        setupDay(R.id.procedures_monday_week1, 1, DateTimeConstants.MONDAY);
-        setupDay(R.id.procedures_tuesday_week1, 1, DateTimeConstants.TUESDAY);
-        setupDay(R.id.procedures_wednesday_week1, 1, DateTimeConstants.WEDNESDAY);
-        setupDay(R.id.procedures_thursday_week1, 1, DateTimeConstants.THURSDAY);
-        setupDay(R.id.procedures_friday_week1, 1, DateTimeConstants.FRIDAY);
-        setupDay(R.id.procedures_saturday_week1, 1, DateTimeConstants.SATURDAY);
-        setupDay(R.id.procedures_sunday_week1, 1, DateTimeConstants.SUNDAY);
+        week1ExpandableListAdaptor = new WeekExpandableListAdaptor(this, routine.getWeek1());
+        week1ExpandableList = findViewById(R.id.week1_procedure_list);
+        week1ExpandableList.setAdapter(week1ExpandableListAdaptor);
+        week1ExpandableList.setOnChildClickListener((parent, v, groupPosition, childPosition, id) ->
+            editProcedureWeek1(groupPosition, childPosition));
+        week1ExpandableList.setOnItemLongClickListener((parent, view, position, id) ->
+            removeProcedureWeek1(position));
 
-        setupDay(R.id.procedures_monday_week2, 2, DateTimeConstants.MONDAY);
-        setupDay(R.id.procedures_tuesday_week2, 2, DateTimeConstants.TUESDAY);
-        setupDay(R.id.procedures_wednesday_week2, 2, DateTimeConstants.WEDNESDAY);
-        setupDay(R.id.procedures_thursday_week2, 2, DateTimeConstants.THURSDAY);
-        setupDay(R.id.procedures_friday_week2, 2, DateTimeConstants.FRIDAY);
-        setupDay(R.id.procedures_saturday_week2, 2, DateTimeConstants.SATURDAY);
-        setupDay(R.id.procedures_sunday_week2, 2, DateTimeConstants.SUNDAY);
+        for (int i = 0; i < week1ExpandableListAdaptor.getGroupCount(); i++)
+        {
+            week1ExpandableList.expandGroup(i);
+        }
 
+        week2ExpandableListAdaptor = new WeekExpandableListAdaptor(this, routine.getWeek2());
+        week2ExpandableList = findViewById(R.id.week2_procedure_list);
+        week2ExpandableList.setAdapter(week2ExpandableListAdaptor);
+        week2ExpandableList.setOnChildClickListener((parent, v, groupPosition, childPosition, id) ->
+            editProcedureWeek2(groupPosition, childPosition));
+        week2ExpandableList.setOnItemLongClickListener((parent, view, position, id) ->
+            removeProcedureWeek2(position));
+
+        for (int i = 0; i < week2ExpandableListAdaptor.getGroupCount(); i++)
+        {
+            week2ExpandableList.expandGroup(i);
+        }
         procedureTimeEditText = findViewById(R.id.week_procedure_time);
         procedureTimeEditText.setInputType(InputType.TYPE_NULL);
         procedureTimeEditText.setOnClickListener(v -> showTimePicker());
@@ -126,86 +126,89 @@ public class FortnightRoutineActivity extends AppCompatActivity
         nameEditText.setText(routine.getName());
     }
 
-    private void setupDay(int procedureDayList, int week, int dayOfWeek)
+    private boolean editProcedureWeek1(int groupPosition, int childPosition)
     {
-        ArrayAdapter<Procedure> adapter = createProcedureListAdapter(week, dayOfWeek);
-
-        ListView list = setupProcedureListView(adapter, procedureDayList, dayOfWeek);
-
-        getProcedureListAdapters(week).put(dayOfWeek, adapter);
-        getProcedureLists(week).put(dayOfWeek, list);
-    }
-
-    private ListView setupProcedureListView(
-        ArrayAdapter<Procedure> procedureArrayAdapter,
-        int procedureList,
-        int dayOfWeek)
-    {
-        ListView procedureListView = findViewById(procedureList);
-
-        procedureListView.setAdapter(procedureArrayAdapter);
-        procedureListView.setOnItemLongClickListener((parent, view, position, id) ->
-            removeProcedure(position, procedureArrayAdapter, dayOfWeek));
-
-        return procedureListView;
-    }
-
-    @NonNull
-    private Map<Integer, ArrayAdapter<Procedure>> getProcedureListAdapters(int week)
-    {
-        switch (week)
-        {
-            case 1:
-                return week1ProcedureListAdapters;
-            case 2:
-                return week2ProcedureListAdapters;
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
-
-    private Map<Integer, ListView> getProcedureLists(int week)
-    {
-        switch (week)
-        {
-            case 1:
-                return week1ProcedureLists;
-            case 2:
-                return week2ProcedureLists;
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
-
-    @NonNull
-    private ArrayAdapter<Procedure> createProcedureListAdapter(int week, int dayOfWeek)
-    {
-        return new ArrayAdapter<>(
-            getBaseContext(),
-            android.R.layout.simple_list_item_1,
-            routine.getWeek(week).getWeekDay(dayOfWeek).getProcedures());
-    }
-
-    private boolean removeProcedure(
-        int position,
-        ArrayAdapter<Procedure> procedureListAdapter,
-        int dayOfWeek)
-    {
-        Procedure procedure = procedureListAdapter.getItem(position);
-
-        if (routine.getWeek1().getProcedures().contains(procedure))
-        {
-            routine.getWeek1().getWeekDay(dayOfWeek).removeProcedure(procedure);
-        }
-
-        if (routine.getWeek2().getProcedures().contains(procedure))
-        {
-            routine.getWeek2().getWeekDay(dayOfWeek).removeProcedure(procedure);
-        }
-
-        procedureListAdapter.remove(procedure);
+        editProcedure(week1ExpandableListAdaptor, groupPosition, childPosition);
 
         return true;
+    }
+
+    private boolean removeProcedureWeek1(int position)
+    {
+        removeProcedure(week1ExpandableList, position, week1ExpandableListAdaptor);
+
+        return true;
+    }
+
+    private boolean editProcedureWeek2(int groupPosition, int childPosition)
+    {
+        editProcedure(week2ExpandableListAdaptor, groupPosition, childPosition);
+
+        return true;
+    }
+
+    private boolean removeProcedureWeek2(int position)
+    {
+        removeProcedure(week2ExpandableList, position, week2ExpandableListAdaptor);
+
+        return true;
+    }
+
+    private void editProcedure(
+        WeekExpandableListAdaptor weekExpandableListAdaptor,
+        int groupPosition,
+        int childPosition)
+    {
+        Procedure procedure = (Procedure)weekExpandableListAdaptor.getChild(
+            groupPosition,
+            childPosition);
+
+        Routine.WeekDay weekDay = (Routine.WeekDay)weekExpandableListAdaptor.getGroup(
+            groupPosition);
+
+        new TimePickerDialog(
+            this,
+            (view, hourOfDay, minute) ->
+            {
+                LocalTime time = new LocalTime(hourOfDay, minute);
+
+                Procedure newProcedure = new Procedure(procedure.getDescription(), time);
+
+                weekDay.removeProcedure(procedure);
+                weekDay.addProcedure(newProcedure);
+
+                weekExpandableListAdaptor.notifyDataSetChanged();
+            },
+            procedure.getTime().getHourOfDay(),
+            procedure.getTime().getMinuteOfHour(),
+            true).show();
+    }
+
+    private void removeProcedure(
+        ExpandableListView week1ExpandableList,
+        int position,
+        WeekExpandableListAdaptor week1ExpandableListAdaptor)
+    {
+        long packedPosition = week1ExpandableList.getExpandableListPosition(position);
+
+        int itemType = ExpandableListView.getPackedPositionType(packedPosition);
+
+        if (itemType == ExpandableListView.PACKED_POSITION_TYPE_CHILD)
+        {
+            int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
+            int childPosition = ExpandableListView.getPackedPositionChild(packedPosition);
+
+            Procedure procedure = (Procedure)week1ExpandableListAdaptor.getChild(
+                groupPosition,
+                childPosition);
+
+            Routine.WeekDay weekDay = (Routine.WeekDay)week1ExpandableListAdaptor.getGroup(
+                groupPosition);
+
+            weekDay.removeProcedure(procedure);
+
+            week1ExpandableListAdaptor.notifyDataSetChanged();
+        }
     }
 
     private void showTimePicker()
@@ -252,6 +255,7 @@ public class FortnightRoutineActivity extends AppCompatActivity
         finish();
     }
 
+    @SuppressLint("SetTextI18n")
     public void addProcedureClick(View view)
     {
         int week = (int)procedureWeekSpinner.getSelectedItemId() + 1;
@@ -263,11 +267,9 @@ public class FortnightRoutineActivity extends AppCompatActivity
 
         routine.getWeek(week).getWeekDay(dayOfWeek).addProcedure(procedure);
 
-        getProcedureListAdapters(week).get(dayOfWeek).add(procedure);
-        getProcedureListAdapters(week).get(dayOfWeek).sort(Procedure::compareTo);
+        week1ExpandableListAdaptor.notifyDataSetChanged();
+        week2ExpandableListAdaptor.notifyDataSetChanged();
 
-//        procedureWeekSpinner.setSelection(0);
-//        procedureDaySpinner.setSelection(0);
         procedureTimeEditText.setText("00:00");
         procedureDescriptionEditText.setText("");
     }

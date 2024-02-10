@@ -44,358 +44,59 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:text="Procedures" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="1">
 
-            <ScrollView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_marginTop="10dp"
+                    android:background="#000000"
+                    android:paddingLeft="5dp"
+                    android:text="Week 1"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20dp" />
 
-                    <!--Week 1-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:scrollbars="vertical">
+                <ExpandableListView
+                    android:id="@+id/week1_procedure_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:divider="@android:color/darker_gray"
+                    android:dividerHeight="0.5dp"
+                    android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft" />
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="#0000FF"
-                            android:paddingTop="10dp"
-                            android:text="Week 1"
-                            android:textColor="#FFFFFF"
-                            android:textSize="30dp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="#000000"
+                    android:paddingLeft="5dp"
+                    android:text="Week 2"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20dp" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingTop="10dp">
+                <ExpandableListView
+                    android:id="@+id/week2_procedure_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:divider="@android:color/darker_gray"
+                    android:dividerHeight="0.5dp"
+                    android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft" />
 
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="#000000"
-                                android:text="Monday"
-                                android:textColor="#FFFFFF"
-                                android:textSize="20dp" />
-
-                            <ListView
-                                android:id="@+id/procedures_monday_week1"
-                                android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:scrollbars="none" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingTop="10dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="#000000"
-                                android:text="Tuesday"
-                                android:textColor="#FFFFFF"
-                                android:textSize="20dp" />
-
-                            <ListView
-                                android:id="@+id/procedures_tuesday_week1"
-                                android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:scrollbars="none" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingTop="10dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="#000000"
-                                android:text="Wednesday"
-                                android:textColor="#FFFFFF"
-                                android:textSize="20dp" />
-
-                            <ListView
-                                android:id="@+id/procedures_wednesday_week1"
-                                android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:scrollbars="none" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingTop="10dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="#000000"
-                                android:text="Thursday"
-                                android:textColor="#FFFFFF"
-                                android:textSize="20dp" />
-
-                            <ListView
-                                android:id="@+id/procedures_thursday_week1"
-                                android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:scrollbars="none" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingTop="10dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="#000000"
-                                android:text="Friday"
-                                android:textColor="#FFFFFF"
-                                android:textSize="20dp" />
-
-                            <ListView
-                                android:id="@+id/procedures_friday_week1"
-                                android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:scrollbars="none" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingTop="10dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="#000000"
-                                android:text="Saturday"
-                                android:textColor="#FFFFFF"
-                                android:textSize="20dp" />
-
-                            <ListView
-                                android:id="@+id/procedures_saturday_week1"
-                                android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:scrollbars="none" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingTop="10dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="#000000"
-                                android:text="Sunday"
-                                android:textColor="#FFFFFF"
-                                android:textSize="20dp" />
-
-                            <ListView
-                                android:id="@+id/procedures_sunday_week1"
-                                android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:scrollbars="none" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <!--Week 2-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:scrollbars="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="#0000FF"
-                            android:paddingTop="10dp"
-                            android:text="Week 2"
-                            android:textColor="#FFFFFF"
-                            android:textSize="30dp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingTop="10dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="#000000"
-                                android:text="Monday"
-                                android:textColor="#FFFFFF"
-                                android:textSize="20dp" />
-
-                            <ListView
-                                android:id="@+id/procedures_monday_week2"
-                                android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:scrollbars="none" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingTop="10dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="#000000"
-                                android:text="Tuesday"
-                                android:textColor="#FFFFFF"
-                                android:textSize="20dp" />
-
-                            <ListView
-                                android:id="@+id/procedures_tuesday_week2"
-                                android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:scrollbars="none" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingTop="10dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="#000000"
-                                android:text="Wednesday"
-                                android:textColor="#FFFFFF"
-                                android:textSize="20dp" />
-
-                            <ListView
-                                android:id="@+id/procedures_wednesday_week2"
-                                android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:scrollbars="none" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingTop="10dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="#000000"
-                                android:text="Thursday"
-                                android:textColor="#FFFFFF"
-                                android:textSize="20dp" />
-
-                            <ListView
-                                android:id="@+id/procedures_thursday_week2"
-                                android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:scrollbars="none" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingTop="10dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="#000000"
-                                android:text="Friday"
-                                android:textColor="#FFFFFF"
-                                android:textSize="20dp" />
-
-                            <ListView
-                                android:id="@+id/procedures_friday_week2"
-                                android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:scrollbars="none" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingTop="10dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="#000000"
-                                android:text="Saturday"
-                                android:textColor="#FFFFFF"
-                                android:textSize="20dp" />
-
-                            <ListView
-                                android:id="@+id/procedures_saturday_week2"
-                                android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:scrollbars="none" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingTop="10dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="#000000"
-                                android:text="Sunday"
-                                android:textColor="#FFFFFF"
-                                android:textSize="20dp" />
-
-                            <ListView
-                                android:id="@+id/procedures_sunday_week2"
-                                android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:scrollbars="none" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-            </ScrollView>
+            </LinearLayout>
 
             <!--Add procedure-->
             <LinearLayout
@@ -427,7 +128,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Week day:" />
+                        android:text="Day:" />
 
                     <Spinner
                         android:id="@+id/week_procedure_day_of_week"

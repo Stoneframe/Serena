@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckedTextView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -52,21 +51,15 @@ public class TodayFragment extends Fragment
         procedureListView.setAdapter(procedureAdapter);
         procedureListView.setOnItemClickListener((parent, view, position, id) ->
         {
-            CheckedTextView checkedTextView = (CheckedTextView)view;
+            Procedure procedure = (Procedure)procedureAdapter.getItem(position);
 
-            if (checkedTextView.isChecked())
-            {
-                return;
-            }
-
-            checkedTextView.setChecked(true);
+            procedureAdapter.setChecked(procedure);
 
             new Thread(() ->
             {
                 waitTwoSeconds();
                 getActivity().runOnUiThread(() ->
                 {
-                    Procedure procedure = (Procedure)procedureAdapter.getItem(position);
                     choreList.procedureDone(procedure);
                     procedureAdapter.notifyDataSetChanged();
                 });
@@ -82,21 +75,15 @@ public class TodayFragment extends Fragment
         choreListView.setAdapter(choreAdapter);
         choreListView.setOnItemClickListener((parent, view, position, id) ->
         {
-            CheckedTextView checkedTextView = (CheckedTextView)view;
+            Chore chore = (Chore)choreAdapter.getItem(position);
 
-            if (checkedTextView.isChecked())
-            {
-                return;
-            }
-
-            checkedTextView.setChecked(true);
+            choreAdapter.setChecked(chore);
 
             new Thread(() ->
             {
                 waitTwoSeconds();
                 getActivity().runOnUiThread(() ->
                 {
-                    Chore chore = (Chore)choreAdapter.getItem(position);
                     choreList.choreDone(chore);
                     choreAdapter.notifyDataSetChanged();
                 });
@@ -119,21 +106,15 @@ public class TodayFragment extends Fragment
         taskListView.setAdapter(taskAdapter);
         taskListView.setOnItemClickListener((parent, view, position, id) ->
         {
-            CheckedTextView checkedTextView = (CheckedTextView)view;
+            Task task = (Task)taskAdapter.getItem(position);
 
-            if (checkedTextView.isChecked())
-            {
-                return;
-            }
-
-            checkedTextView.setChecked(true);
+            taskAdapter.setChecked(task);
 
             new Thread(() ->
             {
                 waitTwoSeconds();
                 getActivity().runOnUiThread(() ->
                 {
-                    Task task = (Task)taskAdapter.getItem(position);
                     choreList.taskDone(task);
                     taskAdapter.notifyDataSetChanged();
                 });

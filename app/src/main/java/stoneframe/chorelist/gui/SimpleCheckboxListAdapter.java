@@ -10,15 +10,19 @@ import android.widget.CheckedTextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class SimpleCheckboxListAdapter<T> extends BaseAdapter
 {
     private final Context context;
     private final Supplier<List<T>> listFunction;
     private final Function<T, String> textFunction;
+
+    private final List<T> checkedItems = new LinkedList<>();
 
     public SimpleCheckboxListAdapter(
         @NonNull Context context,
@@ -65,6 +69,7 @@ public class SimpleCheckboxListAdapter<T> extends BaseAdapter
                 parent,
                 false);
 
+
             holder.checkedTextView = checkedTextView;
 
             convertView = checkedTextView;
@@ -79,10 +84,31 @@ public class SimpleCheckboxListAdapter<T> extends BaseAdapter
         assert item != null;
 
         holder.checkedTextView.setText(textFunction.apply(item));
+        holder.checkedTextView.setChecked(checkedItems.contains(item));
         holder.checkedTextView.setTag(holder);
         holder.item = item;
 
         return convertView;
+    }
+
+    public void setChecked(T item)
+    {
+        removeObsoleteCheckedItems();
+
+        checkedItems.add(item);
+
+        notifyDataSetChanged();
+    }
+
+    private void removeObsoleteCheckedItems()
+    {
+        List<T> allItems = listFunction.get();
+
+        List<T> removed = checkedItems.stream()
+            .filter(i -> !allItems.contains(i))
+            .collect(Collectors.toList());
+
+        checkedItems.removeAll(removed);
     }
 
     private class Holder

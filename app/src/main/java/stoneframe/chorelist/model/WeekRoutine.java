@@ -60,6 +60,11 @@ public class WeekRoutine extends Routine
             .plusDays(procedureWeekDay - now.getDayOfWeek());
     }
 
+    public Week getWeek()
+    {
+        return week;
+    }
+
     private boolean isPending(DateTime now, DateTime procedureDateTime)
     {
         return procedureDateTime.isAfter(lastCompleted)

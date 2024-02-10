@@ -9,21 +9,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
 import android.widget.Spinner;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.Procedure;
+import stoneframe.chorelist.model.Routine;
 import stoneframe.chorelist.model.WeekRoutine;
 
 public class WeekRoutineActivity extends AppCompatActivity
@@ -36,11 +31,10 @@ public class WeekRoutineActivity extends AppCompatActivity
 
     private WeekRoutine routine;
 
-    private Map<Integer, ArrayAdapter<Procedure>> procedureListAdapters;
-
     private EditText nameEditText;
 
-    private WeekRoutineListAdaptor routineProcedureListAdaptor;
+    private ExpandableListView weekExpandableList;
+    private WeekExpandableListAdaptor weekExpandableListAdaptor;
 
     private EditText procedureTimeEditText;
     private EditText procedureDescriptionEditText;
@@ -84,13 +78,11 @@ public class WeekRoutineActivity extends AppCompatActivity
 
         routine.getWeekDay(dayOfWeek).addProcedure(procedure);
 
-        ArrayAdapter<Procedure> procedureArrayAdapter = procedureListAdapters.get(dayOfWeek);
-
-        procedureArrayAdapter.add(procedure);
-        procedureArrayAdapter.sort(Procedure::compareTo);
-
         procedureTimeEditText.setText("00:00");
         procedureDescriptionEditText.setText("");
+
+        weekExpandableListAdaptor.notifyDataSetChanged();
+        weekExpandableList.expandGroup(dayOfWeek - 1);
     }
 
     @Override
@@ -105,27 +97,24 @@ public class WeekRoutineActivity extends AppCompatActivity
 
         int action = intent.getIntExtra("ACTION", -1);
 
-        Button button = findViewById(R.id.removeButton);
-        button.setVisibility(action == ROUTINE_ACTION_EDIT ? Button.VISIBLE : Button.INVISIBLE);
-
-        procedureListAdapters = new HashMap<>();
+        Button removeRoutineButton = findViewById(R.id.removeButton);
+        removeRoutineButton.setVisibility(action == ROUTINE_ACTION_EDIT ? Button.VISIBLE : Button.INVISIBLE);
 
         nameEditText = findViewById(R.id.fortnight_routine_name_edit);
 
-        routineProcedureListAdaptor = new WeekRoutineListAdaptor(
-            this,
-            GlobalState.getInstance(this).getChoreList());
+        weekExpandableListAdaptor = new WeekExpandableListAdaptor(this, routine.getWeek());
 
-        ExpandableListView routineProcedureList = findViewById(R.id.routine_procedure_list);
-        routineProcedureList.setAdapter(routineProcedureListAdaptor);
+        weekExpandableList = findViewById(R.id.week_procedure_list);
+        weekExpandableList.setAdapter(weekExpandableListAdaptor);
+        weekExpandableList.setOnChildClickListener((parent, v, groupPosition, childPosition, id) ->
+            editProcedure(groupPosition, childPosition));
+        weekExpandableList.setOnItemLongClickListener((parent, view, position, id) ->
+            removeProcedure(position));
 
-        setupDay(R.id.procedures_monday, DateTimeConstants.MONDAY);
-        setupDay(R.id.procedures_tuesday, DateTimeConstants.TUESDAY);
-        setupDay(R.id.procedures_wednesday, DateTimeConstants.WEDNESDAY);
-        setupDay(R.id.procedures_thursday, DateTimeConstants.THURSDAY);
-        setupDay(R.id.procedures_friday, DateTimeConstants.FRIDAY);
-        setupDay(R.id.procedures_saturday, DateTimeConstants.SATURDAY);
-        setupDay(R.id.procedures_sunday, DateTimeConstants.SUNDAY);
+        for (int i = 0; i < weekExpandableListAdaptor.getGroupCount(); i++)
+        {
+            weekExpandableList.expandGroup(i);
+        }
 
         procedureTimeEditText = findViewById(R.id.week_procedure_time);
         procedureTimeEditText.setInputType(InputType.TYPE_NULL);
@@ -142,63 +131,69 @@ public class WeekRoutineActivity extends AppCompatActivity
         nameEditText.setText(routine.getName());
     }
 
-    private void setupDay(int procedureDayList, int dayOfWeek)
+    private boolean editProcedure(int groupPosition, int childPosition)
     {
-        ArrayAdapter<Procedure> adapter = createProcedureListAdapter(dayOfWeek);
+        Procedure procedure = (Procedure)weekExpandableListAdaptor.getChild(
+            groupPosition,
+            childPosition);
 
-        setupProcedureListView(adapter, procedureDayList, dayOfWeek);
+        Routine.WeekDay weekDay = (Routine.WeekDay)weekExpandableListAdaptor.getGroup(
+            groupPosition);
 
-        procedureListAdapters.put(dayOfWeek, adapter);
-    }
-
-    private void setupProcedureListView(
-        ArrayAdapter<Procedure> procedureArrayAdapter,
-        int procedureList,
-        int dayOfWeek)
-    {
-        ListView procedureListView = findViewById(procedureList);
-
-        procedureListView.setAdapter(procedureArrayAdapter);
-        procedureListView.setOnItemLongClickListener((parent, view, position, id) ->
-            removeProcedure(position, procedureArrayAdapter, dayOfWeek));
-    }
-
-    @NonNull
-    private ArrayAdapter<Procedure> createProcedureListAdapter(int dayOfWeek)
-    {
-        return new ArrayAdapter<>(
-            getBaseContext(),
-            android.R.layout.simple_list_item_1,
-            routine.getWeekDay(dayOfWeek).getProcedures());
-    }
-
-    private boolean removeProcedure(
-        int position,
-        ArrayAdapter<Procedure> procedureListAdapter,
-        int dayOfWeek)
-    {
-        Procedure procedure = procedureListAdapter.getItem(position);
-
-        WeekRoutine.WeekDay weekDay = routine.getWeekDay(dayOfWeek);
-
-        weekDay.removeProcedure(procedure);
-        procedureListAdapter.remove(procedure);
-
-        return true;
-    }
-
-    private void showTimePicker()
-    {
         new TimePickerDialog(
             this,
             (view, hourOfDay, minute) ->
             {
                 LocalTime time = new LocalTime(hourOfDay, minute);
 
-                procedureTimeEditText.setText(time.toString(DateTimeFormat.forPattern("HH:mm")));
+                Procedure newProcedure = new Procedure(procedure.getDescription(), time);
+
+                weekDay.removeProcedure(procedure);
+                weekDay.addProcedure(newProcedure);
+                
+                weekExpandableListAdaptor.notifyDataSetChanged();
             },
-            0,
-            0,
+            procedure.getTime().getHourOfDay(),
+            procedure.getTime().getMinuteOfHour(),
             true).show();
+
+
+        return true;
+    }
+
+    private boolean removeProcedure(int position)
+    {
+        long packedPosition = weekExpandableList.getExpandableListPosition(position);
+
+        int itemType = ExpandableListView.getPackedPositionType(packedPosition);
+
+        if (itemType == ExpandableListView.PACKED_POSITION_TYPE_CHILD)
+        {
+            int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
+            int childPosition = ExpandableListView.getPackedPositionChild(packedPosition);
+
+            Procedure procedure = (Procedure)weekExpandableListAdaptor.getChild(
+                groupPosition,
+                childPosition);
+
+            Routine.WeekDay weekDay = (Routine.WeekDay)weekExpandableListAdaptor.getGroup(
+                groupPosition);
+
+            weekDay.removeProcedure(procedure);
+
+            weekExpandableListAdaptor.notifyDataSetChanged();
+        }
+
+        return true;
+    }
+
+    private void showTimePicker()
+    {
+        new TimePickerDialog(this, (view, hourOfDay, minute) ->
+        {
+            LocalTime time = new LocalTime(hourOfDay, minute);
+
+            procedureTimeEditText.setText(time.toString(DateTimeFormat.forPattern("HH:mm")));
+        }, 0, 0, true).show();
     }
 }

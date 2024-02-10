@@ -44,175 +44,176 @@
             android:orientation="vertical">
 
             <ExpandableListView
-                android:id="@+id/routine_procedure_list"
+                android:id="@+id/week_procedure_list"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
                 android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
                 android:divider="@android:color/darker_gray"
-                android:dividerHeight="0.5dp" />
+                android:dividerHeight="0.5dp"
+                android:layout_weight="1"/>
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
+<!--            <ScrollView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="1">-->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:scrollbars="vertical">
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="vertical"-->
+<!--                    android:scrollbars="vertical">-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
-                        android:orientation="vertical">
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:paddingTop="10dp"-->
+<!--                        android:orientation="vertical">-->
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="#000000"
-                            android:text="Monday"
-                            android:textColor="#FFFFFF"
-                            android:textSize="20dp" />
+<!--                        <TextView-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:background="#000000"-->
+<!--                            android:text="Monday"-->
+<!--                            android:textColor="#FFFFFF"-->
+<!--                            android:textSize="20dp" />-->
 
-                        <ListView
-                            android:id="@+id/procedures_monday"
-                            android:layout_width="match_parent"
-                            android:layout_height="350dp"
-                            android:scrollbars="none"/>
+<!--                        <ListView-->
+<!--                            android:id="@+id/procedures_monday"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="350dp"-->
+<!--                            android:scrollbars="none"/>-->
 
-                    </LinearLayout>
+<!--                    </LinearLayout>-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
-                        android:orientation="vertical">
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:paddingTop="10dp"-->
+<!--                        android:orientation="vertical">-->
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="#000000"
-                            android:text="Tuesday"
-                            android:textColor="#FFFFFF"
-                            android:textSize="20dp" />
+<!--                        <TextView-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:background="#000000"-->
+<!--                            android:text="Tuesday"-->
+<!--                            android:textColor="#FFFFFF"-->
+<!--                            android:textSize="20dp" />-->
 
-                        <ListView
-                            android:id="@+id/procedures_tuesday"
-                            android:layout_width="match_parent"
-                            android:layout_height="350dp"
-                            android:scrollbars="none" />
-                    </LinearLayout>
+<!--                        <ListView-->
+<!--                            android:id="@+id/procedures_tuesday"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="350dp"-->
+<!--                            android:scrollbars="none" />-->
+<!--                    </LinearLayout>-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
-                        android:orientation="vertical">
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:paddingTop="10dp"-->
+<!--                        android:orientation="vertical">-->
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="#000000"
-                            android:text="Wednesday"
-                            android:textColor="#FFFFFF"
-                            android:textSize="20dp" />
+<!--                        <TextView-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:background="#000000"-->
+<!--                            android:text="Wednesday"-->
+<!--                            android:textColor="#FFFFFF"-->
+<!--                            android:textSize="20dp" />-->
 
-                        <ListView
-                            android:id="@+id/procedures_wednesday"
-                            android:layout_width="match_parent"
-                            android:layout_height="350dp"
-                            android:scrollbars="none" />
-                    </LinearLayout>
+<!--                        <ListView-->
+<!--                            android:id="@+id/procedures_wednesday"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="350dp"-->
+<!--                            android:scrollbars="none" />-->
+<!--                    </LinearLayout>-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
-                        android:orientation="vertical">
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:paddingTop="10dp"-->
+<!--                        android:orientation="vertical">-->
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="#000000"
-                            android:text="Thursday"
-                            android:textColor="#FFFFFF"
-                            android:textSize="20dp" />
+<!--                        <TextView-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:background="#000000"-->
+<!--                            android:text="Thursday"-->
+<!--                            android:textColor="#FFFFFF"-->
+<!--                            android:textSize="20dp" />-->
 
-                        <ListView
-                            android:id="@+id/procedures_thursday"
-                            android:layout_width="match_parent"
-                            android:layout_height="350dp"
-                            android:scrollbars="none" />
-                    </LinearLayout>
+<!--                        <ListView-->
+<!--                            android:id="@+id/procedures_thursday"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="350dp"-->
+<!--                            android:scrollbars="none" />-->
+<!--                    </LinearLayout>-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
-                        android:orientation="vertical">
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:paddingTop="10dp"-->
+<!--                        android:orientation="vertical">-->
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="#000000"
-                            android:text="Friday"
-                            android:textColor="#FFFFFF"
-                            android:textSize="20dp" />
+<!--                        <TextView-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:background="#000000"-->
+<!--                            android:text="Friday"-->
+<!--                            android:textColor="#FFFFFF"-->
+<!--                            android:textSize="20dp" />-->
 
-                        <ListView
-                            android:id="@+id/procedures_friday"
-                            android:layout_width="match_parent"
-                            android:layout_height="350dp"
-                            android:scrollbars="none" />
-                    </LinearLayout>
+<!--                        <ListView-->
+<!--                            android:id="@+id/procedures_friday"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="350dp"-->
+<!--                            android:scrollbars="none" />-->
+<!--                    </LinearLayout>-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
-                        android:orientation="vertical">
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:paddingTop="10dp"-->
+<!--                        android:orientation="vertical">-->
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="#000000"
-                            android:text="Saturday"
-                            android:textColor="#FFFFFF"
-                            android:textSize="20dp" />
+<!--                        <TextView-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:background="#000000"-->
+<!--                            android:text="Saturday"-->
+<!--                            android:textColor="#FFFFFF"-->
+<!--                            android:textSize="20dp" />-->
 
-                        <ListView
-                            android:id="@+id/procedures_saturday"
-                            android:layout_width="match_parent"
-                            android:layout_height="350dp"
-                            android:scrollbars="none" />
-                    </LinearLayout>
+<!--                        <ListView-->
+<!--                            android:id="@+id/procedures_saturday"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="350dp"-->
+<!--                            android:scrollbars="none" />-->
+<!--                    </LinearLayout>-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
-                        android:orientation="vertical">
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:paddingTop="10dp"-->
+<!--                        android:orientation="vertical">-->
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="#000000"
-                            android:text="Sunday"
-                            android:textColor="#FFFFFF"
-                            android:textSize="20dp" />
+<!--                        <TextView-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:background="#000000"-->
+<!--                            android:text="Sunday"-->
+<!--                            android:textColor="#FFFFFF"-->
+<!--                            android:textSize="20dp" />-->
 
-                        <ListView
-                            android:id="@+id/procedures_sunday"
-                            android:layout_width="match_parent"
-                            android:layout_height="350dp"
-                            android:scrollbars="none" />
-                    </LinearLayout>
+<!--                        <ListView-->
+<!--                            android:id="@+id/procedures_sunday"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="350dp"-->
+<!--                            android:scrollbars="none" />-->
+<!--                    </LinearLayout>-->
 
-                </LinearLayout>
+<!--                </LinearLayout>-->
 
-            </ScrollView>
+<!--            </ScrollView>-->
 
             <LinearLayout
                 android:layout_width="match_parent"

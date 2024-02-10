@@ -8,47 +8,44 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
-import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.Procedure;
 import stoneframe.chorelist.model.Routine;
-import stoneframe.chorelist.model.WeekRoutine;
 
-public class WeekRoutineListAdaptor extends BaseExpandableListAdapter
+public class WeekExpandableListAdaptor extends BaseExpandableListAdapter
 {
     private final Context context;
-    private final WeekRoutine choreList;
+    private final Routine.Week week;
 
-    public WeekRoutineListAdaptor(Context context, WeekRoutine choreList)
+    public WeekExpandableListAdaptor(Context context, Routine.Week week)
     {
         this.context = context;
-        this.choreList = choreList;
+        this.week = week;
     }
 
     @Override
     public int getGroupCount()
     {
-        return choreList.getAllRoutines().size();
+        return 7;
     }
 
     @Override
     public int getChildrenCount(int listPosition)
     {
-        return choreList.getAllRoutines().get(listPosition).getAllProcedures().size();
+        return week.getWeekDay(listPosition + 1).getProcedures().size();
     }
 
     @Override
     public Object getGroup(int listPosition)
     {
-        return choreList.getAllRoutines().get(listPosition);
+        return week.getWeekDay(listPosition + 1);
     }
 
     @Override
     public Object getChild(int listPosition, int expandedListPosition)
     {
-        return choreList.getAllRoutines()
-            .get(listPosition)
-            .getAllProcedures()
+        return week.getWeekDay(listPosition + 1)
+            .getProcedures()
             .get(expandedListPosition);
     }
 
@@ -73,7 +70,7 @@ public class WeekRoutineListAdaptor extends BaseExpandableListAdapter
     @Override
     public View getGroupView(int listPosition, boolean isExpanded, View view, ViewGroup viewGroup)
     {
-        Routine routine = (Routine)getGroup(listPosition);
+        Routine.WeekDay weekDay = (Routine.WeekDay)getGroup(listPosition);
 
         if (view == null)
         {
@@ -86,7 +83,7 @@ public class WeekRoutineListAdaptor extends BaseExpandableListAdapter
         TextView listTitleTextView = (TextView)view.findViewById(R.id.listTitle);
 
         listTitleTextView.setTypeface(null, Typeface.BOLD);
-        listTitleTextView.setText(routine.getName());
+        listTitleTextView.setText(weekDay.getName());
 
         return view;
     }
@@ -111,7 +108,11 @@ public class WeekRoutineListAdaptor extends BaseExpandableListAdapter
 
         TextView expandedListTextView = (TextView)view.findViewById(R.id.expandedListItem);
 
-        expandedListTextView.setText(procedure.getDescription());
+        expandedListTextView.setText(
+            String.format(
+                "%s - %s",
+                procedure.getTime().toString("HH.mm"),
+                procedure.getDescription()));
 
         return view;
     }

@@ -17,34 +17,51 @@
         android:layout_marginBottom="70dp"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Name" />
-
-        <EditText
-            android:id="@+id/fortnight_routine_name_edit"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textCapSentences"
-            android:maxLines="1" />
+            android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Start Date" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name:" />
 
-        <EditText
-            android:id="@+id/fortnight_routine_start_date_edit"
+            <EditText
+                android:id="@+id/fortnight_routine_name_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="35dp"
+                android:inputType="textCapSentences"
+                android:maxLines="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textCapSentences"
-            android:maxLines="1" />
+            android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Procedures" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start Date:" />
+
+            <EditText
+                android:id="@+id/fortnight_routine_start_date_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:inputType="textCapSentences"
+                android:maxLines="1" />
+
+        </LinearLayout>
+
+<!--        <TextView-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Procedures" />-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -102,12 +119,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="5dp"
                 android:layout_weight="0"
                 android:background="#FFFF66"
                 android:layoutDirection="ltr"
                 android:orientation="vertical"
-                android:padding="10dp">
+                android:paddingLeft="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"

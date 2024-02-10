@@ -100,7 +100,7 @@ public class WeekRoutineActivity extends AppCompatActivity
         Button removeRoutineButton = findViewById(R.id.removeButton);
         removeRoutineButton.setVisibility(action == ROUTINE_ACTION_EDIT ? Button.VISIBLE : Button.INVISIBLE);
 
-        nameEditText = findViewById(R.id.fortnight_routine_name_edit);
+        nameEditText = findViewById(R.id.week_routine_name_edit);
 
         weekExpandableListAdaptor = new WeekExpandableListAdaptor(this, routine.getWeek());
 

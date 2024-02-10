@@ -57,7 +57,7 @@ public class DayRoutineActivity extends AppCompatActivity
 
         procedureListAdapter.addAll(routine.getAllProcedures());
 
-        nameEditText = findViewById(R.id.routineNameEditText);
+        nameEditText = findViewById(R.id.day_routine_name_edit);
         procedureListView = findViewById(R.id.procedures);
         procedureListView.setAdapter(procedureListAdapter);
         procedureListView.setOnItemLongClickListener((parent, view, position, id) ->

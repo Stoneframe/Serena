@@ -2,7 +2,7 @@ package stoneframe.chorelist.model;
 
 import org.joda.time.DateTime;
 
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -25,7 +25,9 @@ public class RoutineManager
 
     public List<Routine> getAllRoutines()
     {
-        return Collections.unmodifiableList(routines);
+        return routines.stream()
+            .sorted(Comparator.comparing(Routine::getName))
+            .collect(Collectors.toList());
     }
 
     public DateTime getNextProcedureTime(DateTime now)

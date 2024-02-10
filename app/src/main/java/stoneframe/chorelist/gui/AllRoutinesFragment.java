@@ -44,7 +44,7 @@ public class AllRoutinesFragment extends Fragment
         View rootView = inflater.inflate(R.layout.fragment_all_routines, container, false);
 
         routineAdapter = new ArrayAdapter<>(
-            getContext(),
+            getActivity().getBaseContext(),
             android.R.layout.simple_list_item_1);
         ListView routineListView = rootView.findViewById(R.id.all_routines);
         routineListView.setAdapter(routineAdapter);

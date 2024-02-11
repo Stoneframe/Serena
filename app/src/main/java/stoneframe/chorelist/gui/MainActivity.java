@@ -154,21 +154,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        storage = new SharedPreferencesStorage(
-            this,
-            new SimpleChoreSelectorConverter(),
-            new WeeklyEffortTrackerConverter());
-
-        choreList = new ChoreList(
-            storage,
-            new RealTimeService(),
-            new WeeklyEffortTracker(10, 10, 10, 10, 10, 30, 30),
-            new SimpleChoreSelector());
-
-        choreList.load();
-
         GlobalState globalState = (GlobalState)getApplication();
-        globalState.setChoreList(choreList);
+
+        choreList = globalState.getChoreList();
+
+        if (choreList == null)
+        {
+            storage = new SharedPreferencesStorage(
+                this,
+                new SimpleChoreSelectorConverter(),
+                new WeeklyEffortTrackerConverter());
+
+            choreList = new ChoreList(
+                storage,
+                new RealTimeService(),
+                new WeeklyEffortTracker(10, 10, 10, 10, 10, 30, 30),
+                new SimpleChoreSelector());
+
+            choreList.load();
+
+            globalState.setChoreList(choreList);
+        }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

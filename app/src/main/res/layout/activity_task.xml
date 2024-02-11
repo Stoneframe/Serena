@@ -55,7 +55,8 @@
                 <EditText
                     android:id="@+id/deadlineEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:focusable="false" />
 
             </LinearLayout>
 
@@ -76,7 +77,8 @@
                 <EditText
                     android:id="@+id/ignoreBeforeEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:focusable="false" />
 
             </LinearLayout>
 
@@ -90,9 +92,9 @@
 
                 <CheckBox
                     android:id="@+id/isDoneCheckBox"
-                    android:text="Is Done"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:text="Is Done" />
 
             </LinearLayout>
 
@@ -104,8 +106,8 @@
         android:id="@+id/removeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
         android:onClick="removeClick"
         android:text="Remove" />
 

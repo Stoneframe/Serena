@@ -34,6 +34,7 @@ public class DayRoutineActivity extends AppCompatActivity
 
     private EditText procedureTimeEditText;
     private EditText procedureDescriptionEditText;
+
     private ArrayAdapter<Procedure> procedureListAdapter;
 
     @Override
@@ -60,15 +61,10 @@ public class DayRoutineActivity extends AppCompatActivity
         nameEditText = findViewById(R.id.day_routine_name_edit);
         procedureListView = findViewById(R.id.procedures);
         procedureListView.setAdapter(procedureListAdapter);
+        procedureListView.setOnItemClickListener((parent, view, position, id) ->
+            editProcedure(position));
         procedureListView.setOnItemLongClickListener((parent, view, position, id) ->
-        {
-            Procedure procedure = procedureListAdapter.getItem(position);
-
-            routine.removeProcedure(procedure);
-            procedureListAdapter.remove(procedure);
-
-            return true;
-        });
+            removeProcedure(position));
 
         procedureTimeEditText = findViewById(R.id.procedure_time);
         procedureTimeEditText.setInputType(InputType.TYPE_NULL);
@@ -133,8 +129,36 @@ public class DayRoutineActivity extends AppCompatActivity
         procedureDescriptionEditText.setText("");
     }
 
-    public void removeProcedureClick(View view)
+    private void editProcedure(int position)
     {
+        Procedure procedure = (Procedure)procedureListAdapter.getItem(position);
 
+        new TimePickerDialog(
+            this,
+            (view, hourOfDay, minute) ->
+            {
+                LocalTime time = new LocalTime(hourOfDay, minute);
+
+                Procedure newProcedure = new Procedure(procedure.getDescription(), time);
+
+                routine.removeProcedure(procedure);
+                routine.addProcedure(newProcedure);
+
+                procedureListAdapter.clear();
+                procedureListAdapter.addAll(routine.getAllProcedures());
+            },
+            procedure.getTime().getHourOfDay(),
+            procedure.getTime().getMinuteOfHour(),
+            true).show();
+    }
+
+    private boolean removeProcedure(int position)
+    {
+        Procedure procedure = procedureListAdapter.getItem(position);
+
+        routine.removeProcedure(procedure);
+        procedureListAdapter.remove(procedure);
+
+        return true;
     }
 }

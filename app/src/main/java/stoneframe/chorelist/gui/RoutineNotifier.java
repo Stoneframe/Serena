@@ -69,13 +69,19 @@ public class RoutineNotifier
     {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(
+        PendingIntent pendingIntent = PendingIntent.getActivity(
             context,
-            CHANNEL_ID).setSmallIcon(R.mipmap.ic_launcher)
+            0,
+            new Intent(context, MainActivity.class),
+            PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.mipmap.ic_launcher)
             .setContentText(contentText)
             .setSubText(subText)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setAutoCancel(true);
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent);
 
         Notification notification = builder.build();
 

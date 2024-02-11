@@ -132,6 +132,8 @@ public class AllChoresFragment extends Fragment
                     choreList.removeChore(chore);
                     break;
             }
+
+            choreList.save();
         }
     }
 }

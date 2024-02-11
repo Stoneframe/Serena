@@ -156,5 +156,7 @@ public class AllTasksFragment extends Fragment
                     break;
             }
         }
+
+        choreList.save();
     }
 }

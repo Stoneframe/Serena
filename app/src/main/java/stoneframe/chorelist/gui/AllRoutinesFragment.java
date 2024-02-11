@@ -155,6 +155,8 @@ public class AllRoutinesFragment extends Fragment
             }
         }
 
+        choreList.save();
+
         DateTime nextAlarmTime = choreList.getNextRoutineProcedureTime();
 
         if (nextAlarmTime == null)

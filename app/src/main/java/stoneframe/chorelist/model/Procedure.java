@@ -36,6 +36,6 @@ public class Procedure implements Comparable<Procedure>
     @Override
     public String toString()
     {
-        return time.toString("HH:mm") + "\t" + description;
+        return time.toString("HH:mm") + " - " + description;
     }
 }

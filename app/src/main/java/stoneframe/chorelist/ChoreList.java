@@ -154,24 +154,19 @@ public class ChoreList
         routineManager.removeRoutine(routine);
     }
 
-//    public Procedure getNextRoutineProcedure()
-//    {
-//        return routineManager.getNextProcedure(timeService.getNow().toLocalTime());
-//    }
-
     public DateTime getNextRoutineProcedureTime()
     {
         return routineManager.getNextProcedureTime(timeService.getNow());
     }
 
-//    public Procedure getPreviousRoutineProcedure()
-//    {
-//        return routineManager.getPreviousProcedure(timeService.getNow().toLocalTime());
-//    }
-
     public List<Procedure> getPendingProcedures()
     {
         return routineManager.getPendingProcedures(timeService.getNow());
+    }
+
+    public List<Procedure> getFirstPendingProcedures()
+    {
+        return routineManager.getFirstPendingProcedures(timeService.getNow());
     }
 
     public void procedureDone(Procedure procedure)

@@ -47,6 +47,14 @@ public class RoutineManager
             .collect(Collectors.toList());
     }
 
+    public List<Procedure> getFirstPendingProcedures(DateTime now)
+    {
+        return routines.stream()
+            .map(r -> r.getPendingProcedure(now))
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
+    }
+
     public void procedureDone(Procedure procedure, DateTime now)
     {
         Routine routine = routines.stream()

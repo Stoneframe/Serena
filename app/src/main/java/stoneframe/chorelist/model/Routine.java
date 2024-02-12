@@ -53,6 +53,11 @@ public abstract class Routine
 
     public abstract List<Procedure> getPendingProcedures(DateTime now);
 
+    public Procedure getPendingProcedure(DateTime now)
+    {
+        return getPendingProcedures(now).stream().findFirst().orElse(null);
+    }
+
     public abstract void procedureDone(Procedure procedure, DateTime now);
 
     @NonNull

@@ -45,7 +45,7 @@ public class TodayFragment extends Fragment
         procedureAdapter = new SimpleCheckboxListAdapter<>(
             getActivity().getBaseContext(),
             choreList::getFirstPendingProcedures,
-            Procedure::getDescription);
+            Procedure::toString);
         procedureAdapter.registerDataSetObserver(new TodayDataSetObserver());
         ListView procedureListView = rootView.findViewById(R.id.todays_routines);
         procedureListView.setAdapter(procedureAdapter);

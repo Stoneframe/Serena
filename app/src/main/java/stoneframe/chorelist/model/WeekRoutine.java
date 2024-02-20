@@ -3,6 +3,7 @@ package stoneframe.chorelist.model;
 import androidx.annotation.Nullable;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class WeekRoutine extends Routine
 {
-    private final Week week = new Week(0);
+    private final Week week;
 
     private DateTime lastCompleted;
 
@@ -19,6 +20,8 @@ public class WeekRoutine extends Routine
         super(WEEK_ROUTINE, name);
 
         lastCompleted = now;
+
+        week = new Week(0, new LocalDate(2024, 1, 1));
     }
 
     @Override
@@ -27,7 +30,7 @@ public class WeekRoutine extends Routine
         return week.getProcedures();
     }
 
-    public WeekDay getWeekDay(int dayOfWeek)
+    public Day getWeekDay(int dayOfWeek)
     {
         return week.getWeekDay(dayOfWeek);
     }
@@ -42,10 +45,9 @@ public class WeekRoutine extends Routine
     @Override
     public List<Procedure> getPendingProcedures(DateTime now)
     {
-        return week.getProcedureDateTimesBefore(now)
+        return week.getProcedureDateTimesBetween(lastCompleted, now)
             .entrySet().stream()
             .sorted(Map.Entry.comparingByValue())
-            .filter(pd -> isPending(now, pd.getValue()))
             .map(Map.Entry::getKey)
             .collect(Collectors.toList());
     }
@@ -53,21 +55,11 @@ public class WeekRoutine extends Routine
     @Override
     public void procedureDone(Procedure procedure, DateTime now)
     {
-        int procedureWeekDay = week.getWeekDay(procedure);
-
-        lastCompleted = procedure.getTime()
-            .toDateTime(now)
-            .plusDays(procedureWeekDay - now.getDayOfWeek());
+        lastCompleted = week.getNextTimeOfProcedureAfter(procedure, lastCompleted);
     }
 
     public Week getWeek()
     {
         return week;
-    }
-
-    private boolean isPending(DateTime now, DateTime procedureDateTime)
-    {
-        return procedureDateTime.isAfter(lastCompleted)
-            && (procedureDateTime.isBefore(now) || procedureDateTime.isEqual(now));
     }
 }

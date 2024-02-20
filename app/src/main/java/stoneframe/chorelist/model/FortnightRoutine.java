@@ -4,7 +4,6 @@ import androidx.annotation.Nullable;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.joda.time.Weeks;
 
 import java.util.List;
 import java.util.Map;
@@ -16,8 +15,8 @@ import javax.annotation.CheckForNull;
 
 public class FortnightRoutine extends Routine
 {
-    private final Week week1 = new Week(1);
-    private final Week week2 = new Week(1);
+    private final Week week1;
+    private final Week week2;
 
     private LocalDate startDate;
     private DateTime lastCompleted;
@@ -29,6 +28,9 @@ public class FortnightRoutine extends Routine
         setStartDate(startDate);
 
         lastCompleted = now;
+
+        week1 = new Week(1, startDate.plusWeeks(0));
+        week2 = new Week(1, startDate.plusWeeks(1));
     }
 
     public LocalDate getStartDate()
@@ -52,8 +54,8 @@ public class FortnightRoutine extends Routine
     @Override
     public DateTime getNextProcedureTime(DateTime now)
     {
-        DateTime week1Next = getNextProcedureTime(week1, now, isWeek1(now));
-        DateTime week2Next = getNextProcedureTime(week2, now, isWeek2(now));
+        DateTime week1Next = getNextProcedureTime(week1, now);
+        DateTime week2Next = getNextProcedureTime(week2, now);
 
         return getEarliestDateTime(week1Next, week2Next);
     }
@@ -61,27 +63,17 @@ public class FortnightRoutine extends Routine
     @Override
     public List<Procedure> getPendingProcedures(DateTime now)
     {
-        boolean isWeek1 = isWeek1(now);
-        boolean isWeek2 = isWeek2(now);
-
-        Map<Procedure, DateTime> week1ProcedureDateTimes = week1.getProcedureDateTimesBefore(now)
+        Stream<Map.Entry<Procedure, DateTime>> week1ProcedureDateTimes = week1
+            .getProcedureDateTimesBetween(lastCompleted, now)
             .entrySet()
-            .stream()
-            .collect(Collectors.toMap(
-                Map.Entry::getKey,
-                e -> isWeek1 ? e.getValue() : e.getValue().minusWeeks(1)));
+            .stream();
 
-        Map<Procedure, DateTime> week2ProcedureDateTimes = week2.getProcedureDateTimesBefore(now)
+        Stream<Map.Entry<Procedure, DateTime>> week2ProcedureDateTimes = week2
+            .getProcedureDateTimesBetween(lastCompleted, now)
             .entrySet()
-            .stream()
-            .collect(Collectors.toMap(
-                Map.Entry::getKey,
-                e -> isWeek2 ? e.getValue() : e.getValue().minusWeeks(1)));
+            .stream();
 
-        return Stream.concat(
-                week1ProcedureDateTimes.entrySet().stream(),
-                week2ProcedureDateTimes.entrySet().stream())
-            .filter(pd -> isPending(now, pd.getValue()))
+        return Stream.concat(week1ProcedureDateTimes, week2ProcedureDateTimes)
             .sorted(Map.Entry.comparingByValue())
             .map(Map.Entry::getKey)
             .collect(Collectors.toList());
@@ -92,20 +84,12 @@ public class FortnightRoutine extends Routine
     {
         if (week1.getProcedures().contains(procedure))
         {
-            DateTime dateTime = procedure.getTime()
-                .toDateTime(now)
-                .plusDays(week1.getWeekDay(procedure) - now.getDayOfWeek());
-
-            lastCompleted = isWeek1(now) ? dateTime : dateTime.minusWeeks(1);
+            lastCompleted = week1.getNextTimeOfProcedureAfter(procedure, lastCompleted);
         }
 
         if (week2.getProcedures().contains(procedure))
         {
-            DateTime dateTime = procedure.getTime()
-                .toDateTime(now)
-                .plusDays(week2.getWeekDay(procedure) - now.getDayOfWeek());
-
-            lastCompleted = isWeek2(now) ? dateTime : dateTime.minusWeeks(1);
+            lastCompleted = week2.getNextTimeOfProcedureAfter(procedure, lastCompleted);
         }
     }
 
@@ -132,31 +116,10 @@ public class FortnightRoutine extends Routine
         }
     }
 
-    private boolean isWeek1(DateTime now)
-    {
-        Weeks weeksSinceStart = Weeks.weeksBetween(startDate, now.toLocalDate());
-
-        return weeksSinceStart.getWeeks() % 2 == 0;
-    }
-
-    private boolean isWeek2(DateTime now)
-    {
-        Weeks weeksSinceStart = Weeks.weeksBetween(startDate, now.toLocalDate());
-
-        return weeksSinceStart.getWeeks() % 2 == 1;
-    }
-
     @CheckForNull
-    private DateTime getNextProcedureTime(Week week, DateTime now, boolean isWeek)
+    private DateTime getNextProcedureTime(Week week, DateTime now)
     {
-        DateTime weekNext = week.getNextProcedureTime(now);
-
-        if (weekNext == null)
-        {
-            return null;
-        }
-
-        return isWeek ? weekNext : weekNext.plusWeeks(1);
+        return week.getNextProcedureTime(now);
     }
 
     @Nullable
@@ -167,11 +130,5 @@ public class FortnightRoutine extends Routine
             .sorted()
             .findFirst()
             .orElse(null);
-    }
-
-    private boolean isPending(DateTime now, DateTime procedureDateTime)
-    {
-        return procedureDateTime.isAfter(lastCompleted)
-            && (procedureDateTime.isBefore(now) || procedureDateTime.isEqual(now));
     }
 }

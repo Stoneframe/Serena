@@ -4,12 +4,12 @@ import androidx.annotation.NonNull;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
+import org.joda.time.LocalDate;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -67,17 +67,20 @@ public abstract class Routine
         return name;
     }
 
-    public static class WeekDay
+    public static class Day
     {
         private final List<Procedure> procedures = new LinkedList<>();
 
-        private final int dayOfWeek;
         private final String name;
+        private final int interval;
 
-        public WeekDay(int dayOfWeek, String name)
+        private LocalDate startDate;
+
+        public Day(String name, LocalDate startDate, int interval)
         {
-            this.dayOfWeek = dayOfWeek;
             this.name = name;
+            this.interval = interval;
+            this.startDate = startDate;
         }
 
         public String getName()
@@ -85,16 +88,19 @@ public abstract class Routine
             return name;
         }
 
-        public int getDayOfWeek()
+        public LocalDate getStartDate()
         {
-            return dayOfWeek;
+            return startDate;
+        }
+
+        public void setStartDate(LocalDate startDate)
+        {
+            this.startDate = startDate;
         }
 
         public List<Procedure> getProcedures()
         {
-            return procedures.stream()
-                .sorted()
-                .collect(Collectors.toList());
+            return procedures.stream().sorted().collect(Collectors.toList());
         }
 
         public void addProcedure(Procedure procedure)
@@ -107,82 +113,108 @@ public abstract class Routine
             procedures.remove(procedure);
         }
 
-        public DateTime getNextProcedureTime(DateTime now, int skip)
+        public DateTime getNextProcedureTime(DateTime now)
         {
             if (procedures.isEmpty()) return null;
 
-            int dayDiff = dayOfWeek - now.getDayOfWeek();
-
             return procedures.stream()
-                .map(p ->
-                {
-                    DateTime dateTime = p.getTime()
-                        .toDateTime(now.withTimeAtStartOfDay())
-                        .plusDays(dayDiff);
-
-                    if (!dateTime.isAfter(now))
-                    {
-                        dateTime = dateTime.plusWeeks(1 + skip);
-                    }
-
-                    return dateTime;
-                })
+                .map(p -> getNextTimeOfProcedureAfter(p, now))
                 .sorted()
                 .findFirst()
-                .orElse(null);
+                .get();
+        }
+
+        public Map<Procedure, DateTime> getProcedureTimesAfter(DateTime dateTime)
+        {
+            return procedures.stream()
+                .collect(Collectors.toMap(p -> p, p -> getNextTimeOfProcedureAfter(p, dateTime)));
+        }
+
+        public Map<Procedure, DateTime> getProcedureTimesBetween(DateTime first, DateTime second)
+        {
+            return getProcedureTimesAfter(first).entrySet().stream()
+                .filter(e -> e.getValue().isBefore(second) || e.getValue().isEqual(second))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        }
+
+        public DateTime getNextTimeOfProcedureAfter(Procedure procedure, DateTime dateTime)
+        {
+            DateTime nextTime = startDate.toDateTime(procedure.getTime());
+
+            while (!nextTime.isAfter(dateTime))
+            {
+                nextTime = nextTime.plusDays(interval);
+            }
+
+            return nextTime;
         }
     }
 
     public static class Week
     {
-        private final WeekDay monday = new WeekDay(DateTimeConstants.MONDAY, "Monday");
-        private final WeekDay tuesday = new WeekDay(DateTimeConstants.TUESDAY, "Tuesday");
-        private final WeekDay wednesday = new WeekDay(DateTimeConstants.WEDNESDAY, "Wednesday");
-        private final WeekDay thursday = new WeekDay(DateTimeConstants.THURSDAY, "Thursday");
-        private final WeekDay friday = new WeekDay(DateTimeConstants.FRIDAY, "Friday");
-        private final WeekDay saturday = new WeekDay(DateTimeConstants.SATURDAY, "Saturday");
-        private final WeekDay sunday = new WeekDay(DateTimeConstants.SUNDAY, "Sunday");
+        private final Day monday;
+        private final Day tuesday;
+        private final Day wednesday;
+        private final Day thursday;
+        private final Day friday;
+        private final Day saturday;
+        private final Day sunday;
 
-        private final int skip;
-
-        public Week(int skip)
+        public Week(int skip, LocalDate startDate)
         {
-            this.skip = skip;
+            monday = new Day("Monday", startDate.plusDays(0), (skip + 1) * 7);
+            tuesday = new Day("Tuesday", startDate.plusDays(1), (skip + 1) * 7);
+            wednesday = new Day("Wednesday", startDate.plusDays(2), (skip + 1) * 7);
+            thursday = new Day("Thursday", startDate.plusDays(3), (skip + 1) * 7);
+            friday = new Day("Friday", startDate.plusDays(4), (skip + 1) * 7);
+            saturday = new Day("Saturday", startDate.plusDays(5), (skip + 1) * 7);
+            sunday = new Day("Sunday", startDate.plusDays(6), (skip + 1) * 7);
         }
 
-        public WeekDay getMonday()
+        public Day getMonday()
         {
             return monday;
         }
 
-        public WeekDay getTuesday()
+        public Day getTuesday()
         {
             return tuesday;
         }
 
-        public WeekDay getWednesday()
+        public Day getWednesday()
         {
             return wednesday;
         }
 
-        public WeekDay getThursday()
+        public Day getThursday()
         {
             return thursday;
         }
 
-        public WeekDay getFriday()
+        public Day getFriday()
         {
             return friday;
         }
 
-        public WeekDay getSaturday()
+        public Day getSaturday()
         {
             return saturday;
         }
 
-        public WeekDay getSunday()
+        public Day getSunday()
         {
             return sunday;
+        }
+
+        public void setStartDate(LocalDate startDate)
+        {
+            monday.setStartDate(startDate);
+            tuesday.setStartDate(startDate);
+            wednesday.setStartDate(startDate);
+            thursday.setStartDate(startDate);
+            friday.setStartDate(startDate);
+            saturday.setStartDate(startDate);
+            sunday.setStartDate(startDate);
         }
 
         public List<Procedure> getProcedures()
@@ -197,47 +229,59 @@ public abstract class Routine
             if (getProcedures().isEmpty()) return null;
 
             return Stream.of(monday, tuesday, wednesday, thursday, friday, saturday, sunday)
-                .map(p -> p.getNextProcedureTime(now, skip))
+                .map(p -> p.getNextProcedureTime(now))
                 .filter(Objects::nonNull)
                 .sorted()
                 .findFirst()
                 .get();
         }
 
-        public WeekDay getWeekDay(int dayOfWeek)
+        public Day getWeekDay(int dayOfWeek)
         {
-            return Stream.of(monday, tuesday, wednesday, thursday, friday, saturday, sunday)
-                .filter(d -> d.getDayOfWeek() == dayOfWeek)
+            switch (dayOfWeek)
+            {
+                case DateTimeConstants.MONDAY:
+                    return monday;
+                case DateTimeConstants.TUESDAY:
+                    return tuesday;
+                case DateTimeConstants.WEDNESDAY:
+                    return wednesday;
+                case DateTimeConstants.THURSDAY:
+                    return thursday;
+                case DateTimeConstants.FRIDAY:
+                    return friday;
+                case DateTimeConstants.SATURDAY:
+                    return saturday;
+                case DateTimeConstants.SUNDAY:
+                    return sunday;
+                default:
+                    throw new IllegalArgumentException();
+            }
+        }
+
+        public DateTime getNextTimeOfProcedureAfter(Procedure procedure, DateTime now)
+        {
+            return getAllDaysStream().filter(d -> d.getProcedures().contains(procedure))
+                .map(d -> d.getNextTimeOfProcedureAfter(procedure, now))
                 .findFirst()
                 .get();
         }
 
-        public int getWeekDay(Procedure procedure)
-        {
-            Optional<WeekDay> weekDayOptional = getAllDaysStream()
-                .filter(day -> day.getProcedures().contains(procedure))
-                .findFirst();
-
-            assert weekDayOptional.isPresent();
-
-            return weekDayOptional.get().getDayOfWeek();
-        }
-
-        public Map<Procedure, DateTime> getProcedureDateTimesBefore(DateTime now)
+        public Map<Procedure, DateTime> getProcedureDateTimesBetween(DateTime start, DateTime end)
         {
             return this
                 .concat(
-                    getAdjustedProcedureDateTimesOfWeekDay(DateTimeConstants.MONDAY, now),
-                    getAdjustedProcedureDateTimesOfWeekDay(DateTimeConstants.TUESDAY, now),
-                    getAdjustedProcedureDateTimesOfWeekDay(DateTimeConstants.WEDNESDAY, now),
-                    getAdjustedProcedureDateTimesOfWeekDay(DateTimeConstants.THURSDAY, now),
-                    getAdjustedProcedureDateTimesOfWeekDay(DateTimeConstants.FRIDAY, now),
-                    getAdjustedProcedureDateTimesOfWeekDay(DateTimeConstants.SATURDAY, now),
-                    getAdjustedProcedureDateTimesOfWeekDay(DateTimeConstants.SUNDAY, now))
+                    getWeekDay(DateTimeConstants.MONDAY).getProcedureTimesBetween(start, end),
+                    getWeekDay(DateTimeConstants.TUESDAY).getProcedureTimesBetween(start, end),
+                    getWeekDay(DateTimeConstants.WEDNESDAY).getProcedureTimesBetween(start, end),
+                    getWeekDay(DateTimeConstants.THURSDAY).getProcedureTimesBetween(start, end),
+                    getWeekDay(DateTimeConstants.FRIDAY).getProcedureTimesBetween(start, end),
+                    getWeekDay(DateTimeConstants.SATURDAY).getProcedureTimesBetween(start, end),
+                    getWeekDay(DateTimeConstants.SUNDAY).getProcedureTimesBetween(start, end))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         }
 
-        private Stream<WeekDay> getAllDaysStream()
+        private Stream<Day> getAllDaysStream()
         {
             return Stream.of(monday, tuesday, wednesday, thursday, friday, saturday, sunday);
         }
@@ -253,27 +297,6 @@ public abstract class Routine
             }
 
             return stream;
-        }
-
-        @NonNull
-        private Map<Procedure, DateTime> getAdjustedProcedureDateTimesOfWeekDay(
-            int dayOfWeek,
-            DateTime now)
-        {
-            return getWeekDay(dayOfWeek)
-                .getProcedures()
-                .stream()
-                .collect(Collectors.toMap(p -> p, p -> getProcedureDateTime(dayOfWeek, now, p)));
-        }
-
-        @NonNull
-        private DateTime getProcedureDateTime(int dayOfWeek, DateTime now, Procedure procedure)
-        {
-            DateTime dateTime = procedure.getTime()
-                .toDateTime(now)
-                .plusDays(dayOfWeek - now.getDayOfWeek());
-
-            return dateTime.isAfter(now) ? dateTime.minusWeeks(1 + skip) : dateTime;
         }
     }
 }

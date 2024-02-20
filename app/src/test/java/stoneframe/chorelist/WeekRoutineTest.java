@@ -134,8 +134,8 @@ public class WeekRoutineTest
         List<Procedure> pendingProcedures = routine.getPendingProcedures(now.plusDays(9));
 
         assertEquals(2, pendingProcedures.size());
-        assertEquals("Procedure 2", pendingProcedures.get(0).getDescription());
-        assertEquals("Procedure 1", pendingProcedures.get(1).getDescription());
+        assertEquals("Procedure 1", pendingProcedures.get(0).getDescription());
+        assertEquals("Procedure 2", pendingProcedures.get(1).getDescription());
     }
 
     @Test

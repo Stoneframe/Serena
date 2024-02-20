@@ -163,7 +163,7 @@ public class FortnightRoutineActivity extends AppCompatActivity
             groupPosition,
             childPosition);
 
-        Routine.WeekDay weekDay = (Routine.WeekDay)weekExpandableListAdaptor.getGroup(
+        Routine.Day weekDay = (Routine.Day)weekExpandableListAdaptor.getGroup(
             groupPosition);
 
         new TimePickerDialog(
@@ -202,7 +202,7 @@ public class FortnightRoutineActivity extends AppCompatActivity
                 groupPosition,
                 childPosition);
 
-            Routine.WeekDay weekDay = (Routine.WeekDay)week1ExpandableListAdaptor.getGroup(
+            Routine.Day weekDay = (Routine.Day)week1ExpandableListAdaptor.getGroup(
                 groupPosition);
 
             weekDay.removeProcedure(procedure);

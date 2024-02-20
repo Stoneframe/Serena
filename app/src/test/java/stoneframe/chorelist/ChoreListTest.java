@@ -1,14 +1,12 @@
 package stoneframe.chorelist;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.joda.time.DateTime;
-import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,6 +18,7 @@ import java.util.stream.Collectors;
 
 import stoneframe.chorelist.model.Chore;
 import stoneframe.chorelist.model.Container;
+import stoneframe.chorelist.model.DayRoutine;
 import stoneframe.chorelist.model.Procedure;
 import stoneframe.chorelist.model.Routine;
 import stoneframe.chorelist.model.Storage;
@@ -318,67 +317,6 @@ public class ChoreListTest
         assertAllRoutinesIsEmpty();
     }
 
-    @Test
-    public void getNextRoutineProcedure_singleRoutineWithProcedureInFuture_returnProcedure()
-    {
-        addRoutine("Routine", new Procedure("Procedure", new LocalTime(18, 0)));
-        setCurrentTimeTo(TODAY.plusHours(12));
-        assertNextRoutineProcedureIs("Routine", "Procedure");
-    }
-
-    @Test
-    public void getNextRoutineProcedure_singleRoutineWithTwoProcedureInFuture_returnFirstProcedure()
-    {
-        addRoutine(
-            "Routine",
-            new Procedure("Procedure 1", new LocalTime(18, 0)),
-            new Procedure("Procedure 2", new LocalTime(21, 0)));
-        setCurrentTimeTo(TODAY.plusHours(12));
-        assertNextRoutineProcedureIs("Routine", "Procedure 1");
-    }
-
-    @Test
-    public void getNextRoutineProcedure_twoRoutinesWithOneProcedureEachInFuture_returnFirstProcedure()
-    {
-        addRoutine("Routine 1", new Procedure("Procedure 1", new LocalTime(21, 0)));
-        addRoutine("Routine 2", new Procedure("Procedure 1", new LocalTime(18, 0)));
-        setCurrentTimeTo(TODAY.plusHours(12));
-        assertNextRoutineProcedureIs("Routine 2", "Procedure 1");
-    }
-
-    @Test
-    public void getPreviousRoutineProcedure_singleRoutineWithProcedureInPast_returnProcedure()
-    {
-        addRoutine("Routine", new Procedure("Procedure", new LocalTime(6, 0)));
-        setCurrentTimeTo(TODAY.plusHours(12));
-        assertPreviousRoutineProcedureIs("Routine", "Procedure");
-    }
-
-    @Test
-    public void getPreviousRoutineProcedure_singleRoutineWithTwoProcedureInPast_returnLatestProcedure()
-    {
-        addRoutine(
-            "Routine",
-            new Procedure("Procedure 1", new LocalTime(6, 0)),
-            new Procedure("Procedure 2", new LocalTime(9, 0)));
-        setCurrentTimeTo(TODAY.plusHours(12));
-        assertPreviousRoutineProcedureIs("Routine", "Procedure 2");
-    }
-
-    @Test
-    public void getPreviousRoutineProcedure_twoRoutinesWithOneProcedureEachInPast_returnLatestProcedure()
-    {
-        addRoutine("Routine 1", new Procedure("Procedure 1", new LocalTime(9, 0)));
-        addRoutine("Routine 2", new Procedure("Procedure 1", new LocalTime(6, 0)));
-        setCurrentTimeTo(TODAY.plusHours(12));
-        assertPreviousRoutineProcedureIs("Routine 1", "Procedure 1");
-    }
-
-    private void setCurrentTimeTo(DateTime now)
-    {
-        timeService.setNow(now);
-    }
-
     private void setRemainingEffort(int remainingEffort)
     {
         SimpleEffortTracker effortTracker = (SimpleEffortTracker)choreList.getEffortTracker();
@@ -505,11 +443,11 @@ public class ChoreListTest
 
     private void addRoutine(String name, Procedure... procedures)
     {
-//        Routine routine = new Routine(name, new LocalTime(0));
+        DayRoutine routine = new DayRoutine(name, new DateTime(0));
 
-//        Arrays.stream(procedures).forEach(routine::addProcedure);
-//
-//        choreList.addRoutine(routine);
+        Arrays.stream(procedures).forEach(routine::addProcedure);
+
+        choreList.addRoutine(routine);
     }
 
     private void removeRoutine(String name)
@@ -614,24 +552,6 @@ public class ChoreListTest
             .collect(Collectors.toList());
 
         assertEquals(expectedNames, actualNames);
-    }
-
-    private void assertNextRoutineProcedureIs(String routine, String procedure)
-    {
-//        Procedure nextProcedure = choreList.getNextRoutineProcedure();
-
-//        assertNotNull(nextProcedure);
-//        assertEquals(routine, nextProcedure.getRoutine().getName());
-//        assertEquals(procedure, nextProcedure.getDescription());
-    }
-
-    private void assertPreviousRoutineProcedureIs(String routine, String procedure)
-    {
-//        Procedure previousProcedure = choreList.getPreviousRoutineProcedure();
-//
-//        assertNotNull(previousProcedure);
-//        assertEquals(routine, previousProcedure.getRoutine().getName());
-//        assertEquals(procedure, previousProcedure.getDescription());
     }
 
     private static class MockTimeService implements TimeService

@@ -4,6 +4,8 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertTrue;
 
+import androidx.annotation.NonNull;
+
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
 import org.junit.Before;
@@ -210,15 +212,15 @@ public class FortnightRoutineTest
     @Test
     public void getPendingProcedures_proceduresMon13w1AndMon10w2AndNowDay16Hour0_listHasProceduresMon13w2Mon10w1()
     {
-        routine.getWeek1().getMonday().addProcedure(new Procedure("Mon1W1", new LocalTime(13, 0)));
+        routine.getWeek1().getMonday().addProcedure(new Procedure("Mon13W1", new LocalTime(13, 0)));
 
-        routine.getWeek2().getMonday().addProcedure(new Procedure("Mon1W2", new LocalTime(10, 0)));
+        routine.getWeek2().getMonday().addProcedure(new Procedure("Mon10W2", new LocalTime(10, 0)));
 
         List<Procedure> pendingProcedures = routine.getPendingProcedures(now.plusDays(15));
 
         assertEquals(2, pendingProcedures.size());
-        assertEquals("Mon1W2", pendingProcedures.get(0).getDescription());
-        assertEquals("Mon1W1", pendingProcedures.get(1).getDescription());
+        assertEquals("Mon13W1", pendingProcedures.get(0).getDescription());
+        assertEquals("Mon10W2", pendingProcedures.get(1).getDescription());
     }
 
     @Test
@@ -295,11 +297,81 @@ public class FortnightRoutineTest
         routine.getWeek1().getMonday().addProcedure(procedure1);
         routine.getWeek2().getMonday().addProcedure(procedure2);
 
-        routine.procedureDone(procedure1, now.plusDays(8));
+        routine.procedureDone(procedure1, getDateTime(9, 0));
 
-        List<Procedure> pendingProcedures = routine.getPendingProcedures(now.plusDays(8));
+        List<Procedure> pendingProcedures = routine.getPendingProcedures(getDateTime(9, 0));
 
         assertEquals(1, pendingProcedures.size());
         assertEquals("Mon1W2", pendingProcedures.get(0).getDescription());
+    }
+
+    @Test
+    public void procedureDone_proceduresSun22w1Mon10w2AndNowIsDay7Hour23_getNextProcedureTimeIsMon10w2()
+    {
+        Procedure procedure1 = new Procedure("Sun22W1", new LocalTime(22, 0));
+        Procedure procedure2 = new Procedure("Mon10W2", new LocalTime(10, 0));
+
+        routine.getWeek1().getSunday().addProcedure(procedure1);
+        routine.getWeek2().getMonday().addProcedure(procedure2);
+
+        routine.procedureDone(procedure1, getDateTime(7, 23));
+
+        DateTime nextProcedureTime = routine.getNextProcedureTime(getDateTime(7, 23));
+
+        assertEquals(getDateTime(8, 10), nextProcedureTime);
+    }
+
+    @Test
+    public void procedureDone_proceduresSun22w2Mon10w1AndNowIsDay15Hour1_getNextProcedureTimeIsMon10w2()
+    {
+        Procedure procedure1 = new Procedure("Sun22W1", new LocalTime(22, 0));
+        Procedure procedure2 = new Procedure("Mon10W2", new LocalTime(10, 0));
+
+        routine.getWeek2().getSunday().addProcedure(procedure1);
+        routine.getWeek1().getMonday().addProcedure(procedure2);
+
+        routine.procedureDone(procedure1, getDateTime(14, 23));
+
+        DateTime nextProcedureTime = routine.getNextProcedureTime(getDateTime(14, 23));
+
+        assertEquals(getDateTime(15, 10), nextProcedureTime);
+    }
+
+    @Test
+    public void procedureDone_proceduresSun23w1Mon10w2AndNowIsDay8Hour1_getNextProcedureTimeIsMon10w2()
+    {
+        Procedure procedure1 = new Procedure("Sun23W1", new LocalTime(23, 0));
+        Procedure procedure2 = new Procedure("Mon10W2", new LocalTime(10, 0));
+
+        routine.getWeek1().getSunday().addProcedure(procedure1);
+        routine.getWeek2().getMonday().addProcedure(procedure2);
+
+        routine.procedureDone(procedure1, getDateTime(8, 1));
+
+        DateTime nextProcedureTime = routine.getNextProcedureTime(getDateTime(8, 1));
+
+        assertEquals(getDateTime(8, 10), nextProcedureTime);
+    }
+
+    @Test
+    public void procedureDone_proceduresSun23w2Mon10w1AndNowIsDay15Hour1_getNextProcedureTimeIsMon10w2()
+    {
+        Procedure procedure1 = new Procedure("Sun23W1", new LocalTime(23, 0));
+        Procedure procedure2 = new Procedure("Mon10W2", new LocalTime(10, 0));
+
+        routine.getWeek2().getSunday().addProcedure(procedure1);
+        routine.getWeek1().getMonday().addProcedure(procedure2);
+
+        routine.procedureDone(procedure1, getDateTime(15, 1));
+
+        DateTime nextProcedureTime = routine.getNextProcedureTime(getDateTime(15, 1));
+
+        assertEquals(getDateTime(15, 10), nextProcedureTime);
+    }
+
+    @NonNull
+    private DateTime getDateTime(int day, int hours)
+    {
+        return now.plusDays(day -1).plusHours(hours);
     }
 }

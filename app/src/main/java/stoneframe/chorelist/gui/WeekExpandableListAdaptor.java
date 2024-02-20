@@ -70,7 +70,7 @@ public class WeekExpandableListAdaptor extends BaseExpandableListAdapter
     @Override
     public View getGroupView(int listPosition, boolean isExpanded, View view, ViewGroup viewGroup)
     {
-        Routine.WeekDay weekDay = (Routine.WeekDay)getGroup(listPosition);
+        Routine.Day weekDay = (Routine.Day)getGroup(listPosition);
 
         if (view == null)
         {

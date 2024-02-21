@@ -81,7 +81,8 @@ public class RoutineNotifier
             .setSubText(subText)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
-            .setContentIntent(pendingIntent);
+            .setContentIntent(pendingIntent)
+            .setStyle(new NotificationCompat.BigTextStyle().bigText(contentText));
 
         Notification notification = builder.build();
 

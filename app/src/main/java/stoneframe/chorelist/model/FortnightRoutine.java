@@ -1,5 +1,6 @@
 package stoneframe.chorelist.model;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.joda.time.DateTime;
@@ -18,29 +19,27 @@ public class FortnightRoutine extends Routine
     private final Week week1;
     private final Week week2;
 
-    private LocalDate startDate;
     private DateTime lastCompleted;
 
     public FortnightRoutine(String name, LocalDate startDate, DateTime now)
     {
         super(Routine.FORTNIGHT_ROUTINE, name);
 
-        setStartDate(startDate);
-
         lastCompleted = now;
 
-        week1 = new Week(1, startDate.plusWeeks(0));
-        week2 = new Week(1, startDate.plusWeeks(1));
+        week1 = new Week(1, getMondayOfWeek(startDate).plusWeeks(0));
+        week2 = new Week(1, getMondayOfWeek(startDate).plusWeeks(1));
     }
 
     public LocalDate getStartDate()
     {
-        return startDate;
+        return week1.getStartDate();
     }
 
     public void setStartDate(LocalDate startDate)
     {
-        this.startDate = startDate.minusDays(startDate.getDayOfWeek() - 1);
+        week1.setStartDate(getMondayOfWeek(startDate).plusWeeks(0));
+        week2.setStartDate(getMondayOfWeek(startDate).plusWeeks(1));
     }
 
     @Override
@@ -130,5 +129,11 @@ public class FortnightRoutine extends Routine
             .sorted()
             .findFirst()
             .orElse(null);
+    }
+
+    @NonNull
+    private static LocalDate getMondayOfWeek(LocalDate startDate)
+    {
+        return startDate.minusDays(startDate.getDayOfWeek() - 1);
     }
 }

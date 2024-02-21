@@ -224,6 +224,18 @@ public class FortnightRoutineTest
     }
 
     @Test
+    public void getPendingProcedures_proceduresMon13w1AndMon13w2AndNowDay1Hour15_listHasProceduresMon13w2()
+    {
+        routine.getWeek1().getMonday().addProcedure(new Procedure("Mon13W1", new LocalTime(13, 0)));
+        routine.getWeek2().getMonday().addProcedure(new Procedure("Mon13W2", new LocalTime(13, 0)));
+
+        List<Procedure> pendingProcedures = routine.getPendingProcedures(getDateTime(1, 15));
+
+        assertEquals(1, pendingProcedures.size());
+        assertEquals("Mon13W1", pendingProcedures.get(0).getDescription());
+    }
+
+    @Test
     public void procedureDone_procedureMon15w1IsDoneAndNowIsDay2Hour0_pendingProceduresIsEmpty()
     {
         Procedure procedure = new Procedure("Mon1W1", new LocalTime(15, 0));
@@ -372,6 +384,6 @@ public class FortnightRoutineTest
     @NonNull
     private DateTime getDateTime(int day, int hours)
     {
-        return now.plusDays(day -1).plusHours(hours);
+        return now.plusDays(day - 1).plusHours(hours);
     }
 }

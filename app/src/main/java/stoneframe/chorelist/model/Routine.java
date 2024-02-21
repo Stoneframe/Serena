@@ -206,15 +206,20 @@ public abstract class Routine
             return sunday;
         }
 
+        public LocalDate getStartDate()
+        {
+            return monday.getStartDate();
+        }
+
         public void setStartDate(LocalDate startDate)
         {
-            monday.setStartDate(startDate);
-            tuesday.setStartDate(startDate);
-            wednesday.setStartDate(startDate);
-            thursday.setStartDate(startDate);
-            friday.setStartDate(startDate);
-            saturday.setStartDate(startDate);
-            sunday.setStartDate(startDate);
+            monday.setStartDate(startDate.plusDays(0));
+            tuesday.setStartDate(startDate.plusDays(1));
+            wednesday.setStartDate(startDate.plusDays(2));
+            thursday.setStartDate(startDate.plusDays(3));
+            friday.setStartDate(startDate.plusDays(4));
+            saturday.setStartDate(startDate.plusDays(5));
+            sunday.setStartDate(startDate.plusDays(6));
         }
 
         public List<Procedure> getProcedures()

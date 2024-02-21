@@ -23,7 +23,6 @@ import stoneframe.chorelist.model.Procedure;
 import stoneframe.chorelist.model.Routine;
 import stoneframe.chorelist.model.Storage;
 import stoneframe.chorelist.model.Task;
-import stoneframe.chorelist.model.TimeService;
 import stoneframe.chorelist.model.choreselectors.SimpleChoreSelector;
 import stoneframe.chorelist.model.efforttrackers.SimpleEffortTracker;
 
@@ -552,29 +551,6 @@ public class ChoreListTest
             .collect(Collectors.toList());
 
         assertEquals(expectedNames, actualNames);
-    }
-
-    private static class MockTimeService implements TimeService
-    {
-        @NonNull
-        private DateTime now;
-
-        public MockTimeService(@NonNull DateTime now)
-        {
-            this.now = now;
-        }
-
-        @NonNull
-        @Override
-        public DateTime getNow()
-        {
-            return now;
-        }
-
-        public void setNow(@NonNull DateTime now)
-        {
-            this.now = now;
-        }
     }
 
     private static class MockStorage implements Storage

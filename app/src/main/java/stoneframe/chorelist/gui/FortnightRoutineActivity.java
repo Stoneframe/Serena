@@ -66,7 +66,7 @@ public class FortnightRoutineActivity extends AppCompatActivity
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(
             this,
-            (DatePickerDialog.OnDateSetListener)(view1, year, month, dayOfMonth) ->
+            (view1, year, month, dayOfMonth) ->
             {
                 DateTime startDate = new DateTime(year, month + 1, dayOfMonth, 0, 0);
                 startDateEditText.setText(startDate.toString("yyyy-MM-dd"));
@@ -78,6 +78,7 @@ public class FortnightRoutineActivity extends AppCompatActivity
         nameEditText = findViewById(R.id.fortnight_routine_name_edit);
         startDateEditText = findViewById(R.id.fortnight_routine_start_date_edit);
         startDateEditText.setText(routine.getStartDate().toString("yyyy-MM-dd"));
+        startDateEditText.setInputType(InputType.TYPE_NULL);
         startDateEditText.setOnClickListener(view -> datePickerDialog.show());
 
         week1ExpandableListAdaptor = new WeekExpandableListAdaptor(this, routine.getWeek1());

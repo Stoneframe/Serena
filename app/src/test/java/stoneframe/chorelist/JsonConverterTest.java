@@ -31,7 +31,7 @@ import stoneframe.chorelist.model.timeservices.RealTimeService;
 
 public class JsonConverterTest
 {
-    private String json = "{\"ChoreManager\":{\"effortTracker\":{\"mon\":10,\"tue\":10,\"wed\":10,\"thu\":10,\"fri\":10,\"sat\":10,\"sun\":10,\"remaining\":0},\"choreSelector\":{},\"chores\":[]},\"TaskManager\":{\"tasks\":[{\"description\":\"Test Task\",\"deadline\":\"2024-02-25T00:00:00.000+01:00\",\"ignoreBefore\":\"2024-02-24T00:00:00.000+01:00\",\"isDone\":false}]},\"RoutineManager\":{\"routines\":[]}}";
+    private String json;
 
     private JsonConverter jsonConverter = new JsonConverter(
         new SimpleChoreSelectorConverter(),

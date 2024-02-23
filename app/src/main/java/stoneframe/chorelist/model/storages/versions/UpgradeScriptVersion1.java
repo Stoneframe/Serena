@@ -39,7 +39,7 @@ public class UpgradeScriptVersion1 implements UpgradeScript
 
             if (task.getBoolean("isDone"))
             {
-                task.putOpt("completed", completedJson);
+                task.put("completed", completedJson);
             }
         }
 

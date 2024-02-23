@@ -4,7 +4,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -47,8 +46,6 @@ public class JsonConverter
 
         JSONObject jsonObject = new JSONObject(json);
 
-        jsonObject.put(VERSION, getCurrentVersion());
-
         return jsonObject.toString();
     }
 
@@ -59,9 +56,14 @@ public class JsonConverter
         int jsonVersion = getJsonVersion(jsonObject);
         int currentVersion = getCurrentVersion();
 
-        for (int version = jsonVersion; version <= currentVersion; version++)
+        for (int version = jsonVersion + 1; version <= currentVersion; version++)
         {
-            jsonObject = Objects.requireNonNull(upgradeScripts.get(version)).upgrade(jsonObject);
+            UpgradeScript upgradeScript = upgradeScripts.get(version);
+
+            assert upgradeScript != null;
+
+            jsonObject = upgradeScript.upgrade(jsonObject);
+            jsonObject.put(VERSION, upgradeScript.getVersion());
         }
 
         return jsonObject.toString();

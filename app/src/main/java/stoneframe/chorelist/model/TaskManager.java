@@ -48,4 +48,9 @@ public class TaskManager
     {
         task.setDone(false, null);
     }
+
+    public void clean(DateTime now)
+    {
+        tasks.removeIf(t -> t.isDone() && t.getCompleted().plusWeeks(1).isBefore(now));
+    }
 }

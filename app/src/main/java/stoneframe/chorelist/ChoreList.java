@@ -25,9 +25,7 @@ public class ChoreList
     private final EffortTracker effortTracker;
     private final ChoreSelector choreSelector;
 
-    private ChoreManager choreManager;
-    private TaskManager taskManager;
-    private RoutineManager routineManager;
+    private Container container;
 
     public ChoreList(
         Storage storage,
@@ -43,134 +41,127 @@ public class ChoreList
 
     public void load()
     {
-        Container container;
-        if ((container = storage.load()) != null)
+        container = storage.load();
+
+        if (container == null)
         {
-            choreManager = container.ChoreManager;
-            taskManager = container.TaskManager;
-            routineManager = container.RoutineManager;
+            container = new Container();
+
+            container.RoutineManager = new RoutineManager();
+            container.ChoreManager = new ChoreManager(effortTracker, choreSelector);
+            container.TaskManager = new TaskManager();
         }
-        else
-        {
-            choreManager = new ChoreManager(effortTracker, choreSelector);
-            taskManager = new TaskManager();
-            routineManager = new RoutineManager();
-        }
+
+        container.TaskManager.clean(timeService.getNow());
     }
 
     public void save()
     {
-        Container container = new Container();
-
-        container.ChoreManager = choreManager;
-        container.TaskManager = taskManager;
-        container.RoutineManager = routineManager;
-
         storage.save(container);
     }
 
     public List<Chore> getAllChores()
     {
-        return choreManager.getAllChores();
+        return container.ChoreManager.getAllChores();
     }
 
     public void addChore(Chore chore)
     {
-        choreManager.addChore(chore);
+        container.ChoreManager.addChore(chore);
     }
 
     public void removeChore(Chore chore)
     {
-        choreManager.removeChore(chore);
+        container.ChoreManager.removeChore(chore);
     }
 
     public List<Chore> getTodaysChores()
     {
-        return choreManager.getChores(timeService.getNow());
+        return container.ChoreManager.getChores(timeService.getNow());
     }
 
     public void choreDone(Chore chore)
     {
-        choreManager.complete(chore, timeService.getNow());
+        container.ChoreManager.complete(chore, timeService.getNow());
     }
 
     public void choreSkip(Chore chore)
     {
-        choreManager.skip(chore, timeService.getNow());
+        container.ChoreManager.skip(chore, timeService.getNow());
     }
 
     public int getRemainingEffort()
     {
-        return choreManager.getEffortTracker().getTodaysEffort(timeService.getNow());
+        return container.ChoreManager.getEffortTracker().getTodaysEffort(timeService.getNow());
     }
 
     public EffortTracker getEffortTracker()
     {
-        return choreManager.getEffortTracker();
+        return container.ChoreManager.getEffortTracker();
     }
 
     public List<Task> getAllTasks(boolean includeCompleted)
     {
-        return taskManager.getAllTasks(includeCompleted);
+        return container.TaskManager.getAllTasks(includeCompleted);
     }
 
     public void addTask(Task task)
     {
-        taskManager.addTask(task);
+        container.TaskManager.addTask(task);
     }
 
     public void removeTask(Task task)
     {
-        taskManager.removeTask(task);
+        container.TaskManager.removeTask(task);
     }
 
     public List<Task> getTodaysTasks()
     {
-        return taskManager.getTodaysTasks(timeService.getNow());
+        return container.TaskManager.getTodaysTasks(timeService.getNow());
     }
 
     public void taskDone(Task task)
     {
-        taskManager.complete(task, timeService.getNow());
+        container.TaskManager.complete(task, timeService.getNow());
     }
 
     public void taskUndone(Task task)
     {
-        taskManager.undo(task);
+        container.TaskManager.undo(task);
     }
 
     public List<Routine> getAllRoutines()
     {
-        return routineManager.getAllRoutines();
+        return container.RoutineManager.getAllRoutines();
     }
 
     public void addRoutine(Routine routine)
     {
-        routineManager.addRoutine(routine);
+        container.RoutineManager.addRoutine(routine);
     }
 
     public void removeRoutine(Routine routine)
     {
-        routineManager.removeRoutine(routine);
+        container.RoutineManager.removeRoutine(routine);
     }
 
     public DateTime getNextRoutineProcedureTime()
     {
-        return routineManager.getNextProcedureTime(timeService.getNow());
+        return container.RoutineManager.getNextProcedureTime(timeService.getNow());
     }
 
     public List<Procedure> getPendingProcedures()
     {
-        return routineManager.getPendingProcedures(timeService.getNow());
+        return container.RoutineManager.getPendingProcedures(timeService.getNow());
     }
 
     public List<Procedure> getFirstPendingProcedures()
     {
-        return routineManager.getFirstPendingProcedures(timeService.getNow());
+        return container.RoutineManager.getFirstPendingProcedures(timeService.getNow());
     }
 
     public void procedureDone(Procedure procedure)
     {
-        routineManager.procedureDone(procedure, timeService.getNow());
+        container.RoutineManager.procedureDone(procedure, timeService.getNow());
     }
 }

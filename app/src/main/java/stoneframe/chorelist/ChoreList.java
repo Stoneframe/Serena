@@ -131,7 +131,7 @@ public class ChoreList
 
     public void taskDone(Task task)
     {
-        taskManager.complete(task);
+        taskManager.complete(task, timeService.getNow());
     }
 
     public void taskUndone(Task task)

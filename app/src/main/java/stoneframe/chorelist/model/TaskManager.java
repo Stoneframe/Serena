@@ -39,13 +39,13 @@ public class TaskManager
             .collect(Collectors.toList());
     }
 
-    public void complete(Task task)
+    public void complete(Task task, DateTime now)
     {
-        task.setDone(true);
+        task.setDone(true, now);
     }
 
     public void undo(Task task)
     {
-        task.setDone(false);
+        task.setDone(false, null);
     }
 }

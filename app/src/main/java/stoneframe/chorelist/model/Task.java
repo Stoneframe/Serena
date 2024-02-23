@@ -9,6 +9,7 @@ public class Task
     private String description;
     private DateTime deadline;
     private DateTime ignoreBefore;
+    private DateTime completed;
     private boolean isDone;
 
     public Task(String description, DateTime deadline, DateTime ignoreBefore)
@@ -16,6 +17,7 @@ public class Task
         this.description = description;
         this.deadline = deadline;
         this.ignoreBefore = ignoreBefore;
+        this.completed = null;
     }
 
     public String getDescription()
@@ -53,9 +55,15 @@ public class Task
         return isDone;
     }
 
-    void setDone(boolean done)
+    public DateTime getCompleted()
+    {
+        return completed;
+    }
+
+    void setDone(boolean done, DateTime now)
     {
         isDone = done;
+        completed = done ? now : null;
     }
 
     @NonNull

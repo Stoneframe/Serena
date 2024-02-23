@@ -56,6 +56,12 @@ public class JsonConverterTest
                 {
                     json = ContainerJsonConverter.toJson(container);
                 }
+
+                @Override
+                public int getCurrentVersion()
+                {
+                    return 0;
+                }
             },
             new RealTimeService(),
             new WeeklyEffortTracker(10, 10, 10, 10, 10, 10, 10),

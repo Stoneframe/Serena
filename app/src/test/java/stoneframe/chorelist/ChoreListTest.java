@@ -567,5 +567,11 @@ public class ChoreListTest
         {
 
         }
+
+        @Override
+        public int getCurrentVersion()
+        {
+            return 0;
+        }
     }
 }

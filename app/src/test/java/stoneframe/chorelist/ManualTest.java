@@ -46,6 +46,12 @@ public class ManualTest
             public void save(@NonNull Container container)
             {
             }
+
+            @Override
+            public int getCurrentVersion()
+            {
+                return 0;
+            }
         };
 
         ChoreList choreList = new ChoreList(

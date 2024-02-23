@@ -74,7 +74,7 @@ public class JsonConverter
         return jsonObject.has(VERSION) ? jsonObject.getInt(VERSION) : 0;
     }
 
-    private int getCurrentVersion()
+    int getCurrentVersion()
     {
         return upgradeScripts.keySet().stream().max(Integer::compareTo).get();
     }

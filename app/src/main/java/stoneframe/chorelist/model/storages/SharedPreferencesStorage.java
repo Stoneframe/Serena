@@ -66,4 +66,10 @@ public class SharedPreferencesStorage implements Storage
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public int getCurrentVersion()
+    {
+        return jsonConverter.getCurrentVersion();
+    }
 }

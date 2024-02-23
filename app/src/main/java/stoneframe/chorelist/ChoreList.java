@@ -47,6 +47,7 @@ public class ChoreList
         {
             container = new Container();
 
+            container.Version = storage.getCurrentVersion();
             container.RoutineManager = new RoutineManager();
             container.ChoreManager = new ChoreManager(effortTracker, choreSelector);
             container.TaskManager = new TaskManager();

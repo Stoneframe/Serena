@@ -9,4 +9,6 @@ public interface Storage
     Container load();
 
     void save(@NonNull Container container);
+
+    int getCurrentVersion();
 }

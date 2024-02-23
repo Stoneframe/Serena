@@ -71,7 +71,7 @@ public class WeekRoutineActivity extends AppCompatActivity
     public void addProcedureClick(View view)
     {
         LocalTime time = LocalTime.parse(procedureTimeEditText.getText().toString());
-        String description = procedureDescriptionEditText.getText().toString();
+        String description = procedureDescriptionEditText.getText().toString().trim();
         int dayOfWeek = (int)procedureDaySpinner.getSelectedItemId() + 1;
 
         Procedure procedure = new Procedure(description, time);

@@ -173,7 +173,7 @@ public class FortnightRoutineActivity extends AppCompatActivity
             {
                 LocalTime time = new LocalTime(hourOfDay, minute);
 
-                Procedure newProcedure = new Procedure(procedure.getDescription(), time);
+                Procedure newProcedure = new Procedure(procedure.getDescription().trim(), time);
 
                 weekDay.removeProcedure(procedure);
                 weekDay.addProcedure(newProcedure);
@@ -229,7 +229,7 @@ public class FortnightRoutineActivity extends AppCompatActivity
 
     public void saveClick(View view)
     {
-        routine.setName(nameEditText.getText().toString());
+        routine.setName(nameEditText.getText().toString().trim());
         routine.setStartDate(LocalDate.parse(startDateEditText.getText().toString()));
 
         Intent intent = new Intent();
@@ -262,7 +262,7 @@ public class FortnightRoutineActivity extends AppCompatActivity
         int week = (int)procedureWeekSpinner.getSelectedItemId() + 1;
         int dayOfWeek = (int)procedureDaySpinner.getSelectedItemId() + 1;
         LocalTime time = LocalTime.parse(procedureTimeEditText.getText().toString());
-        String description = procedureDescriptionEditText.getText().toString();
+        String description = procedureDescriptionEditText.getText().toString().trim();
 
         Procedure procedure = new Procedure(description, time);
 

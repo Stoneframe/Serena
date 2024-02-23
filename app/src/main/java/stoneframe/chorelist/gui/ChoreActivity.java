@@ -102,7 +102,7 @@ public class ChoreActivity extends AppCompatActivity
 
     public void saveClick(View view)
     {
-        description = descriptionEditText.getText().toString();
+        description = descriptionEditText.getText().toString().trim();
         priority = Integer.parseInt(priorityEditText.getText().toString());
         effort = Integer.parseInt(effortEditText.getText().toString());
         intervalUnit = (int)intervalUnitSpinner.getSelectedItemId();

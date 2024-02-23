@@ -117,7 +117,7 @@ public class DayRoutineActivity extends AppCompatActivity
     public void addProcedureClick(View view)
     {
         LocalTime time = LocalTime.parse(procedureTimeEditText.getText().toString());
-        String description = procedureDescriptionEditText.getText().toString();
+        String description = procedureDescriptionEditText.getText().toString().trim();
 
         Procedure procedure = new Procedure(description, time);
 
@@ -139,7 +139,7 @@ public class DayRoutineActivity extends AppCompatActivity
             {
                 LocalTime time = new LocalTime(hourOfDay, minute);
 
-                Procedure newProcedure = new Procedure(procedure.getDescription(), time);
+                Procedure newProcedure = new Procedure(procedure.getDescription().trim(), time);
 
                 routine.removeProcedure(procedure);
                 routine.addProcedure(newProcedure);

@@ -85,7 +85,7 @@ public class TaskActivity extends AppCompatActivity
 
     public void saveClick(View view)
     {
-        description = descriptionEditText.getText().toString();
+        description = descriptionEditText.getText().toString().trim();
         isDone = isDoneCheckBox.isChecked();
 
         Intent intent = new Intent();

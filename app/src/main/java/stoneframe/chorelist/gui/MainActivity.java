@@ -27,6 +27,7 @@ import stoneframe.chorelist.model.Container;
 import stoneframe.chorelist.model.Storage;
 import stoneframe.chorelist.model.choreselectors.SimpleChoreSelector;
 import stoneframe.chorelist.model.efforttrackers.WeeklyEffortTracker;
+import stoneframe.chorelist.model.storages.JsonConverter;
 import stoneframe.chorelist.model.storages.SharedPreferencesStorage;
 import stoneframe.chorelist.model.timeservices.RealTimeService;
 
@@ -162,8 +163,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             storage = new SharedPreferencesStorage(
                 this,
-                new SimpleChoreSelectorConverter(),
-                new WeeklyEffortTrackerConverter());
+                new JsonConverter(
+                    new SimpleChoreSelectorConverter(),
+                    new WeeklyEffortTrackerConverter()));
 
             choreList = new ChoreList(
                 storage,

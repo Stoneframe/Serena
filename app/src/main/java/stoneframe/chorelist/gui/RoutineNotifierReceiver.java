@@ -16,6 +16,7 @@ import stoneframe.chorelist.model.Procedure;
 import stoneframe.chorelist.model.Storage;
 import stoneframe.chorelist.model.choreselectors.SimpleChoreSelector;
 import stoneframe.chorelist.model.efforttrackers.WeeklyEffortTracker;
+import stoneframe.chorelist.model.storages.JsonConverter;
 import stoneframe.chorelist.model.storages.SharedPreferencesStorage;
 import stoneframe.chorelist.model.timeservices.RealTimeService;
 
@@ -56,8 +57,9 @@ public class RoutineNotifierReceiver extends BroadcastReceiver
     {
         Storage storage = new SharedPreferencesStorage(
             context,
-            new SimpleChoreSelectorConverter(),
-            new WeeklyEffortTrackerConverter());
+            new JsonConverter(
+                new SimpleChoreSelectorConverter(),
+                new WeeklyEffortTrackerConverter()));
 
         ChoreList choreList = new ChoreList(
             storage,

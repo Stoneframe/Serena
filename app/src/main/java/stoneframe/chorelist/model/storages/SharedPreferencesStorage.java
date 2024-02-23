@@ -5,8 +5,9 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 
+import org.json.JSONException;
+
 import stoneframe.chorelist.json.ChoreSelectorConverter;
-import stoneframe.chorelist.json.ContainerJsonConverter;
 import stoneframe.chorelist.json.EffortTrackerConverter;
 import stoneframe.chorelist.model.Container;
 import stoneframe.chorelist.model.Storage;
@@ -17,44 +18,52 @@ public class SharedPreferencesStorage implements Storage
 
     private final SharedPreferences sharedPreferences;
 
-    private final ChoreSelectorConverter choreSelectorConverter;
-    private final EffortTrackerConverter effortTrackerConverter;
+    private final JsonConverter jsonConverter;
 
     public SharedPreferencesStorage(
         Context context,
-        ChoreSelectorConverter choreSelectorConverter,
-        EffortTrackerConverter effortTrackerConverter)
+        JsonConverter jsonConverter)
     {
         this.sharedPreferences = context.getSharedPreferences(SAVE_NAME, 0);
-        this.choreSelectorConverter = choreSelectorConverter;
-        this.effortTrackerConverter = effortTrackerConverter;
+        this.jsonConverter = jsonConverter;
     }
 
     @Override
     public Container load()
     {
-        String json = sharedPreferences.getString(SAVE_NAME, null);
-
-        if (json == null)
+        try
         {
-            return null;
-        }
+            String json = sharedPreferences.getString(SAVE_NAME, null);
 
-        return ContainerJsonConverter.fromJson(
-            json,
-            choreSelectorConverter,
-            effortTrackerConverter);
+            if (json == null)
+            {
+                return null;
+            }
+
+            return jsonConverter.fromJson(json);
+        }
+        catch (JSONException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void save(@NonNull Container container)
     {
-        String json = ContainerJsonConverter.toJson(container);
+        try
+        {
+            String json = jsonConverter.toJson(container);
 
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+            SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        editor.putString(SAVE_NAME, json);
+            editor.putString(SAVE_NAME, json);
 
-        editor.apply();
+            editor.apply();
+        }
+        catch (JSONException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 }

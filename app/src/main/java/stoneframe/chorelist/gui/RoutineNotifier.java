@@ -69,10 +69,14 @@ public class RoutineNotifier
     {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
+        Intent openMainActivityIntent = new Intent(context, MainActivity.class);
+
+        openMainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
         PendingIntent pendingIntent = PendingIntent.getActivity(
             context,
             0,
-            new Intent(context, MainActivity.class),
+            openMainActivityIntent,
             PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)

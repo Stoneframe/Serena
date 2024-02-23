@@ -30,7 +30,7 @@ public class RoutineNotifierReceiver extends BroadcastReceiver
 
         String notificationText = procedures.stream()
             .map(Procedure::toString)
-            .collect(Collectors.joining(", "));
+            .collect(Collectors.joining(System.lineSeparator()));
 
         RoutineNotifier.showRoutineNotification(context, notificationText, "Routine");
         RoutineNotifier.scheduleRoutineAlarm(context, choreList.getNextRoutineProcedureTime());

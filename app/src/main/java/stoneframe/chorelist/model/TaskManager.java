@@ -1,5 +1,7 @@
 package stoneframe.chorelist.model;
 
+import androidx.annotation.NonNull;
+
 import org.joda.time.DateTime;
 
 import java.util.Collections;
@@ -16,7 +18,7 @@ public class TaskManager
     {
         List<Task> sortedTasks = tasks.stream()
             .filter(t -> !t.isDone() || includeCompleted)
-            .sorted(Comparator.comparing(Task::isDone).thenComparing(Task::getDeadline))
+            .sorted(getTaskComparator())
             .collect(Collectors.toList());
 
         return Collections.unmodifiableList(sortedTasks);
@@ -52,5 +54,26 @@ public class TaskManager
     public void clean(DateTime now)
     {
         tasks.removeIf(t -> t.isDone() && t.getCompleted().plusWeeks(1).isBefore(now));
+    }
+
+    @NonNull
+    private static Comparator<Task> getTaskComparator()
+    {
+        return (task1, task2) ->
+        {
+            int comparison = Boolean.compare(task1.isDone(), task2.isDone());
+
+            if (comparison != 0)
+            {
+                return comparison;
+            }
+
+            if (task1.isDone() && task2.isDone())
+            {
+                return task2.getCompleted().compareTo(task1.getCompleted());
+            }
+
+            return task1.getDeadline().compareTo(task2.getDeadline());
+        };
     }
 }

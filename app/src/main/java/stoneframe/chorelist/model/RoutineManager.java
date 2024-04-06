@@ -26,6 +26,7 @@ public class RoutineManager
     public List<Routine> getAllRoutines()
     {
         return routines.stream()
+            .map(Routine::copy)
             .sorted(Comparator.comparing(Routine::getName))
             .collect(Collectors.toList());
     }
@@ -33,6 +34,7 @@ public class RoutineManager
     public DateTime getNextProcedureTime(DateTime now)
     {
         return routines.stream()
+            .map(Routine::copy)
             .flatMap(r -> Stream.of(r.getNextProcedureTime(now)))
             .filter(Objects::nonNull)
             .sorted()
@@ -43,6 +45,7 @@ public class RoutineManager
     public List<Procedure> getPendingProcedures(DateTime now)
     {
         return routines.stream()
+            .map(Routine::copy)
             .flatMap(r -> r.getPendingProcedures(now).stream())
             .collect(Collectors.toList());
     }
@@ -50,6 +53,7 @@ public class RoutineManager
     public List<Procedure> getFirstPendingProcedures(DateTime now)
     {
         return routines.stream()
+            .map(Routine::copy)
             .map(r -> r.getPendingProcedure(now))
             .filter(Objects::nonNull)
             .collect(Collectors.toList());
@@ -58,6 +62,7 @@ public class RoutineManager
     public void procedureDone(Procedure procedure, DateTime now)
     {
         Routine routine = routines.stream()
+            .map(Routine::copy)
             .filter(r -> r.getAllProcedures().contains(procedure))
             .findFirst()
             .orElse(null);

@@ -9,6 +9,7 @@ import org.joda.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,6 +30,21 @@ public class FortnightRoutine extends Routine
 
         week1 = new Week(1, getMondayOfWeek(startDate).plusWeeks(0));
         week2 = new Week(1, getMondayOfWeek(startDate).plusWeeks(1));
+    }
+
+    private FortnightRoutine(
+        UUID identity,
+        String name,
+        DateTime lastCompleted,
+        Week week1,
+        Week week2)
+    {
+        super(identity, FORTNIGHT_ROUTINE, name);
+
+        this.lastCompleted = lastCompleted;
+
+        this.week1 = week1;
+        this.week2 = week2;
     }
 
     public LocalDate getStartDate()
@@ -113,6 +129,12 @@ public class FortnightRoutine extends Routine
             default:
                 throw new IllegalArgumentException();
         }
+    }
+
+    @Override
+    Routine copy()
+    {
+        return new FortnightRoutine(identity, name, lastCompleted, week1, week2);
     }
 
     @CheckForNull

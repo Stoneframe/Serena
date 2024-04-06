@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -21,14 +22,22 @@ public abstract class Routine
     public static final int WEEK_ROUTINE = 1;
     public static final int FORTNIGHT_ROUTINE = 2;
 
+    protected final UUID identity;
+
     private final int routineType;
 
     protected String name;
 
-    public Routine(int routineType, String name)
+    protected Routine(UUID identity, int routineType, String name)
     {
+        this.identity = identity;
         this.routineType = routineType;
         this.name = name;
+    }
+
+    protected Routine(int routineType, String name)
+    {
+        this(UUID.randomUUID(), routineType, name);
     }
 
     public int getRoutineType()
@@ -66,6 +75,13 @@ public abstract class Routine
     {
         return name;
     }
+
+    UUID getIdentity()
+    {
+        return identity;
+    }
+
+    abstract Routine copy();
 
     public static class Day
     {
@@ -169,6 +185,24 @@ public abstract class Routine
             friday = new Day("Friday", startDate.plusDays(4), (skip + 1) * 7);
             saturday = new Day("Saturday", startDate.plusDays(5), (skip + 1) * 7);
             sunday = new Day("Sunday", startDate.plusDays(6), (skip + 1) * 7);
+        }
+
+        private Week(
+            Day monday,
+            Day tuesday,
+            Day wednesday,
+            Day thursday,
+            Day friday,
+            Day saturday,
+            Day sunday)
+        {
+            this.monday = monday;
+            this.tuesday = tuesday;
+            this.wednesday = wednesday;
+            this.thursday = thursday;
+            this.friday = friday;
+            this.saturday = saturday;
+            this.sunday = sunday;
         }
 
         public Day getMonday()
@@ -284,6 +318,11 @@ public abstract class Routine
                     getWeekDay(DateTimeConstants.SATURDAY).getProcedureTimesBetween(start, end),
                     getWeekDay(DateTimeConstants.SUNDAY).getProcedureTimesBetween(start, end))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        }
+
+        Week copy()
+        {
+            return new Week(monday, tuesday, wednesday, thursday, friday, saturday, sunday);
         }
 
         private Stream<Day> getAllDaysStream()

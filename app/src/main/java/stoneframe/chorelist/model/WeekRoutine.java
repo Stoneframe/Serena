@@ -7,6 +7,7 @@ import org.joda.time.LocalDate;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class WeekRoutine extends Routine
@@ -22,6 +23,13 @@ public class WeekRoutine extends Routine
         lastCompleted = now;
 
         week = new Week(0, new LocalDate(2024, 1, 1));
+    }
+
+    private WeekRoutine(UUID identity, String name, DateTime lastCompleted, Week week)
+    {
+        super(identity, WEEK_ROUTINE, name);
+        this.lastCompleted = lastCompleted;
+        this.week = week;
     }
 
     @Override
@@ -61,5 +69,15 @@ public class WeekRoutine extends Routine
     public Week getWeek()
     {
         return week;
+    }
+
+    @Override
+    Routine copy()
+    {
+        return new WeekRoutine(
+            identity,
+            name,
+            lastCompleted,
+            week.copy());
     }
 }

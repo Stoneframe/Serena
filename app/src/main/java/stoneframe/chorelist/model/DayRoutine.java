@@ -5,6 +5,7 @@ import org.joda.time.DateTime;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.CheckForNull;
@@ -20,6 +21,19 @@ public class DayRoutine extends Routine
         super(DAY_ROUTINE, name);
 
         this.lastCompleted = now;
+    }
+
+    private DayRoutine(
+        UUID identity,
+        String name,
+        DateTime lastCompleted,
+        List<Procedure> procedures)
+    {
+        super(identity, DAY_ROUTINE, name);
+
+        this.lastCompleted = lastCompleted;
+
+        this.procedures.addAll(procedures);
     }
 
     @Override
@@ -72,6 +86,16 @@ public class DayRoutine extends Routine
     public void procedureDone(Procedure procedure, DateTime now)
     {
         lastCompleted = procedure.getTime().toDateTime(now);
+    }
+
+    @Override
+    Routine copy()
+    {
+        return new DayRoutine(
+            identity,
+            name,
+            lastCompleted,
+            procedures.stream().map(Procedure::copy).collect(Collectors.toList()));
     }
 
     private static boolean isPending(Procedure procedure, DateTime lastCompleted, DateTime now)

@@ -56,6 +56,8 @@ public class WeekRoutine extends Routine
     public void procedureDone(Procedure procedure, DateTime now)
     {
         lastCompleted = week.getNextTimeOfProcedureAfter(procedure, lastCompleted);
+
+        notifyChanged();
     }
 
     public Week getWeek()

@@ -17,7 +17,7 @@ import org.joda.time.DateTime;
 
 import java.util.Objects;
 
-import stoneframe.chorelist.ChoreList;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.Chore;
 

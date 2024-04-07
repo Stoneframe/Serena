@@ -1,23 +1,10 @@
-package stoneframe.chorelist;
+package stoneframe.chorelist.model;
 
 import org.joda.time.DateTime;
 
 import java.util.List;
 
-import stoneframe.chorelist.model.Chore;
-import stoneframe.chorelist.model.ChoreManager;
-import stoneframe.chorelist.model.ChoreSelector;
-import stoneframe.chorelist.model.Container;
-import stoneframe.chorelist.model.EffortTracker;
-import stoneframe.chorelist.model.Procedure;
-import stoneframe.chorelist.model.Routine;
-import stoneframe.chorelist.model.RoutineManager;
-import stoneframe.chorelist.model.Storage;
-import stoneframe.chorelist.model.Task;
-import stoneframe.chorelist.model.TaskManager;
-import stoneframe.chorelist.model.TimeService;
-
-public class ChoreList
+public class ChoreList implements ChangeListener
 {
     private final Storage storage;
     private final TimeService timeService;
@@ -53,6 +40,7 @@ public class ChoreList
             container.TaskManager = new TaskManager();
         }
 
+        container.RoutineManager.setChangeListener(this);
         container.TaskManager.clean(timeService.getNow());
     }
 
@@ -164,5 +152,11 @@ public class ChoreList
     public void procedureDone(Procedure procedure)
     {
         container.RoutineManager.procedureDone(procedure, timeService.getNow());
+    }
+
+    @Override
+    public void notifyChanged()
+    {
+
     }
 }

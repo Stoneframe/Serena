@@ -90,6 +90,8 @@ public class FortnightRoutine extends Routine
         {
             lastCompleted = week2.getNextTimeOfProcedureAfter(procedure, lastCompleted);
         }
+
+        notifyChanged();
     }
 
     public Week getWeek1()

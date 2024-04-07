@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import org.joda.time.DateTime;
 
-import stoneframe.chorelist.ChoreList;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.DayRoutine;
 import stoneframe.chorelist.model.FortnightRoutine;

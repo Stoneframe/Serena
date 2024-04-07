@@ -17,6 +17,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import stoneframe.chorelist.model.Chore;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.Container;
 import stoneframe.chorelist.model.DayRoutine;
 import stoneframe.chorelist.model.Procedure;

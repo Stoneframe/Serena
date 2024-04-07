@@ -23,9 +23,11 @@ public abstract class Routine
 
     private final int routineType;
 
+    protected transient ChangeListener changeListener;
+
     protected String name;
 
-    public Routine(int routineType, String name)
+    protected Routine(int routineType, String name)
     {
         this.routineType = routineType;
         this.name = name;
@@ -44,6 +46,7 @@ public abstract class Routine
     public void setName(String name)
     {
         this.name = name;
+        notifyChanged();
     }
 
     public abstract List<Procedure> getAllProcedures();
@@ -60,6 +63,11 @@ public abstract class Routine
 
     public abstract void procedureDone(Procedure procedure, DateTime now);
 
+    public void setChangeListener(ChangeListener changeListener)
+    {
+        this.changeListener = changeListener;
+    }
+
     @NonNull
     @Override
     public String toString()
@@ -67,7 +75,15 @@ public abstract class Routine
         return name;
     }
 
-    public static class Day
+    protected void notifyChanged()
+    {
+        if (changeListener != null)
+        {
+            changeListener.notifyChanged();
+        }
+    }
+
+    public class Day
     {
         private final List<Procedure> procedures = new LinkedList<>();
 
@@ -96,6 +112,7 @@ public abstract class Routine
         public void setStartDate(LocalDate startDate)
         {
             this.startDate = startDate;
+            notifyChanged();
         }
 
         public List<Procedure> getProcedures()
@@ -106,11 +123,13 @@ public abstract class Routine
         public void addProcedure(Procedure procedure)
         {
             procedures.add(procedure);
+            notifyChanged();
         }
 
         public void removeProcedure(Procedure procedure)
         {
             procedures.remove(procedure);
+            notifyChanged();
         }
 
         public DateTime getNextProcedureTime(DateTime now)
@@ -150,7 +169,7 @@ public abstract class Routine
         }
     }
 
-    public static class Week
+    public class Week
     {
         private final Day monday;
         private final Day tuesday;
@@ -220,6 +239,8 @@ public abstract class Routine
             friday.setStartDate(startDate.plusDays(4));
             saturday.setStartDate(startDate.plusDays(5));
             sunday.setStartDate(startDate.plusDays(6));
+
+            notifyChanged();
         }
 
         public List<Procedure> getProcedures()

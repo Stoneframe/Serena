@@ -5,8 +5,7 @@ import android.app.Application;
 
 import java.util.Objects;
 
-import stoneframe.chorelist.ChoreList;
-import stoneframe.chorelist.model.DayRoutine;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.Routine;
 
 public class GlobalState extends Application

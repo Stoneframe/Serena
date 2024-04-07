@@ -18,7 +18,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import org.joda.time.DateTime;
 
-import stoneframe.chorelist.ChoreList;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.json.ContainerJsonConverter;
 import stoneframe.chorelist.json.SimpleChoreSelectorConverter;

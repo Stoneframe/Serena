@@ -11,16 +11,15 @@ import androidx.annotation.Nullable;
 
 import org.joda.time.DateTime;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.Date;
 import java.util.List;
 
 import stoneframe.chorelist.json.ContainerJsonConverter;
 import stoneframe.chorelist.json.SimpleChoreSelectorConverter;
 import stoneframe.chorelist.json.WeeklyEffortTrackerConverter;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.Container;
 import stoneframe.chorelist.model.Storage;
 import stoneframe.chorelist.model.Task;

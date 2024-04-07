@@ -72,6 +72,8 @@ public class DayRoutine extends Routine
     public void procedureDone(Procedure procedure, DateTime now)
     {
         lastCompleted = procedure.getTime().toDateTime(now);
+
+        notifyChanged();
     }
 
     private static boolean isPending(Procedure procedure, DateTime lastCompleted, DateTime now)

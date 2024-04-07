@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import stoneframe.chorelist.ChoreList;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.json.SimpleChoreSelectorConverter;
 import stoneframe.chorelist.json.WeeklyEffortTrackerConverter;
 import stoneframe.chorelist.model.Procedure;

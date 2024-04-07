@@ -13,14 +13,18 @@ public class RoutineManager
 {
     private final List<Routine> routines = new LinkedList<>();
 
+    private transient ChangeListener changeListener;
+
     public void addRoutine(Routine routine)
     {
         routines.add(routine);
+        routine.setChangeListener(changeListener);
     }
 
     public void removeRoutine(Routine routine)
     {
         routines.remove(routine);
+        routine.setChangeListener(null);
     }
 
     public List<Routine> getAllRoutines()
@@ -65,5 +69,12 @@ public class RoutineManager
         assert routine != null;
 
         routine.procedureDone(procedure, now);
+    }
+
+    void setChangeListener(ChangeListener changeListener)
+    {
+        this.changeListener = changeListener;
+
+        routines.forEach(r -> r.setChangeListener(changeListener));
     }
 }

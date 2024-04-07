@@ -13,6 +13,7 @@ import java.util.List;
 import stoneframe.chorelist.json.ContainerJsonConverter;
 import stoneframe.chorelist.json.SimpleChoreSelectorConverter;
 import stoneframe.chorelist.json.WeeklyEffortTrackerConverter;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.Container;
 import stoneframe.chorelist.model.Procedure;
 import stoneframe.chorelist.model.Storage;

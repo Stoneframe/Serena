@@ -58,6 +58,8 @@ public class ManualTest
         ChoreList choreList = new ChoreList(
             storage,
             timeService,
+            null,
+            null,
             new SimpleEffortTracker(10),
             new SimpleChoreSelector());
 

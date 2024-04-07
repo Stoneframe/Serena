@@ -170,6 +170,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             choreList = new ChoreList(
                 storage,
                 new RealTimeService(),
+                new AndroidAlarmService(getApplicationContext()),
+                new AndroidNotificationService(getApplicationContext()),
                 new WeeklyEffortTracker(10, 10, 10, 10, 10, 30, 30),
                 new SimpleChoreSelector());
 
@@ -194,14 +196,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.getMenu().getItem(0).setChecked(true);
         onNavigationItemSelected(navigationView.getMenu().getItem(0));
 
-        RoutineNotifier.setupNotificationChannel(this);
+//        RoutineNotifier.setupNotificationChannel(this);
 
-        DateTime nextRoutineProcedureTime = choreList.getNextRoutineProcedureTime();
-
-        if (nextRoutineProcedureTime != null)
-        {
-            RoutineNotifier.scheduleRoutineAlarm(this, nextRoutineProcedureTime);
-        }
+//        DateTime nextRoutineProcedureTime = choreList.getNextRoutineProcedureTime();
+//
+//        if (nextRoutineProcedureTime != null)
+//        {
+//            RoutineNotifier.scheduleRoutineAlarm(this, nextRoutineProcedureTime);
+//        }
     }
 
     @Override

@@ -7,19 +7,24 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import stoneframe.chorelist.model.AlarmListener;
+import stoneframe.chorelist.model.AlarmService;
 import stoneframe.chorelist.model.Chore;
 import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.Container;
 import stoneframe.chorelist.model.DayRoutine;
+import stoneframe.chorelist.model.NotifierService;
 import stoneframe.chorelist.model.Procedure;
 import stoneframe.chorelist.model.Routine;
 import stoneframe.chorelist.model.Storage;
@@ -38,14 +43,22 @@ public class ChoreListTest
 
     private final MockTimeService timeService = new MockTimeService(TODAY);
 
+    private MockAlarmService alarmService;
+    private MockNotifierService notifierService;
+
     private ChoreList choreList;
 
     @Before
     public void before()
     {
+        alarmService = new MockAlarmService();
+        notifierService = new MockNotifierService();
+
         choreList = new ChoreList(
             new MockStorage(),
             timeService,
+            alarmService,
+            notifierService,
             new SimpleEffortTracker(MAX_EFFORT),
             new SimpleChoreSelector());
 
@@ -317,6 +330,29 @@ public class ChoreListTest
         assertAllRoutinesIsEmpty();
     }
 
+    @Test
+    public void addRoutine_routineAddedWithProcedure_setAlarmCalled()
+    {
+        addRoutine("A Routine", new Procedure("Procedure 1", new LocalTime(10, 30)));
+        assertAlarmScheduled(new LocalTime(10, 30));
+    }
+
+    @Test
+    public void notifyAlarm_alarmNotTriggered_notificationNotSent()
+    {
+        addRoutine("A Routine", new Procedure("Procedure 1", new LocalTime(10, 30)));
+        assertNotificationsSent(0);
+    }
+
+    @Test
+    public void notifyAlarm_alarmTriggered_notificationSent()
+    {
+        addRoutine("A Routine", new Procedure("Procedure 1", new LocalTime(10, 30)));
+        setCurrentTimeTo(new LocalTime(10, 30));
+        triggerAlarm();
+        assertNotificationsSent(1);
+    }
+
     private void setRemainingEffort(int remainingEffort)
     {
         SimpleEffortTracker effortTracker = (SimpleEffortTracker)choreList.getEffortTracker();
@@ -443,7 +479,7 @@ public class ChoreListTest
 
     private void addRoutine(String name, Procedure... procedures)
     {
-        DayRoutine routine = new DayRoutine(name, new DateTime(0));
+        DayRoutine routine = new DayRoutine(name, TODAY);
 
         Arrays.stream(procedures).forEach(routine::addProcedure);
 
@@ -455,6 +491,16 @@ public class ChoreListTest
         Routine routine = getRoutine(name);
 
         choreList.removeRoutine(routine);
+    }
+
+    private void setCurrentTimeTo(LocalTime localTime)
+    {
+        timeService.setNow(localTime.toDateTime(TODAY));
+    }
+
+    private void triggerAlarm()
+    {
+        alarmService.triggerAlarm();
     }
 
     private void assertAllChoresIsEmpty()
@@ -554,6 +600,20 @@ public class ChoreListTest
         assertEquals(expectedNames, actualNames);
     }
 
+    private void assertAlarmScheduled(LocalTime alarmTime)
+    {
+        List<DateTime> alarms = alarmService.getAlarms();
+
+        assertEquals(alarms.get(0).toLocalTime(), alarmTime);
+    }
+
+    private void assertNotificationsSent(int numberOfNotifications)
+    {
+        List<String> notifications = notifierService.getNotifications();
+
+        assertEquals(numberOfNotifications, notifications.size());
+    }
+
     private static class MockStorage implements Storage
     {
         @Nullable
@@ -573,6 +633,53 @@ public class ChoreListTest
         public int getCurrentVersion()
         {
             return 0;
+        }
+    }
+
+    private static class MockAlarmService implements AlarmService
+    {
+        private final List<DateTime> alarms = new LinkedList<>();
+
+        private AlarmListener alarmListener;
+
+        @Override
+        public void setAlarm(DateTime dateTime, AlarmListener alarmListener)
+        {
+            this.alarmListener = alarmListener;
+
+            alarms.add(dateTime);
+        }
+
+        @Override
+        public void cancelAlarm()
+        {
+
+        }
+
+        public List<DateTime> getAlarms()
+        {
+            return alarms;
+        }
+
+        public void triggerAlarm()
+        {
+            alarmListener.notifyAlarm();
+        }
+    }
+
+    private static class MockNotifierService implements NotifierService
+    {
+        private final List<String> notifications = new LinkedList<>();
+
+        @Override
+        public void sendNotification(String contentText, String subText)
+        {
+            notifications.add(contentText);
+        }
+
+        public List<String> getNotifications()
+        {
+            return notifications;
         }
     }
 }

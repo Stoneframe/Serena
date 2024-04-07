@@ -63,6 +63,8 @@ public class JsonConverterTest
                 }
             },
             new RealTimeService(),
+            null,
+            null,
             new WeeklyEffortTracker(10, 10, 10, 10, 10, 10, 10),
             new SimpleChoreSelector());
 

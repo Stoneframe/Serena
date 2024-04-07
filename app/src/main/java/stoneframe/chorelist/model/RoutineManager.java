@@ -19,12 +19,14 @@ public class RoutineManager
     {
         routines.add(routine);
         routine.setChangeListener(changeListener);
+        changeListener.notifyChanged();
     }
 
     public void removeRoutine(Routine routine)
     {
         routines.remove(routine);
         routine.setChangeListener(null);
+        changeListener.notifyChanged();
     }
 
     public List<Routine> getAllRoutines()

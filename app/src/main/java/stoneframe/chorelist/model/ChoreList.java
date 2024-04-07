@@ -3,11 +3,15 @@ package stoneframe.chorelist.model;
 import org.joda.time.DateTime;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class ChoreList implements ChangeListener
+public class ChoreList implements ChangeListener,
+    AlarmListener
 {
     private final Storage storage;
     private final TimeService timeService;
+    private final AlarmService alarmService;
+    private final NotifierService notifierService;
 
     private final EffortTracker effortTracker;
     private final ChoreSelector choreSelector;
@@ -17,11 +21,15 @@ public class ChoreList implements ChangeListener
     public ChoreList(
         Storage storage,
         TimeService timeService,
+        AlarmService alarmService,
+        NotifierService notifierService,
         EffortTracker effortTracker,
         ChoreSelector choreSelector)
     {
         this.storage = storage;
         this.timeService = timeService;
+        this.alarmService = alarmService;
+        this.notifierService = notifierService;
         this.effortTracker = effortTracker;
         this.choreSelector = choreSelector;
     }
@@ -157,6 +165,41 @@ public class ChoreList implements ChangeListener
     @Override
     public void notifyChanged()
     {
+        scheduleNextAlarm();
+        sendNotification();
+    }
 
+    @Override
+    public void notifyAlarm()
+    {
+        scheduleNextAlarm();
+        sendNotification();
+    }
+
+    private void sendNotification()
+    {
+        String notificationText = getPendingProcedures()
+            .stream()
+            .map(Procedure::toString)
+            .collect(Collectors.joining(System.lineSeparator()));
+
+        if (!notificationText.isEmpty())
+        {
+            notifierService.sendNotification(notificationText, "Routine");
+        }
+    }
+
+    private void scheduleNextAlarm()
+    {
+        DateTime nextRoutineProcedureTime = getNextRoutineProcedureTime();
+
+        if (nextRoutineProcedureTime != null)
+        {
+            alarmService.setAlarm(nextRoutineProcedureTime, this);
+        }
+        else
+        {
+            alarmService.cancelAlarm();
+        }
     }
 }

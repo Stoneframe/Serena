@@ -85,6 +85,6 @@ public class DayRoutine extends Routine
             next = next.plusDays(1);
         }
 
-        return next.isBefore(now);
+        return next.isBefore(now) || next.isEqual(now);
     }
 }

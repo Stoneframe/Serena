@@ -14,6 +14,7 @@ import org.junit.Test;
 import java.util.List;
 
 import stoneframe.chorelist.model.FortnightRoutine;
+import stoneframe.chorelist.model.PendingProcedure;
 import stoneframe.chorelist.model.Procedure;
 
 public class FortnightRoutineTest
@@ -135,7 +136,9 @@ public class FortnightRoutineTest
 
         routine.getWeek1().getMonday().addProcedure(procedure);
 
-        routine.procedureDone(procedure, now.plusHours(11));
+        PendingProcedure pendingProcedure = routine.getPendingProcedure(now.plusHours(11));
+
+        routine.procedureDone(pendingProcedure);
 
         DateTime next = routine.getNextProcedureTime(now.plusHours(11));
 
@@ -160,7 +163,7 @@ public class FortnightRoutineTest
     @Test
     public void getPendingProcedures_noProceduresAndNowDay1Hour0_listIsEmpty()
     {
-        List<Procedure> pendingProcedures = routine.getPendingProcedures(now);
+        List<PendingProcedure> pendingProcedures = routine.getPendingProcedures(now);
 
         assertTrue(pendingProcedures.isEmpty());
     }
@@ -172,7 +175,7 @@ public class FortnightRoutineTest
             .getMonday()
             .addProcedure(new Procedure("Monday 1", new LocalTime(10, 0)));
 
-        List<Procedure> pendingProcedures = routine.getPendingProcedures(now);
+        List<PendingProcedure> pendingProcedures = routine.getPendingProcedures(now);
 
         assertTrue(pendingProcedures.isEmpty());
     }
@@ -182,7 +185,7 @@ public class FortnightRoutineTest
     {
         routine.getWeek1().getMonday().addProcedure(new Procedure("Mon1W1", new LocalTime(10, 0)));
 
-        List<Procedure> pendingProcedures = routine.getPendingProcedures(now.plusDays(1));
+        List<PendingProcedure> pendingProcedures = routine.getPendingProcedures(now.plusDays(1));
 
         assertEquals(1, pendingProcedures.size());
         assertEquals("Mon1W1", pendingProcedures.get(0).getDescription());
@@ -193,7 +196,7 @@ public class FortnightRoutineTest
     {
         routine.getWeek2().getMonday().addProcedure(new Procedure("Mon1W2", new LocalTime(10, 0)));
 
-        List<Procedure> pendingProcedures = routine.getPendingProcedures(now.plusDays(1));
+        List<PendingProcedure> pendingProcedures = routine.getPendingProcedures(now.plusDays(1));
 
         assertTrue(pendingProcedures.isEmpty());
     }
@@ -203,7 +206,7 @@ public class FortnightRoutineTest
     {
         routine.getWeek2().getMonday().addProcedure(new Procedure("Mon1W2", new LocalTime(10, 0)));
 
-        List<Procedure> pendingProcedures = routine.getPendingProcedures(now.plusDays(8));
+        List<PendingProcedure> pendingProcedures = routine.getPendingProcedures(now.plusDays(8));
 
         assertEquals(1, pendingProcedures.size());
         assertEquals("Mon1W2", pendingProcedures.get(0).getDescription());
@@ -216,11 +219,12 @@ public class FortnightRoutineTest
 
         routine.getWeek2().getMonday().addProcedure(new Procedure("Mon10W2", new LocalTime(10, 0)));
 
-        List<Procedure> pendingProcedures = routine.getPendingProcedures(now.plusDays(15));
+        List<PendingProcedure> pendingProcedures = routine.getPendingProcedures(now.plusDays(15));
 
-        assertEquals(2, pendingProcedures.size());
+        assertEquals(3, pendingProcedures.size());
         assertEquals("Mon13W1", pendingProcedures.get(0).getDescription());
         assertEquals("Mon10W2", pendingProcedures.get(1).getDescription());
+        assertEquals("Mon13W1", pendingProcedures.get(2).getDescription());
     }
 
     @Test
@@ -229,7 +233,7 @@ public class FortnightRoutineTest
         routine.getWeek1().getMonday().addProcedure(new Procedure("Mon13W1", new LocalTime(13, 0)));
         routine.getWeek2().getMonday().addProcedure(new Procedure("Mon13W2", new LocalTime(13, 0)));
 
-        List<Procedure> pendingProcedures = routine.getPendingProcedures(getDateTime(1, 15));
+        List<PendingProcedure> pendingProcedures = routine.getPendingProcedures(getDateTime(1, 15));
 
         assertEquals(1, pendingProcedures.size());
         assertEquals("Mon13W1", pendingProcedures.get(0).getDescription());
@@ -242,9 +246,11 @@ public class FortnightRoutineTest
 
         routine.getWeek1().getMonday().addProcedure(procedure);
 
-        routine.procedureDone(procedure, now.plusDays(1));
+        PendingProcedure pendingProcedure = routine.getPendingProcedure(now.plusDays(1));
 
-        List<Procedure> pendingProcedures = routine.getPendingProcedures(now.plusDays(1));
+        routine.procedureDone(pendingProcedure);
+
+        List<PendingProcedure> pendingProcedures = routine.getPendingProcedures(now.plusDays(1));
 
         assertTrue(pendingProcedures.isEmpty());
     }
@@ -258,9 +264,11 @@ public class FortnightRoutineTest
         routine.getWeek1().getMonday().addProcedure(procedure1);
         routine.getWeek1().getMonday().addProcedure(procedure2);
 
-        routine.procedureDone(procedure1, now.plusHours(17));
+        PendingProcedure pendingProcedure = routine.getPendingProcedure(now.plusHours(17));
 
-        List<Procedure> pendingProcedures = routine.getPendingProcedures(now.plusHours(17));
+        routine.procedureDone(pendingProcedure);
+
+        List<PendingProcedure> pendingProcedures = routine.getPendingProcedures(now.plusHours(17));
 
         assertTrue(pendingProcedures.isEmpty());
     }
@@ -274,27 +282,30 @@ public class FortnightRoutineTest
         routine.getWeek1().getMonday().addProcedure(procedure1);
         routine.getWeek1().getMonday().addProcedure(procedure2);
 
-        routine.procedureDone(procedure1, now.plusHours(22));
+        PendingProcedure pendingProcedure = routine.getPendingProcedure(now.plusHours(22));
 
-        List<Procedure> pendingProcedures = routine.getPendingProcedures(now.plusHours(22));
+        routine.procedureDone(pendingProcedure);
+
+        List<PendingProcedure> pendingProcedures = routine.getPendingProcedures(now.plusHours(22));
 
         assertEquals(1, pendingProcedures.size());
         assertEquals("Mon2W1", pendingProcedures.get(0).getDescription());
     }
 
     @Test
-    public void procedureDone_proceduresMon15w2IsDoneMon20w2AndNowIsDay8Hour23_pendingProceduresHasMon2w1()
+    public void procedureDone_proceduresMon15w2IsDoneMon20w2AndNowIsDay8Hour23_pendingProceduresHasMon2w2()
     {
-        Procedure procedure1 = new Procedure("Mon1W2", new LocalTime(15, 0));
+        Procedure procedure1 = new Procedure("Mon2W2", new LocalTime(15, 0));
         Procedure procedure2 = new Procedure("Mon2W2", new LocalTime(20, 0));
 
         routine.getWeek2().getMonday().addProcedure(procedure1);
         routine.getWeek2().getMonday().addProcedure(procedure2);
 
-        routine.procedureDone(procedure1, now.plusDays(7).plusHours(22));
+        PendingProcedure pendingProcedure = routine.getPendingProcedure(getDateTime(8, 22));
 
-        List<Procedure> pendingProcedures = routine.getPendingProcedures(now.plusDays(7)
-            .plusHours(22));
+        routine.procedureDone(pendingProcedure);
+
+        List<PendingProcedure> pendingProcedures = routine.getPendingProcedures(getDateTime(8, 22));
 
         assertEquals(1, pendingProcedures.size());
         assertEquals("Mon2W2", pendingProcedures.get(0).getDescription());
@@ -309,9 +320,11 @@ public class FortnightRoutineTest
         routine.getWeek1().getMonday().addProcedure(procedure1);
         routine.getWeek2().getMonday().addProcedure(procedure2);
 
-        routine.procedureDone(procedure1, getDateTime(9, 0));
+        PendingProcedure pendingProcedure = routine.getPendingProcedure(getDateTime(9, 0));
 
-        List<Procedure> pendingProcedures = routine.getPendingProcedures(getDateTime(9, 0));
+        routine.procedureDone(pendingProcedure);
+
+        List<PendingProcedure> pendingProcedures = routine.getPendingProcedures(getDateTime(9, 0));
 
         assertEquals(1, pendingProcedures.size());
         assertEquals("Mon1W2", pendingProcedures.get(0).getDescription());
@@ -326,7 +339,9 @@ public class FortnightRoutineTest
         routine.getWeek1().getSunday().addProcedure(procedure1);
         routine.getWeek2().getMonday().addProcedure(procedure2);
 
-        routine.procedureDone(procedure1, getDateTime(7, 23));
+        PendingProcedure pendingProcedure = routine.getPendingProcedure(getDateTime(7, 23));
+
+        routine.procedureDone(pendingProcedure);
 
         DateTime nextProcedureTime = routine.getNextProcedureTime(getDateTime(7, 23));
 
@@ -342,7 +357,9 @@ public class FortnightRoutineTest
         routine.getWeek2().getSunday().addProcedure(procedure1);
         routine.getWeek1().getMonday().addProcedure(procedure2);
 
-        routine.procedureDone(procedure1, getDateTime(14, 23));
+        PendingProcedure pendingProcedure = routine.getPendingProcedure(getDateTime(14, 23));
+
+        routine.procedureDone(pendingProcedure);
 
         DateTime nextProcedureTime = routine.getNextProcedureTime(getDateTime(14, 23));
 
@@ -358,7 +375,9 @@ public class FortnightRoutineTest
         routine.getWeek1().getSunday().addProcedure(procedure1);
         routine.getWeek2().getMonday().addProcedure(procedure2);
 
-        routine.procedureDone(procedure1, getDateTime(8, 1));
+        PendingProcedure pendingProcedure = routine.getPendingProcedure(getDateTime(8, 1));
+
+        routine.procedureDone(pendingProcedure);
 
         DateTime nextProcedureTime = routine.getNextProcedureTime(getDateTime(8, 1));
 
@@ -374,7 +393,9 @@ public class FortnightRoutineTest
         routine.getWeek2().getSunday().addProcedure(procedure1);
         routine.getWeek1().getMonday().addProcedure(procedure2);
 
-        routine.procedureDone(procedure1, getDateTime(15, 1));
+        PendingProcedure pendingProcedure = routine.getPendingProcedure(getDateTime(15, 1));
+
+        routine.procedureDone(pendingProcedure);
 
         DateTime nextProcedureTime = routine.getNextProcedureTime(getDateTime(15, 1));
 

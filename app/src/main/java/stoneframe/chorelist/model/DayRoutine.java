@@ -60,29 +60,35 @@ public class DayRoutine extends Routine
     }
 
     @Override
-    public List<Procedure> getPendingProcedures(DateTime now)
+    public List<PendingProcedure> getPendingProcedures(DateTime now)
     {
         return procedures.stream()
+            .flatMap(p ->
+            {
+                List<PendingProcedure> pendingProcedures = new LinkedList<>();
+
+                for (DateTime i = lastCompleted.withTimeAtStartOfDay();
+                     i.isBefore(now);
+                     i = i.plusDays(1))
+                {
+                    PendingProcedure pendingProcedure = new PendingProcedure(
+                        p,
+                        p.getTime().toDateTime(i));
+
+                    pendingProcedures.add(pendingProcedure);
+                }
+
+                return pendingProcedures.stream();
+            })
+            .filter(p -> p.getDateTime().isAfter(lastCompleted))
+            .filter(p -> p.getDateTime().isBefore(now) || p.getDateTime().isEqual(now))
             .sorted()
-            .filter(p -> isPending(p, lastCompleted, now))
             .collect(Collectors.toList());
     }
 
     @Override
-    public void procedureDone(Procedure procedure, DateTime now)
+    public void procedureDone(PendingProcedure procedure)
     {
-        lastCompleted = procedure.getTime().toDateTime(now);
-    }
-
-    private static boolean isPending(Procedure procedure, DateTime lastCompleted, DateTime now)
-    {
-        DateTime next = procedure.getTime().toDateTime(lastCompleted);
-
-        if (next.isBefore(lastCompleted) || next.isEqual(lastCompleted))
-        {
-            next = next.plusDays(1);
-        }
-
-        return next.isBefore(now);
+        lastCompleted = procedure.getDateTime();
     }
 }

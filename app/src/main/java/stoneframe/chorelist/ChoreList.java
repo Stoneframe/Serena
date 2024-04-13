@@ -9,6 +9,7 @@ import stoneframe.chorelist.model.ChoreManager;
 import stoneframe.chorelist.model.ChoreSelector;
 import stoneframe.chorelist.model.Container;
 import stoneframe.chorelist.model.EffortTracker;
+import stoneframe.chorelist.model.PendingProcedure;
 import stoneframe.chorelist.model.Procedure;
 import stoneframe.chorelist.model.Routine;
 import stoneframe.chorelist.model.RoutineManager;
@@ -151,18 +152,18 @@ public class ChoreList
         return container.RoutineManager.getNextProcedureTime(timeService.getNow());
     }
 
-    public List<Procedure> getPendingProcedures()
+    public List<PendingProcedure> getPendingProcedures()
     {
         return container.RoutineManager.getPendingProcedures(timeService.getNow());
     }
 
-    public List<Procedure> getFirstPendingProcedures()
+    public List<PendingProcedure> getFirstPendingProcedures()
     {
         return container.RoutineManager.getFirstPendingProcedures(timeService.getNow());
     }
 
-    public void procedureDone(Procedure procedure)
+    public void procedureDone(PendingProcedure procedure)
     {
-        container.RoutineManager.procedureDone(procedure, timeService.getNow());
+        container.RoutineManager.procedureDone(procedure);
     }
 }

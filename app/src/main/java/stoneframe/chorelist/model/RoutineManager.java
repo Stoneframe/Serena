@@ -40,14 +40,14 @@ public class RoutineManager
             .orElse(null);
     }
 
-    public List<Procedure> getPendingProcedures(DateTime now)
+    public List<PendingProcedure> getPendingProcedures(DateTime now)
     {
         return routines.stream()
             .flatMap(r -> r.getPendingProcedures(now).stream())
             .collect(Collectors.toList());
     }
 
-    public List<Procedure> getFirstPendingProcedures(DateTime now)
+    public List<PendingProcedure> getFirstPendingProcedures(DateTime now)
     {
         return routines.stream()
             .map(r -> r.getPendingProcedure(now))
@@ -55,15 +55,15 @@ public class RoutineManager
             .collect(Collectors.toList());
     }
 
-    public void procedureDone(Procedure procedure, DateTime now)
+    public void procedureDone(PendingProcedure procedure)
     {
         Routine routine = routines.stream()
-            .filter(r -> r.getAllProcedures().contains(procedure))
+            .filter(r -> r.getAllProcedures().contains(procedure.getProcedure()))
             .findFirst()
             .orElse(null);
 
         assert routine != null;
 
-        routine.procedureDone(procedure, now);
+        routine.procedureDone(procedure);
     }
 }

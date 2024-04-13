@@ -7,7 +7,6 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -60,36 +59,25 @@ public class FortnightRoutine extends Routine
     }
 
     @Override
-    public List<Procedure> getPendingProcedures(DateTime now)
+    public List<PendingProcedure> getPendingProcedures(DateTime now)
     {
-        Stream<Map.Entry<Procedure, DateTime>> week1ProcedureDateTimes = week1
-            .getProcedureDateTimesBetween(lastCompleted, now)
-            .entrySet()
-            .stream();
+        List<PendingProcedure> week1PendingProcedures = week1.getPendingProceduresBetween(
+            lastCompleted,
+            now);
 
-        Stream<Map.Entry<Procedure, DateTime>> week2ProcedureDateTimes = week2
-            .getProcedureDateTimesBetween(lastCompleted, now)
-            .entrySet()
-            .stream();
+        List<PendingProcedure> week2PendingProcedures = week2.getPendingProceduresBetween(
+            lastCompleted,
+            now);
 
-        return Stream.concat(week1ProcedureDateTimes, week2ProcedureDateTimes)
-            .sorted(Map.Entry.comparingByValue())
-            .map(Map.Entry::getKey)
+        return Stream.concat(week1PendingProcedures.stream(), week2PendingProcedures.stream())
+            .sorted()
             .collect(Collectors.toList());
     }
 
     @Override
-    public void procedureDone(Procedure procedure, DateTime now)
+    public void procedureDone(PendingProcedure procedure)
     {
-        if (week1.getProcedures().contains(procedure))
-        {
-            lastCompleted = week1.getNextTimeOfProcedureAfter(procedure, lastCompleted);
-        }
-
-        if (week2.getProcedures().contains(procedure))
-        {
-            lastCompleted = week2.getNextTimeOfProcedureAfter(procedure, lastCompleted);
-        }
+        lastCompleted = procedure.getDateTime();
     }
 
     public Week getWeek1()

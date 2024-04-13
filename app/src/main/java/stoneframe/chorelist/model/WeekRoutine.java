@@ -43,19 +43,15 @@ public class WeekRoutine extends Routine
     }
 
     @Override
-    public List<Procedure> getPendingProcedures(DateTime now)
+    public List<PendingProcedure> getPendingProcedures(DateTime now)
     {
-        return week.getProcedureDateTimesBetween(lastCompleted, now)
-            .entrySet().stream()
-            .sorted(Map.Entry.comparingByValue())
-            .map(Map.Entry::getKey)
-            .collect(Collectors.toList());
+        return week.getPendingProceduresBetween(lastCompleted, now);
     }
 
     @Override
-    public void procedureDone(Procedure procedure, DateTime now)
+    public void procedureDone(PendingProcedure procedure)
     {
-        lastCompleted = week.getNextTimeOfProcedureAfter(procedure, lastCompleted);
+        lastCompleted = procedure.getDateTime();
     }
 
     public Week getWeek()

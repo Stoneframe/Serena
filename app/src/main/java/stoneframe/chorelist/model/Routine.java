@@ -8,7 +8,6 @@ import org.joda.time.LocalDate;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -51,14 +50,14 @@ public abstract class Routine
     @CheckForNull
     public abstract DateTime getNextProcedureTime(DateTime now);
 
-    public abstract List<Procedure> getPendingProcedures(DateTime now);
+    public abstract List<PendingProcedure> getPendingProcedures(DateTime now);
 
-    public Procedure getPendingProcedure(DateTime now)
+    public PendingProcedure getPendingProcedure(DateTime now)
     {
         return getPendingProcedures(now).stream().findFirst().orElse(null);
     }
 
-    public abstract void procedureDone(Procedure procedure, DateTime now);
+    public abstract void procedureDone(PendingProcedure procedure);
 
     @NonNull
     @Override
@@ -124,19 +123,6 @@ public abstract class Routine
                 .get();
         }
 
-        public Map<Procedure, DateTime> getProcedureTimesAfter(DateTime dateTime)
-        {
-            return procedures.stream()
-                .collect(Collectors.toMap(p -> p, p -> getNextTimeOfProcedureAfter(p, dateTime)));
-        }
-
-        public Map<Procedure, DateTime> getProcedureTimesBetween(DateTime first, DateTime second)
-        {
-            return getProcedureTimesAfter(first).entrySet().stream()
-                .filter(e -> e.getValue().isBefore(second) || e.getValue().isEqual(second))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        }
-
         public DateTime getNextTimeOfProcedureAfter(Procedure procedure, DateTime dateTime)
         {
             DateTime nextTime = startDate.toDateTime(procedure.getTime());
@@ -147,6 +133,37 @@ public abstract class Routine
             }
 
             return nextTime;
+        }
+
+        public List<PendingProcedure> getPendingProceduresBetween(DateTime start, DateTime end)
+        {
+            return procedures.stream()
+                .flatMap(p ->
+                {
+                    List<PendingProcedure> pendingProcedures = new LinkedList<>();
+
+                    for (DateTime i = startDate.toDateTimeAtStartOfDay();
+                         i.isBefore(end);
+                         i = i.plusDays(interval))
+                    {
+                        if (i.isBefore(start.withTimeAtStartOfDay()))
+                        {
+                            continue;
+                        }
+
+                        PendingProcedure pendingProcedure = new PendingProcedure(
+                            p,
+                            p.getTime().toDateTime(i));
+
+                        pendingProcedures.add(pendingProcedure);
+                    }
+
+                    return pendingProcedures.stream();
+                })
+                .filter(p -> p.getDateTime().isAfter(start))
+                .filter(p -> p.getDateTime().isBefore(end) || p.getDateTime().isEqual(end))
+                .sorted()
+                .collect(Collectors.toList());
         }
     }
 
@@ -264,41 +281,29 @@ public abstract class Routine
             }
         }
 
-        public DateTime getNextTimeOfProcedureAfter(Procedure procedure, DateTime now)
-        {
-            return getAllDaysStream().filter(d -> d.getProcedures().contains(procedure))
-                .map(d -> d.getNextTimeOfProcedureAfter(procedure, now))
-                .findFirst()
-                .get();
-        }
-
-        public Map<Procedure, DateTime> getProcedureDateTimesBetween(DateTime start, DateTime end)
+        public List<PendingProcedure> getPendingProceduresBetween(DateTime start, DateTime end)
         {
             return this
                 .concat(
-                    getWeekDay(DateTimeConstants.MONDAY).getProcedureTimesBetween(start, end),
-                    getWeekDay(DateTimeConstants.TUESDAY).getProcedureTimesBetween(start, end),
-                    getWeekDay(DateTimeConstants.WEDNESDAY).getProcedureTimesBetween(start, end),
-                    getWeekDay(DateTimeConstants.THURSDAY).getProcedureTimesBetween(start, end),
-                    getWeekDay(DateTimeConstants.FRIDAY).getProcedureTimesBetween(start, end),
-                    getWeekDay(DateTimeConstants.SATURDAY).getProcedureTimesBetween(start, end),
-                    getWeekDay(DateTimeConstants.SUNDAY).getProcedureTimesBetween(start, end))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        }
-
-        private Stream<Day> getAllDaysStream()
-        {
-            return Stream.of(monday, tuesday, wednesday, thursday, friday, saturday, sunday);
+                    getWeekDay(DateTimeConstants.MONDAY).getPendingProceduresBetween(start, end),
+                    getWeekDay(DateTimeConstants.TUESDAY).getPendingProceduresBetween(start, end),
+                    getWeekDay(DateTimeConstants.WEDNESDAY).getPendingProceduresBetween(start, end),
+                    getWeekDay(DateTimeConstants.THURSDAY).getPendingProceduresBetween(start, end),
+                    getWeekDay(DateTimeConstants.FRIDAY).getPendingProceduresBetween(start, end),
+                    getWeekDay(DateTimeConstants.SATURDAY).getPendingProceduresBetween(start, end),
+                    getWeekDay(DateTimeConstants.SUNDAY).getPendingProceduresBetween(start, end))
+                .sorted()
+                .collect(Collectors.toList());
         }
 
         @SafeVarargs
-        private final Stream<Map.Entry<Procedure, DateTime>> concat(@NonNull Map<Procedure, DateTime>... procedureMaps)
+        private final Stream<PendingProcedure> concat(@NonNull List<PendingProcedure>... pendingProcedures)
         {
-            Stream<Map.Entry<Procedure, DateTime>> stream = Stream.of();
+            Stream<PendingProcedure> stream = Stream.of();
 
-            for (Map<Procedure, DateTime> procedureMap : procedureMaps)
+            for (List<PendingProcedure> procedures : pendingProcedures)
             {
-                stream = Stream.concat(stream, procedureMap.entrySet().stream());
+                stream = Stream.concat(stream, procedures.stream());
             }
 
             return stream;

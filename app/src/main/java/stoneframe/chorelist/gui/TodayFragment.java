@@ -17,6 +17,7 @@ import java.util.Objects;
 import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.Chore;
+import stoneframe.chorelist.model.PendingProcedure;
 import stoneframe.chorelist.model.Procedure;
 import stoneframe.chorelist.model.Task;
 
@@ -24,7 +25,7 @@ public class TodayFragment extends Fragment
 {
     private ChoreList choreList;
 
-    private SimpleCheckboxListAdapter<Procedure> procedureAdapter;
+    private SimpleCheckboxListAdapter<PendingProcedure> procedureAdapter;
     private SimpleCheckboxListAdapter<Chore> choreAdapter;
     private SimpleCheckboxListAdapter<Task> taskAdapter;
 
@@ -45,13 +46,13 @@ public class TodayFragment extends Fragment
         procedureAdapter = new SimpleCheckboxListAdapter<>(
             getActivity().getBaseContext(),
             choreList::getFirstPendingProcedures,
-            Procedure::toString);
+            PendingProcedure::toString);
         procedureAdapter.registerDataSetObserver(new TodayDataSetObserver());
         ListView procedureListView = rootView.findViewById(R.id.todays_routines);
         procedureListView.setAdapter(procedureAdapter);
         procedureListView.setOnItemClickListener((parent, view, position, id) ->
         {
-            Procedure procedure = (Procedure)procedureAdapter.getItem(position);
+            PendingProcedure procedure = (PendingProcedure)procedureAdapter.getItem(position);
 
             procedureAdapter.setChecked(procedure);
 

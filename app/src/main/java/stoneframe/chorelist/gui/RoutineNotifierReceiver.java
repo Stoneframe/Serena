@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.json.SimpleChoreSelectorConverter;
 import stoneframe.chorelist.json.WeeklyEffortTrackerConverter;
+import stoneframe.chorelist.model.PendingProcedure;
 import stoneframe.chorelist.model.Procedure;
 import stoneframe.chorelist.model.Storage;
 import stoneframe.chorelist.model.choreselectors.SimpleChoreSelector;
@@ -27,10 +28,10 @@ public class RoutineNotifierReceiver extends BroadcastReceiver
     {
         ChoreList choreList = getChoreList(context);
 
-        List<Procedure> procedures = choreList.getPendingProcedures();
+        List<PendingProcedure> procedures = choreList.getPendingProcedures();
 
         String notificationText = procedures.stream()
-            .map(Procedure::toString)
+            .map(PendingProcedure::toString)
             .collect(Collectors.joining(System.lineSeparator()));
 
         RoutineNotifier.showRoutineNotification(context, notificationText, "Routine");

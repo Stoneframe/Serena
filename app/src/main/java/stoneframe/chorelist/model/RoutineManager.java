@@ -44,6 +44,7 @@ public class RoutineManager
     {
         return routines.stream()
             .flatMap(r -> r.getPendingProcedures(now).stream())
+            .sorted()
             .collect(Collectors.toList());
     }
 
@@ -52,6 +53,7 @@ public class RoutineManager
         return routines.stream()
             .map(r -> r.getPendingProcedure(now))
             .filter(Objects::nonNull)
+            .sorted()
             .collect(Collectors.toList());
     }
 

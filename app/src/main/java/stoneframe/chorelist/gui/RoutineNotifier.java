@@ -1,5 +1,6 @@
 package stoneframe.chorelist.gui;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -25,6 +26,7 @@ public class RoutineNotifier
     public static final String CHANNEL_ID = "1234";
     public static final int NOTIFICATION_ID = 1;
 
+    @SuppressLint("ScheduleExactAlarm")
     public static void scheduleRoutineAlarm(Context context, DateTime triggerDateTime)
     {
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
@@ -87,33 +89,40 @@ public class RoutineNotifier
                 .map(PendingProcedure::toString)
                 .collect(Collectors.joining(System.lineSeparator()));
 
-            showRoutineNotification(context, notificationText);
+            showRoutineNotification(context, notificationText, true);
         }
     }
 
-//    public static void updateNotification(Context context, ChoreList choreList)
-//    {
-//        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-//
-//        if (notificationManager.getAc)
-//
-//        List<PendingProcedure> procedures = choreList.getPendingProcedures();
-//
-//        if (procedures.isEmpty())
-//        {
-//            notificationManager.cancel(NOTIFICATION_ID);
-//        }
-//        else if ()
-//        {
-//            String notificationText = procedures.stream()
-//                .map(PendingProcedure::toString)
-//                .collect(Collectors.joining(System.lineSeparator()));
-//
-//            showRoutineNotification(context, notificationText);
-//        }
-//    }
+    @SuppressLint("MissingPermission")
+    public static void updateNotification(Context context, ChoreList choreList)
+    {
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
-    private static void showRoutineNotification(Context context, String contentText)
+        if (notificationManager.getActiveNotifications()
+            .stream()
+            .noneMatch(n -> n.getId() == NOTIFICATION_ID))
+        {
+            return;
+        }
+
+        List<PendingProcedure> procedures = choreList.getPendingProcedures();
+
+        if (procedures.isEmpty())
+        {
+            notificationManager.cancel(NOTIFICATION_ID);
+        }
+        else
+        {
+            String notificationText = procedures.stream()
+                .map(PendingProcedure::toString)
+                .collect(Collectors.joining(System.lineSeparator()));
+
+            showRoutineNotification(context, notificationText, false);
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private static void showRoutineNotification(Context context, String contentText, boolean splash)
     {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
@@ -132,6 +141,7 @@ public class RoutineNotifier
             .setContentText(contentText)
             .setSubText("Routine")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setOnlyAlertOnce(!splash)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .setStyle(new NotificationCompat.BigTextStyle().bigText(contentText));

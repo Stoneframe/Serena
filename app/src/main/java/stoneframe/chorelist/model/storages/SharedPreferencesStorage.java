@@ -3,12 +3,10 @@ package stoneframe.chorelist.model.storages;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.json.JSONException;
 
-import stoneframe.chorelist.json.ChoreSelectorConverter;
-import stoneframe.chorelist.json.EffortTrackerConverter;
 import stoneframe.chorelist.model.Container;
 import stoneframe.chorelist.model.Storage;
 
@@ -35,7 +33,7 @@ public class SharedPreferencesStorage implements Storage
         {
             String json = sharedPreferences.getString(SAVE_NAME, null);
 
-            if (json == null)
+            if (json == null || json.isEmpty())
             {
                 return null;
             }
@@ -49,13 +47,15 @@ public class SharedPreferencesStorage implements Storage
     }
 
     @Override
-    public void save(@NonNull Container container)
+    public void save(@Nullable Container container)
     {
         try
         {
-            String json = jsonConverter.toJson(container);
-
             SharedPreferences.Editor editor = sharedPreferences.edit();
+
+            String json = container != null
+                ? jsonConverter.toJson(container)
+                : null;
 
             editor.putString(SAVE_NAME, json);
 

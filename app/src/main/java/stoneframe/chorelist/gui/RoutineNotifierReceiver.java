@@ -28,13 +28,7 @@ public class RoutineNotifierReceiver extends BroadcastReceiver
     {
         ChoreList choreList = getChoreList(context);
 
-        List<PendingProcedure> procedures = choreList.getPendingProcedures();
-
-        String notificationText = procedures.stream()
-            .map(PendingProcedure::toString)
-            .collect(Collectors.joining(System.lineSeparator()));
-
-        RoutineNotifier.showRoutineNotification(context, notificationText, "Routine");
+        RoutineNotifier.showRoutineNotification(context, choreList);
         RoutineNotifier.scheduleRoutineAlarm(context, choreList.getNextRoutineProcedureTime());
     }
 

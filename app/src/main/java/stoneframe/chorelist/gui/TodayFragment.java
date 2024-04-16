@@ -63,6 +63,7 @@ public class TodayFragment extends Fragment
                 {
                     choreList.procedureDone(procedure);
                     procedureAdapter.notifyDataSetChanged();
+                    RoutineNotifier.showRoutineNotification(getContext(), choreList);
                 });
             }).start();
         });

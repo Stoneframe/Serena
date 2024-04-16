@@ -240,7 +240,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             String json = data.getStringExtra("Storage");
 
-            Container container = ContainerJsonConverter.fromJson(
+            Container container;
+            if (json == null || json.isEmpty()){
+                container = new Container();
+            }
+            container = ContainerJsonConverter.fromJson(
                 json,
                 new SimpleChoreSelectorConverter(),
                 new WeeklyEffortTrackerConverter());

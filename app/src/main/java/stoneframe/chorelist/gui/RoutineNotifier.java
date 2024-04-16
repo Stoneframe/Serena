@@ -13,11 +13,17 @@ import androidx.core.app.NotificationManagerCompat;
 
 import org.joda.time.DateTime;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
+import stoneframe.chorelist.model.PendingProcedure;
 
 public class RoutineNotifier
 {
     public static final String CHANNEL_ID = "1234";
+    public static final int NOTIFICATION_ID = 1;
 
     public static void scheduleRoutineAlarm(Context context, DateTime triggerDateTime)
     {
@@ -65,7 +71,49 @@ public class RoutineNotifier
         notificationManager.createNotificationChannel(channel);
     }
 
-    public static void showRoutineNotification(Context context, String contentText, String subText)
+    public static void showRoutineNotification(Context context, ChoreList choreList)
+    {
+        List<PendingProcedure> procedures = choreList.getPendingProcedures();
+
+        if (procedures.isEmpty())
+        {
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+
+            notificationManager.cancel(NOTIFICATION_ID);
+        }
+        else
+        {
+            String notificationText = procedures.stream()
+                .map(PendingProcedure::toString)
+                .collect(Collectors.joining(System.lineSeparator()));
+
+            showRoutineNotification(context, notificationText);
+        }
+    }
+
+//    public static void updateNotification(Context context, ChoreList choreList)
+//    {
+//        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+//
+//        if (notificationManager.getAc)
+//
+//        List<PendingProcedure> procedures = choreList.getPendingProcedures();
+//
+//        if (procedures.isEmpty())
+//        {
+//            notificationManager.cancel(NOTIFICATION_ID);
+//        }
+//        else if ()
+//        {
+//            String notificationText = procedures.stream()
+//                .map(PendingProcedure::toString)
+//                .collect(Collectors.joining(System.lineSeparator()));
+//
+//            showRoutineNotification(context, notificationText);
+//        }
+//    }
+
+    private static void showRoutineNotification(Context context, String contentText)
     {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
@@ -82,7 +130,7 @@ public class RoutineNotifier
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentText(contentText)
-            .setSubText(subText)
+            .setSubText("Routine")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
@@ -90,6 +138,6 @@ public class RoutineNotifier
 
         Notification notification = builder.build();
 
-        notificationManager.notify(1, notification);
+        notificationManager.notify(NOTIFICATION_ID, notification);
     }
 }

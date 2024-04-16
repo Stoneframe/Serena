@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdk 28
     defaultConfig {
         applicationId "stoneframe.chorelist"
         minSdkVersion 26

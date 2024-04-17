@@ -2,23 +2,18 @@ package stoneframe.chorelist.gui;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
-import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
-import org.joda.time.format.DateTimeFormat;
 
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.FortnightRoutine;
@@ -43,11 +38,6 @@ public class FortnightRoutineActivity extends AppCompatActivity
 
     private ExpandableListView week2ExpandableList;
     private WeekExpandableListAdaptor week2ExpandableListAdaptor;
-
-    private Spinner procedureWeekSpinner;
-    private Spinner procedureDaySpinner;
-    private EditText procedureTimeEditText;
-    private EditText procedureDescriptionEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -106,23 +96,6 @@ public class FortnightRoutineActivity extends AppCompatActivity
         {
             week2ExpandableList.expandGroup(i);
         }
-        procedureTimeEditText = findViewById(R.id.week_procedure_time);
-        procedureTimeEditText.setInputType(InputType.TYPE_NULL);
-        procedureTimeEditText.setOnClickListener(v -> showTimePicker());
-
-        procedureWeekSpinner = findViewById(R.id.week_procedure_week);
-        procedureWeekSpinner.setAdapter(new ArrayAdapter<>(
-            this,
-            android.R.layout.simple_list_item_1,
-            new String[]{"1", "2"}));
-
-        procedureDaySpinner = findViewById(R.id.week_procedure_day_of_week);
-        procedureDaySpinner.setAdapter(new ArrayAdapter<>(
-            this,
-            android.R.layout.simple_list_item_1,
-            new String[]{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}));
-
-        procedureDescriptionEditText = findViewById(R.id.week_procedure_description);
 
         nameEditText.setText(routine.getName());
     }
@@ -167,22 +140,19 @@ public class FortnightRoutineActivity extends AppCompatActivity
         Routine.Day weekDay = (Routine.Day)weekExpandableListAdaptor.getGroup(
             groupPosition);
 
-        new TimePickerDialog(
+        ProcedureEditDialog.edit(
             this,
-            (view, hourOfDay, minute) ->
+            procedure.getTime(),
+            procedure.getDescription(),
+            (time, description) ->
             {
-                LocalTime time = new LocalTime(hourOfDay, minute);
-
-                Procedure newProcedure = new Procedure(procedure.getDescription().trim(), time);
+                Procedure newProcedure = new Procedure(description, time);
 
                 weekDay.removeProcedure(procedure);
                 weekDay.addProcedure(newProcedure);
 
                 weekExpandableListAdaptor.notifyDataSetChanged();
-            },
-            procedure.getTime().getHourOfDay(),
-            procedure.getTime().getMinuteOfHour(),
-            true).show();
+            });
     }
 
     private void removeProcedure(
@@ -210,21 +180,6 @@ public class FortnightRoutineActivity extends AppCompatActivity
 
             week1ExpandableListAdaptor.notifyDataSetChanged();
         }
-    }
-
-    private void showTimePicker()
-    {
-        new TimePickerDialog(
-            this,
-            (view, hourOfDay, minute) ->
-            {
-                LocalTime time = new LocalTime(hourOfDay, minute);
-
-                procedureTimeEditText.setText(time.toString(DateTimeFormat.forPattern("HH:mm")));
-            },
-            0,
-            0,
-            true).show();
     }
 
     public void saveClick(View view)
@@ -259,19 +214,14 @@ public class FortnightRoutineActivity extends AppCompatActivity
     @SuppressLint("SetTextI18n")
     public void addProcedureClick(View view)
     {
-        int week = (int)procedureWeekSpinner.getSelectedItemId() + 1;
-        int dayOfWeek = (int)procedureDaySpinner.getSelectedItemId() + 1;
-        LocalTime time = LocalTime.parse(procedureTimeEditText.getText().toString());
-        String description = procedureDescriptionEditText.getText().toString().trim();
+        ProcedureEditDialog.create(this, (time, description, week, weekDay) ->
+        {
+            Procedure procedure = new Procedure(description, time);
 
-        Procedure procedure = new Procedure(description, time);
+            routine.getWeek(week).getWeekDay(weekDay).addProcedure(procedure);
 
-        routine.getWeek(week).getWeekDay(dayOfWeek).addProcedure(procedure);
-
-        week1ExpandableListAdaptor.notifyDataSetChanged();
-        week2ExpandableListAdaptor.notifyDataSetChanged();
-
-        procedureTimeEditText.setText("00:00");
-        procedureDescriptionEditText.setText("");
+            week1ExpandableListAdaptor.notifyDataSetChanged();
+            week2ExpandableListAdaptor.notifyDataSetChanged();
+        });
     }
 }

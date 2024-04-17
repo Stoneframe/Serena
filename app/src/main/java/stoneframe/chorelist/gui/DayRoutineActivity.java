@@ -1,9 +1,7 @@
 package stoneframe.chorelist.gui;
 
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -11,9 +9,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import org.joda.time.LocalTime;
-import org.joda.time.format.DateTimeFormat;
 
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.DayRoutine;
@@ -31,9 +26,6 @@ public class DayRoutineActivity extends AppCompatActivity
 
     private EditText nameEditText;
     private ListView procedureListView;
-
-    private EditText procedureTimeEditText;
-    private EditText procedureDescriptionEditText;
 
     private ArrayAdapter<Procedure> procedureListAdapter;
 
@@ -65,23 +57,6 @@ public class DayRoutineActivity extends AppCompatActivity
             editProcedure(position));
         procedureListView.setOnItemLongClickListener((parent, view, position, id) ->
             removeProcedure(position));
-
-        procedureTimeEditText = findViewById(R.id.procedure_time);
-        procedureTimeEditText.setInputType(InputType.TYPE_NULL);
-        procedureTimeEditText.setOnClickListener(v ->
-            new TimePickerDialog(
-                this,
-                (view, hourOfDay, minute) ->
-                {
-                    LocalTime time = new LocalTime(hourOfDay, minute);
-
-                    procedureTimeEditText.setText(time.toString(DateTimeFormat.forPattern("HH:mm")));
-                },
-                0,
-                0,
-                true).show());
-
-        procedureDescriptionEditText = findViewById(R.id.procedureDescription);
 
         nameEditText.setText(routine.getName());
     }
@@ -116,40 +91,35 @@ public class DayRoutineActivity extends AppCompatActivity
 
     public void addProcedureClick(View view)
     {
-        LocalTime time = LocalTime.parse(procedureTimeEditText.getText().toString());
-        String description = procedureDescriptionEditText.getText().toString().trim();
+        ProcedureEditDialog.create(this, (time, description) ->
+        {
+            Procedure procedure = new Procedure(description, time);
 
-        Procedure procedure = new Procedure(description, time);
+            routine.addProcedure(procedure);
 
-        routine.addProcedure(procedure);
-        procedureListAdapter.add(procedure);
-        procedureListAdapter.sort(Procedure::compareTo);
-
-        procedureTimeEditText.setText("00:00");
-        procedureDescriptionEditText.setText("");
+            procedureListAdapter.add(procedure);
+            procedureListAdapter.sort(Procedure::compareTo);
+        });
     }
 
     private void editProcedure(int position)
     {
         Procedure procedure = (Procedure)procedureListAdapter.getItem(position);
 
-        new TimePickerDialog(
+        ProcedureEditDialog.edit(
             this,
-            (view, hourOfDay, minute) ->
+            procedure.getTime(),
+            procedure.getDescription(),
+            (time, description) ->
             {
-                LocalTime time = new LocalTime(hourOfDay, minute);
-
-                Procedure newProcedure = new Procedure(procedure.getDescription().trim(), time);
+                Procedure newProcedure = new Procedure(description, time);
 
                 routine.removeProcedure(procedure);
                 routine.addProcedure(newProcedure);
 
                 procedureListAdapter.clear();
                 procedureListAdapter.addAll(routine.getAllProcedures());
-            },
-            procedure.getTime().getHourOfDay(),
-            procedure.getTime().getMinuteOfHour(),
-            true).show();
+            });
     }
 
     private boolean removeProcedure(int position)

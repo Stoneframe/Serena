@@ -91,11 +91,25 @@ public class SimpleCheckboxListAdapter<T> extends BaseAdapter
         return convertView;
     }
 
+    public boolean isChecked(T item)
+    {
+        return checkedItems.contains(item);
+    }
+
     public void setChecked(T item)
     {
         removeObsoleteCheckedItems();
 
         checkedItems.add(item);
+
+        notifyDataSetChanged();
+    }
+
+    public void setUnchecked(T item)
+    {
+        removeObsoleteCheckedItems();
+
+        checkedItems.remove(item);
 
         notifyDataSetChanged();
     }

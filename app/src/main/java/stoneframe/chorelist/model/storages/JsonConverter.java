@@ -12,13 +12,15 @@ import stoneframe.chorelist.json.ContainerJsonConverter;
 import stoneframe.chorelist.json.EffortTrackerConverter;
 import stoneframe.chorelist.model.Container;
 import stoneframe.chorelist.model.storages.versions.UpgradeScriptVersion1;
+import stoneframe.chorelist.model.storages.versions.UpgradeScriptVersion2;
 
 public class JsonConverter
 {
     private static final String VERSION = "Version";
 
     private final Map<Integer, UpgradeScript> upgradeScripts = Stream.of(
-            new UpgradeScriptVersion1())
+            new UpgradeScriptVersion1(),
+            new UpgradeScriptVersion2())
         .collect(Collectors.toMap(UpgradeScript::getVersion, s -> s));
 
     private final ChoreSelectorConverter choreSelectorConverter;

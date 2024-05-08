@@ -39,6 +39,12 @@
             android:name=".gui.FortnightRoutineActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".gui.ChecklistActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".gui.EditChecklistActivity"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".gui.EffortActivity"
             android:screenOrientation="portrait" />
         <activity

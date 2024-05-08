@@ -6,12 +6,15 @@ import android.app.Application;
 import java.util.Objects;
 
 import stoneframe.chorelist.ChoreList;
+import stoneframe.chorelist.model.Checklist;
 import stoneframe.chorelist.model.DayRoutine;
 import stoneframe.chorelist.model.Routine;
 
 public class GlobalState extends Application
 {
     public Routine RoutineToEdit;
+
+    public Checklist ActiveChecklist;
 
     private ChoreList choreList;
 

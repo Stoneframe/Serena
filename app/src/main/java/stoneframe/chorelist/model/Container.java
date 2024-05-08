@@ -9,4 +9,6 @@ public class Container
     public TaskManager TaskManager;
 
     public RoutineManager RoutineManager;
+
+    public ChecklistManager ChecklistManager;
 }

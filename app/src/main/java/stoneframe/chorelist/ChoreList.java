@@ -4,13 +4,14 @@ import org.joda.time.DateTime;
 
 import java.util.List;
 
+import stoneframe.chorelist.model.Checklist;
+import stoneframe.chorelist.model.ChecklistManager;
 import stoneframe.chorelist.model.Chore;
 import stoneframe.chorelist.model.ChoreManager;
 import stoneframe.chorelist.model.ChoreSelector;
 import stoneframe.chorelist.model.Container;
 import stoneframe.chorelist.model.EffortTracker;
 import stoneframe.chorelist.model.PendingProcedure;
-import stoneframe.chorelist.model.Procedure;
 import stoneframe.chorelist.model.Routine;
 import stoneframe.chorelist.model.RoutineManager;
 import stoneframe.chorelist.model.Storage;
@@ -52,6 +53,7 @@ public class ChoreList
             container.RoutineManager = new RoutineManager();
             container.ChoreManager = new ChoreManager(effortTracker, choreSelector);
             container.TaskManager = new TaskManager();
+            container.ChecklistManager = new ChecklistManager();
         }
 
         container.TaskManager.clean(timeService.getNow());
@@ -165,5 +167,20 @@ public class ChoreList
     public void procedureDone(PendingProcedure procedure)
     {
         container.RoutineManager.procedureDone(procedure);
+    }
+
+    public List<Checklist> getChecklists()
+    {
+        return container.ChecklistManager.getChecklists();
+    }
+
+    public void createChecklist(String name)
+    {
+        container.ChecklistManager.createChecklist(name);
+    }
+
+    public void removeChecklist(Checklist checklist)
+    {
+        container.ChecklistManager.removeChecklist(checklist);
     }
 }

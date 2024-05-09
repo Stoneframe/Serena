@@ -77,7 +77,7 @@ public class WeekExpandableListAdaptor extends BaseExpandableListAdapter
             LayoutInflater layoutInflater = (LayoutInflater)this.context.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            view = layoutInflater.inflate(R.layout.expandable_list_group, viewGroup);
+            view = layoutInflater.inflate(R.layout.expandable_list_group, null);
         }
 
         TextView listTitleTextView = view.findViewById(R.id.listTitle);
@@ -103,7 +103,7 @@ public class WeekExpandableListAdaptor extends BaseExpandableListAdapter
             LayoutInflater layoutInflater = (LayoutInflater)this.context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            view = layoutInflater.inflate(R.layout.expandable_list_item, viewGroup);
+            view = layoutInflater.inflate(R.layout.expandable_list_item, null);
         }
 
         TextView expandedListTextView = view.findViewById(R.id.expandedListItem);

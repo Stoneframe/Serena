@@ -22,12 +22,48 @@ public class WeekRoutineActivity extends AppCompatActivity
     public static final int ROUTINE_RESULT_SAVE = 0;
     public static final int ROUTINE_RESULT_REMOVE = 1;
 
+    private int action;
+
     private WeekRoutine routine;
 
     private EditText nameEditText;
 
     private ExpandableListView weekExpandableList;
     private WeekExpandableListAdaptor weekExpandableListAdaptor;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_routine_week);
+
+        routine = (WeekRoutine)GlobalState.getInstance(this).ActiveRoutine;
+
+        Intent intent = getIntent();
+
+        action = intent.getIntExtra("ACTION", -1);
+
+        Button removeRoutineButton = findViewById(R.id.removeButton);
+        removeRoutineButton.setVisibility(action == ROUTINE_ACTION_EDIT ? Button.VISIBLE : Button.INVISIBLE);
+
+        nameEditText = findViewById(R.id.week_routine_name_edit);
+
+        weekExpandableListAdaptor = new WeekExpandableListAdaptor(this, routine.getWeek());
+
+        weekExpandableList = findViewById(R.id.week_procedure_list);
+        weekExpandableList.setAdapter(weekExpandableListAdaptor);
+        weekExpandableList.setOnChildClickListener((parent, v, groupPosition, childPosition, id) ->
+            editProcedure(groupPosition, childPosition));
+        weekExpandableList.setOnItemLongClickListener((parent, view, position, id) ->
+            removeProcedure(position));
+
+        for (int i = 0; i < weekExpandableListAdaptor.getGroupCount(); i++)
+        {
+            weekExpandableList.expandGroup(i);
+        }
+
+        nameEditText.setText(routine.getName());
+    }
 
     public void saveClick(View view)
     {
@@ -36,6 +72,7 @@ public class WeekRoutineActivity extends AppCompatActivity
         Intent intent = new Intent();
 
         intent.putExtra("RESULT", ROUTINE_RESULT_SAVE);
+        intent.putExtra("ACTION", action);
 
         setResult(RESULT_OK, intent);
         finish();
@@ -68,40 +105,6 @@ public class WeekRoutineActivity extends AppCompatActivity
             weekExpandableListAdaptor.notifyDataSetChanged();
             weekExpandableList.expandGroup(dayOfWeek - 1);
         });
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_routine_week);
-
-        routine = (WeekRoutine)GlobalState.getInstance(this).ActiveRoutine;
-
-        Intent intent = getIntent();
-
-        int action = intent.getIntExtra("ACTION", -1);
-
-        Button removeRoutineButton = findViewById(R.id.removeButton);
-        removeRoutineButton.setVisibility(action == ROUTINE_ACTION_EDIT ? Button.VISIBLE : Button.INVISIBLE);
-
-        nameEditText = findViewById(R.id.week_routine_name_edit);
-
-        weekExpandableListAdaptor = new WeekExpandableListAdaptor(this, routine.getWeek());
-
-        weekExpandableList = findViewById(R.id.week_procedure_list);
-        weekExpandableList.setAdapter(weekExpandableListAdaptor);
-        weekExpandableList.setOnChildClickListener((parent, v, groupPosition, childPosition, id) ->
-            editProcedure(groupPosition, childPosition));
-        weekExpandableList.setOnItemLongClickListener((parent, view, position, id) ->
-            removeProcedure(position));
-
-        for (int i = 0; i < weekExpandableListAdaptor.getGroupCount(); i++)
-        {
-            weekExpandableList.expandGroup(i);
-        }
-
-        nameEditText.setText(routine.getName());
     }
 
     private boolean editProcedure(int groupPosition, int childPosition)

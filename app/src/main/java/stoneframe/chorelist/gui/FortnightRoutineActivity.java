@@ -28,6 +28,8 @@ public class FortnightRoutineActivity extends AppCompatActivity
     public static final int ROUTINE_RESULT_SAVE = 0;
     public static final int ROUTINE_RESULT_REMOVE = 1;
 
+    private int action;
+
     private FortnightRoutine routine;
 
     private EditText nameEditText;
@@ -49,7 +51,7 @@ public class FortnightRoutineActivity extends AppCompatActivity
 
         Intent intent = getIntent();
 
-        int action = intent.getIntExtra("ACTION", -1);
+        action = intent.getIntExtra("ACTION", -1);
 
         Button button = findViewById(R.id.removeButton);
         button.setVisibility(action == ROUTINE_ACTION_EDIT ? Button.VISIBLE : Button.INVISIBLE);
@@ -190,6 +192,7 @@ public class FortnightRoutineActivity extends AppCompatActivity
         Intent intent = new Intent();
 
         intent.putExtra("RESULT", ROUTINE_RESULT_SAVE);
+        intent.putExtra("ACTION", action);
 
         setResult(RESULT_OK, intent);
         finish();

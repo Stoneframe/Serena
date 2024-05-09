@@ -7,13 +7,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
 import org.joda.time.DateTime;
+
+import java.util.Objects;
 
 import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
@@ -24,9 +28,11 @@ import stoneframe.chorelist.model.WeekRoutine;
 
 public class AllRoutinesFragment extends Fragment
 {
+    private ActivityResultLauncher<Intent> editRoutineLauncher;
+
     private ChoreList choreList;
 
-    private ArrayAdapter<Routine> routineAdapter;
+    private SimpleListAdapter<Routine> routineListAdapter;
 
     private Routine routineUnderEdit;
     private GlobalState globalState;
@@ -43,14 +49,15 @@ public class AllRoutinesFragment extends Fragment
 
         View rootView = inflater.inflate(R.layout.fragment_all_routines, container, false);
 
-        routineAdapter = new ArrayAdapter<>(
+        routineListAdapter = new SimpleListAdapter<>(
             requireContext(),
-            android.R.layout.simple_list_item_1);
+            choreList::getAllRoutines,
+            Routine::getName);
         ListView routineListView = rootView.findViewById(R.id.all_routines);
-        routineListView.setAdapter(routineAdapter);
+        routineListView.setAdapter(routineListAdapter);
         routineListView.setOnItemClickListener((parent, view, position, id) ->
         {
-            Routine routine = routineAdapter.getItem(position);
+            Routine routine = (Routine)routineListAdapter.getItem(position);
             assert routine != null;
             startRoutineEditor(routine, DayRoutineActivity.ROUTINE_ACTION_EDIT);
         });
@@ -79,6 +86,10 @@ public class AllRoutinesFragment extends Fragment
             startRoutineEditor(routine, FortnightRoutineActivity.ROUTINE_ACTION_ADD);
         });
 
+        editRoutineLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            this::editRoutineCallback);
+
         return rootView;
     }
 
@@ -87,7 +98,7 @@ public class AllRoutinesFragment extends Fragment
     {
         super.onStart();
 
-        routineAdapter.addAll(choreList.getAllRoutines());
+//        routineAdapter.addAll(choreList.getAllRoutines());
     }
 
     @Override
@@ -95,7 +106,7 @@ public class AllRoutinesFragment extends Fragment
     {
         super.onStop();
 
-        routineAdapter.clear();
+//        routineAdapter.clear();
     }
 
     private void startRoutineEditor(Routine routine, int mode)
@@ -125,23 +136,22 @@ public class AllRoutinesFragment extends Fragment
 
         intent.putExtra("ACTION", mode);
 
-        startActivityForResult(intent, mode);
+        editRoutineLauncher.launch(intent);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent)
+    private void editRoutineCallback(ActivityResult activityResult)
     {
-        super.onActivityResult(requestCode, resultCode, intent);
-
-        if (resultCode == RESULT_OK)
+        if (activityResult.getResultCode() == RESULT_OK)
         {
             Routine routine = routineUnderEdit;
+
+            Intent intent = Objects.requireNonNull(activityResult.getData());
 
             switch (intent.getIntExtra("RESULT", -1))
             {
                 case DayRoutineActivity.ROUTINE_RESULT_SAVE:
 
-                    if (requestCode == DayRoutineActivity.ROUTINE_ACTION_ADD)
+                    if (intent.getIntExtra("ACTION", -1) == DayRoutineActivity.ROUTINE_ACTION_ADD)
                     {
                         choreList.addRoutine(routine);
                     }
@@ -149,13 +159,15 @@ public class AllRoutinesFragment extends Fragment
                     break;
 
                 case DayRoutineActivity.ROUTINE_RESULT_REMOVE:
-                    routineAdapter.remove(routine);
+//                    routineAdapter.remove(routine);
                     choreList.removeRoutine(routine);
                     break;
             }
         }
 
         choreList.save();
+
+        routineListAdapter.notifyDataSetChanged();
 
         DateTime nextAlarmTime = choreList.getNextRoutineProcedureTime();
 

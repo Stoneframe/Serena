@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -46,20 +47,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private ChoreList choreList;
     private Storage storage;
-
-    @Override
-    public void onBackPressed()
-    {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START))
-        {
-            drawer.closeDrawer(GravityCompat.START);
-        }
-        else
-        {
-            super.onBackPressed();
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -221,6 +208,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         editStorageLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             this::editStorageCallback);
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true)
+        {
+            @Override
+            public void handleOnBackPressed()
+            {
+                DrawerLayout drawer = findViewById(R.id.drawer_layout);
+                if (drawer.isDrawerOpen(GravityCompat.START))
+                {
+                    drawer.closeDrawer(GravityCompat.START);
+                }
+                else
+                {
+                    finish();
+                }
+            }
+        });
     }
 
     @Override

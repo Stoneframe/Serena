@@ -7,13 +7,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
 import org.joda.time.DateTime;
+
+import java.util.Objects;
 
 import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
@@ -21,9 +25,11 @@ import stoneframe.chorelist.model.Chore;
 
 public class AllChoresFragment extends Fragment
 {
+    private ActivityResultLauncher<Intent> editChoreLauncher;
+
     private ChoreList choreList;
 
-    private ArrayAdapter<Chore> choreAdapter;
+    private SimpleListAdapter<Chore> choreListAdapter;
 
     private Chore choreUnderEdit;
 
@@ -39,14 +45,15 @@ public class AllChoresFragment extends Fragment
 
         View rootView = inflater.inflate(R.layout.fragment_all_chores, container, false);
 
-        choreAdapter = new ArrayAdapter<>(
+        choreListAdapter = new SimpleListAdapter<>(
             requireContext(),
-            android.R.layout.simple_list_item_1);
+            choreList::getAllChores,
+            Chore::getDescription);
         ListView choreListView = rootView.findViewById(R.id.all_tasks);
-        choreListView.setAdapter(choreAdapter);
+        choreListView.setAdapter(choreListAdapter);
         choreListView.setOnItemClickListener((parent, view, position, id) ->
         {
-            Chore chore = choreAdapter.getItem(position);
+            Chore chore = (Chore)choreListAdapter.getItem(position);
             assert chore != null;
             startChoreEditor(chore, ChoreActivity.CHORE_ACTION_EDIT);
         });
@@ -64,6 +71,10 @@ public class AllChoresFragment extends Fragment
             startChoreEditor(chore, ChoreActivity.CHORE_ACTION_ADD);
         });
 
+        editChoreLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            this::editChoreCallback);
+
         return rootView;
     }
 
@@ -71,16 +82,12 @@ public class AllChoresFragment extends Fragment
     public void onStart()
     {
         super.onStart();
-
-        choreAdapter.addAll(choreList.getAllChores());
     }
 
     @Override
     public void onStop()
     {
         super.onStop();
-
-        choreAdapter.clear();
     }
 
     private void startChoreEditor(Chore chore, int mode)
@@ -96,17 +103,16 @@ public class AllChoresFragment extends Fragment
         intent.putExtra("IntervalUnit", chore.getIntervalUnit());
         intent.putExtra("IntervalLength", chore.getIntervalLength());
 
-        startActivityForResult(intent, mode);
+        editChoreLauncher.launch(intent);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent)
+    private void editChoreCallback(ActivityResult activityResult)
     {
-        super.onActivityResult(requestCode, resultCode, intent);
-
-        if (resultCode == RESULT_OK)
+        if (activityResult.getResultCode() == RESULT_OK)
         {
             Chore chore = choreUnderEdit;
+
+            Intent intent = Objects.requireNonNull(activityResult.getData());
 
             switch (intent.getIntExtra("RESULT", -1))
             {
@@ -118,7 +124,7 @@ public class AllChoresFragment extends Fragment
                     chore.setIntervalUnit(intent.getIntExtra("IntervalUnit", 1));
                     chore.setIntervalLength(intent.getIntExtra("IntervalLength", 1));
 
-                    if (requestCode == ChoreActivity.CHORE_ACTION_ADD)
+                    if (intent.getIntExtra("ACTION", -1) == ChoreActivity.CHORE_ACTION_ADD)
                     {
                         choreList.addChore(chore);
                     }
@@ -126,12 +132,13 @@ public class AllChoresFragment extends Fragment
                     break;
 
                 case ChoreActivity.CHORE_RESULT_REMOVE:
-                    choreAdapter.remove(chore);
                     choreList.removeChore(chore);
                     break;
             }
 
             choreList.save();
+
+            choreListAdapter.notifyDataSetChanged();
         }
     }
 }

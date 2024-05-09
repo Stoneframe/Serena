@@ -26,6 +26,8 @@ public class ChoreActivity extends AppCompatActivity
     public static final int CHORE_RESULT_SAVE = 0;
     public static final int CHORE_RESULT_REMOVE = 1;
 
+    private int action;
+
     private DateTime next;
     private String description;
     private int priority;
@@ -51,7 +53,7 @@ public class ChoreActivity extends AppCompatActivity
 
         Intent intent = getIntent();
 
-        int action = intent.getIntExtra("ACTION", -1);
+        action = intent.getIntExtra("ACTION", -1);
 
         Button button = findViewById(R.id.removeButton);
         button.setVisibility(action == CHORE_ACTION_EDIT ? Button.VISIBLE : Button.INVISIBLE);
@@ -105,6 +107,7 @@ public class ChoreActivity extends AppCompatActivity
         Intent intent = new Intent();
 
         intent.putExtra("RESULT", CHORE_RESULT_SAVE);
+        intent.putExtra("ACTION", action);
         intent.putExtra("Next", next);
         intent.putExtra("Description", description);
         intent.putExtra("Priority", priority);

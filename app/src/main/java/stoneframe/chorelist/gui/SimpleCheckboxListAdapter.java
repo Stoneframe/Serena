@@ -69,7 +69,6 @@ public class SimpleCheckboxListAdapter<T> extends BaseAdapter
                 parent,
                 false);
 
-
             holder.checkedTextView = checkedTextView;
 
             convertView = checkedTextView;

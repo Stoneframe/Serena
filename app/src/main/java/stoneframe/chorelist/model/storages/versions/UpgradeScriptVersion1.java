@@ -4,7 +4,6 @@ import com.fatboyindustrial.gsonjodatime.Converters;
 import com.google.gson.GsonBuilder;
 
 import org.joda.time.DateTime;
-import org.joda.time.convert.Converter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

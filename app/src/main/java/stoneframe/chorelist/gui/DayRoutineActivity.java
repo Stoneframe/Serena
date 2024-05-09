@@ -35,7 +35,7 @@ public class DayRoutineActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_routine_day);
 
-        routine = (DayRoutine)GlobalState.getInstance(this).RoutineToEdit;
+        routine = (DayRoutine)GlobalState.getInstance(this).ActiveRoutine;
 
         Intent intent = getIntent();
 
@@ -104,7 +104,9 @@ public class DayRoutineActivity extends AppCompatActivity
 
     private void editProcedure(int position)
     {
-        Procedure procedure = (Procedure)procedureListAdapter.getItem(position);
+        Procedure procedure = procedureListAdapter.getItem(position);
+
+        assert procedure != null;
 
         ProcedureEditDialog.edit(
             this,

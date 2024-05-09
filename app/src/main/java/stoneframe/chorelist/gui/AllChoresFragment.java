@@ -15,8 +15,6 @@ import androidx.fragment.app.Fragment;
 
 import org.joda.time.DateTime;
 
-import java.util.Objects;
-
 import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.Chore;
@@ -35,14 +33,14 @@ public class AllChoresFragment extends Fragment
         ViewGroup container,
         Bundle savedInstanceState)
     {
-        GlobalState globalState = (GlobalState)Objects.requireNonNull(getActivity())
-            .getApplication();
+        GlobalState globalState = GlobalState.getInstance(this);
+
         choreList = globalState.getChoreList();
 
         View rootView = inflater.inflate(R.layout.fragment_all_chores, container, false);
 
         choreAdapter = new ArrayAdapter<>(
-            getActivity().getBaseContext(),
+            requireContext(),
             android.R.layout.simple_list_item_1);
         ListView choreListView = rootView.findViewById(R.id.all_tasks);
         choreListView.setAdapter(choreAdapter);

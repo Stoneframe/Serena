@@ -45,7 +45,7 @@ public class FortnightRoutineActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_routine_fortnight);
 
-        routine = (FortnightRoutine)GlobalState.getInstance(this).RoutineToEdit;
+        routine = (FortnightRoutine)GlobalState.getInstance(this).ActiveRoutine;
 
         Intent intent = getIntent();
 

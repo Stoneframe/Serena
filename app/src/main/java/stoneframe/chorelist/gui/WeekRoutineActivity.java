@@ -76,7 +76,7 @@ public class WeekRoutineActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_routine_week);
 
-        routine = (WeekRoutine)GlobalState.getInstance(this).RoutineToEdit;
+        routine = (WeekRoutine)GlobalState.getInstance(this).ActiveRoutine;
 
         Intent intent = getIntent();
 

@@ -77,10 +77,10 @@ public class WeekExpandableListAdaptor extends BaseExpandableListAdapter
             LayoutInflater layoutInflater = (LayoutInflater)this.context.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            view = layoutInflater.inflate(R.layout.expandable_list_group, null);
+            view = layoutInflater.inflate(R.layout.expandable_list_group, viewGroup);
         }
 
-        TextView listTitleTextView = (TextView)view.findViewById(R.id.listTitle);
+        TextView listTitleTextView = view.findViewById(R.id.listTitle);
 
         listTitleTextView.setTypeface(null, Typeface.BOLD);
         listTitleTextView.setText(weekDay.getName());
@@ -103,10 +103,10 @@ public class WeekExpandableListAdaptor extends BaseExpandableListAdapter
             LayoutInflater layoutInflater = (LayoutInflater)this.context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            view = layoutInflater.inflate(R.layout.expandable_list_item, null);
+            view = layoutInflater.inflate(R.layout.expandable_list_item, viewGroup);
         }
 
-        TextView expandedListTextView = (TextView)view.findViewById(R.id.expandedListItem);
+        TextView expandedListTextView = view.findViewById(R.id.expandedListItem);
 
         expandedListTextView.setText(
             String.format(

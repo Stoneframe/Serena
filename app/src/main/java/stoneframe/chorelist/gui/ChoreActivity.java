@@ -1,5 +1,6 @@
 package stoneframe.chorelist.gui;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -41,6 +42,7 @@ public class ChoreActivity extends AppCompatActivity
     private Spinner intervalUnitSpinner;
     private EditText intervalLengthEditText;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -61,18 +63,10 @@ public class ChoreActivity extends AppCompatActivity
         intervalUnit = intent.getIntExtra("IntervalUnit", 0);
         intervalLength = intent.getIntExtra("IntervalLength", 1);
 
-        datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener()
+        datePickerDialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) ->
         {
-            @Override
-            public void onDateSet(
-                android.widget.DatePicker view,
-                int year,
-                int month,
-                int dayOfMonth)
-            {
-                next = new DateTime(year, month + 1, dayOfMonth, 0, 0);
-                nextEditText.setText(next.toString("yyyy-MM-dd"));
-            }
+            next = new DateTime(year, month + 1, dayOfMonth, 0, 0);
+            nextEditText.setText(next.toString("yyyy-MM-dd"));
         }, next.getYear(), next.getMonthOfYear() - 1, next.getDayOfMonth());
 
         nextEditText = findViewById(R.id.nextEditText);

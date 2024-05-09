@@ -6,8 +6,6 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class WeekRoutine extends Routine
 {

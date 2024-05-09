@@ -2,7 +2,6 @@ package stoneframe.chorelist.model;
 
 import androidx.annotation.NonNull;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
 
 public class Procedure implements Comparable<Procedure>

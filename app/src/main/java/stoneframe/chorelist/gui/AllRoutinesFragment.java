@@ -44,7 +44,7 @@ public class AllRoutinesFragment extends Fragment
         View rootView = inflater.inflate(R.layout.fragment_all_routines, container, false);
 
         routineAdapter = new ArrayAdapter<>(
-            getActivity().getBaseContext(),
+            requireContext(),
             android.R.layout.simple_list_item_1);
         ListView routineListView = rootView.findViewById(R.id.all_routines);
         routineListView.setAdapter(routineAdapter);
@@ -102,7 +102,7 @@ public class AllRoutinesFragment extends Fragment
     {
         routineUnderEdit = routine;
 
-        globalState.RoutineToEdit = routine;
+        globalState.ActiveRoutine = routine;
 
         Intent intent;
 
@@ -161,11 +161,11 @@ public class AllRoutinesFragment extends Fragment
 
         if (nextAlarmTime == null)
         {
-            RoutineNotifier.cancelRoutineAlarm(getContext());
+            RoutineNotifier.cancelRoutineAlarm(requireContext());
         }
         else
         {
-            RoutineNotifier.scheduleRoutineAlarm(getContext(), nextAlarmTime);
+            RoutineNotifier.scheduleRoutineAlarm(requireContext(), nextAlarmTime);
         }
     }
 }

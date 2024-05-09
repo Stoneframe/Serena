@@ -12,13 +12,10 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
-import java.util.Objects;
-
 import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.Chore;
 import stoneframe.chorelist.model.PendingProcedure;
-import stoneframe.chorelist.model.Procedure;
 import stoneframe.chorelist.model.Task;
 
 public class TodayFragment extends Fragment
@@ -37,14 +34,14 @@ public class TodayFragment extends Fragment
         ViewGroup container,
         Bundle savedInstanceState)
     {
-        GlobalState globalState = (GlobalState)Objects.requireNonNull(getActivity())
-            .getApplication();
+        GlobalState globalState = GlobalState.getInstance(this);
+
         choreList = globalState.getChoreList();
 
         rootView = inflater.inflate(R.layout.fragment_today, container, false);
 
         procedureAdapter = new SimpleCheckboxListAdapter<>(
-            getActivity().getBaseContext(),
+            requireContext(),
             choreList::getFirstPendingProcedures,
             PendingProcedure::toString);
         procedureAdapter.registerDataSetObserver(new TodayDataSetObserver());
@@ -59,7 +56,7 @@ public class TodayFragment extends Fragment
             new Thread(() ->
             {
                 waitTwoSeconds();
-                getActivity().runOnUiThread(() ->
+                requireActivity().runOnUiThread(() ->
                 {
                     choreList.procedureDone(procedure);
                     procedureAdapter.notifyDataSetChanged();
@@ -69,7 +66,7 @@ public class TodayFragment extends Fragment
         });
 
         choreAdapter = new SimpleCheckboxListAdapter<>(
-            getActivity().getBaseContext(),
+            requireContext(),
             choreList::getTodaysChores,
             Chore::getDescription);
         choreAdapter.registerDataSetObserver(new TodayDataSetObserver());
@@ -84,7 +81,7 @@ public class TodayFragment extends Fragment
             new Thread(() ->
             {
                 waitTwoSeconds();
-                getActivity().runOnUiThread(() ->
+                requireActivity().runOnUiThread(() ->
                 {
                     choreList.choreDone(chore);
                     choreAdapter.notifyDataSetChanged();
@@ -100,7 +97,7 @@ public class TodayFragment extends Fragment
         });
 
         taskAdapter = new SimpleCheckboxListAdapter<>(
-            getActivity().getBaseContext(),
+            requireContext(),
             choreList::getTodaysTasks,
             Task::getDescription);
         taskAdapter.registerDataSetObserver(new TodayDataSetObserver());
@@ -115,7 +112,7 @@ public class TodayFragment extends Fragment
             new Thread(() ->
             {
                 waitTwoSeconds();
-                getActivity().runOnUiThread(() ->
+                requireActivity().runOnUiThread(() ->
                 {
                     choreList.taskDone(task);
                     taskAdapter.notifyDataSetChanged();

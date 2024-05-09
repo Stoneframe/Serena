@@ -14,8 +14,6 @@ import androidx.fragment.app.Fragment;
 
 import org.joda.time.DateTime;
 
-import java.util.Objects;
-
 import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.Task;
@@ -34,13 +32,13 @@ public class AllTasksFragment extends Fragment
         ViewGroup container,
         Bundle savedInstanceState)
     {
-        GlobalState globalState = (GlobalState)Objects.requireNonNull(getActivity())
-            .getApplication();
+        GlobalState globalState = GlobalState.getInstance(this);
+
         choreList = globalState.getChoreList();
 
         View rootView = inflater.inflate(R.layout.fragment_all_tasks, container, false);
 
-        taskAdapter = new TaskArrayAdapter(getActivity().getBaseContext());
+        taskAdapter = new TaskArrayAdapter(requireContext());
         taskAdapter.setCheckboxChangedListener((task, isChecked) ->
         {
             if (isChecked)

@@ -6,14 +6,9 @@ import android.content.Intent;
 
 import androidx.annotation.NonNull;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.json.SimpleChoreSelectorConverter;
 import stoneframe.chorelist.json.WeeklyEffortTrackerConverter;
-import stoneframe.chorelist.model.PendingProcedure;
-import stoneframe.chorelist.model.Procedure;
 import stoneframe.chorelist.model.Storage;
 import stoneframe.chorelist.model.choreselectors.SimpleChoreSelector;
 import stoneframe.chorelist.model.efforttrackers.WeeklyEffortTracker;

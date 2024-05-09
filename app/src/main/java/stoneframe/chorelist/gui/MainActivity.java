@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -17,6 +20,8 @@ import androidx.fragment.app.FragmentManager;
 import com.google.android.material.navigation.NavigationView;
 
 import org.joda.time.DateTime;
+
+import java.util.Objects;
 
 import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
@@ -35,6 +40,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 {
     private static final int ACTIVITY_EDIT_EFFORT = 0;
     private static final int ACTIVITY_EDIT_STORAGE = 1;
+
+    private ActivityResultLauncher<Intent> editEffortLauncher;
+    private ActivityResultLauncher<Intent> editStorageLauncher;
 
     private ChoreList choreList;
     private Storage storage;
@@ -80,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             intent.putExtra("Saturday", effortTracker.getSaturday());
             intent.putExtra("Sunday", effortTracker.getSunday());
 
-            startActivityForResult(intent, ACTIVITY_EDIT_EFFORT);
+            editEffortLauncher.launch(intent);
 
             return true;
         }
@@ -95,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             intent.putExtra("Storage", json);
 
-            startActivityForResult(intent, ACTIVITY_EDIT_STORAGE);
+            editStorageLauncher.launch(intent);
 
             return true;
         }
@@ -205,6 +213,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             RoutineNotifier.scheduleRoutineAlarm(this, nextRoutineProcedureTime);
         }
+
+        editEffortLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            this::editEffortCallback);
+
+        editStorageLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            this::editStorageCallback);
     }
 
     @Override
@@ -252,5 +268,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             choreList.load();
         }
+    }
+
+    private void editEffortCallback(ActivityResult activityResult)
+    {
+        if (activityResult.getResultCode() != RESULT_OK)
+        {
+            return;
+        }
+
+        WeeklyEffortTracker effortTracker = (WeeklyEffortTracker)choreList.getEffortTracker();
+
+        Intent data = Objects.requireNonNull(activityResult.getData());
+
+        effortTracker.setMonday(data.getIntExtra("Monday", 0));
+        effortTracker.setTuesday(data.getIntExtra("Tuesday", 0));
+        effortTracker.setWednesday(data.getIntExtra("Wednesday", 0));
+        effortTracker.setThursday(data.getIntExtra("Thursday", 0));
+        effortTracker.setFriday(data.getIntExtra("Friday", 0));
+        effortTracker.setSaturday(data.getIntExtra("Saturday", 0));
+        effortTracker.setSunday(data.getIntExtra("Sunday", 0));
+    }
+
+    private void editStorageCallback(ActivityResult activityResult)
+    {
+        if (activityResult.getResultCode() != RESULT_OK)
+        {
+            return;
+        }
+
+        Intent data = Objects.requireNonNull(activityResult.getData());
+
+        String json = data.getStringExtra("Storage");
+
+        Container container = ContainerJsonConverter.fromJson(
+            json,
+            new SimpleChoreSelectorConverter(),
+            new WeeklyEffortTrackerConverter());
+
+        storage.save(container);
+
+        choreList.load();
     }
 }

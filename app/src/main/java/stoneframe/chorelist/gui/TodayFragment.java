@@ -133,12 +133,6 @@ public class TodayFragment extends Fragment
         taskAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-    }
-
     private void updateColors()
     {
         updateColorsOf(procedureAdapter, rootView.findViewById(R.id.routines_text));

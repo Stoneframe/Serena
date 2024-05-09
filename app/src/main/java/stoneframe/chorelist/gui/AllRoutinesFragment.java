@@ -93,22 +93,6 @@ public class AllRoutinesFragment extends Fragment
         return rootView;
     }
 
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-
-//        routineAdapter.addAll(choreList.getAllRoutines());
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-
-//        routineAdapter.clear();
-    }
-
     private void startRoutineEditor(Routine routine, int mode)
     {
         routineUnderEdit = routine;

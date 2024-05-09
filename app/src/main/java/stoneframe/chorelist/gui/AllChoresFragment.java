@@ -78,18 +78,6 @@ public class AllChoresFragment extends Fragment
         return rootView;
     }
 
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-    }
-
     private void startChoreEditor(Chore chore, int mode)
     {
         choreUnderEdit = chore;

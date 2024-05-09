@@ -90,18 +90,6 @@ public class AllTasksFragment extends Fragment
     }
 
     @Override
-    public void onStart()
-    {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-    }
-
-    @Override
     public void onResume()
     {
         super.onResume();

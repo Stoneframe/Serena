@@ -104,6 +104,11 @@ public class ChoreList
         return container.ChoreManager.getEffortTracker();
     }
 
+    public List<Task> getAllTasks()
+    {
+        return container.TaskManager.getAllTasks(true);
+    }
+
     public List<Task> getAllTasks(boolean includeCompleted)
     {
         return container.TaskManager.getAllTasks(includeCompleted);

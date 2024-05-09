@@ -23,6 +23,8 @@ public class TaskActivity extends AppCompatActivity
     public static final int TASK_RESULT_SAVE = 0;
     public static final int TASK_RESULT_REMOVE = 1;
 
+    private int action;
+
     private String description;
     private DateTime deadline;
     private DateTime ignoreBefore;
@@ -44,7 +46,7 @@ public class TaskActivity extends AppCompatActivity
 
         Intent intent = getIntent();
 
-        int action = intent.getIntExtra("ACTION", -1);
+        action = intent.getIntExtra("ACTION", -1);
 
         Button button = findViewById(R.id.removeButton);
         button.setVisibility(action == TASK_ACTION_EDIT ? Button.VISIBLE : Button.INVISIBLE);
@@ -90,6 +92,7 @@ public class TaskActivity extends AppCompatActivity
 
         Intent intent = new Intent();
         intent.putExtra("RESULT", TASK_RESULT_SAVE);
+        intent.putExtra("ACTION", action);
         intent.putExtra("Description", description);
         intent.putExtra("Deadline", deadline);
         intent.putExtra("IgnoreBefore", ignoreBefore);

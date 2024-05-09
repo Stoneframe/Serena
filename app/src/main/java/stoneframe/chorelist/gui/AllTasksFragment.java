@@ -10,9 +10,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
 import org.joda.time.DateTime;
+
+import java.util.Objects;
 
 import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
@@ -20,9 +25,11 @@ import stoneframe.chorelist.model.Task;
 
 public class AllTasksFragment extends Fragment
 {
+    private ActivityResultLauncher<Intent> editTaskLauncher;
+
     private ChoreList choreList;
 
-    private TaskArrayAdapter taskAdapter;
+    private CheckboxListAdapter<Task> taskAdapter;
 
     private Task taskUnderEdit;
 
@@ -38,7 +45,11 @@ public class AllTasksFragment extends Fragment
 
         View rootView = inflater.inflate(R.layout.fragment_all_tasks, container, false);
 
-        taskAdapter = new TaskArrayAdapter(requireContext());
+        taskAdapter = new CheckboxListAdapter<>(
+            requireContext(),
+            choreList::getAllTasks,
+            Task::getDescription,
+            Task::isDone);
         taskAdapter.setCheckboxChangedListener((task, isChecked) ->
         {
             if (isChecked)
@@ -55,9 +66,9 @@ public class AllTasksFragment extends Fragment
         taskListView.setAdapter(taskAdapter);
         taskListView.setOnItemClickListener((parent, view, position, id) ->
         {
-            Task chore = taskAdapter.getItem(position);
-            assert chore != null;
-            startTaskEditor(chore, TaskActivity.TASK_ACTION_EDIT);
+            Task task = (Task)taskAdapter.getItem(position);
+            assert task != null;
+            startTaskEditor(task, TaskActivity.TASK_ACTION_EDIT);
         });
 
         Button addButton = rootView.findViewById(R.id.add_button);
@@ -71,6 +82,10 @@ public class AllTasksFragment extends Fragment
             startTaskEditor(task, TaskActivity.TASK_ACTION_ADD);
         });
 
+        editTaskLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            this::editTaskCallback);
+
         return rootView;
     }
 
@@ -78,16 +93,12 @@ public class AllTasksFragment extends Fragment
     public void onStart()
     {
         super.onStart();
-
-        taskAdapter.addAll(choreList.getAllTasks(true));
     }
 
     @Override
     public void onStop()
     {
         super.onStop();
-
-        taskAdapter.clear();
     }
 
     @Override
@@ -110,17 +121,16 @@ public class AllTasksFragment extends Fragment
         intent.putExtra("IgnoreBefore", task.getIgnoreBefore());
         intent.putExtra("IsDone", task.isDone());
 
-        startActivityForResult(intent, mode);
+        editTaskLauncher.launch(intent);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent)
+    private void editTaskCallback(ActivityResult activityResult)
     {
-        super.onActivityResult(requestCode, resultCode, intent);
-
-        if (resultCode == RESULT_OK)
+        if (activityResult.getResultCode() == RESULT_OK)
         {
             Task task = taskUnderEdit;
+
+            Intent intent = Objects.requireNonNull(activityResult.getData());
 
             switch (intent.getIntExtra("RESULT", -1))
             {
@@ -129,7 +139,7 @@ public class AllTasksFragment extends Fragment
                     task.setDeadline((DateTime)intent.getSerializableExtra("Deadline"));
                     task.setIgnoreBefore((DateTime)intent.getSerializableExtra("IgnoreBefore"));
 
-                    if (requestCode == TaskActivity.TASK_ACTION_ADD)
+                    if (intent.getIntExtra("ACTION", -1) == TaskActivity.TASK_ACTION_ADD)
                     {
                         choreList.addTask(task);
                     }
@@ -149,7 +159,6 @@ public class AllTasksFragment extends Fragment
 
                     break;
                 case TaskActivity.TASK_RESULT_REMOVE:
-                    taskAdapter.remove(task);
                     choreList.removeTask(task);
                     break;
             }

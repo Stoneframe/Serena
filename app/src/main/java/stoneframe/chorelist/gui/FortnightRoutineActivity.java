@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
+import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.FortnightRoutine;
 import stoneframe.chorelist.model.Procedure;
@@ -32,7 +34,10 @@ public class FortnightRoutineActivity extends AppCompatActivity
 
     private FortnightRoutine routine;
 
+    private ChoreList choreList;
+
     private EditText nameEditText;
+    private CheckBox enabledCheckBox;
     private EditText startDateEditText;
 
     private ExpandableListView week1ExpandableList;
@@ -47,7 +52,10 @@ public class FortnightRoutineActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_routine_fortnight);
 
-        routine = (FortnightRoutine)GlobalState.getInstance(this).ActiveRoutine;
+        GlobalState globalState = GlobalState.getInstance(this);
+
+        choreList = globalState.getChoreList();
+        routine = (FortnightRoutine)globalState.ActiveRoutine;
 
         Intent intent = getIntent();
 
@@ -68,6 +76,7 @@ public class FortnightRoutineActivity extends AppCompatActivity
             routine.getStartDate().getDayOfMonth());
 
         nameEditText = findViewById(R.id.fortnight_routine_name_edit);
+        enabledCheckBox = findViewById(R.id.fortnight_routine_enabled_checkbox);
         startDateEditText = findViewById(R.id.fortnight_routine_start_date_edit);
         startDateEditText.setText(routine.getStartDate().toString("yyyy-MM-dd"));
         startDateEditText.setInputType(InputType.TYPE_NULL);
@@ -100,6 +109,7 @@ public class FortnightRoutineActivity extends AppCompatActivity
         }
 
         nameEditText.setText(routine.getName());
+        enabledCheckBox.setChecked(routine.isEnabled());
     }
 
     private boolean editProcedureWeek1(int groupPosition, int childPosition)
@@ -186,7 +196,13 @@ public class FortnightRoutineActivity extends AppCompatActivity
 
     public void saveClick(View view)
     {
+        if (enabledCheckBox.isChecked() && !routine.isEnabled())
+        {
+            choreList.resetRoutine(routine);
+        }
+
         routine.setName(nameEditText.getText().toString().trim());
+        routine.setEnabled(enabledCheckBox.isChecked());
         routine.setStartDate(LocalDate.parse(startDateEditText.getText().toString()));
 
         Intent intent = new Intent();

@@ -18,13 +18,9 @@ public class FortnightRoutine extends Routine
     private final Week week1;
     private final Week week2;
 
-    private DateTime lastCompleted;
-
     public FortnightRoutine(String name, LocalDate startDate, DateTime now)
     {
-        super(Routine.FORTNIGHT_ROUTINE, name);
-
-        lastCompleted = now;
+        super(Routine.FORTNIGHT_ROUTINE, name, now);
 
         week1 = new Week(1, getMondayOfWeek(startDate).plusWeeks(0));
         week2 = new Week(1, getMondayOfWeek(startDate).plusWeeks(1));

@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.Procedure;
 import stoneframe.chorelist.model.Routine;
@@ -26,7 +28,10 @@ public class WeekRoutineActivity extends AppCompatActivity
 
     private WeekRoutine routine;
 
+    private ChoreList choreList;
+
     private EditText nameEditText;
+    private CheckBox enabledCheckBox;
 
     private ExpandableListView weekExpandableList;
     private WeekExpandableListAdaptor weekExpandableListAdaptor;
@@ -37,7 +42,10 @@ public class WeekRoutineActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_routine_week);
 
-        routine = (WeekRoutine)GlobalState.getInstance(this).ActiveRoutine;
+        GlobalState globalState = GlobalState.getInstance(this);
+
+        choreList = globalState.getChoreList();
+        routine = (WeekRoutine)globalState.ActiveRoutine;
 
         Intent intent = getIntent();
 
@@ -47,6 +55,7 @@ public class WeekRoutineActivity extends AppCompatActivity
         removeRoutineButton.setVisibility(action == ROUTINE_ACTION_EDIT ? Button.VISIBLE : Button.INVISIBLE);
 
         nameEditText = findViewById(R.id.week_routine_name_edit);
+        enabledCheckBox = findViewById(R.id.week_routine_enabled_checkbox);
 
         weekExpandableListAdaptor = new WeekExpandableListAdaptor(this, routine.getWeek());
 
@@ -63,11 +72,18 @@ public class WeekRoutineActivity extends AppCompatActivity
         }
 
         nameEditText.setText(routine.getName());
+        enabledCheckBox.setChecked(routine.isEnabled());
     }
 
     public void saveClick(View view)
     {
+        if (enabledCheckBox.isChecked() && !routine.isEnabled())
+        {
+            choreList.resetRoutine(routine);
+        }
+
         routine.setName(nameEditText.getText().toString());
+        routine.setEnabled(enabledCheckBox.isChecked());
 
         Intent intent = new Intent();
 

@@ -23,11 +23,16 @@ public abstract class Routine
     private final int routineType;
 
     protected String name;
+    protected boolean isEnabled;
 
-    public Routine(int routineType, String name)
+    protected DateTime lastCompleted;
+
+    public Routine(int routineType, String name, DateTime now)
     {
         this.routineType = routineType;
         this.name = name;
+
+        this.lastCompleted = now;
     }
 
     public int getRoutineType()
@@ -43,6 +48,16 @@ public abstract class Routine
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    public boolean isEnabled()
+    {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean isEnabled)
+    {
+        this.isEnabled = isEnabled;
     }
 
     public abstract List<Procedure> getAllProcedures();

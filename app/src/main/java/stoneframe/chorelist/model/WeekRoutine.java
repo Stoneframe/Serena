@@ -11,13 +11,9 @@ public class WeekRoutine extends Routine
 {
     private final Week week;
 
-    private DateTime lastCompleted;
-
     public WeekRoutine(String name, DateTime now)
     {
-        super(WEEK_ROUTINE, name);
-
-        lastCompleted = now;
+        super(WEEK_ROUTINE, name, now);
 
         week = new Week(0, new LocalDate(2024, 1, 1));
     }

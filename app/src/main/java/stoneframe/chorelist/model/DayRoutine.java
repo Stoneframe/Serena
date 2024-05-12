@@ -13,13 +13,9 @@ public class DayRoutine extends Routine
 {
     private final List<Procedure> procedures = new LinkedList<>();
 
-    private DateTime lastCompleted;
-
     public DayRoutine(String name, DateTime now)
     {
-        super(DAY_ROUTINE, name);
-
-        this.lastCompleted = now;
+        super(DAY_ROUTINE, name, now);
     }
 
     @Override

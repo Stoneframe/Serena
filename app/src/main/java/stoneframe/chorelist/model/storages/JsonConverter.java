@@ -11,8 +11,7 @@ import stoneframe.chorelist.json.ChoreSelectorConverter;
 import stoneframe.chorelist.json.ContainerJsonConverter;
 import stoneframe.chorelist.json.EffortTrackerConverter;
 import stoneframe.chorelist.model.Container;
-import stoneframe.chorelist.model.storages.versions.UpgradeScriptVersion1;
-import stoneframe.chorelist.model.storages.versions.UpgradeScriptVersion2;
+import stoneframe.chorelist.model.storages.versions.*;
 
 public class JsonConverter
 {
@@ -20,7 +19,8 @@ public class JsonConverter
 
     private final Map<Integer, UpgradeScript> upgradeScripts = Stream.of(
             new UpgradeScriptVersion1(),
-            new UpgradeScriptVersion2())
+            new UpgradeScriptVersion2(),
+            new UpgradeScriptVersion3())
         .collect(Collectors.toMap(UpgradeScript::getVersion, s -> s));
 
     private final ChoreSelectorConverter choreSelectorConverter;

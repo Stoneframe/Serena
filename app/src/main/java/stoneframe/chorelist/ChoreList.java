@@ -174,6 +174,11 @@ public class ChoreList
         container.RoutineManager.procedureDone(procedure);
     }
 
+    public void resetRoutine(Routine routine)
+    {
+        container.RoutineManager.resetRoutine(routine, timeService.getNow());
+    }
+
     public List<Checklist> getChecklists()
     {
         return container.ChecklistManager.getChecklists();

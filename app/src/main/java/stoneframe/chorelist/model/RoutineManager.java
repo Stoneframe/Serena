@@ -33,6 +33,7 @@ public class RoutineManager
     public DateTime getNextProcedureTime(DateTime now)
     {
         return routines.stream()
+            .filter(Routine::isEnabled)
             .flatMap(r -> Stream.of(r.getNextProcedureTime(now)))
             .filter(Objects::nonNull)
             .sorted()
@@ -43,6 +44,7 @@ public class RoutineManager
     public List<PendingProcedure> getPendingProcedures(DateTime now)
     {
         return routines.stream()
+            .filter(Routine::isEnabled)
             .flatMap(r -> r.getPendingProcedures(now).stream())
             .sorted()
             .collect(Collectors.toList());
@@ -51,6 +53,7 @@ public class RoutineManager
     public List<PendingProcedure> getFirstPendingProcedures(DateTime now)
     {
         return routines.stream()
+            .filter(Routine::isEnabled)
             .map(r -> r.getPendingProcedure(now))
             .filter(Objects::nonNull)
             .sorted()
@@ -67,5 +70,10 @@ public class RoutineManager
         assert routine != null;
 
         routine.procedureDone(procedure);
+    }
+
+    public void resetRoutine(Routine routine, DateTime now)
+    {
+        routine.lastCompleted = now;
     }
 }

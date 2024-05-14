@@ -1,0 +1,120 @@
+package stoneframe.chorelist.gui;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+
+import stoneframe.chorelist.R;
+import stoneframe.chorelist.model.Checklist;
+import stoneframe.chorelist.model.ChecklistItem;
+
+public class EditChecklistActivity extends Activity
+{
+    private SimpleListAdapter<ChecklistItem> checklistItemsAdapter;
+
+    private EditText checklistNameEditText;
+    private ListView checklistItemsListView;
+
+    private Button buttonAddItem;
+    private Button buttonDone;
+
+    private Checklist checklist;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_edit_checklist);
+
+        GlobalState globalState = GlobalState.getInstance(this);
+
+        checklist = globalState.ActiveChecklist;
+
+        checklistNameEditText = findViewById(R.id.editText);
+        checklistItemsListView = findViewById(R.id.listView);
+
+        buttonAddItem = findViewById(R.id.buttonAddItem);
+        buttonDone = findViewById(R.id.buttonDone);
+
+        checklistNameEditText.setText(checklist.getName());
+        checklistNameEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+                checklist.setName(checklistNameEditText.getText().toString());
+            }
+        });
+
+        checklistItemsAdapter = new SimpleListAdapter<>(
+            this,
+            checklist::getItems,
+            ChecklistItem::getDescription);
+        checklistItemsListView.setAdapter(checklistItemsAdapter);
+        checklistItemsListView.setOnItemClickListener((parent, view, position, id) ->
+        {
+            ChecklistItem item = (ChecklistItem)checklistItemsAdapter.getItem(position);
+
+            showChecklistItemDialog(item, () -> {});
+        });
+        checklistItemsListView.setOnItemLongClickListener((parent, view, position, id) ->
+        {
+            ChecklistItem item = (ChecklistItem)checklistItemsAdapter.getItem(position);
+
+            checklist.removeItem(item);
+
+            checklistItemsAdapter.notifyDataSetChanged();
+
+            return true;
+        });
+
+        buttonDone.setOnClickListener(v -> finish());
+
+        buttonAddItem.setOnClickListener(v ->
+        {
+            ChecklistItem item = new ChecklistItem("");
+
+            showChecklistItemDialog(item, () -> checklist.addItem(item));
+        });
+    }
+
+    private void showChecklistItemDialog(ChecklistItem checklistItem, Runnable onOk)
+    {
+        final EditText checklistItemDescriptionText = new EditText(this);
+
+        checklistItemDescriptionText.setText(checklistItem.getDescription());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Checklist item");
+        builder.setView(checklistItemDescriptionText);
+
+        builder.setPositiveButton("OK", (dialog, which) ->
+        {
+            String checklistItemDescription = checklistItemDescriptionText.getText().toString();
+
+            checklistItem.setDescription(checklistItemDescription);
+
+            onOk.run();
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+}

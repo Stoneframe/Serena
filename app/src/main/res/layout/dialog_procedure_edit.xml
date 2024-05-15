@@ -11,7 +11,7 @@
         android:layout_height="60dp"
         android:background="@drawable/border_black"
         android:hint="Description"
-        android:inputType="text"
+        android:inputType="textCapSentences"
         android:padding="8dp" />
 
     <View

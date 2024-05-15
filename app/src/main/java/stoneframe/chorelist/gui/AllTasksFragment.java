@@ -134,7 +134,7 @@ public class AllTasksFragment extends Fragment
 
                     boolean isDone = intent.getBooleanExtra("IsDone", false);
 
-                    if (isDone == task.isDone()) return;
+                    if (isDone == task.isDone()) break;
 
                     if (isDone)
                     {

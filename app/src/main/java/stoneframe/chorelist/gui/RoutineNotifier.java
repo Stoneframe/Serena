@@ -35,7 +35,7 @@ public class RoutineNotifier
             context,
             0,
             new Intent(context, RoutineNotifierReceiver.class),
-            PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
@@ -67,7 +67,7 @@ public class RoutineNotifier
 
         NotificationChannel channel = new NotificationChannel(
             CHANNEL_ID,
-            "Test",
+            "Routines",
             NotificationManager.IMPORTANCE_HIGH);
 
         notificationManager.createNotificationChannel(channel);

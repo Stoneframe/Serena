@@ -61,6 +61,7 @@ public class TodayFragment extends Fragment
                     choreList.procedureDone(procedure);
                     procedureAdapter.notifyDataSetChanged();
                     RoutineNotifier.updateNotification(getContext(), choreList);
+                    choreList.save();
                 });
             }).start();
         });
@@ -85,6 +86,7 @@ public class TodayFragment extends Fragment
                 {
                     choreList.choreDone(chore);
                     choreAdapter.notifyDataSetChanged();
+                    choreList.save();
                 });
             }).start();
         });
@@ -93,6 +95,7 @@ public class TodayFragment extends Fragment
             Chore chore = choreList.getTodaysChores().get(position);
             choreList.choreSkip(chore);
             choreAdapter.notifyDataSetChanged();
+            choreList.save();
             return true;
         });
 
@@ -116,6 +119,7 @@ public class TodayFragment extends Fragment
                 {
                     choreList.taskDone(task);
                     taskAdapter.notifyDataSetChanged();
+                    choreList.save();
                 });
             }).start();
         });

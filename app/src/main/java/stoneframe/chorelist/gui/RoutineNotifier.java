@@ -51,7 +51,7 @@ public class RoutineNotifier
             context,
             0,
             new Intent(context, RoutineNotifierReceiver.class),
-            PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
 
         alarmManager.cancel(pendingIntent);
     }
@@ -134,7 +134,7 @@ public class RoutineNotifier
             context,
             0,
             openMainActivityIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_launcher)

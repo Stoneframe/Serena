@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -121,6 +122,7 @@ public class EditChecklistActivity extends Activity
         final EditText checklistItemDescriptionText = new EditText(this);
 
         checklistItemDescriptionText.setText(checklistItem.getDescription());
+        checklistItemDescriptionText.setInputType(EditorInfo.TYPE_TEXT_FLAG_CAP_SENTENCES);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Checklist item");

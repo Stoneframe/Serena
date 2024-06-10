@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -59,6 +60,8 @@ public class AllChecklistsFragment extends Fragment
     private void onAddButtonClicked()
     {
         final EditText checklistNameText = new EditText(getContext());
+
+        checklistNameText.setInputType(EditorInfo.TYPE_TEXT_FLAG_CAP_SENTENCES);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Create checklist");

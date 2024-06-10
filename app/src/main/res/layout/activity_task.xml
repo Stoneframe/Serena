@@ -112,21 +112,21 @@
         android:text="Remove" />
 
     <Button
-        android:id="@+id/saveButton"
+        android:id="@+id/cancelButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@id/cancelButton"
-        android:onClick="saveClick"
-        android:text="Save" />
+        android:layout_toLeftOf="@id/saveButton"
+        android:onClick="cancelClick"
+        android:text="Cancel" />
 
     <Button
-        android:id="@+id/cancelButton"
+        android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:onClick="cancelClick"
-        android:text="Cancel" />
+        android:onClick="saveClick"
+        android:text="Save" />
 
 </RelativeLayout>

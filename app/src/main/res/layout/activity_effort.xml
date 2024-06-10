@@ -16,72 +16,100 @@
 
         <TableRow>
 
-            <TextView android:text="Monday" />
+            <TextView
+                android:labelFor="@+id/mondayEditText"
+                android:text="Monday" />
 
             <EditText
                 android:id="@+id/mondayEditText"
                 android:layout_width="50dp"
-                android:inputType="number" />
+                android:layout_height="48dp"
+                android:inputType="number"
+                android:autofillHints="" />
         </TableRow>
 
         <TableRow>
 
-            <TextView android:text="Tuesday" />
+            <TextView
+                android:labelFor="@+id/tuesdayEditText"
+                android:text="Tuesday" />
 
             <EditText
                 android:id="@+id/tuesdayEditText"
                 android:layout_width="50dp"
-                android:inputType="number" />
+                android:layout_height="48dp"
+                android:inputType="number"
+                android:autofillHints="" />
         </TableRow>
 
         <TableRow>
 
-            <TextView android:text="Wednesday" />
+            <TextView
+                android:labelFor="@+id/wednesdayEditText"
+                android:text="Wednesday" />
 
             <EditText
                 android:id="@+id/wednesdayEditText"
                 android:layout_width="50dp"
-                android:inputType="number" />
+                android:layout_height="48dp"
+                android:inputType="number"
+                android:autofillHints="" />
         </TableRow>
 
         <TableRow>
 
-            <TextView android:text="Thursday" />
+            <TextView
+                android:labelFor="@+id/thursdayEditText"
+                android:text="Thursday" />
 
             <EditText
                 android:id="@+id/thursdayEditText"
                 android:layout_width="50dp"
-                android:inputType="number" />
+                android:layout_height="48dp"
+                android:inputType="number"
+                android:autofillHints="" />
         </TableRow>
 
         <TableRow>
 
-            <TextView android:text="Friday" />
+            <TextView
+                android:labelFor="@+id/fridayEditText"
+                android:text="Friday" />
 
             <EditText
                 android:id="@+id/fridayEditText"
                 android:layout_width="50dp"
-                android:inputType="number" />
+                android:layout_height="48dp"
+                android:inputType="number"
+                android:autofillHints="" />
         </TableRow>
 
         <TableRow>
 
-            <TextView android:text="Saturday" />
+            <TextView
+                android:labelFor="@+id/saturdayEditText"
+                android:text="Saturday" />
 
             <EditText
                 android:id="@+id/saturdayEditText"
                 android:layout_width="50dp"
-                android:inputType="number" />
+                android:layout_height="48dp"
+                android:inputType="number"
+                android:autofillHints="" />
         </TableRow>
 
         <TableRow>
 
-            <TextView android:text="Sunday" />
+            <TextView
+                android:labelFor="@+id/sundayEditText"
+                android:text="Sunday" />
 
             <EditText
                 android:id="@+id/sundayEditText"
                 android:layout_width="50dp"
-                android:inputType="number" />
+                android:layout_height="48dp"
+                android:inputType="number"
+                android:autofillHints="" />
         </TableRow>
     </TableLayout>
 
@@ -90,14 +118,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/cancelButton"/>
 
     <Button
         android:id="@+id/cancelButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@id/saveButton"
+        android:layout_toStartOf="@id/saveButton"
         android:onClick="onCancelClick"
         android:text="Cancel" />
 
@@ -105,7 +134,7 @@
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:onClick="onOkClick"
         android:text="OK" />

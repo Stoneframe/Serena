@@ -25,27 +25,29 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Name:"
                 android:layout_gravity="center_vertical"
-                android:layout_marginRight="8dp"/>
+                android:layout_marginEnd="8dp"
+                android:text="Name:" />
 
             <EditText
                 android:id="@+id/fortnight_routine_name_edit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="9dp"
                 android:layout_weight="1"
                 android:hint="Enter routine name"
+                android:importantForAutofill="no"
                 android:inputType="textCapSentences"
                 android:maxLines="1"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="9dp"/>
+                android:minHeight="48dp" />
 
             <CheckBox
                 android:id="@+id/fortnight_routine_enabled_checkbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Enable"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"
+                android:text="Enable" />
 
         </LinearLayout>
 
@@ -63,9 +65,11 @@
                 android:id="@+id/fortnight_routine_start_date_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:focusable="false"
-                android:maxLines="1" />
+                android:inputType="date"
+                android:maxLines="1"
+                android:importantForAutofill="no" />
 
         </LinearLayout>
 
@@ -77,7 +81,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -86,10 +90,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:background="#000000"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:text="Week 1"
                     android:textColor="#FFFFFF"
-                    android:textSize="20dp" />
+                    android:textSize="20sp" />
 
                 <ExpandableListView
                     android:id="@+id/week1_procedure_list"
@@ -105,10 +109,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:background="#000000"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:text="Week 2"
                     android:textColor="#FFFFFF"
-                    android:textSize="20dp" />
+                    android:textSize="20sp" />
 
                 <ExpandableListView
                     android:id="@+id/week2_procedure_list"
@@ -118,26 +122,6 @@
                     android:divider="@android:color/darker_gray"
                     android:dividerHeight="0.5dp"
                     android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft" />
-
-            </LinearLayout>
-
-            <!--Add procedure-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_weight="0"
-                android:background="#FFFF66"
-                android:layoutDirection="ltr"
-                android:orientation="vertical"
-                android:paddingLeft="5dp">
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_gravity="end"
-                        android:onClick="addProcedureClick"
-                        android:text="ADD" />
 
             </LinearLayout>
 
@@ -155,10 +139,19 @@
         android:text="REMOVE" />
 
     <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="end"
+        android:layout_toStartOf="@id/saveButton"
+        android:onClick="addProcedureClick"
+        android:text="ADD..." />
+
+    <Button
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:onClick="saveClick"
         android:text="DONE" />

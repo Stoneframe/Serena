@@ -10,123 +10,148 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="stoneframe.chorelist.gui.TaskActivity">
 
-    <TableLayout
-        android:id="@+id/topTable"
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:stretchColumns="*">
+        android:layout_above="@+id/buttonLayout"
+        android:layout_alignParentTop="true"
+        android:fillViewport="true">
 
-        <TableRow android:paddingBottom="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
 
+            <!-- Description Section -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="10dp">
 
                 <TextView
                     android:id="@+id/taskDescriptionTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:labelFor="@+id/taskDescriptionEditText"
                     android:text="Description" />
 
                 <EditText
                     android:id="@+id/taskDescriptionEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:importantForAutofill="no"
                     android:inputType="textCapSentences"
                     android:maxLines="1"
+                    android:minHeight="48dp"
                     android:nextFocusDown="@+id/priorityEditText" />
-
             </LinearLayout>
-        </TableRow>
 
-        <TableRow android:paddingBottom="10dp">
-
+            <!-- Deadline Section -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="10dp">
 
                 <TextView
                     android:id="@+id/deadlineTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:labelFor="@+id/deadlineEditText"
                     android:text="Deadline" />
 
                 <EditText
                     android:id="@+id/deadlineEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:focusable="false" />
-
+                    android:focusable="false"
+                    android:importantForAutofill="no"
+                    android:inputType="date"
+                    android:minHeight="48dp" />
             </LinearLayout>
 
-        </TableRow>
-
-        <TableRow android:paddingBottom="10dp">
-
+            <!-- Ignore Before Section -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="10dp">
 
                 <TextView
                     android:id="@+id/ignoreBeforeTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:labelFor="@+id/ignoreBeforeEditText"
                     android:text="Ignore Before" />
 
                 <EditText
                     android:id="@+id/ignoreBeforeEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:focusable="false" />
-
+                    android:focusable="false"
+                    android:importantForAutofill="no"
+                    android:inputType="date"
+                    android:minHeight="48dp" />
             </LinearLayout>
 
-        </TableRow>
-
-        <TableRow android:paddingBottom="10dp">
-
+            <!-- Is Done Section -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="10dp">
 
                 <CheckBox
                     android:id="@+id/isDoneCheckBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Is Done" />
-
+                    android:text="Is Done"
+                    android:minHeight="48dp"/>
             </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
-        </TableRow>
-
-    </TableLayout>
-
-    <Button
-        android:id="@+id/removeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:onClick="removeClick"
-        android:text="Remove" />
-
-    <Button
-        android:id="@+id/cancelButton"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@id/saveButton"
-        android:onClick="cancelClick"
-        android:text="Cancel" />
+        android:orientation="horizontal"
+        android:padding="10dp">
 
-    <Button
-        android:id="@+id/saveButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:onClick="saveClick"
-        android:text="Save" />
+        <Button
+            android:id="@+id/removeButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="removeClick"
+            android:text="Remove" />
+
+        <!-- Spacer View -->
+        <View
+            android:layout_width="100dp"
+            android:layout_height="0dp"
+            android:layout_weight="0" />
+
+        <Button
+            android:id="@+id/cancelButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="cancelClick"
+            android:text="Cancel"
+            tools:ignore="ButtonOrder" />
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="saveClick"
+            android:text="Save" />
+    </LinearLayout>
 
 </RelativeLayout>

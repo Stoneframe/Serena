@@ -81,7 +81,7 @@ public class ChoreActivity extends AppCompatActivity
         intervalUnitSpinner.setAdapter(new ArrayAdapter<>(
             this,
             android.R.layout.simple_list_item_1,
-            new String[]{"Daily", "Weekly", "Monthly", "Yearly"}));
+            new String[]{"Days", "Weeks", "Months", "Years"}));
 
         nextEditText.setText(next.toString("yyyy-MM-dd"));
         descriptionEditText.setText(description);

@@ -9,20 +9,26 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.Checklist;
 import stoneframe.chorelist.model.ChecklistItem;
 
 public class EditChecklistActivity extends Activity
 {
+    public static final int DONE = 0;
+    public static final int REMOVE = 1;
+
     private SimpleListAdapter<ChecklistItem> checklistItemsAdapter;
 
     private EditText checklistNameEditText;
     private ListView checklistItemsListView;
 
+    private Button removeButton;
     private Button buttonAddItem;
     private Button buttonDone;
 
+    private ChoreList choreList;
     private Checklist checklist;
 
     @Override
@@ -31,13 +37,15 @@ public class EditChecklistActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_checklist);
 
-        GlobalState globalState = GlobalState.getInstance(this);
+        GlobalState globalState = GlobalState.getInstance();
 
-        checklist = globalState.ActiveChecklist;
+        choreList = globalState.getChoreList();
+        checklist = globalState.getActiveChecklist();
 
         checklistNameEditText = findViewById(R.id.editText);
         checklistItemsListView = findViewById(R.id.listView);
 
+        removeButton = findViewById(R.id.buttonRemove);
         buttonAddItem = findViewById(R.id.buttonAddItem);
         buttonDone = findViewById(R.id.buttonDone);
 
@@ -70,26 +78,41 @@ public class EditChecklistActivity extends Activity
         {
             ChecklistItem item = (ChecklistItem)checklistItemsAdapter.getItem(position);
 
-            showChecklistItemDialog(item, () -> {});
+            showChecklistItemDialog(item, () ->
+            {});
         });
         checklistItemsListView.setOnItemLongClickListener((parent, view, position, id) ->
         {
             ChecklistItem item = (ChecklistItem)checklistItemsAdapter.getItem(position);
 
             checklist.removeItem(item);
-
             checklistItemsAdapter.notifyDataSetChanged();
 
             return true;
         });
 
-        buttonDone.setOnClickListener(v -> finish());
+        removeButton.setOnClickListener(v ->
+        {
+            choreList.removeChecklist(checklist);
+            setResult(REMOVE);
+            finish();
+        });
 
         buttonAddItem.setOnClickListener(v ->
         {
             ChecklistItem item = new ChecklistItem("");
 
-            showChecklistItemDialog(item, () -> checklist.addItem(item));
+            showChecklistItemDialog(item, () ->
+            {
+                checklist.addItem(item);
+                checklistItemsAdapter.notifyDataSetChanged();
+            });
+        });
+
+        buttonDone.setOnClickListener(v ->
+        {
+            setResult(DONE);
+            finish();
         });
     }
 

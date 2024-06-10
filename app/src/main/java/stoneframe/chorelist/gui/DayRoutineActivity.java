@@ -42,7 +42,7 @@ public class DayRoutineActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_routine_day);
 
-        GlobalState globalState = GlobalState.getInstance(this);
+        GlobalState globalState = GlobalState.getInstance();
 
         choreList = globalState.getChoreList();
         routine = (DayRoutine)globalState.ActiveRoutine;

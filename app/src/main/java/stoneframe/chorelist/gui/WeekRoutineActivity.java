@@ -42,7 +42,7 @@ public class WeekRoutineActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_routine_week);
 
-        GlobalState globalState = GlobalState.getInstance(this);
+        GlobalState globalState = GlobalState.getInstance();
 
         choreList = globalState.getChoreList();
         routine = (WeekRoutine)globalState.ActiveRoutine;

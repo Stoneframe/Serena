@@ -6,24 +6,26 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.Checklist;
 import stoneframe.chorelist.model.ChecklistItem;
 
 public class ChecklistActivity extends AppCompatActivity
 {
+    private ActivityResultLauncher<Intent> editChecklistLauncher;
+
     private SimpleCheckboxListAdapter<ChecklistItem> checklistItemAdapter;
 
     private TextView checklistNameTextView;
-    
-    private Button removeButton;
+
     private Button editButton;
     private Button doneButton;
 
-    private ChoreList choreList;
     private Checklist checklist;
 
     @Override
@@ -32,10 +34,13 @@ public class ChecklistActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checklist);
 
-        GlobalState globalState = GlobalState.getInstance(this);
+        GlobalState globalState = GlobalState.getInstance();
 
-        choreList = globalState.getChoreList();
-        checklist = globalState.ActiveChecklist;
+        checklist = globalState.getActiveChecklist();
+
+        editChecklistLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            this::editChecklistCallback);
 
         checklistNameTextView = findViewById(R.id.checklistNameTextView);
         checklistNameTextView.setText(checklist.getName());
@@ -60,31 +65,28 @@ public class ChecklistActivity extends AppCompatActivity
             }
         });
 
-        removeButton = findViewById(R.id.buttonRemove);
         editButton = findViewById(R.id.buttonEditChecklist);
         doneButton = findViewById(R.id.buttonDone);
-
-        removeButton.setOnClickListener(v ->
-        {
-            choreList.removeChecklist(checklist);
-            finish();
-        });
 
         editButton.setOnClickListener(v ->
         {
             Intent intent = new Intent(this, EditChecklistActivity.class);
-            startActivity(intent);
+            editChecklistLauncher.launch(intent);
         });
 
         doneButton.setOnClickListener(v -> finish());
     }
 
-    @Override
-    protected void onResume()
+    private void editChecklistCallback(ActivityResult result)
     {
-        super.onResume();
-
-        checklistNameTextView.setText(checklist.getName());
-        checklistItemAdapter.notifyDataSetChanged();
+        if (result.getResultCode() == EditChecklistActivity.REMOVE)
+        {
+            finish();
+        }
+        else
+        {
+            checklistNameTextView.setText(checklist.getName());
+            checklistItemAdapter.notifyDataSetChanged();
+        }
     }
 }

@@ -43,7 +43,7 @@ public class AllRoutinesFragment extends Fragment
         ViewGroup container,
         Bundle savedInstanceState)
     {
-        globalState = GlobalState.getInstance(getActivity());
+        globalState = GlobalState.getInstance();
 
         choreList = globalState.getChoreList();
 

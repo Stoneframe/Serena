@@ -39,7 +39,7 @@ public class AllTasksFragment extends Fragment
         ViewGroup container,
         Bundle savedInstanceState)
     {
-        GlobalState globalState = GlobalState.getInstance(this);
+        GlobalState globalState = GlobalState.getInstance();
 
         choreList = globalState.getChoreList();
 

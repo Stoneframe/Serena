@@ -1,11 +1,6 @@
 package stoneframe.chorelist.gui;
 
-import android.app.Activity;
 import android.app.Application;
-
-import androidx.fragment.app.Fragment;
-
-import java.util.Objects;
 
 import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.model.Checklist;
@@ -13,19 +8,28 @@ import stoneframe.chorelist.model.Routine;
 
 public class GlobalState extends Application
 {
+    private static GlobalState instance;
+
     public Routine ActiveRoutine;
-    public Checklist ActiveChecklist;
+
+    private Checklist activeChecklist;
 
     private ChoreList choreList;
 
-    public static GlobalState getInstance(Activity activity)
+    @Override
+    public synchronized void onCreate()
     {
-        return (GlobalState)Objects.requireNonNull(activity).getApplication();
+        super.onCreate();
+
+        if (instance == null)
+        {
+            instance = this;
+        }
     }
 
-    public static GlobalState getInstance(Fragment fragment)
+    public static GlobalState getInstance()
     {
-        return (GlobalState)fragment.requireActivity().getApplication();
+        return instance;
     }
 
     public ChoreList getChoreList()
@@ -36,5 +40,15 @@ public class GlobalState extends Application
     public void setChoreList(ChoreList choreList)
     {
         this.choreList = choreList;
+    }
+
+    public Checklist getActiveChecklist()
+    {
+        return activeChecklist;
+    }
+
+    public void setActiveChecklist(Checklist activeChecklist)
+    {
+        this.activeChecklist = activeChecklist;
     }
 }

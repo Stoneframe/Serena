@@ -32,7 +32,7 @@ public class AllChecklistsFragment extends Fragment
         @Nullable ViewGroup container,
         @Nullable Bundle savedInstanceState)
     {
-        globalState = GlobalState.getInstance(getActivity());
+        globalState = GlobalState.getInstance();
 
         choreList = globalState.getChoreList();
 
@@ -46,7 +46,7 @@ public class AllChecklistsFragment extends Fragment
         checklistListView.setAdapter(checklistAdapter);
         checklistListView.setOnItemClickListener((parent, view, position, id) ->
         {
-            globalState.ActiveChecklist = (Checklist)checklistAdapter.getItem(position);
+            globalState.setActiveChecklist((Checklist)checklistAdapter.getItem(position));
             openChecklistActivity();
         });
 

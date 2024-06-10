@@ -23,21 +23,14 @@
         android:padding="8dp"/>
 
     <Button
-        android:id="@+id/buttonRemove"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="REMOVE"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_margin="16dp"/>
-
-    <Button
         android:id="@+id/buttonEditChecklist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_toStartOf="@id/buttonDone"
         android:layout_alignParentBottom="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_toStartOf="@+id/buttonDone"
         android:text="Edit..." />
 
     <Button

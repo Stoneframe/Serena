@@ -52,7 +52,7 @@ public class FortnightRoutineActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_routine_fortnight);
 
-        GlobalState globalState = GlobalState.getInstance(this);
+        GlobalState globalState = GlobalState.getInstance();
 
         choreList = globalState.getChoreList();
         routine = (FortnightRoutine)globalState.ActiveRoutine;

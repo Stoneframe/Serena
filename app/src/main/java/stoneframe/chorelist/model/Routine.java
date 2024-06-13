@@ -33,6 +33,8 @@ public abstract class Routine
         this.name = name;
 
         this.lastCompleted = now;
+
+        this.isEnabled = true;
     }
 
     public int getRoutineType()

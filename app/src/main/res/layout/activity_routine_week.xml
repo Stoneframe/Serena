@@ -56,41 +56,14 @@
             android:layout_marginTop="20dp"
             android:text="Procedures" />
 
-        <LinearLayout
+        <ExpandableListView
+            android:id="@+id/week_procedure_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <ExpandableListView
-                android:id="@+id/week_procedure_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:divider="@android:color/darker_gray"
-                android:dividerHeight="0.5dp"
-                android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginTop="20dp"
-                android:layout_weight="0"
-                android:background="#FFFF66"
-                android:layoutDirection="ltr"
-                android:orientation="vertical"
-                android:padding="5dp">
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_gravity="end"
-                    android:onClick="addProcedureClick"
-                    android:text="ADD" />
-
-            </LinearLayout>
-
-        </LinearLayout>
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="0.5dp"
+            android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft" />
 
     </LinearLayout>
 
@@ -102,6 +75,15 @@
         android:layout_alignParentBottom="true"
         android:onClick="removeClick"
         android:text="REMOVE" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="end"
+        android:layout_toStartOf="@id/saveButton"
+        android:onClick="addProcedureClick"
+        android:text="ADD..." />
 
     <Button
         android:id="@+id/saveButton"

@@ -119,6 +119,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_all_checklists:
                 fragmentClass = AllChecklistsFragment.class;
                 break;
+            case R.id.nav_calories:
+                fragmentClass = CaloriesFragment.class;
+                break;
             case R.id.nav_todays:
             default:
                 fragmentClass = TodayFragment.class;

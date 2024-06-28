@@ -23,6 +23,7 @@ public class UpgradeScriptVersion4 implements UpgradeScript
         caloriesManager.put("consumptionTypes", new JSONArray());
         caloriesManager.put("consumptions", new JSONArray());
         caloriesManager.put("incrementPerDay", 250);
+        caloriesManager.put("previousConsumption", 0);
         caloriesManager.put("startDate", LocalDate.now().toString("yyyy-MM-dd"));
 
         jsonObject.put("CaloriesManager", caloriesManager);

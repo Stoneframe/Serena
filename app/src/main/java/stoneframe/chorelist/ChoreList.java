@@ -56,7 +56,9 @@ public class ChoreList
             container.ChoreManager = new ChoreManager(effortTracker, choreSelector);
             container.TaskManager = new TaskManager();
             container.ChecklistManager = new ChecklistManager();
-            container.CaloriesManager = new CaloriesManager(timeService.getNow().toLocalDate(), 250);
+            container.CaloriesManager = new CaloriesManager(
+                timeService.getNow().toLocalDate(),
+                250);
         }
 
         container.TaskManager.clean(timeService.getNow());
@@ -214,8 +216,13 @@ public class ChoreList
         return container.CaloriesManager.getAvailable(timeService.getNow().toLocalDateTime());
     }
 
-    public void addCalorieConsumption(int calories)
+    public void addCalorieConsumption(String description, int calories)
     {
-        container.CaloriesManager.addConsumption(new CalorieConsumption("Quick", calories));
+        CalorieConsumption consumption = new CalorieConsumption(
+            description,
+            calories,
+            timeService.getNow().toLocalDateTime());
+
+        container.CaloriesManager.addConsumption(consumption);
     }
 }

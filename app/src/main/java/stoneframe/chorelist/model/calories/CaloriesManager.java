@@ -7,6 +7,7 @@ import org.joda.time.Minutes;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CaloriesManager
 {
@@ -14,6 +15,8 @@ public class CaloriesManager
 
     private final List<CalorieConsumptionType> consumptionTypes = new LinkedList<>();
     private final List<CalorieConsumption> consumptions = new LinkedList<>();
+
+    private int previousConsumption;
 
     private LocalDate startDate;
     private int incrementPerDay;
@@ -42,17 +45,31 @@ public class CaloriesManager
 
     public int getAvailable(LocalDateTime now)
     {
-        Minutes minutes = Minutes.minutesBetween(startDate.toLocalDateTime(LocalTime.MIDNIGHT), now);
+        Minutes minutes = Minutes.minutesBetween(
+            startDate.toLocalDateTime(LocalTime.MIDNIGHT),
+            now);
 
-        int totalAdjustments = consumptions.stream()
+        int recentConsumption = consumptions.stream()
             .mapToInt(CalorieConsumption::getCalories)
             .sum();
 
-        return (int)(incrementPerDay * minutes.getMinutes() / MINUTES_PER_DAY) - totalAdjustments;
+        return (int)(incrementPerDay * minutes.getMinutes() / MINUTES_PER_DAY)
+            - previousConsumption
+            - recentConsumption;
     }
 
     public void addConsumption(CalorieConsumption consumption)
     {
+        List<CalorieConsumption> oldConsumptions = consumptions.stream()
+            .filter(c -> c.getTime().isBefore(consumption.getTime().minusDays(1)))
+            .collect(Collectors.toList());
+
+        previousConsumption += oldConsumptions.stream()
+            .mapToInt(CalorieConsumption::getCalories)
+            .sum();
+
+        consumptions.removeAll(oldConsumptions);
+
         consumptions.add(consumption);
     }
 }

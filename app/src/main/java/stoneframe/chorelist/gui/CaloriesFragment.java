@@ -47,7 +47,7 @@ public class CaloriesFragment extends Fragment
         {
             int enteredCalories = Integer.parseInt(editTextCalories.getText().toString());
 
-            choreList.addCalorieConsumption(enteredCalories);
+            choreList.addCalorieConsumption("Quick", enteredCalories);
             choreList.save();
 
             editTextCalories.setText("");

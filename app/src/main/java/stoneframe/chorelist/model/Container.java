@@ -1,5 +1,7 @@
 package stoneframe.chorelist.model;
 
+import stoneframe.chorelist.model.calories.CaloriesManager;
+
 public class Container
 {
     public int Version = 0;
@@ -11,4 +13,6 @@ public class Container
     public RoutineManager RoutineManager;
 
     public ChecklistManager ChecklistManager;
+
+    public CaloriesManager CaloriesManager;
 }

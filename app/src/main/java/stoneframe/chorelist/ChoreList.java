@@ -18,6 +18,8 @@ import stoneframe.chorelist.model.Storage;
 import stoneframe.chorelist.model.Task;
 import stoneframe.chorelist.model.TaskManager;
 import stoneframe.chorelist.model.TimeService;
+import stoneframe.chorelist.model.calories.CalorieConsumption;
+import stoneframe.chorelist.model.calories.CaloriesManager;
 
 public class ChoreList
 {
@@ -54,6 +56,9 @@ public class ChoreList
             container.ChoreManager = new ChoreManager(effortTracker, choreSelector);
             container.TaskManager = new TaskManager();
             container.ChecklistManager = new ChecklistManager();
+            container.CaloriesManager = new CaloriesManager(
+                timeService.getNow().toLocalDate(),
+                250);
         }
 
         container.TaskManager.clean(timeService.getNow());
@@ -192,5 +197,32 @@ public class ChoreList
     public void removeChecklist(Checklist checklist)
     {
         container.ChecklistManager.removeChecklist(checklist);
+    }
+
+    public int getCalorieIncrementPerDay()
+    {
+        return container.CaloriesManager.getIncrementPerDay();
+    }
+
+    public void setCalorieIncrementPerDay(int incrementPerDay)
+    {
+        container.CaloriesManager.setIncrementPerDay(
+            timeService.getNow().toLocalDate(),
+            incrementPerDay);
+    }
+
+    public int getAvailableCalories()
+    {
+        return container.CaloriesManager.getAvailable(timeService.getNow().toLocalDateTime());
+    }
+
+    public void addCalorieConsumption(String description, int calories)
+    {
+        CalorieConsumption consumption = new CalorieConsumption(
+            description,
+            calories,
+            timeService.getNow().toLocalDateTime());
+
+        container.CaloriesManager.addConsumption(consumption);
     }
 }

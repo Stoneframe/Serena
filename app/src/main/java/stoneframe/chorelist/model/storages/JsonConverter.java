@@ -20,7 +20,8 @@ public class JsonConverter
     private final Map<Integer, UpgradeScript> upgradeScripts = Stream.of(
             new UpgradeScriptVersion1(),
             new UpgradeScriptVersion2(),
-            new UpgradeScriptVersion3())
+            new UpgradeScriptVersion3(),
+            new UpgradeScriptVersion4())
         .collect(Collectors.toMap(UpgradeScript::getVersion, s -> s));
 
     private final ChoreSelectorConverter choreSelectorConverter;

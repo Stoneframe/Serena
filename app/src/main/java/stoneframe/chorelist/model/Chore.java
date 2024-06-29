@@ -14,6 +14,7 @@ public class Chore
     public static final int YEARS = 3;
 
     private DateTime next;
+    private DateTime postpone;
 
     private String description;
     private int priority;
@@ -27,13 +28,15 @@ public class Chore
         int priority,
         int effort,
         DateTime next,
-        int intervalLength, int intervalUnit)
+        int intervalLength,
+        int intervalUnit)
     {
         this.description = description;
         this.priority = priority;
         this.effort = effort;
 
         this.next = next;
+        this.postpone = null;
         this.intervalUnit = intervalUnit;
         this.intervalLength = intervalLength;
     }
@@ -46,6 +49,7 @@ public class Chore
     public void setNext(DateTime next)
     {
         this.next = next;
+        this.postpone = null;
     }
 
     public String getDescription()
@@ -125,6 +129,13 @@ public class Chore
                     return;
             }
         }
+
+        postpone = null;
+    }
+
+    public void postpone(DateTime now)
+    {
+        postpone = now.plusDays(1);
     }
 
     @Override
@@ -147,6 +158,16 @@ public class Chore
         return description;
     }
 
+    boolean isTimeToDo(DateTime now)
+    {
+        return getNextOrPostpone().isAfter(now);
+    }
+
+    private DateTime getNextOrPostpone()
+    {
+        return postpone == null ? next : postpone;
+    }
+
     public static class ChoreComparator implements Comparator<Chore>
     {
         private final DateTime now;
@@ -161,9 +182,9 @@ public class Chore
         {
             int i;
 
-            if (o1.next.isAfter(now) || o2.next.isAfter(now))
+            if (o1.getNextOrPostpone().isAfter(now) || o2.getNextOrPostpone().isAfter(now))
             {
-                if ((i = o1.next.compareTo(o2.next)) != 0) return i;
+                if ((i = o1.getNextOrPostpone().compareTo(o2.getNextOrPostpone())) != 0) return i;
             }
             else
             {

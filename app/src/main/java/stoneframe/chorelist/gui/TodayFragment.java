@@ -1,5 +1,6 @@
 package stoneframe.chorelist.gui;
 
+import android.app.AlertDialog;
 import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -92,10 +93,28 @@ public class TodayFragment extends Fragment
         });
         choreListView.setOnItemLongClickListener((parent, view, position, id) ->
         {
-            Chore chore = choreList.getTodaysChores().get(position);
-            choreList.choreSkip(chore);
-            choreAdapter.notifyDataSetChanged();
-            choreList.save();
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setMessage("Do you want to skip or postpone this task?")
+                .setCancelable(false)
+                .setPositiveButton("Skip", (dialog, skipButtonId) ->
+                {
+                    Chore chore = choreList.getTodaysChores().get(position);
+                    choreList.choreSkip(chore);
+                    choreAdapter.notifyDataSetChanged();
+                    choreList.save();
+                })
+                .setNegativeButton("Postpone", (dialog, postponeButtonId) ->
+                {
+                    Chore chore = choreList.getTodaysChores().get(position);
+                    choreList.chorePostpone(chore);
+                    choreAdapter.notifyDataSetChanged();
+                    choreList.save();
+                })
+                .setNeutralButton("Cancel", (dialog, cancelButtonId) -> dialog.cancel());
+
+            AlertDialog alert = builder.create();
+            alert.show();
+
             return true;
         });
 

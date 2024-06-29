@@ -51,7 +51,7 @@ public class ChoreManager
 
         for (Chore chore : chores)
         {
-            if (chore.getNext().isAfter(now))
+            if (chore.isTimeToDo(now))
             {
                 break;
             }
@@ -75,6 +75,11 @@ public class ChoreManager
     public void skip(Chore chore, DateTime now)
     {
         chore.reschedule(now);
+    }
+
+    public void postpone(Chore chore, DateTime now)
+    {
+        chore.postpone(now);
     }
 
     @Override

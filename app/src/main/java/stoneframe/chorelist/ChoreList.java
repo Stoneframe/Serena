@@ -99,6 +99,11 @@ public class ChoreList
         container.ChoreManager.skip(chore, timeService.getNow());
     }
 
+    public void chorePostpone(Chore chore)
+    {
+        container.ChoreManager.postpone(chore, timeService.getNow());
+    }
+
     public int getRemainingEffort()
     {
         return container.ChoreManager.getEffortTracker().getTodaysEffort(timeService.getNow());

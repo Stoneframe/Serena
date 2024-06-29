@@ -12,6 +12,8 @@ import android.widget.ListView;
 
 import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
+import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
+import stoneframe.chorelist.gui.util.EditTextCriteria;
 import stoneframe.chorelist.model.Checklist;
 import stoneframe.chorelist.model.ChecklistItem;
 
@@ -80,7 +82,8 @@ public class EditChecklistActivity extends Activity
             ChecklistItem item = (ChecklistItem)checklistItemsAdapter.getItem(position);
 
             showChecklistItemDialog(item, () ->
-            {});
+            {
+            });
         });
         checklistItemsListView.setOnItemLongClickListener((parent, view, position, id) ->
         {
@@ -115,6 +118,10 @@ public class EditChecklistActivity extends Activity
             setResult(DONE);
             finish();
         });
+
+        new EditTextButtonEnabledLink(
+            buttonDone,
+            new EditTextCriteria(checklistNameEditText, EditTextCriteria.IS_NOT_EMPTY));
     }
 
     private void showChecklistItemDialog(ChecklistItem checklistItem, Runnable onOk)
@@ -130,7 +137,9 @@ public class EditChecklistActivity extends Activity
 
         builder.setPositiveButton("OK", (dialog, which) ->
         {
-            String checklistItemDescription = checklistItemDescriptionText.getText().toString();
+            String checklistItemDescription = checklistItemDescriptionText.getText()
+                .toString()
+                .trim();
 
             checklistItem.setDescription(checklistItemDescription);
 
@@ -141,5 +150,11 @@ public class EditChecklistActivity extends Activity
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+
+        Button okButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+
+        new EditTextButtonEnabledLink(
+            okButton,
+            new EditTextCriteria(checklistItemDescriptionText, EditTextCriteria.IS_NOT_EMPTY));
     }
 }

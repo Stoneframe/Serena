@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
+import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
+import stoneframe.chorelist.gui.util.EditTextCriteria;
 import stoneframe.chorelist.model.DayRoutine;
 import stoneframe.chorelist.model.Procedure;
 
@@ -51,8 +53,10 @@ public class DayRoutineActivity extends AppCompatActivity
 
         action = intent.getIntExtra("ACTION", -1);
 
-        Button button = findViewById(R.id.removeButton);
-        button.setVisibility(action == ROUTINE_ACTION_EDIT ? Button.VISIBLE : Button.INVISIBLE);
+        Button removeButton = findViewById(R.id.removeButton);
+        removeButton.setVisibility(action == ROUTINE_ACTION_EDIT ? Button.VISIBLE : Button.INVISIBLE);
+
+        Button saveButton = findViewById(R.id.saveButton);
 
         procedureListAdapter = new ArrayAdapter<>(
             getBaseContext(),
@@ -71,6 +75,10 @@ public class DayRoutineActivity extends AppCompatActivity
 
         nameEditText.setText(routine.getName());
         enabledCheckBox.setChecked(routine.isEnabled());
+
+        new EditTextButtonEnabledLink(
+            saveButton,
+            new EditTextCriteria(nameEditText, EditTextCriteria.IS_NOT_EMPTY));
     }
 
     public void saveClick(View view)

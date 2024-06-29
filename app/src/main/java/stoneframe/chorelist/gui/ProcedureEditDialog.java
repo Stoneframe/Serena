@@ -20,6 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import stoneframe.chorelist.R;
+import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
+import stoneframe.chorelist.gui.util.EditTextCriteria;
 
 public class ProcedureEditDialog
 {
@@ -95,6 +97,10 @@ public class ProcedureEditDialog
 
         buttonCancel.setOnClickListener(v -> alertDialog.dismiss());
 
+        new EditTextButtonEnabledLink(
+            buttonSave,
+            new EditTextCriteria(descriptionText, EditTextCriteria.IS_NOT_EMPTY));
+
         alertDialog.show();
     }
 
@@ -146,12 +152,19 @@ public class ProcedureEditDialog
             String description = editText.getText().toString();
             int weekDayIndex = weekdaySpinner.getSelectedItemPosition() + 1;
 
-            listener.onProcedureCreated(new LocalTime(hourOfDay, minute), description, weekDayIndex);
+            listener.onProcedureCreated(
+                new LocalTime(hourOfDay, minute),
+                description,
+                weekDayIndex);
 
             alertDialog.dismiss();
         });
 
         buttonCancel.setOnClickListener(v -> alertDialog.dismiss());
+
+        new EditTextButtonEnabledLink(
+            buttonSave,
+            new EditTextCriteria(editText, EditTextCriteria.IS_NOT_EMPTY));
 
         alertDialog.show();
     }
@@ -210,6 +223,10 @@ public class ProcedureEditDialog
         });
 
         buttonCancel.setOnClickListener(v -> alertDialog.dismiss());
+
+        new EditTextButtonEnabledLink(
+            buttonSave,
+            new EditTextCriteria(editText, EditTextCriteria.IS_NOT_EMPTY));
 
         alertDialog.show();
     }

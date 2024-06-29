@@ -17,6 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.joda.time.DateTime;
 
 import stoneframe.chorelist.R;
+import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
+import stoneframe.chorelist.gui.util.EditTextCriteria;
 
 public class ChoreActivity extends AppCompatActivity
 {
@@ -43,6 +45,8 @@ public class ChoreActivity extends AppCompatActivity
     private EditText effortEditText;
     private Spinner intervalUnitSpinner;
     private EditText intervalLengthEditText;
+
+    private Button saveButton;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -77,6 +81,7 @@ public class ChoreActivity extends AppCompatActivity
         effortEditText = findViewById(R.id.effortEditText);
         intervalUnitSpinner = findViewById(R.id.intervalUnitSpinner);
         intervalLengthEditText = findViewById(R.id.intervalLengthEditText);
+        saveButton = findViewById(R.id.saveButton);
 
         intervalUnitSpinner.setAdapter(new ArrayAdapter<>(
             this,
@@ -94,6 +99,13 @@ public class ChoreActivity extends AppCompatActivity
 
         nextEditText.setInputType(InputType.TYPE_NULL);
         nextEditText.setOnClickListener(view -> datePickerDialog.show());
+
+        new EditTextButtonEnabledLink(
+            saveButton,
+            new EditTextCriteria(descriptionEditText, EditTextCriteria.IS_NOT_EMPTY),
+            new EditTextCriteria(priorityEditText, EditTextCriteria.IS_NOT_EMPTY),
+            new EditTextCriteria(effortEditText, EditTextCriteria.IS_NOT_EMPTY),
+            new EditTextCriteria(intervalLengthEditText, EditTextCriteria.IS_NOT_EMPTY));
     }
 
     public void saveClick(View view)

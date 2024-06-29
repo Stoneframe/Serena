@@ -14,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.joda.time.DateTime;
 
 import stoneframe.chorelist.R;
+import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
+import stoneframe.chorelist.gui.util.EditTextCriteria;
 
 public class TaskActivity extends AppCompatActivity
 {
@@ -48,8 +50,10 @@ public class TaskActivity extends AppCompatActivity
 
         action = intent.getIntExtra("ACTION", -1);
 
-        Button button = findViewById(R.id.removeButton);
-        button.setVisibility(action == TASK_ACTION_EDIT ? Button.VISIBLE : Button.INVISIBLE);
+        Button removeButton = findViewById(R.id.removeButton);
+        removeButton.setVisibility(action == TASK_ACTION_EDIT ? Button.VISIBLE : Button.INVISIBLE);
+
+        Button saveButton = findViewById(R.id.saveButton);
 
         description = intent.getStringExtra("Description");
         deadline = (DateTime)intent.getSerializableExtra("Deadline");
@@ -83,6 +87,10 @@ public class TaskActivity extends AppCompatActivity
 
         ignoreBeforeEditText.setInputType(InputType.TYPE_NULL);
         ignoreBeforeEditText.setOnClickListener(view -> ignoreBeforePickerDialog.show());
+
+        new EditTextButtonEnabledLink(
+            saveButton,
+            new EditTextCriteria(descriptionEditText, EditTextCriteria.IS_NOT_EMPTY));
     }
 
     public void saveClick(View view)

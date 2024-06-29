@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment;
 
 import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
+import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
+import stoneframe.chorelist.gui.util.EditTextCriteria;
 
 public class CaloriesFragment extends Fragment
 {
@@ -56,6 +58,10 @@ public class CaloriesFragment extends Fragment
         });
 
         buttonSettings.setOnClickListener(v -> showSettingsDialog());
+
+        new EditTextButtonEnabledLink(
+            buttonAddCalories,
+            new EditTextCriteria(editTextCalories, EditTextCriteria.IS_VALID_INT));
 
         return view;
     }

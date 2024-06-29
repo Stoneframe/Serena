@@ -89,7 +89,7 @@
         android:layout_height="48dp"
         android:layout_gravity="end"
         android:onClick="addProcedureClick"
-        android:text="ADD ITEM..."
+        android:text="ADD..."
         android:layout_toStartOf="@+id/saveButton"
         android:layout_alignParentBottom="true"/>
 

@@ -19,6 +19,7 @@ import org.joda.time.LocalDate;
 
 import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
+import stoneframe.chorelist.gui.util.DialogUtils;
 import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
 import stoneframe.chorelist.model.FortnightRoutine;
@@ -239,12 +240,21 @@ public class FortnightRoutineActivity extends AppCompatActivity
 
     public void removeClick(View view)
     {
-        Intent intent = new Intent();
+        DialogUtils.showConfirmationDialog(
+            this,
+            "Remove Routine",
+            "Are you sure you want to remove the routine?",
+            isConfirmed ->
+            {
+                if (!isConfirmed) return;
 
-        intent.putExtra("RESULT", ROUTINE_RESULT_REMOVE);
+                Intent intent = new Intent();
 
-        setResult(RESULT_OK, intent);
-        finish();
+                intent.putExtra("RESULT", ROUTINE_RESULT_REMOVE);
+
+                setResult(RESULT_OK, intent);
+                finish();
+            });
     }
 
     @SuppressLint("SetTextI18n")

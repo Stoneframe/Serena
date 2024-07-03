@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.joda.time.DateTime;
 
 import stoneframe.chorelist.R;
+import stoneframe.chorelist.gui.util.DialogUtils;
 import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
 
@@ -139,11 +140,20 @@ public class ChoreActivity extends AppCompatActivity
 
     public void removeClick(View view)
     {
-        Intent intent = new Intent();
+        DialogUtils.showConfirmationDialog(
+            this,
+            "Remove Chore",
+            "Are you sure you want to remove the chore?",
+            isConfirmed ->
+            {
+                if (!isConfirmed) return;
 
-        intent.putExtra("RESULT", CHORE_RESULT_REMOVE);
+                Intent intent = new Intent();
 
-        setResult(RESULT_OK, intent);
-        finish();
+                intent.putExtra("RESULT", CHORE_RESULT_REMOVE);
+
+                setResult(RESULT_OK, intent);
+                finish();
+            });
     }
 }

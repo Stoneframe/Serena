@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
+import stoneframe.chorelist.gui.util.DialogUtils;
 import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
 import stoneframe.chorelist.model.Checklist;
@@ -96,11 +97,18 @@ public class EditChecklistActivity extends Activity
         });
 
         removeButton.setOnClickListener(v ->
-        {
-            choreList.removeChecklist(checklist);
-            setResult(REMOVE);
-            finish();
-        });
+            DialogUtils.showConfirmationDialog(
+                this,
+                "Remove Checklist",
+                "Are you sure you want to remove the checklist?",
+                isConfirmed ->
+                {
+                    if (!isConfirmed) return;
+
+                    choreList.removeChecklist(checklist);
+                    setResult(REMOVE);
+                    finish();
+                }));
 
         buttonAddItem.setOnClickListener(v ->
         {

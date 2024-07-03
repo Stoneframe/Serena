@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.joda.time.DateTime;
 
 import stoneframe.chorelist.R;
+import stoneframe.chorelist.gui.util.DialogUtils;
 import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
 
@@ -118,10 +119,19 @@ public class TaskActivity extends AppCompatActivity
 
     public void removeClick(View view)
     {
-        Intent intent = new Intent();
-        intent.putExtra("RESULT", TASK_RESULT_REMOVE);
+        DialogUtils.showConfirmationDialog(
+            this,
+            "Remove Task",
+            "Are you sure you want to remove the task?",
+            isConfirmed ->
+            {
+                if (!isConfirmed) return;
 
-        setResult(RESULT_OK, intent);
-        finish();
+                Intent intent = new Intent();
+                intent.putExtra("RESULT", TASK_RESULT_REMOVE);
+
+                setResult(RESULT_OK, intent);
+                finish();
+            });
     }
 }

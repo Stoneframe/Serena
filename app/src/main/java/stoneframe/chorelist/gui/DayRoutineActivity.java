@@ -1,5 +1,6 @@
 package stoneframe.chorelist.gui;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -71,7 +72,7 @@ public class DayRoutineActivity extends AppCompatActivity
         procedureListView.setOnItemClickListener((parent, view, position, id) ->
             editProcedure(position));
         procedureListView.setOnItemLongClickListener((parent, view, position, id) ->
-            removeProcedure(position));
+            removeOrCopyProcedure(position));
 
         nameEditText.setText(routine.getName());
         enabledCheckBox.setChecked(routine.isEnabled());
@@ -118,7 +119,7 @@ public class DayRoutineActivity extends AppCompatActivity
 
     public void addProcedureClick(View view)
     {
-        ProcedureEditDialog.create(this, (time, description) ->
+        ProcedureEditDialog.create(this, null, null, (time, description) ->
         {
             Procedure procedure = new Procedure(description, time);
 
@@ -151,13 +152,47 @@ public class DayRoutineActivity extends AppCompatActivity
             });
     }
 
-    private boolean removeProcedure(int position)
+    private boolean removeOrCopyProcedure(int position)
     {
         Procedure procedure = procedureListAdapter.getItem(position);
 
-        routine.removeProcedure(procedure);
-        procedureListAdapter.remove(procedure);
+        assert procedure != null;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Select option")
+            .setCancelable(false)
+            .setPositiveButton("Remove", (dialog, removeButtonId) ->
+                removeProcedure(procedure))
+            .setNegativeButton("Copy", (dialog, copyButtonId) ->
+                copyProcedure(procedure))
+            .setNeutralButton("Cancel", (dialog, cancelButtonId) -> dialog.cancel());
+
+        AlertDialog alert = builder.create();
+        alert.show();
 
         return true;
+    }
+
+    private void removeProcedure(Procedure procedure)
+    {
+        routine.removeProcedure(procedure);
+        procedureListAdapter.remove(procedure);
+    }
+
+    private void copyProcedure(Procedure procedure)
+    {
+        ProcedureEditDialog.create(
+            this,
+            procedure.getTime(),
+            procedure.getDescription(),
+            (time, description) ->
+            {
+                Procedure copiedProcedure = new Procedure(description, time);
+
+                routine.addProcedure(copiedProcedure);
+
+                procedureListAdapter.add(copiedProcedure);
+                procedureListAdapter.sort(Procedure::compareTo);
+            });
     }
 }

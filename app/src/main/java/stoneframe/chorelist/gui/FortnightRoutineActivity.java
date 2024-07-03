@@ -1,6 +1,7 @@
 package stoneframe.chorelist.gui;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -129,7 +130,7 @@ public class FortnightRoutineActivity extends AppCompatActivity
 
     private boolean removeProcedureWeek1(int position)
     {
-        removeProcedure(week1ExpandableList, position, week1ExpandableListAdaptor);
+        removeOrCopyProcedure(week1ExpandableList, position, week1ExpandableListAdaptor);
 
         return true;
     }
@@ -143,7 +144,7 @@ public class FortnightRoutineActivity extends AppCompatActivity
 
     private boolean removeProcedureWeek2(int position)
     {
-        removeProcedure(week2ExpandableList, position, week2ExpandableListAdaptor);
+        removeOrCopyProcedure(week2ExpandableList, position, week2ExpandableListAdaptor);
 
         return true;
     }
@@ -175,7 +176,7 @@ public class FortnightRoutineActivity extends AppCompatActivity
             });
     }
 
-    private void removeProcedure(
+    private void removeOrCopyProcedure(
         ExpandableListView week1ExpandableList,
         int position,
         WeekExpandableListAdaptor week1ExpandableListAdaptor)
@@ -196,9 +197,17 @@ public class FortnightRoutineActivity extends AppCompatActivity
             Routine.Day weekDay = (Routine.Day)week1ExpandableListAdaptor.getGroup(
                 groupPosition);
 
-            weekDay.removeProcedure(procedure);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Select option")
+                .setCancelable(false)
+                .setPositiveButton("Remove", (dialog, removeButtonId) ->
+                    removeProcedure(weekDay, procedure))
+                .setNegativeButton("Copy", (dialog, copyButtonId) ->
+                    copyProcedure(procedure))
+                .setNeutralButton("Cancel", (dialog, cancelButtonId) -> dialog.cancel());
 
-            week1ExpandableListAdaptor.notifyDataSetChanged();
+            AlertDialog alert = builder.create();
+            alert.show();
         }
     }
 
@@ -241,7 +250,7 @@ public class FortnightRoutineActivity extends AppCompatActivity
     @SuppressLint("SetTextI18n")
     public void addProcedureClick(View view)
     {
-        ProcedureEditDialog.create(this, (time, description, week, weekDay) ->
+        ProcedureEditDialog.create(this, null, null, (time, description, week, weekDay) ->
         {
             Procedure procedure = new Procedure(description, time);
 
@@ -250,5 +259,30 @@ public class FortnightRoutineActivity extends AppCompatActivity
             week1ExpandableListAdaptor.notifyDataSetChanged();
             week2ExpandableListAdaptor.notifyDataSetChanged();
         });
+    }
+
+    private void removeProcedure(Routine.Day weekDay, Procedure procedure)
+    {
+        weekDay.removeProcedure(procedure);
+
+        week1ExpandableListAdaptor.notifyDataSetChanged();
+        week2ExpandableListAdaptor.notifyDataSetChanged();
+    }
+
+    private void copyProcedure(Procedure procedure)
+    {
+        ProcedureEditDialog.create(
+            this,
+            procedure.getTime(),
+            procedure.getDescription(),
+            (time, description, week, weekDay) ->
+            {
+                Procedure newProcedure = new Procedure(description, time);
+
+                routine.getWeek(week).getWeekDay(weekDay).addProcedure(newProcedure);
+
+                week1ExpandableListAdaptor.notifyDataSetChanged();
+                week2ExpandableListAdaptor.notifyDataSetChanged();
+            });
     }
 }

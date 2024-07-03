@@ -1,5 +1,6 @@
 package stoneframe.chorelist.gui;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -68,7 +69,7 @@ public class WeekRoutineActivity extends AppCompatActivity
         weekExpandableList.setOnChildClickListener((parent, v, groupPosition, childPosition, id) ->
             editProcedure(groupPosition, childPosition));
         weekExpandableList.setOnItemLongClickListener((parent, view, position, id) ->
-            removeProcedure(position));
+            removeOrCopyProcedure(position));
 
         for (int i = 0; i < weekExpandableListAdaptor.getGroupCount(); i++)
         {
@@ -120,7 +121,7 @@ public class WeekRoutineActivity extends AppCompatActivity
 
     public void addProcedureClick(View view)
     {
-        ProcedureEditDialog.create(this, (time, description, dayOfWeek) ->
+        ProcedureEditDialog.create(this, null, null, (time, description, dayOfWeek) ->
         {
             Procedure procedure = new Procedure(description, time);
 
@@ -157,7 +158,7 @@ public class WeekRoutineActivity extends AppCompatActivity
         return true;
     }
 
-    private boolean removeProcedure(int position)
+    private boolean removeOrCopyProcedure(int position)
     {
         long packedPosition = weekExpandableList.getExpandableListPosition(position);
 
@@ -175,11 +176,43 @@ public class WeekRoutineActivity extends AppCompatActivity
             Routine.Day weekDay = (Routine.Day)weekExpandableListAdaptor.getGroup(
                 groupPosition);
 
-            weekDay.removeProcedure(procedure);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Select option")
+                .setCancelable(false)
+                .setPositiveButton("Remove", (dialog, removeButtonId) ->
+                    removeProcedure(weekDay, procedure))
+                .setNegativeButton("Copy", (dialog, copyButtonId) ->
+                    copyProcedure(procedure))
+                .setNeutralButton("Cancel", (dialog, cancelButtonId) -> dialog.cancel());
 
-            weekExpandableListAdaptor.notifyDataSetChanged();
+            AlertDialog alert = builder.create();
+            alert.show();
         }
 
         return true;
+    }
+
+    private void removeProcedure(Routine.Day weekDay, Procedure procedure)
+    {
+        weekDay.removeProcedure(procedure);
+
+        weekExpandableListAdaptor.notifyDataSetChanged();
+    }
+
+    private void copyProcedure(Procedure procedure)
+    {
+        ProcedureEditDialog.create(
+            this,
+            procedure.getTime(),
+            procedure.getDescription(),
+            (time, description, dayOfWeek) ->
+            {
+                Procedure newProcedure = new Procedure(description, time);
+
+                routine.getWeekDay(dayOfWeek).addProcedure(newProcedure);
+
+                weekExpandableListAdaptor.notifyDataSetChanged();
+                weekExpandableList.expandGroup(dayOfWeek - 1);
+            });
     }
 }

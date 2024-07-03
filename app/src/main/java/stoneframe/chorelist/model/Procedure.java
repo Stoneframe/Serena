@@ -9,7 +9,7 @@ public class Procedure implements Comparable<Procedure>
     private final String description;
     private final LocalTime time;
 
-    public Procedure(String description, LocalTime time)
+    public Procedure(String description, @NonNull LocalTime time)
     {
         this.description = description;
         this.time = time;
@@ -20,6 +20,7 @@ public class Procedure implements Comparable<Procedure>
         return description;
     }
 
+    @NonNull
     public LocalTime getTime()
     {
         return time;

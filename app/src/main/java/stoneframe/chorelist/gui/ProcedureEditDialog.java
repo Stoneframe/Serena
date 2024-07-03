@@ -67,8 +67,6 @@ public class ProcedureEditDialog
         builder.setTitle("Routine Procedure");
 
         timePicker.setIs24HourView(true);
-        timePicker.setHour(0);
-        timePicker.setMinute(0);
 
         if (time != null)
         {
@@ -104,12 +102,20 @@ public class ProcedureEditDialog
         alertDialog.show();
     }
 
-    public static void create(Context context, final DayProcedureListener listener)
+    public static void create(
+        Context context,
+        LocalTime initialTime,
+        String initialDescription,
+        final DayProcedureListener listener)
     {
-        edit(context, null, null, listener::onProcedureCreated);
+        edit(context, initialTime, initialDescription, listener::onProcedureCreated);
     }
 
-    public static void create(Context context, final WeekProcedureListener listener)
+    public static void create(
+        Context context,
+        LocalTime initialTime,
+        String initialDescription,
+        final WeekProcedureListener listener)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -119,8 +125,11 @@ public class ProcedureEditDialog
         final TimePicker timePicker = dialogView.findViewById(R.id.timePicker);
         final EditText editText = dialogView.findViewById(R.id.editText);
         final Spinner weekdaySpinner = dialogView.findViewById(R.id.weekdaySpinner);
+
         Button buttonSave = dialogView.findViewById(R.id.buttonSave);
         Button buttonCancel = dialogView.findViewById(R.id.buttonCancel);
+
+        editText.setText(initialDescription);
 
         List<String> weekdays = new ArrayList<>(Arrays.asList(
             "Monday",
@@ -138,8 +147,12 @@ public class ProcedureEditDialog
         weekdaySpinner.setAdapter(adapter);
 
         timePicker.setIs24HourView(true);
-        timePicker.setHour(0);
-        timePicker.setMinute(0);
+
+        if (initialTime != null)
+        {
+            timePicker.setHour(initialTime.getHourOfDay());
+            timePicker.setMinute(initialTime.getMinuteOfHour());
+        }
 
         builder.setTitle("Add procedure");
 
@@ -169,7 +182,11 @@ public class ProcedureEditDialog
         alertDialog.show();
     }
 
-    public static void create(Context context, final FortnightProcedureListener listener)
+    public static void create(
+        Context context,
+        LocalTime initialTime,
+        String initialDescription,
+        final FortnightProcedureListener listener)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -181,8 +198,10 @@ public class ProcedureEditDialog
         final Spinner weekdaySpinner = dialogView.findViewById(R.id.weekdaySpinner);
         final RadioGroup radioGroup = dialogView.findViewById(R.id.radioGroup);
         final RadioButton radioButtonWeek1 = dialogView.findViewById(R.id.radioButtonWeek1);
+
         Button buttonSave = dialogView.findViewById(R.id.buttonSave);
         Button buttonCancel = dialogView.findViewById(R.id.buttonCancel);
+        editText.setText(initialDescription);
 
         radioButtonWeek1.toggle();
 
@@ -202,8 +221,12 @@ public class ProcedureEditDialog
         weekdaySpinner.setAdapter(adapter);
 
         timePicker.setIs24HourView(true);
-        timePicker.setHour(0);
-        timePicker.setMinute(0);
+
+        if (initialTime != null)
+        {
+            timePicker.setHour(initialTime.getHourOfDay());
+            timePicker.setMinute(initialTime.getMinuteOfHour());
+        }
 
         builder.setTitle("Add procedure");
 

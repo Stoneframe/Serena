@@ -135,7 +135,7 @@ public class Chore
 
     public void postpone(DateTime now)
     {
-        postpone = now.plusDays(1);
+        postpone = now.withTimeAtStartOfDay().plusDays(1);
     }
 
     @Override

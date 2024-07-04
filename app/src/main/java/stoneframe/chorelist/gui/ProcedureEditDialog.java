@@ -73,6 +73,11 @@ public class ProcedureEditDialog
             timePicker.setHour(time.getHourOfDay());
             timePicker.setMinute(time.getMinuteOfHour());
         }
+        else
+        {
+            timePicker.setHour(0);
+            timePicker.setMinute(0);
+        }
 
         if (description != null)
         {
@@ -153,6 +158,11 @@ public class ProcedureEditDialog
             timePicker.setHour(initialTime.getHourOfDay());
             timePicker.setMinute(initialTime.getMinuteOfHour());
         }
+        else
+        {
+            timePicker.setHour(0);
+            timePicker.setMinute(0);
+        }
 
         builder.setTitle("Add procedure");
 
@@ -226,6 +236,11 @@ public class ProcedureEditDialog
         {
             timePicker.setHour(initialTime.getHourOfDay());
             timePicker.setMinute(initialTime.getMinuteOfHour());
+        }
+        else
+        {
+            timePicker.setHour(0);
+            timePicker.setMinute(0);
         }
 
         builder.setTitle("Add procedure");

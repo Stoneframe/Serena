@@ -16,15 +16,15 @@
             android:id="@+id/textViewAvailableCalories"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Available calories: "
-            android:textSize="32sp" />
+            android:text="Available: "
+            android:textSize="30sp" />
 
         <TextView
             android:id="@+id/textViewCaloriesValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
-            android:textSize="32sp"
+            android:textSize="30sp"
             android:layout_marginStart="8dp" />
     </LinearLayout>
 

@@ -51,6 +51,11 @@ public class TaskManager
         task.setDone(false, null);
     }
 
+    public void postpone(Task task, DateTime now)
+    {
+        task.setIgnoreBefore(now.withTimeAtStartOfDay().plusDays(1));
+    }
+
     public void clean(DateTime now)
     {
         tasks.removeIf(t -> t.isDone() && t.getCompleted().plusWeeks(1).isBefore(now));

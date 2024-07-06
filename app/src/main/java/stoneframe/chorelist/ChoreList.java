@@ -149,6 +149,11 @@ public class ChoreList
         container.TaskManager.undo(task);
     }
 
+    public void taskPostpone(Task task)
+    {
+        container.TaskManager.postpone(task, timeService.getNow());
+    }
+
     public List<Routine> getAllRoutines()
     {
         return container.RoutineManager.getAllRoutines();

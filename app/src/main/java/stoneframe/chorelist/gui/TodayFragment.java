@@ -94,7 +94,7 @@ public class TodayFragment extends Fragment
         choreListView.setOnItemLongClickListener((parent, view, position, id) ->
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setMessage("Do you want to skip or postpone this task?")
+            builder.setMessage("Do you want to skip or postpone this chore?")
                 .setCancelable(false)
                 .setPositiveButton("Skip", (dialog, skipButtonId) ->
                 {
@@ -141,6 +141,25 @@ public class TodayFragment extends Fragment
                     choreList.save();
                 });
             }).start();
+        });
+        taskListView.setOnItemLongClickListener((parent, view, position, id) ->
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setMessage("Do you want to postpone this task?")
+                .setCancelable(false)
+                .setPositiveButton("Postpone", (dialog, skipButtonId) ->
+                {
+                    Task task = (Task)taskAdapter.getItem(position);
+                    choreList.taskPostpone(task);
+                    taskAdapter.notifyDataSetChanged();
+                    choreList.save();
+                })
+                .setNeutralButton("Cancel", (dialog, cancelButtonId) -> dialog.cancel());
+
+            AlertDialog alert = builder.create();
+            alert.show();
+
+            return true;
         });
 
         return rootView;

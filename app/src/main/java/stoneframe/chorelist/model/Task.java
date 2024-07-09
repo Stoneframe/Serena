@@ -2,17 +2,17 @@ package stoneframe.chorelist.model;
 
 import androidx.annotation.NonNull;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 public class Task
 {
     private String description;
-    private DateTime deadline;
-    private DateTime ignoreBefore;
-    private DateTime completed;
+    private LocalDate deadline;
+    private LocalDate ignoreBefore;
+    private LocalDate completed;
     private boolean isDone;
 
-    public Task(String description, DateTime deadline, DateTime ignoreBefore)
+    public Task(String description, LocalDate deadline, LocalDate ignoreBefore)
     {
         this.description = description;
         this.deadline = deadline;
@@ -30,22 +30,22 @@ public class Task
         this.description = description;
     }
 
-    public DateTime getDeadline()
+    public LocalDate getDeadline()
     {
-        return deadline == null ? new DateTime(Long.MIN_VALUE) : deadline;
+        return deadline == null ? new LocalDate(Long.MIN_VALUE) : deadline;
     }
 
-    public void setDeadline(DateTime deadline)
+    public void setDeadline(LocalDate deadline)
     {
         this.deadline = deadline;
     }
 
-    public DateTime getIgnoreBefore()
+    public LocalDate getIgnoreBefore()
     {
-        return ignoreBefore == null ? new DateTime(Long.MIN_VALUE) : ignoreBefore;
+        return ignoreBefore == null ? new LocalDate(-292275055, 1, 1) : ignoreBefore;
     }
 
-    public void setIgnoreBefore(DateTime ignoreBefore)
+    public void setIgnoreBefore(LocalDate ignoreBefore)
     {
         this.ignoreBefore = ignoreBefore;
     }
@@ -55,12 +55,12 @@ public class Task
         return isDone;
     }
 
-    public DateTime getCompleted()
+    public LocalDate getCompleted()
     {
         return completed;
     }
 
-    void setDone(boolean done, DateTime now)
+    void setDone(boolean done, LocalDate now)
     {
         isDone = done;
         completed = done ? now : null;

@@ -2,7 +2,7 @@ package stoneframe.chorelist.model;
 
 import androidx.annotation.NonNull;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -34,16 +34,16 @@ public class TaskManager
         tasks.remove(task);
     }
 
-    public List<Task> getTodaysTasks(DateTime now)
+    public List<Task> getTodaysTasks(LocalDate today)
     {
         return getAllTasks(false).stream()
-            .filter(t -> t.getIgnoreBefore().isBefore(now) || t.getIgnoreBefore().isEqual(now))
+            .filter(t -> t.getIgnoreBefore().isBefore(today) || t.getIgnoreBefore().isEqual(today))
             .collect(Collectors.toList());
     }
 
-    public void complete(Task task, DateTime now)
+    public void complete(Task task, LocalDate today)
     {
-        task.setDone(true, now);
+        task.setDone(true, today);
     }
 
     public void undo(Task task)
@@ -51,14 +51,14 @@ public class TaskManager
         task.setDone(false, null);
     }
 
-    public void postpone(Task task, DateTime now)
+    public void postpone(Task task, LocalDate today)
     {
-        task.setIgnoreBefore(now.withTimeAtStartOfDay().plusDays(1));
+        task.setIgnoreBefore(today.plusDays(1));
     }
 
-    public void clean(DateTime now)
+    public void clean(LocalDate today)
     {
-        tasks.removeIf(t -> t.isDone() && t.getCompleted().plusWeeks(1).isBefore(now));
+        tasks.removeIf(t -> t.isDone() && t.getCompleted().plusWeeks(1).isBefore(today));
     }
 
     @NonNull

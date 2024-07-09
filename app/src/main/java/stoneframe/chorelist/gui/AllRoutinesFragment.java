@@ -15,7 +15,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import java.util.Objects;
 
@@ -65,14 +66,14 @@ public class AllRoutinesFragment extends Fragment
         Button addDayButton = rootView.findViewById(R.id.add_day_button);
         addDayButton.setOnClickListener(v ->
         {
-            Routine routine = new DayRoutine("", DateTime.now());
+            Routine routine = new DayRoutine("", LocalDateTime.now());
             startRoutineEditor(routine, DayRoutineActivity.ROUTINE_ACTION_ADD);
         });
 
         Button addWeekButton = rootView.findViewById(R.id.add_week_button);
         addWeekButton.setOnClickListener(v ->
         {
-            Routine routine = new WeekRoutine("", DateTime.now());
+            Routine routine = new WeekRoutine("", LocalDateTime.now());
             startRoutineEditor(routine, WeekRoutineActivity.ROUTINE_ACTION_ADD);
         });
 
@@ -81,8 +82,8 @@ public class AllRoutinesFragment extends Fragment
         {
             Routine routine = new FortnightRoutine(
                 "",
-                DateTime.now().toLocalDate(),
-                DateTime.now());
+                LocalDate.now(),
+                LocalDateTime.now());
             startRoutineEditor(routine, FortnightRoutineActivity.ROUTINE_ACTION_ADD);
         });
 
@@ -153,7 +154,7 @@ public class AllRoutinesFragment extends Fragment
 
         routineListAdapter.notifyDataSetChanged();
 
-        DateTime nextAlarmTime = choreList.getNextRoutineProcedureTime();
+        LocalDateTime nextAlarmTime = choreList.getNextRoutineProcedureTime();
 
         if (nextAlarmTime == null)
         {

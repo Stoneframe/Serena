@@ -2,9 +2,10 @@ package stoneframe.chorelist.model;
 
 import androidx.annotation.NonNull;
 
-import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.joda.time.LocalTime;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -25,9 +26,9 @@ public abstract class Routine
     protected String name;
     protected boolean isEnabled;
 
-    protected DateTime lastCompleted;
+    protected LocalDateTime lastCompleted;
 
-    public Routine(int routineType, String name, DateTime now)
+    public Routine(int routineType, String name, LocalDateTime now)
     {
         this.routineType = routineType;
         this.name = name;
@@ -65,11 +66,11 @@ public abstract class Routine
     public abstract List<Procedure> getAllProcedures();
 
     @CheckForNull
-    public abstract DateTime getNextProcedureTime(DateTime now);
+    public abstract LocalDateTime getNextProcedureTime(LocalDateTime now);
 
-    public abstract List<PendingProcedure> getPendingProcedures(DateTime now);
+    public abstract List<PendingProcedure> getPendingProcedures(LocalDateTime now);
 
-    public PendingProcedure getPendingProcedure(DateTime now)
+    public PendingProcedure getPendingProcedure(LocalDateTime now)
     {
         return getPendingProcedures(now).stream().findFirst().orElse(null);
     }
@@ -129,7 +130,7 @@ public abstract class Routine
             procedures.remove(procedure);
         }
 
-        public DateTime getNextProcedureTime(DateTime now)
+        public LocalDateTime getNextProcedureTime(LocalDateTime now)
         {
             if (procedures.isEmpty()) return null;
 
@@ -140,9 +141,11 @@ public abstract class Routine
                 .get();
         }
 
-        public DateTime getNextTimeOfProcedureAfter(Procedure procedure, DateTime dateTime)
+        public LocalDateTime getNextTimeOfProcedureAfter(
+            Procedure procedure,
+            LocalDateTime dateTime)
         {
-            DateTime nextTime = startDate.toDateTime(procedure.getTime());
+            LocalDateTime nextTime = startDate.toLocalDateTime(procedure.getTime());
 
             while (!nextTime.isAfter(dateTime))
             {
@@ -152,25 +155,27 @@ public abstract class Routine
             return nextTime;
         }
 
-        public List<PendingProcedure> getPendingProceduresBetween(DateTime start, DateTime end)
+        public List<PendingProcedure> getPendingProceduresBetween(
+            LocalDateTime start,
+            LocalDateTime end)
         {
             return procedures.stream()
                 .flatMap(p ->
                 {
                     List<PendingProcedure> pendingProcedures = new LinkedList<>();
 
-                    for (DateTime i = startDate.toDateTimeAtStartOfDay();
+                    for (LocalDateTime i = startDate.toLocalDateTime(LocalTime.MIDNIGHT);
                          i.isBefore(end);
                          i = i.plusDays(interval))
                     {
-                        if (i.isBefore(start.withTimeAtStartOfDay()))
+                        if (i.isBefore(start.withTime(0, 0, 0, 0)))
                         {
                             continue;
                         }
 
                         PendingProcedure pendingProcedure = new PendingProcedure(
                             p,
-                            p.getTime().toDateTime(i));
+                            i.toLocalDate().toLocalDateTime(p.getTime()));
 
                         pendingProcedures.add(pendingProcedure);
                     }
@@ -263,7 +268,7 @@ public abstract class Routine
                 .collect(Collectors.toList());
         }
 
-        public DateTime getNextProcedureTime(DateTime now)
+        public LocalDateTime getNextProcedureTime(LocalDateTime now)
         {
             if (getProcedures().isEmpty()) return null;
 
@@ -298,7 +303,9 @@ public abstract class Routine
             }
         }
 
-        public List<PendingProcedure> getPendingProceduresBetween(DateTime start, DateTime end)
+        public List<PendingProcedure> getPendingProceduresBetween(
+            LocalDateTime start,
+            LocalDateTime end)
         {
             return this
                 .concat(

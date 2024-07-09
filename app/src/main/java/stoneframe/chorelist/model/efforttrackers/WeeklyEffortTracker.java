@@ -1,13 +1,13 @@
 package stoneframe.chorelist.model.efforttrackers;
 
-import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
+import org.joda.time.LocalDate;
 
 import stoneframe.chorelist.model.EffortTracker;
 
 public class WeeklyEffortTracker implements EffortTracker
 {
-    private DateTime previous;
+    private LocalDate previous;
 
     private int mon;
     private int tue;
@@ -129,12 +129,12 @@ public class WeeklyEffortTracker implements EffortTracker
     }
 
     @Override
-    public int getTodaysEffort(DateTime now)
+    public int getTodaysEffort(LocalDate today)
     {
-        if (!isSameDay(previous, now))
+        if (!isSameDay(previous, today))
         {
-            previous = now;
-            switch (now.getDayOfWeek())
+            previous = today;
+            switch (today.getDayOfWeek())
             {
                 case DateTimeConstants.MONDAY:
                     remaining = mon;
@@ -176,7 +176,7 @@ public class WeeklyEffortTracker implements EffortTracker
         }
     }
 
-    private boolean isSameDay(DateTime d1, DateTime d2)
+    private boolean isSameDay(LocalDate d1, LocalDate d2)
     {
         return d1 != null && d2 != null
             && d1.getYear() == d2.getYear()

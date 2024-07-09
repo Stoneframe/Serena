@@ -2,16 +2,16 @@ package stoneframe.chorelist.model;
 
 import androidx.annotation.NonNull;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 
 import java.util.Objects;
 
 public class PendingProcedure implements Comparable<PendingProcedure>
 {
     private final Procedure procedure;
-    private final DateTime dateTime;
+    private final LocalDateTime dateTime;
 
-    public PendingProcedure(Procedure procedure, DateTime dateTime)
+    public PendingProcedure(Procedure procedure, LocalDateTime dateTime)
     {
         this.procedure = procedure;
         this.dateTime = dateTime;
@@ -22,7 +22,7 @@ public class PendingProcedure implements Comparable<PendingProcedure>
         return procedure.getDescription();
     }
 
-    public DateTime getDateTime()
+    public LocalDateTime getDateTime()
     {
         return dateTime;
     }

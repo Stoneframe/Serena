@@ -6,7 +6,8 @@ import static org.junit.Assert.assertTrue;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,11 +32,11 @@ public class ChoreListTest
 {
     private final int MAX_EFFORT = 10;
 
-    private static final DateTime TODAY = TestUtils.MOCK_NOW;
-    private static final DateTime YESTERDAY = TODAY.minusDays(1);
-    private static final DateTime TOMORROW = TODAY.plusDays(1);
+    private static final LocalDate TODAY = TestUtils.MOCK_TODAY;
+    private static final LocalDate YESTERDAY = TODAY.minusDays(1);
+    private static final LocalDate TOMORROW = TODAY.plusDays(1);
 
-    private final MockTimeService timeService = new MockTimeService(TODAY);
+    private final MockTimeService timeService = new MockTimeService(TestUtils.MOCK_NOW);
 
     private ChoreList choreList;
 
@@ -323,24 +324,24 @@ public class ChoreListTest
         effortTracker.setTodaysEffort(remainingEffort);
     }
 
-    private void addChore(String description, DateTime next)
+    private void addChore(String description, LocalDate next)
     {
         addChore(description, next, 1, Chore.DAYS);
     }
 
-    private void addChore(String description, DateTime next, int effort)
+    private void addChore(String description, LocalDate next, int effort)
     {
         addChore(description, next, 1, Chore.DAYS, effort);
     }
 
-    private void addChore(String description, DateTime next, int intervalLength, int intervalUnit)
+    private void addChore(String description, LocalDate next, int intervalLength, int intervalUnit)
     {
         addChore(description, next, intervalLength, intervalUnit, 1);
     }
 
     private void addChore(
         String description,
-        DateTime next,
+        LocalDate next,
         int intervalLength,
         int intervalUnit,
         int effort)
@@ -402,12 +403,12 @@ public class ChoreListTest
         addTask(description, null);
     }
 
-    private void addTask(String description, DateTime deadline)
+    private void addTask(String description, LocalDate deadline)
     {
         addTask(description, deadline, null);
     }
 
-    private void addTask(String description, DateTime deadline, DateTime ignoreBefore)
+    private void addTask(String description, LocalDate deadline, LocalDate ignoreBefore)
     {
         Task task = new Task(description, deadline, ignoreBefore);
 
@@ -442,7 +443,7 @@ public class ChoreListTest
 
     private void addRoutine(String name, Procedure... procedures)
     {
-        DayRoutine routine = new DayRoutine(name, new DateTime(0));
+        DayRoutine routine = new DayRoutine(name, new LocalDateTime(0));
 
         Arrays.stream(procedures).forEach(routine::addProcedure);
 
@@ -563,7 +564,7 @@ public class ChoreListTest
         }
 
         @Override
-        public void save(@NonNull Container container)
+        public void save(Container container)
         {
 
         }

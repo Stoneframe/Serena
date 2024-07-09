@@ -15,7 +15,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.util.Objects;
 
@@ -76,8 +76,8 @@ public class AllTasksFragment extends Fragment
         {
             Task task = new Task(
                 "",
-                DateTime.now().withTimeAtStartOfDay(),
-                DateTime.now().withTimeAtStartOfDay());
+                LocalDate.now(),
+                LocalDate.now());
 
             startTaskEditor(task, TaskActivity.TASK_ACTION_ADD);
         });
@@ -124,8 +124,8 @@ public class AllTasksFragment extends Fragment
             {
                 case TaskActivity.TASK_RESULT_SAVE:
                     task.setDescription(intent.getStringExtra("Description"));
-                    task.setDeadline((DateTime)intent.getSerializableExtra("Deadline"));
-                    task.setIgnoreBefore((DateTime)intent.getSerializableExtra("IgnoreBefore"));
+                    task.setDeadline((LocalDate)intent.getSerializableExtra("Deadline"));
+                    task.setIgnoreBefore((LocalDate)intent.getSerializableExtra("IgnoreBefore"));
 
                     if (intent.getIntExtra("ACTION", -1) == TaskActivity.TASK_ACTION_ADD)
                     {

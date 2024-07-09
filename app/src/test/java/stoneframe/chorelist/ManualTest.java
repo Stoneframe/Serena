@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -16,7 +16,6 @@ import stoneframe.chorelist.json.SimpleChoreSelectorConverter;
 import stoneframe.chorelist.json.WeeklyEffortTrackerConverter;
 import stoneframe.chorelist.model.Container;
 import stoneframe.chorelist.model.PendingProcedure;
-import stoneframe.chorelist.model.Procedure;
 import stoneframe.chorelist.model.Storage;
 import stoneframe.chorelist.model.choreselectors.SimpleChoreSelector;
 import stoneframe.chorelist.model.efforttrackers.SimpleEffortTracker;
@@ -24,7 +23,7 @@ import stoneframe.chorelist.model.efforttrackers.SimpleEffortTracker;
 public class ManualTest
 {
 
-    private final MockTimeService timeService = new MockTimeService(DateTime.now());
+    private final MockTimeService timeService = new MockTimeService(LocalDateTime.now());
     private Storage storage;
 
     @Test
@@ -65,7 +64,7 @@ public class ManualTest
 
         choreList.load();
 
-        timeService.setNow(new DateTime(2024, 2, 21, 17, 45));
+        timeService.setNow(new LocalDateTime(2024, 2, 21, 17, 45));
 
         List<PendingProcedure> pendingProcedures = choreList.getPendingProcedures();
 

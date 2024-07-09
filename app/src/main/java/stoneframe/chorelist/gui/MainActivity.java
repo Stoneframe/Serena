@@ -2,6 +2,7 @@ package stoneframe.chorelist.gui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +21,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.navigation.NavigationView;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 
 import java.util.Objects;
 
@@ -197,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         RoutineNotifier.setupNotificationChannel(this);
 
-        DateTime nextRoutineProcedureTime = choreList.getNextRoutineProcedureTime();
+        LocalDateTime nextRoutineProcedureTime = choreList.getNextRoutineProcedureTime();
 
         if (nextRoutineProcedureTime != null)
         {
@@ -256,19 +257,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             effortTracker.setSunday(data.getIntExtra("Sunday", 0));
         }
 
-        if (resultCode == RESULT_OK && requestCode == ACTIVITY_EDIT_STORAGE)
-        {
-            String json = data.getStringExtra("Storage");
-
-            Container container = ContainerJsonConverter.fromJson(
-                json,
-                new SimpleChoreSelectorConverter(),
-                new WeeklyEffortTrackerConverter());
-
-            storage.save(container);
-
-            choreList.load();
-        }
+//        if (resultCode == RESULT_OK && requestCode == ACTIVITY_EDIT_STORAGE)
+//        {
+//            String json = data.getStringExtra("Storage");
+//
+//            Container container = ContainerJsonConverter.fromJson(
+//                json,
+//                new SimpleChoreSelectorConverter(),
+//                new WeeklyEffortTrackerConverter());
+//
+//            storage.save(container);
+//
+//            choreList.load();
+//        }
     }
 
     private void editEffortCallback(ActivityResult activityResult)
@@ -302,12 +303,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         String json = data.getStringExtra("Storage");
 
-        Container container = ContainerJsonConverter.fromJson(
-            json,
-            new SimpleChoreSelectorConverter(),
-            new WeeklyEffortTrackerConverter());
+        SharedPreferences sharedPreferences = getSharedPreferences("DATA", 0);
 
-        storage.save(container);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString("DATA", json);
+
+        editor.apply();
 
         choreList.load();
     }

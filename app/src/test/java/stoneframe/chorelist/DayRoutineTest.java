@@ -2,7 +2,7 @@ package stoneframe.chorelist;
 
 import static junit.framework.TestCase.assertEquals;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +13,7 @@ import stoneframe.chorelist.model.Procedure;
 
 public class DayRoutineTest
 {
-    private final DateTime now = new DateTime(2024, 1, 1, 12, 0);
+    private final LocalDateTime now = new LocalDateTime(2024, 1, 1, 12, 0);
 
     private DayRoutine routine;
 
@@ -38,8 +38,10 @@ public class DayRoutineTest
 
         routine.procedureDone(pendingProcedure);
 
-        DateTime nextProcedureTime = routine.getNextProcedureTime(now.plusHours(20));
+        LocalDateTime nextProcedureTime = routine.getNextProcedureTime(now.plusHours(20));
 
-        assertEquals(procedure1.getTime().toDateTime(now.plusDays(1)), nextProcedureTime);
+        assertEquals(
+            now.toLocalDate().plusDays(1).toLocalDateTime(procedure1.getTime()),
+            nextProcedureTime);
     }
 }

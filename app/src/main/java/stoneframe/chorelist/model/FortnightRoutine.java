@@ -3,8 +3,8 @@ package stoneframe.chorelist.model;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import java.util.List;
 import java.util.Objects;
@@ -18,7 +18,7 @@ public class FortnightRoutine extends Routine
     private final Week week1;
     private final Week week2;
 
-    public FortnightRoutine(String name, LocalDate startDate, DateTime now)
+    public FortnightRoutine(String name, LocalDate startDate, LocalDateTime now)
     {
         super(Routine.FORTNIGHT_ROUTINE, name, now);
 
@@ -46,16 +46,16 @@ public class FortnightRoutine extends Routine
 
     @Nullable
     @Override
-    public DateTime getNextProcedureTime(DateTime now)
+    public LocalDateTime getNextProcedureTime(LocalDateTime now)
     {
-        DateTime week1Next = getNextProcedureTime(week1, now);
-        DateTime week2Next = getNextProcedureTime(week2, now);
+        LocalDateTime week1Next = getNextProcedureTime(week1, now);
+        LocalDateTime week2Next = getNextProcedureTime(week2, now);
 
         return getEarliestDateTime(week1Next, week2Next);
     }
 
     @Override
-    public List<PendingProcedure> getPendingProcedures(DateTime now)
+    public List<PendingProcedure> getPendingProcedures(LocalDateTime now)
     {
         List<PendingProcedure> week1PendingProcedures = week1.getPendingProceduresBetween(
             lastCompleted,
@@ -100,13 +100,15 @@ public class FortnightRoutine extends Routine
     }
 
     @CheckForNull
-    private DateTime getNextProcedureTime(Week week, DateTime now)
+    private LocalDateTime getNextProcedureTime(Week week, LocalDateTime now)
     {
         return week.getNextProcedureTime(now);
     }
 
     @Nullable
-    private static DateTime getEarliestDateTime(DateTime week1Next, DateTime week2Next)
+    private static LocalDateTime getEarliestDateTime(
+        LocalDateTime week1Next,
+        LocalDateTime week2Next)
     {
         return Stream.of(week1Next, week2Next)
             .filter(Objects::nonNull)

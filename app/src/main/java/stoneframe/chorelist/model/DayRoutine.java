@@ -1,6 +1,7 @@
 package stoneframe.chorelist.model;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
+import org.joda.time.LocalTime;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -13,7 +14,7 @@ public class DayRoutine extends Routine
 {
     private final List<Procedure> procedures = new LinkedList<>();
 
-    public DayRoutine(String name, DateTime now)
+    public DayRoutine(String name, LocalDateTime now)
     {
         super(DAY_ROUTINE, name, now);
     }
@@ -28,18 +29,18 @@ public class DayRoutine extends Routine
 
     @Override
     @CheckForNull
-    public DateTime getNextProcedureTime(DateTime now)
+    public LocalDateTime getNextProcedureTime(LocalDateTime now)
     {
         if (procedures.isEmpty()) return null;
 
         return procedures.stream()
             .sorted()
             .filter(p -> p.getTime().isAfter(now.toLocalTime()))
-            .map(p -> now.withTimeAtStartOfDay()
+            .map(p -> now.withTime(0, 0, 0, 0)
                 .plusHours(p.getTime().getHourOfDay())
                 .plusMinutes(p.getTime().getMinuteOfHour()))
             .findFirst()
-            .orElse(now.withTimeAtStartOfDay()
+            .orElse(now.withTime(0, 0, 0, 0)
                 .plusDays(1)
                 .plusHours(procedures.get(0).getTime().getHourOfDay())
                 .plusMinutes(procedures.get(0).getTime().getMinuteOfHour()));
@@ -56,20 +57,20 @@ public class DayRoutine extends Routine
     }
 
     @Override
-    public List<PendingProcedure> getPendingProcedures(DateTime now)
+    public List<PendingProcedure> getPendingProcedures(LocalDateTime now)
     {
         return procedures.stream()
             .flatMap(p ->
             {
                 List<PendingProcedure> pendingProcedures = new LinkedList<>();
 
-                for (DateTime i = lastCompleted.withTimeAtStartOfDay();
+                for (LocalDateTime i = lastCompleted.toLocalDate().toLocalDateTime(LocalTime.MIDNIGHT);
                      i.isBefore(now);
                      i = i.plusDays(1))
                 {
                     PendingProcedure pendingProcedure = new PendingProcedure(
                         p,
-                        p.getTime().toDateTime(i));
+                        i.toLocalDate().toLocalDateTime(p.getTime()));
 
                     pendingProcedures.add(pendingProcedure);
                 }

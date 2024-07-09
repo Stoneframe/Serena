@@ -1,8 +1,11 @@
 package stoneframe.chorelist.model;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 public interface TimeService
 {
-    DateTime getNow();
+    LocalDateTime getNow();
+
+    LocalDate getToday();
 }

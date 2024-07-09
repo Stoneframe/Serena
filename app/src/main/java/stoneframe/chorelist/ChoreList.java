@@ -1,6 +1,6 @@
 package stoneframe.chorelist;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 
 import java.util.List;
 
@@ -56,12 +56,10 @@ public class ChoreList
             container.ChoreManager = new ChoreManager(effortTracker, choreSelector);
             container.TaskManager = new TaskManager();
             container.ChecklistManager = new ChecklistManager();
-            container.CaloriesManager = new CaloriesManager(
-                timeService.getNow().toLocalDate(),
-                250);
+            container.CaloriesManager = new CaloriesManager(timeService.getToday(), 250);
         }
 
-        container.TaskManager.clean(timeService.getNow());
+        container.TaskManager.clean(timeService.getToday());
     }
 
     public void save()
@@ -86,27 +84,27 @@ public class ChoreList
 
     public List<Chore> getTodaysChores()
     {
-        return container.ChoreManager.getChores(timeService.getNow());
+        return container.ChoreManager.getChores(timeService.getToday());
     }
 
     public void choreDone(Chore chore)
     {
-        container.ChoreManager.complete(chore, timeService.getNow());
+        container.ChoreManager.complete(chore, timeService.getToday());
     }
 
     public void choreSkip(Chore chore)
     {
-        container.ChoreManager.skip(chore, timeService.getNow());
+        container.ChoreManager.skip(chore, timeService.getToday());
     }
 
     public void chorePostpone(Chore chore)
     {
-        container.ChoreManager.postpone(chore, timeService.getNow());
+        container.ChoreManager.postpone(chore, timeService.getToday());
     }
 
     public int getRemainingEffort()
     {
-        return container.ChoreManager.getEffortTracker().getTodaysEffort(timeService.getNow());
+        return container.ChoreManager.getEffortTracker().getTodaysEffort(timeService.getToday());
     }
 
     public EffortTracker getEffortTracker()
@@ -136,12 +134,12 @@ public class ChoreList
 
     public List<Task> getTodaysTasks()
     {
-        return container.TaskManager.getTodaysTasks(timeService.getNow());
+        return container.TaskManager.getTodaysTasks(timeService.getToday());
     }
 
     public void taskDone(Task task)
     {
-        container.TaskManager.complete(task, timeService.getNow());
+        container.TaskManager.complete(task, timeService.getToday());
     }
 
     public void taskUndone(Task task)
@@ -151,7 +149,7 @@ public class ChoreList
 
     public void taskPostpone(Task task)
     {
-        container.TaskManager.postpone(task, timeService.getNow());
+        container.TaskManager.postpone(task, timeService.getToday());
     }
 
     public List<Routine> getAllRoutines()
@@ -169,7 +167,7 @@ public class ChoreList
         container.RoutineManager.removeRoutine(routine);
     }
 
-    public DateTime getNextRoutineProcedureTime()
+    public LocalDateTime getNextRoutineProcedureTime()
     {
         return container.RoutineManager.getNextProcedureTime(timeService.getNow());
     }
@@ -223,7 +221,7 @@ public class ChoreList
 
     public int getAvailableCalories()
     {
-        return container.CaloriesManager.getAvailable(timeService.getNow().toLocalDateTime());
+        return container.CaloriesManager.getAvailable(timeService.getNow());
     }
 
     public void addCalorieConsumption(String description, int calories)
@@ -231,7 +229,7 @@ public class ChoreList
         CalorieConsumption consumption = new CalorieConsumption(
             description,
             calories,
-            timeService.getNow().toLocalDateTime());
+            timeService.getNow());
 
         container.CaloriesManager.addConsumption(consumption);
     }

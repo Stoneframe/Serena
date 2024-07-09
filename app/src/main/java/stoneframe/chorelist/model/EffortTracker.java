@@ -1,10 +1,10 @@
 package stoneframe.chorelist.model;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 public interface EffortTracker
 {
-    int getTodaysEffort(DateTime now);
+    int getTodaysEffort(LocalDate today);
 
     void spend(int effort);
 }

@@ -1,14 +1,21 @@
 package stoneframe.chorelist.model.timeservices;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import stoneframe.chorelist.model.TimeService;
 
 public class RealTimeService implements TimeService
 {
     @Override
-    public DateTime getNow()
+    public LocalDateTime getNow()
     {
-        return DateTime.now();
+        return LocalDateTime.now();
+    }
+
+    @Override
+    public LocalDate getToday()
+    {
+        return LocalDate.now();
     }
 }

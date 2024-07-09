@@ -2,8 +2,8 @@ package stoneframe.chorelist.model;
 
 import androidx.annotation.Nullable;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ public class WeekRoutine extends Routine
 {
     private final Week week;
 
-    public WeekRoutine(String name, DateTime now)
+    public WeekRoutine(String name, LocalDateTime now)
     {
         super(WEEK_ROUTINE, name, now);
 
@@ -31,13 +31,13 @@ public class WeekRoutine extends Routine
 
     @Nullable
     @Override
-    public DateTime getNextProcedureTime(DateTime now)
+    public LocalDateTime getNextProcedureTime(LocalDateTime now)
     {
         return week.getNextProcedureTime(now);
     }
 
     @Override
-    public List<PendingProcedure> getPendingProcedures(DateTime now)
+    public List<PendingProcedure> getPendingProcedures(LocalDateTime now)
     {
         return week.getPendingProceduresBetween(lastCompleted, now);
     }

@@ -11,7 +11,7 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.util.DialogUtils;
@@ -29,8 +29,8 @@ public class TaskActivity extends AppCompatActivity
     private int action;
 
     private String description;
-    private DateTime deadline;
-    private DateTime ignoreBefore;
+    private LocalDate deadline;
+    private LocalDate ignoreBefore;
     private boolean isDone;
 
     private DatePickerDialog deadlinePickerDialog;
@@ -57,19 +57,19 @@ public class TaskActivity extends AppCompatActivity
         Button saveButton = findViewById(R.id.saveButton);
 
         description = intent.getStringExtra("Description");
-        deadline = (DateTime)intent.getSerializableExtra("Deadline");
-        ignoreBefore = (DateTime)intent.getSerializableExtra("IgnoreBefore");
+        deadline = (LocalDate)intent.getSerializableExtra("Deadline");
+        ignoreBefore = (LocalDate)intent.getSerializableExtra("IgnoreBefore");
         isDone = intent.getBooleanExtra("IsDone", false);
 
         deadlinePickerDialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) ->
         {
-            deadline = new DateTime(year, month + 1, dayOfMonth, 0, 0);
+            deadline = new LocalDate(year, month + 1, dayOfMonth);
             deadlineEditText.setText(deadline.toString("yyyy-MM-dd"));
         }, deadline.getYear(), deadline.getMonthOfYear() - 1, deadline.getDayOfMonth());
 
         ignoreBeforePickerDialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) ->
         {
-            ignoreBefore = new DateTime(year, month + 1, dayOfMonth, 0, 0);
+            ignoreBefore = new LocalDate(year, month + 1, dayOfMonth);
             ignoreBeforeEditText.setText(ignoreBefore.toString("yyyy-MM-dd"));
         }, ignoreBefore.getYear(), ignoreBefore.getMonthOfYear() - 1, ignoreBefore.getDayOfMonth());
 

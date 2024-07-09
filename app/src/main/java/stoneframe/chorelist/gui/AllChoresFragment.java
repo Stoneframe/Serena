@@ -15,7 +15,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.util.Objects;
 
@@ -65,9 +65,9 @@ public class AllChoresFragment extends Fragment
                 "",
                 1,
                 1,
-                DateTime.now().withTimeAtStartOfDay(),
-                1, Chore.DAYS
-            );
+                LocalDate.now(),
+                1,
+                Chore.DAYS);
             startChoreEditor(chore, ChoreActivity.CHORE_ACTION_ADD);
         });
 
@@ -105,7 +105,7 @@ public class AllChoresFragment extends Fragment
             switch (intent.getIntExtra("RESULT", -1))
             {
                 case ChoreActivity.CHORE_RESULT_SAVE:
-                    chore.setNext((DateTime)intent.getSerializableExtra("Next"));
+                    chore.setNext((LocalDate)intent.getSerializableExtra("Next"));
                     chore.setDescription(intent.getStringExtra("Description"));
                     chore.setPriority(intent.getIntExtra("Priority", 1));
                     chore.setEffort(intent.getIntExtra("Effort", 1));

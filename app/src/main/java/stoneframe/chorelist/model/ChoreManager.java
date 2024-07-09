@@ -1,6 +1,6 @@
 package stoneframe.chorelist.model;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -41,7 +41,7 @@ public class ChoreManager
         return Collections.unmodifiableList(chores);
     }
 
-    public List<Chore> getChores(DateTime now)
+    public List<Chore> getChores(LocalDate now)
     {
         chores.sort(new Chore.ChoreComparator(now));
 
@@ -66,20 +66,20 @@ public class ChoreManager
         return Collections.unmodifiableList(list);
     }
 
-    public void complete(Chore chore, DateTime now)
+    public void complete(Chore chore, LocalDate today)
     {
-        chore.reschedule(now);
+        chore.reschedule(today);
         effortTracker.spend(chore.getEffort());
     }
 
-    public void skip(Chore chore, DateTime now)
+    public void skip(Chore chore, LocalDate today)
     {
-        chore.reschedule(now);
+        chore.reschedule(today);
     }
 
-    public void postpone(Chore chore, DateTime now)
+    public void postpone(Chore chore, LocalDate today)
     {
-        chore.postpone(now);
+        chore.postpone(today);
     }
 
     @Override

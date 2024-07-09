@@ -12,7 +12,7 @@ import android.content.Intent;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,7 +27,7 @@ public class RoutineNotifier
     public static final int NOTIFICATION_ID = 1;
 
     @SuppressLint("ScheduleExactAlarm")
-    public static void scheduleRoutineAlarm(Context context, DateTime triggerDateTime)
+    public static void scheduleRoutineAlarm(Context context, LocalDateTime triggerDateTime)
     {
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 
@@ -39,7 +39,7 @@ public class RoutineNotifier
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
-            triggerDateTime.getMillis(),
+            triggerDateTime.toDateTime().getMillis(),
             pendingIntent);
     }
 

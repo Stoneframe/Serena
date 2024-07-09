@@ -1,6 +1,6 @@
 package stoneframe.chorelist.model;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -30,7 +30,7 @@ public class RoutineManager
             .collect(Collectors.toList());
     }
 
-    public DateTime getNextProcedureTime(DateTime now)
+    public LocalDateTime getNextProcedureTime(LocalDateTime now)
     {
         return routines.stream()
             .filter(Routine::isEnabled)
@@ -41,7 +41,7 @@ public class RoutineManager
             .orElse(null);
     }
 
-    public List<PendingProcedure> getPendingProcedures(DateTime now)
+    public List<PendingProcedure> getPendingProcedures(LocalDateTime now)
     {
         return routines.stream()
             .filter(Routine::isEnabled)
@@ -50,7 +50,7 @@ public class RoutineManager
             .collect(Collectors.toList());
     }
 
-    public List<PendingProcedure> getFirstPendingProcedures(DateTime now)
+    public List<PendingProcedure> getFirstPendingProcedures(LocalDateTime now)
     {
         return routines.stream()
             .filter(Routine::isEnabled)
@@ -72,7 +72,7 @@ public class RoutineManager
         routine.procedureDone(procedure);
     }
 
-    public void resetRoutine(Routine routine, DateTime now)
+    public void resetRoutine(Routine routine, LocalDateTime now)
     {
         routine.lastCompleted = now;
     }

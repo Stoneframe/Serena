@@ -6,7 +6,7 @@ import static junit.framework.TestCase.assertTrue;
 
 import androidx.annotation.NonNull;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +19,7 @@ import stoneframe.chorelist.model.Procedure;
 
 public class FortnightRoutineTest
 {
-    private final DateTime now = new DateTime(2024, 1, 1, 0, 0);
+    private final LocalDateTime now = new LocalDateTime(2024, 1, 1, 0, 0);
 
     private FortnightRoutine routine;
 
@@ -32,7 +32,7 @@ public class FortnightRoutineTest
     @Test
     public void getNextProcedureTime_NoProcedures_returnNull()
     {
-        DateTime next = routine.getNextProcedureTime(now);
+        LocalDateTime next = routine.getNextProcedureTime(now);
 
         assertNull(next);
     }
@@ -44,9 +44,9 @@ public class FortnightRoutineTest
             .getMonday()
             .addProcedure(new Procedure("Monday 1", new LocalTime(10, 0)));
 
-        DateTime next = routine.getNextProcedureTime(now);
+        LocalDateTime next = routine.getNextProcedureTime(now);
 
-        assertEquals(new DateTime(2024, 1, 1, 10, 0), next);
+        assertEquals(new LocalDateTime(2024, 1, 1, 10, 0), next);
     }
 
     @Test
@@ -56,9 +56,9 @@ public class FortnightRoutineTest
             .getMonday()
             .addProcedure(new Procedure("Monday 1", new LocalTime(12, 0)));
 
-        DateTime next = routine.getNextProcedureTime(now);
+        LocalDateTime next = routine.getNextProcedureTime(now);
 
-        assertEquals(new DateTime(2024, 1, 1, 12, 0), next);
+        assertEquals(new LocalDateTime(2024, 1, 1, 12, 0), next);
     }
 
     @Test
@@ -68,9 +68,9 @@ public class FortnightRoutineTest
             .getTuesday()
             .addProcedure(new Procedure("Tuesday 1", new LocalTime(15, 0)));
 
-        DateTime next = routine.getNextProcedureTime(now);
+        LocalDateTime next = routine.getNextProcedureTime(now);
 
-        assertEquals(new DateTime(2024, 1, 2, 15, 0), next);
+        assertEquals(new LocalDateTime(2024, 1, 2, 15, 0), next);
     }
 
     @Test
@@ -80,9 +80,9 @@ public class FortnightRoutineTest
             .getWednesday()
             .addProcedure(new Procedure("Wednesday 1", new LocalTime(16, 0)));
 
-        DateTime next = routine.getNextProcedureTime(now);
+        LocalDateTime next = routine.getNextProcedureTime(now);
 
-        assertEquals(new DateTime(2024, 1, 10, 16, 0), next);
+        assertEquals(new LocalDateTime(2024, 1, 10, 16, 0), next);
     }
 
     @Test
@@ -96,9 +96,9 @@ public class FortnightRoutineTest
             .getSunday()
             .addProcedure(new Procedure("Sunday 1", new LocalTime(10, 0)));
 
-        DateTime next = routine.getNextProcedureTime(now.plusDays(2));
+        LocalDateTime next = routine.getNextProcedureTime(now.plusDays(2));
 
-        assertEquals(new DateTime(2024, 1, 14, 10, 0), next);
+        assertEquals(new LocalDateTime(2024, 1, 14, 10, 0), next);
     }
 
     @Test
@@ -112,9 +112,9 @@ public class FortnightRoutineTest
             .getSunday()
             .addProcedure(new Procedure("Sunday 1", new LocalTime(10, 0)));
 
-        DateTime next = routine.getNextProcedureTime(now.plusDays(11));
+        LocalDateTime next = routine.getNextProcedureTime(now.plusDays(11));
 
-        assertEquals(new DateTime(2024, 1, 14, 10, 0), next);
+        assertEquals(new LocalDateTime(2024, 1, 14, 10, 0), next);
     }
 
     @Test
@@ -124,9 +124,9 @@ public class FortnightRoutineTest
             .getSunday()
             .addProcedure(new Procedure("Sunday 1", new LocalTime(10, 0)));
 
-        DateTime next = routine.getNextProcedureTime(now.plusDays(8));
+        LocalDateTime next = routine.getNextProcedureTime(now.plusDays(8));
 
-        assertEquals(new DateTime(2024, 1, 21, 10, 0), next);
+        assertEquals(new LocalDateTime(2024, 1, 21, 10, 0), next);
     }
 
     @Test
@@ -140,24 +140,24 @@ public class FortnightRoutineTest
 
         routine.procedureDone(pendingProcedure);
 
-        DateTime next = routine.getNextProcedureTime(now.plusHours(11));
+        LocalDateTime next = routine.getNextProcedureTime(now.plusHours(11));
 
-        assertEquals(new DateTime(2024, 1, 15, 10, 0), next);
+        assertEquals(new LocalDateTime(2024, 1, 15, 10, 0), next);
     }
 
     @Test
     public void getNextProcedureTime_procedure_returnCorrectTime()
     {
-        DateTime testNow = now.plusDays(11);
+        LocalDateTime testNow = now.plusDays(11);
 
         routine.getWeek2().getFriday().addProcedure(new Procedure("Fri1W2", new LocalTime(10, 0)));
         routine.getWeek2().getFriday().addProcedure(new Procedure("Fri2W2", new LocalTime(11, 0)));
 
-        DateTime next1 = routine.getNextProcedureTime(testNow.plusHours(9).plusMinutes(0));
-        DateTime next2 = routine.getNextProcedureTime(testNow.plusHours(10).plusMinutes(1));
+        LocalDateTime next1 = routine.getNextProcedureTime(testNow.plusHours(9).plusMinutes(0));
+        LocalDateTime next2 = routine.getNextProcedureTime(testNow.plusHours(10).plusMinutes(1));
 
-        assertEquals(new DateTime(2024, 1, 12, 10, 0), next1);
-        assertEquals(new DateTime(2024, 1, 12, 11, 0), next2);
+        assertEquals(new LocalDateTime(2024, 1, 12, 10, 0), next1);
+        assertEquals(new LocalDateTime(2024, 1, 12, 11, 0), next2);
     }
 
     @Test
@@ -343,7 +343,7 @@ public class FortnightRoutineTest
 
         routine.procedureDone(pendingProcedure);
 
-        DateTime nextProcedureTime = routine.getNextProcedureTime(getDateTime(7, 23));
+        LocalDateTime nextProcedureTime = routine.getNextProcedureTime(getDateTime(7, 23));
 
         assertEquals(getDateTime(8, 10), nextProcedureTime);
     }
@@ -361,7 +361,7 @@ public class FortnightRoutineTest
 
         routine.procedureDone(pendingProcedure);
 
-        DateTime nextProcedureTime = routine.getNextProcedureTime(getDateTime(14, 23));
+        LocalDateTime nextProcedureTime = routine.getNextProcedureTime(getDateTime(14, 23));
 
         assertEquals(getDateTime(15, 10), nextProcedureTime);
     }
@@ -379,7 +379,7 @@ public class FortnightRoutineTest
 
         routine.procedureDone(pendingProcedure);
 
-        DateTime nextProcedureTime = routine.getNextProcedureTime(getDateTime(8, 1));
+        LocalDateTime nextProcedureTime = routine.getNextProcedureTime(getDateTime(8, 1));
 
         assertEquals(getDateTime(8, 10), nextProcedureTime);
     }
@@ -397,13 +397,13 @@ public class FortnightRoutineTest
 
         routine.procedureDone(pendingProcedure);
 
-        DateTime nextProcedureTime = routine.getNextProcedureTime(getDateTime(15, 1));
+        LocalDateTime nextProcedureTime = routine.getNextProcedureTime(getDateTime(15, 1));
 
         assertEquals(getDateTime(15, 10), nextProcedureTime);
     }
 
     @NonNull
-    private DateTime getDateTime(int day, int hours)
+    private LocalDateTime getDateTime(int day, int hours)
     {
         return now.plusDays(day - 1).plusHours(hours);
     }

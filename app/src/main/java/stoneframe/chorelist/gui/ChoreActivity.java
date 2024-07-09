@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.util.DialogUtils;
@@ -31,7 +31,7 @@ public class ChoreActivity extends AppCompatActivity
 
     private int action;
 
-    private DateTime next;
+    private LocalDate next;
     private String description;
     private int priority;
     private int effort;
@@ -63,7 +63,7 @@ public class ChoreActivity extends AppCompatActivity
         Button button = findViewById(R.id.removeButton);
         button.setVisibility(action == CHORE_ACTION_EDIT ? Button.VISIBLE : Button.INVISIBLE);
 
-        next = (DateTime)intent.getSerializableExtra("Next");
+        next = (LocalDate)intent.getSerializableExtra("Next");
         description = intent.getStringExtra("Description");
         priority = intent.getIntExtra("Priority", 1);
         effort = intent.getIntExtra("Effort", 1);
@@ -72,7 +72,7 @@ public class ChoreActivity extends AppCompatActivity
 
         datePickerDialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) ->
         {
-            next = new DateTime(year, month + 1, dayOfMonth, 0, 0);
+            next = new LocalDate(year, month + 1, dayOfMonth);
             nextEditText.setText(next.toString("yyyy-MM-dd"));
         }, next.getYear(), next.getMonthOfYear() - 1, next.getDayOfMonth());
 

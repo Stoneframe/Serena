@@ -3,8 +3,8 @@ package stoneframe.chorelist;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
-import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
+import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import stoneframe.chorelist.model.WeekRoutine;
 
 public class WeekRoutineTest
 {
-    private final DateTime now = new DateTime(2024, 1, 1, 0, 0);
+    private final LocalDateTime now = new LocalDateTime(2024, 1, 1, 0, 0);
 
     private WeekRoutine routine;
 
@@ -33,9 +33,9 @@ public class WeekRoutineTest
         routine.getWeekDay(DateTimeConstants.MONDAY)
             .addProcedure(new Procedure("Procedure", new LocalTime(10, 0)));
 
-        DateTime next = routine.getNextProcedureTime(now);
+        LocalDateTime next = routine.getNextProcedureTime(now);
 
-        assertEquals(new DateTime(2024, 1, 1, 10, 0), next);
+        assertEquals(new LocalDateTime(2024, 1, 1, 10, 0), next);
     }
 
     @Test
@@ -44,9 +44,9 @@ public class WeekRoutineTest
         routine.getWeekDay(DateTimeConstants.MONDAY)
             .addProcedure(new Procedure("Procedure", new LocalTime(10, 0)));
 
-        DateTime next = routine.getNextProcedureTime(now.plusHours(12));
+        LocalDateTime next = routine.getNextProcedureTime(now.plusHours(12));
 
-        assertEquals(new DateTime(2024, 1, 8, 10, 0), next);
+        assertEquals(new LocalDateTime(2024, 1, 8, 10, 0), next);
     }
 
     @Test

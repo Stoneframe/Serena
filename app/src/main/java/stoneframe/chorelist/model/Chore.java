@@ -2,7 +2,7 @@ package stoneframe.chorelist.model;
 
 import androidx.annotation.NonNull;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.util.Comparator;
 
@@ -13,8 +13,8 @@ public class Chore
     public static final int MONTHS = 2;
     public static final int YEARS = 3;
 
-    private DateTime next;
-    private DateTime postpone;
+    private LocalDate next;
+    private LocalDate postpone;
 
     private String description;
     private int priority;
@@ -27,7 +27,7 @@ public class Chore
         String description,
         int priority,
         int effort,
-        DateTime next,
+        LocalDate next,
         int intervalLength,
         int intervalUnit)
     {
@@ -41,12 +41,12 @@ public class Chore
         this.intervalLength = intervalLength;
     }
 
-    public DateTime getNext()
+    public LocalDate getNext()
     {
-        return new DateTime(next);
+        return new LocalDate(next);
     }
 
-    public void setNext(DateTime next)
+    public void setNext(LocalDate next)
     {
         this.next = next;
         this.postpone = null;
@@ -102,19 +102,19 @@ public class Chore
         this.intervalLength = intervalLength;
     }
 
-    public void reschedule(DateTime now)
+    public void reschedule(LocalDate today)
     {
         if (next == null)
         {
-            next = now;
+            next = today;
         }
 
-        while (!next.isAfter(now))
+        while (!next.isAfter(today))
         {
             switch (intervalUnit)
             {
                 case DAYS:
-                    next = now.plusDays(intervalLength).withTimeAtStartOfDay();
+                    next = today.plusDays(intervalLength);
                     break;
                 case WEEKS:
                     next = next.plusWeeks(intervalLength);
@@ -133,9 +133,9 @@ public class Chore
         postpone = null;
     }
 
-    public void postpone(DateTime now)
+    public void postpone(LocalDate today)
     {
-        postpone = now.withTimeAtStartOfDay().plusDays(1);
+        postpone = today.plusDays(1);
     }
 
     @Override
@@ -158,23 +158,23 @@ public class Chore
         return description;
     }
 
-    boolean isTimeToDo(DateTime now)
+    boolean isTimeToDo(LocalDate now)
     {
         return getNextOrPostpone().isAfter(now);
     }
 
-    private DateTime getNextOrPostpone()
+    private LocalDate getNextOrPostpone()
     {
         return postpone == null ? next : postpone;
     }
 
     public static class ChoreComparator implements Comparator<Chore>
     {
-        private final DateTime now;
+        private final LocalDate today;
 
-        public ChoreComparator(DateTime now)
+        public ChoreComparator(LocalDate today)
         {
-            this.now = now;
+            this.today = today;
         }
 
         @Override
@@ -182,7 +182,7 @@ public class Chore
         {
             int i;
 
-            if (o1.getNextOrPostpone().isAfter(now) || o2.getNextOrPostpone().isAfter(now))
+            if (o1.getNextOrPostpone().isAfter(today) || o2.getNextOrPostpone().isAfter(today))
             {
                 if ((i = o1.getNextOrPostpone().compareTo(o2.getNextOrPostpone())) != 0) return i;
             }

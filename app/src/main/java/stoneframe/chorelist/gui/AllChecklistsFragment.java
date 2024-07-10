@@ -15,9 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import stoneframe.chorelist.ChoreList;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.R;
-import stoneframe.chorelist.model.Checklist;
+import stoneframe.chorelist.model.checklists.Checklist;
 
 public class AllChecklistsFragment extends Fragment
 {

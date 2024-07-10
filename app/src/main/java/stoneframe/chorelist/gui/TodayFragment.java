@@ -16,11 +16,11 @@ import androidx.fragment.app.Fragment;
 
 import org.joda.time.LocalDate;
 
-import stoneframe.chorelist.ChoreList;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.R;
-import stoneframe.chorelist.model.Chore;
-import stoneframe.chorelist.model.PendingProcedure;
-import stoneframe.chorelist.model.Task;
+import stoneframe.chorelist.model.chores.Chore;
+import stoneframe.chorelist.model.routines.PendingProcedure;
+import stoneframe.chorelist.model.tasks.Task;
 
 public class TodayFragment extends Fragment
 {

@@ -10,13 +10,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import stoneframe.chorelist.ChoreList;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.util.DialogUtils;
 import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
-import stoneframe.chorelist.model.Checklist;
-import stoneframe.chorelist.model.ChecklistItem;
+import stoneframe.chorelist.model.checklists.Checklist;
+import stoneframe.chorelist.model.checklists.ChecklistItem;
 
 public class EditChecklistActivity extends Activity
 {

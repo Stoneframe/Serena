@@ -7,10 +7,10 @@ import org.junit.Test;
 import stoneframe.chorelist.json.ChoreManagerToJsonConverter;
 import stoneframe.chorelist.json.SimpleChoreSelectorConverter;
 import stoneframe.chorelist.json.SimpleEffortTrackerConverter;
-import stoneframe.chorelist.model.Chore;
-import stoneframe.chorelist.model.ChoreManager;
-import stoneframe.chorelist.model.choreselectors.SimpleChoreSelector;
-import stoneframe.chorelist.model.efforttrackers.SimpleEffortTracker;
+import stoneframe.chorelist.model.chores.Chore;
+import stoneframe.chorelist.model.chores.ChoreManager;
+import stoneframe.chorelist.model.chores.choreselectors.SimpleChoreSelector;
+import stoneframe.chorelist.model.chores.efforttrackers.SimpleEffortTracker;
 
 public class ChoreManagerToJsonConverterTest
 {

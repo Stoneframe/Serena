@@ -14,11 +14,12 @@ import java.util.List;
 import stoneframe.chorelist.json.ContainerJsonConverter;
 import stoneframe.chorelist.json.SimpleChoreSelectorConverter;
 import stoneframe.chorelist.json.WeeklyEffortTrackerConverter;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.Container;
-import stoneframe.chorelist.model.PendingProcedure;
+import stoneframe.chorelist.model.routines.PendingProcedure;
 import stoneframe.chorelist.model.Storage;
-import stoneframe.chorelist.model.choreselectors.SimpleChoreSelector;
-import stoneframe.chorelist.model.efforttrackers.SimpleEffortTracker;
+import stoneframe.chorelist.model.chores.choreselectors.SimpleChoreSelector;
+import stoneframe.chorelist.model.chores.efforttrackers.SimpleEffortTracker;
 
 public class ManualTest
 {

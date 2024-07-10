@@ -6,8 +6,8 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-import stoneframe.chorelist.model.EffortTracker;
-import stoneframe.chorelist.model.efforttrackers.SimpleEffortTracker;
+import stoneframe.chorelist.model.chores.EffortTracker;
+import stoneframe.chorelist.model.chores.efforttrackers.SimpleEffortTracker;
 
 public class SimpleEffortTrackerConverter implements EffortTrackerConverter
 {

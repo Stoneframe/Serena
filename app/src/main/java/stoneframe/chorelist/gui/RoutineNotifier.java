@@ -17,9 +17,9 @@ import org.joda.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import stoneframe.chorelist.ChoreList;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.R;
-import stoneframe.chorelist.model.PendingProcedure;
+import stoneframe.chorelist.model.routines.PendingProcedure;
 
 public class RoutineNotifier
 {

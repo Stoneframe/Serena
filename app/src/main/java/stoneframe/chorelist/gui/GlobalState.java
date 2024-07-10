@@ -2,9 +2,9 @@ package stoneframe.chorelist.gui;
 
 import android.app.Application;
 
-import stoneframe.chorelist.ChoreList;
-import stoneframe.chorelist.model.Checklist;
-import stoneframe.chorelist.model.Routine;
+import stoneframe.chorelist.model.ChoreList;
+import stoneframe.chorelist.model.checklists.Checklist;
+import stoneframe.chorelist.model.routines.Routine;
 
 public class GlobalState extends Application
 {

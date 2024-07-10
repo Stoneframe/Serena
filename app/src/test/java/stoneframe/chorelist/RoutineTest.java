@@ -6,16 +6,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalTime;
-import org.junit.Test;
-
-import java.util.Collections;
-import java.util.List;
-
-import stoneframe.chorelist.model.Procedure;
-import stoneframe.chorelist.model.Routine;
-
 public class RoutineTest
 {
 //    @Test

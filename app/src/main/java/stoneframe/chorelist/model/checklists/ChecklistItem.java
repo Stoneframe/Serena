@@ -1,4 +1,4 @@
-package stoneframe.chorelist.model;
+package stoneframe.chorelist.model.checklists;
 
 public class ChecklistItem
 {

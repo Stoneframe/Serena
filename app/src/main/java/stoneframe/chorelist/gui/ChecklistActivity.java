@@ -12,8 +12,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import stoneframe.chorelist.R;
-import stoneframe.chorelist.model.Checklist;
-import stoneframe.chorelist.model.ChecklistItem;
+import stoneframe.chorelist.model.checklists.Checklist;
+import stoneframe.chorelist.model.checklists.ChecklistItem;
 
 public class ChecklistActivity extends AppCompatActivity
 {

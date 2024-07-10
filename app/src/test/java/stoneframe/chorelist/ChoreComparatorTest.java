@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import stoneframe.chorelist.model.Chore;
+import stoneframe.chorelist.model.chores.Chore;
 
 public class ChoreComparatorTest
 {

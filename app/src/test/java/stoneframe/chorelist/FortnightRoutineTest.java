@@ -13,9 +13,9 @@ import org.junit.Test;
 
 import java.util.List;
 
-import stoneframe.chorelist.model.FortnightRoutine;
-import stoneframe.chorelist.model.PendingProcedure;
-import stoneframe.chorelist.model.Procedure;
+import stoneframe.chorelist.model.routines.FortnightRoutine;
+import stoneframe.chorelist.model.routines.PendingProcedure;
+import stoneframe.chorelist.model.routines.Procedure;
 
 public class FortnightRoutineTest
 {

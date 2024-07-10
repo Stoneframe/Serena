@@ -12,13 +12,13 @@ import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import stoneframe.chorelist.ChoreList;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.util.DialogUtils;
 import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
-import stoneframe.chorelist.model.DayRoutine;
-import stoneframe.chorelist.model.Procedure;
+import stoneframe.chorelist.model.routines.DayRoutine;
+import stoneframe.chorelist.model.routines.Procedure;
 
 public class DayRoutineActivity extends AppCompatActivity
 {

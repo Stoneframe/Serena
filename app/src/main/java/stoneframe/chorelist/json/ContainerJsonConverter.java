@@ -3,10 +3,10 @@ package stoneframe.chorelist.json;
 import com.fatboyindustrial.gsonjodatime.Converters;
 import com.google.gson.GsonBuilder;
 
-import stoneframe.chorelist.model.ChoreSelector;
+import stoneframe.chorelist.model.chores.ChoreSelector;
 import stoneframe.chorelist.model.Container;
-import stoneframe.chorelist.model.EffortTracker;
-import stoneframe.chorelist.model.Routine;
+import stoneframe.chorelist.model.chores.EffortTracker;
+import stoneframe.chorelist.model.routines.Routine;
 
 public class ContainerJsonConverter
 {

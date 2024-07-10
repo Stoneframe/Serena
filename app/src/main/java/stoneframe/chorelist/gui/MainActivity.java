@@ -25,15 +25,14 @@ import org.joda.time.LocalDateTime;
 
 import java.util.Objects;
 
-import stoneframe.chorelist.ChoreList;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.json.ContainerJsonConverter;
 import stoneframe.chorelist.json.SimpleChoreSelectorConverter;
 import stoneframe.chorelist.json.WeeklyEffortTrackerConverter;
-import stoneframe.chorelist.model.Container;
 import stoneframe.chorelist.model.Storage;
-import stoneframe.chorelist.model.choreselectors.SimpleChoreSelector;
-import stoneframe.chorelist.model.efforttrackers.WeeklyEffortTracker;
+import stoneframe.chorelist.model.chores.choreselectors.SimpleChoreSelector;
+import stoneframe.chorelist.model.chores.efforttrackers.WeeklyEffortTracker;
 import stoneframe.chorelist.model.storages.JsonConverter;
 import stoneframe.chorelist.model.storages.SharedPreferencesStorage;
 import stoneframe.chorelist.model.timeservices.RealTimeService;

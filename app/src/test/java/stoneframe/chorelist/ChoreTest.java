@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
-import stoneframe.chorelist.model.Chore;
+import stoneframe.chorelist.model.chores.Chore;
 
 public class ChoreTest
 {

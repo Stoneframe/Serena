@@ -15,7 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import stoneframe.chorelist.ChoreList;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;

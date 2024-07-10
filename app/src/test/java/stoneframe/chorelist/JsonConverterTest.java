@@ -6,27 +6,24 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.Date;
 import java.util.List;
 
 import stoneframe.chorelist.json.ContainerJsonConverter;
 import stoneframe.chorelist.json.SimpleChoreSelectorConverter;
 import stoneframe.chorelist.json.WeeklyEffortTrackerConverter;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.Container;
 import stoneframe.chorelist.model.Storage;
-import stoneframe.chorelist.model.Task;
-import stoneframe.chorelist.model.choreselectors.SimpleChoreSelector;
-import stoneframe.chorelist.model.efforttrackers.WeeklyEffortTracker;
+import stoneframe.chorelist.model.tasks.Task;
+import stoneframe.chorelist.model.chores.choreselectors.SimpleChoreSelector;
+import stoneframe.chorelist.model.chores.efforttrackers.WeeklyEffortTracker;
 import stoneframe.chorelist.model.storages.JsonConverter;
 import stoneframe.chorelist.model.timeservices.RealTimeService;
 

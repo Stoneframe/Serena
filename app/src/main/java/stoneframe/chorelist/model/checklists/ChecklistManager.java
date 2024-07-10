@@ -1,4 +1,4 @@
-package stoneframe.chorelist.model;
+package stoneframe.chorelist.model.checklists;
 
 import java.util.Collections;
 import java.util.LinkedList;

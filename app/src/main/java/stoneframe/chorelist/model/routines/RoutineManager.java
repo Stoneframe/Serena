@@ -1,4 +1,4 @@
-package stoneframe.chorelist.model;
+package stoneframe.chorelist.model.routines;
 
 import org.joda.time.LocalDateTime;
 

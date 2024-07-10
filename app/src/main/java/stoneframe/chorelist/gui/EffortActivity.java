@@ -13,9 +13,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.stream.IntStream;
 
-import stoneframe.chorelist.ChoreList;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.R;
-import stoneframe.chorelist.model.Chore;
+import stoneframe.chorelist.model.chores.Chore;
 
 public class EffortActivity extends AppCompatActivity implements TextWatcher
 {

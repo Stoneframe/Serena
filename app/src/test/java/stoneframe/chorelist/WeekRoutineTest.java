@@ -11,9 +11,9 @@ import org.junit.Test;
 
 import java.util.List;
 
-import stoneframe.chorelist.model.PendingProcedure;
-import stoneframe.chorelist.model.Procedure;
-import stoneframe.chorelist.model.WeekRoutine;
+import stoneframe.chorelist.model.routines.PendingProcedure;
+import stoneframe.chorelist.model.routines.Procedure;
+import stoneframe.chorelist.model.routines.WeekRoutine;
 
 public class WeekRoutineTest
 {

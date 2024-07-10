@@ -20,12 +20,12 @@ import org.joda.time.LocalDateTime;
 
 import java.util.Objects;
 
-import stoneframe.chorelist.ChoreList;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.R;
-import stoneframe.chorelist.model.DayRoutine;
-import stoneframe.chorelist.model.FortnightRoutine;
-import stoneframe.chorelist.model.Routine;
-import stoneframe.chorelist.model.WeekRoutine;
+import stoneframe.chorelist.model.routines.DayRoutine;
+import stoneframe.chorelist.model.routines.FortnightRoutine;
+import stoneframe.chorelist.model.routines.Routine;
+import stoneframe.chorelist.model.routines.WeekRoutine;
 
 public class AllRoutinesFragment extends Fragment
 {

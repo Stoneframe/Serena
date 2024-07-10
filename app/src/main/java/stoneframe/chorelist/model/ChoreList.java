@@ -1,22 +1,22 @@
-package stoneframe.chorelist;
+package stoneframe.chorelist.model;
 
 import org.joda.time.LocalDateTime;
 
 import java.util.List;
 
-import stoneframe.chorelist.model.Checklist;
-import stoneframe.chorelist.model.ChecklistManager;
-import stoneframe.chorelist.model.Chore;
-import stoneframe.chorelist.model.ChoreManager;
-import stoneframe.chorelist.model.ChoreSelector;
+import stoneframe.chorelist.model.checklists.Checklist;
+import stoneframe.chorelist.model.checklists.ChecklistManager;
+import stoneframe.chorelist.model.chores.Chore;
+import stoneframe.chorelist.model.chores.ChoreManager;
+import stoneframe.chorelist.model.chores.ChoreSelector;
 import stoneframe.chorelist.model.Container;
-import stoneframe.chorelist.model.EffortTracker;
-import stoneframe.chorelist.model.PendingProcedure;
-import stoneframe.chorelist.model.Routine;
-import stoneframe.chorelist.model.RoutineManager;
+import stoneframe.chorelist.model.chores.EffortTracker;
+import stoneframe.chorelist.model.routines.PendingProcedure;
+import stoneframe.chorelist.model.routines.Routine;
+import stoneframe.chorelist.model.routines.RoutineManager;
 import stoneframe.chorelist.model.Storage;
-import stoneframe.chorelist.model.Task;
-import stoneframe.chorelist.model.TaskManager;
+import stoneframe.chorelist.model.tasks.Task;
+import stoneframe.chorelist.model.tasks.TaskManager;
 import stoneframe.chorelist.model.TimeService;
 import stoneframe.chorelist.model.calories.CalorieConsumption;
 import stoneframe.chorelist.model.calories.CaloriesManager;

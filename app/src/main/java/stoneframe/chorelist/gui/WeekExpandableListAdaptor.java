@@ -9,8 +9,8 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 import stoneframe.chorelist.R;
-import stoneframe.chorelist.model.Procedure;
-import stoneframe.chorelist.model.Routine;
+import stoneframe.chorelist.model.routines.Procedure;
+import stoneframe.chorelist.model.routines.Routine;
 
 public class WeekExpandableListAdaptor extends BaseExpandableListAdapter
 {

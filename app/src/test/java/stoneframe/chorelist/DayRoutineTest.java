@@ -7,9 +7,9 @@ import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import stoneframe.chorelist.model.DayRoutine;
-import stoneframe.chorelist.model.PendingProcedure;
-import stoneframe.chorelist.model.Procedure;
+import stoneframe.chorelist.model.routines.DayRoutine;
+import stoneframe.chorelist.model.routines.PendingProcedure;
+import stoneframe.chorelist.model.routines.Procedure;
 
 public class DayRoutineTest
 {

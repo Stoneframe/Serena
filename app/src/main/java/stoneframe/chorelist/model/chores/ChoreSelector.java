@@ -1,4 +1,4 @@
-package stoneframe.chorelist.model;
+package stoneframe.chorelist.model.chores;
 
 import java.util.List;
 

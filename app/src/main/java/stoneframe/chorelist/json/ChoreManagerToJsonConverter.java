@@ -3,16 +3,10 @@ package stoneframe.chorelist.json;
 import com.fatboyindustrial.gsonjodatime.Converters;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
 
-import org.joda.time.Chronology;
-import org.joda.time.chrono.ISOChronology;
-
-import java.io.IOException;
-
-import stoneframe.chorelist.model.ChoreManager;
-import stoneframe.chorelist.model.ChoreSelector;
-import stoneframe.chorelist.model.EffortTracker;
+import stoneframe.chorelist.model.chores.ChoreManager;
+import stoneframe.chorelist.model.chores.ChoreSelector;
+import stoneframe.chorelist.model.chores.EffortTracker;
 
 public class ChoreManagerToJsonConverter
 {

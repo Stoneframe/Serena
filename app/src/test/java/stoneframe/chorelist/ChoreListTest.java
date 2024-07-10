@@ -17,15 +17,16 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import stoneframe.chorelist.model.Chore;
+import stoneframe.chorelist.model.ChoreList;
+import stoneframe.chorelist.model.chores.Chore;
 import stoneframe.chorelist.model.Container;
-import stoneframe.chorelist.model.DayRoutine;
-import stoneframe.chorelist.model.Procedure;
-import stoneframe.chorelist.model.Routine;
+import stoneframe.chorelist.model.routines.DayRoutine;
+import stoneframe.chorelist.model.routines.Procedure;
+import stoneframe.chorelist.model.routines.Routine;
 import stoneframe.chorelist.model.Storage;
-import stoneframe.chorelist.model.Task;
-import stoneframe.chorelist.model.choreselectors.SimpleChoreSelector;
-import stoneframe.chorelist.model.efforttrackers.SimpleEffortTracker;
+import stoneframe.chorelist.model.tasks.Task;
+import stoneframe.chorelist.model.chores.choreselectors.SimpleChoreSelector;
+import stoneframe.chorelist.model.chores.efforttrackers.SimpleEffortTracker;
 
 @SuppressWarnings("SameParameterValue")
 public class ChoreListTest

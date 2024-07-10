@@ -1,9 +1,9 @@
-package stoneframe.chorelist.model.efforttrackers;
+package stoneframe.chorelist.model.chores.efforttrackers;
 
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 
-import stoneframe.chorelist.model.EffortTracker;
+import stoneframe.chorelist.model.chores.EffortTracker;
 
 public class WeeklyEffortTracker implements EffortTracker
 {

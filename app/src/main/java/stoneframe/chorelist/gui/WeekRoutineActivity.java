@@ -11,14 +11,14 @@ import android.widget.ExpandableListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import stoneframe.chorelist.ChoreList;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.util.DialogUtils;
 import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
-import stoneframe.chorelist.model.Procedure;
-import stoneframe.chorelist.model.Routine;
-import stoneframe.chorelist.model.WeekRoutine;
+import stoneframe.chorelist.model.routines.Procedure;
+import stoneframe.chorelist.model.routines.Routine;
+import stoneframe.chorelist.model.routines.WeekRoutine;
 
 public class WeekRoutineActivity extends AppCompatActivity
 {

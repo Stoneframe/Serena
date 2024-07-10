@@ -1,18 +1,13 @@
 package stoneframe.chorelist;
 
-import org.joda.time.LocalTime;
 import org.junit.Test;
 
-import stoneframe.chorelist.json.ContainerJsonConverter;
-import stoneframe.chorelist.model.ChoreManager;
+import stoneframe.chorelist.model.chores.ChoreManager;
 import stoneframe.chorelist.model.Container;
-import stoneframe.chorelist.model.Procedure;
-import stoneframe.chorelist.model.Routine;
-import stoneframe.chorelist.model.RoutineManager;
-import stoneframe.chorelist.model.TaskManager;
-import stoneframe.chorelist.model.choreselectors.SimpleChoreSelector;
-import stoneframe.chorelist.model.efforttrackers.WeeklyEffortTracker;
-import stoneframe.chorelist.model.timeservices.RealTimeService;
+import stoneframe.chorelist.model.routines.RoutineManager;
+import stoneframe.chorelist.model.tasks.TaskManager;
+import stoneframe.chorelist.model.chores.choreselectors.SimpleChoreSelector;
+import stoneframe.chorelist.model.chores.efforttrackers.WeeklyEffortTracker;
 
 public class ContainerTest
 {

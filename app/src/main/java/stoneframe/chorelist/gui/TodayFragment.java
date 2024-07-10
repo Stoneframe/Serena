@@ -1,6 +1,7 @@
 package stoneframe.chorelist.gui;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,6 +13,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+
+import org.joda.time.LocalDate;
 
 import stoneframe.chorelist.ChoreList;
 import stoneframe.chorelist.R;
@@ -144,15 +147,36 @@ public class TodayFragment extends Fragment
         });
         taskListView.setOnItemLongClickListener((parent, view, position, id) ->
         {
+            LocalDate today = LocalDate.now();
+
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setMessage("Do you want to postpone this task?")
+            builder.setMessage("Until when do you want to ignore this task?")
                 .setCancelable(false)
-                .setPositiveButton("Postpone", (dialog, skipButtonId) ->
+                .setPositiveButton("Tomorrow", (dialog, skipButtonId) ->
                 {
                     Task task = (Task)taskAdapter.getItem(position);
-                    choreList.taskPostpone(task);
+                    task.setIgnoreBefore(today.plusDays(1));
                     taskAdapter.notifyDataSetChanged();
                     choreList.save();
+                })
+                .setNegativeButton("Choose...", (dialog, postponeButtonId) ->
+                {
+                    DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        requireContext(),
+                        (v, year, month, dayOfMonth) ->
+                        {
+                            LocalDate ignoreBefore = new LocalDate(year, month + 1, dayOfMonth);
+
+                            Task task = (Task)taskAdapter.getItem(position);
+                            task.setIgnoreBefore(ignoreBefore);
+                            taskAdapter.notifyDataSetChanged();
+                            choreList.save();
+                        },
+                        today.getYear(),
+                        today.getMonthOfYear() - 1,
+                        today.getDayOfMonth());
+
+                    datePickerDialog.show();
                 })
                 .setNeutralButton("Cancel", (dialog, cancelButtonId) -> dialog.cancel());
 

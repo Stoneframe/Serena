@@ -4,22 +4,21 @@ import org.joda.time.LocalDateTime;
 
 import java.util.List;
 
+import stoneframe.chorelist.model.calories.CalorieConsumption;
+import stoneframe.chorelist.model.calories.CalorieConsumptionType;
+import stoneframe.chorelist.model.calories.CaloriesManager;
+import stoneframe.chorelist.model.calories.CustomCalorieConsumptionType;
 import stoneframe.chorelist.model.checklists.Checklist;
 import stoneframe.chorelist.model.checklists.ChecklistManager;
 import stoneframe.chorelist.model.chores.Chore;
 import stoneframe.chorelist.model.chores.ChoreManager;
 import stoneframe.chorelist.model.chores.ChoreSelector;
-import stoneframe.chorelist.model.Container;
 import stoneframe.chorelist.model.chores.EffortTracker;
 import stoneframe.chorelist.model.routines.PendingProcedure;
 import stoneframe.chorelist.model.routines.Routine;
 import stoneframe.chorelist.model.routines.RoutineManager;
-import stoneframe.chorelist.model.Storage;
 import stoneframe.chorelist.model.tasks.Task;
 import stoneframe.chorelist.model.tasks.TaskManager;
-import stoneframe.chorelist.model.TimeService;
-import stoneframe.chorelist.model.calories.CalorieConsumption;
-import stoneframe.chorelist.model.calories.CaloriesManager;
 
 public class ChoreList
 {
@@ -214,9 +213,7 @@ public class ChoreList
 
     public void setCalorieIncrementPerDay(int incrementPerDay)
     {
-        container.CaloriesManager.setIncrementPerDay(
-            timeService.getNow().toLocalDate(),
-            incrementPerDay);
+        container.CaloriesManager.setIncrementPerDay(timeService.getNow(), incrementPerDay);
     }
 
     public int getAvailableCalories()
@@ -232,5 +229,21 @@ public class ChoreList
             timeService.getNow());
 
         container.CaloriesManager.addConsumption(consumption);
+    }
+
+    public List<CalorieConsumptionType> getCaloriesConsumptionTypes()
+    {
+        return container.CaloriesManager.getConsumptionTypes();
+    }
+
+    public void addCalorieConsumptionType(String name, int calories)
+    {
+        container.CaloriesManager.addConsumptionType(
+            new CustomCalorieConsumptionType(name, calories));
+    }
+
+    public void removeCalorieConsumptionType(CustomCalorieConsumptionType consumptionType)
+    {
+        container.CaloriesManager.removeConsumptionType(consumptionType);
     }
 }

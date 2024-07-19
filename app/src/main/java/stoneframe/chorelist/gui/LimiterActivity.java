@@ -26,7 +26,7 @@ import stoneframe.chorelist.gui.util.EditTextCriteria;
 import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.limiters.CustomExpenditureType;
 import stoneframe.chorelist.model.limiters.ExpenditureType;
-import stoneframe.chorelist.model.limiters.Limiter;
+import stoneframe.chorelist.model.limiters.LimiterEditor;
 
 public class LimiterActivity extends AppCompatActivity
 {
@@ -44,7 +44,7 @@ public class LimiterActivity extends AppCompatActivity
 
     private ChoreList choreList;
 
-    private Limiter limiter;
+    private LimiterEditor limiterEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -53,7 +53,8 @@ public class LimiterActivity extends AppCompatActivity
         setContentView(R.layout.activity_limiter);
 
         choreList = GlobalState.getInstance().getChoreList();
-        limiter = GlobalState.getInstance().getActiveLimiter();
+
+        limiterEditor = choreList.getLimiterEditor(GlobalState.getInstance().getActiveLimiter());
 
         textViewName = findViewById(R.id.textViewName);
 
@@ -73,11 +74,11 @@ public class LimiterActivity extends AppCompatActivity
 
         updateUIComponents();
 
-        textViewName.setText(limiter.getName());
+        textViewName.setText(limiterEditor.getName());
 
         SimpleListAdapter<ExpenditureType> expenditureTypeAdapter = new SimpleListAdapter<>(
             this,
-            limiter::getExpenditureTypes,
+            limiterEditor::getExpenditureTypes,
             ExpenditureType::getName);
 
         spinnerExpenditureType.setAdapter(expenditureTypeAdapter);
@@ -100,7 +101,7 @@ public class LimiterActivity extends AppCompatActivity
         buttonNewExpenditureType.setOnClickListener(v ->
             showExpenditureTypeDialog(null, null, (name, calories) ->
             {
-                limiter.addExpenditureType(new CustomExpenditureType(name, calories));
+                limiterEditor.addExpenditureType(new CustomExpenditureType(name, calories));
                 choreList.save();
             }));
 
@@ -140,8 +141,7 @@ public class LimiterActivity extends AppCompatActivity
 
                     assert expenditureType != null;
 
-                    limiter.removeExpenditureType(expenditureType);
-
+                    limiterEditor.removeExpenditureType(expenditureType);
                     choreList.save();
 
                     spinnerExpenditureType.setSelection(0);
@@ -155,10 +155,8 @@ public class LimiterActivity extends AppCompatActivity
                 ? Integer.parseInt(editTextAmount.getText().toString())
                 : expenditureType.getAmount();
 
-            choreList.addLimiterExpenditure(
-                limiter,
-                expenditureType.getName(),
-                enteredExpenditureAmount);
+            limiterEditor.addExpenditure(expenditureType.getName(), enteredExpenditureAmount);
+
             choreList.save();
 
             if (expenditureType.isQuick())
@@ -182,7 +180,7 @@ public class LimiterActivity extends AppCompatActivity
                 {
                     if (!isConfirmed) return;
 
-                    choreList.removeLimiter(limiter);
+                    limiterEditor.delete();
                     choreList.save();
 
                     finish();
@@ -226,10 +224,11 @@ public class LimiterActivity extends AppCompatActivity
 
     private void updateUIComponents()
     {
-        textViewName.setText(limiter.getName());
-        editTextAmount.setHint(limiter.getUnit().isEmpty() ? "amount" : limiter.getUnit());
+        textViewName.setText(limiterEditor.getName());
+        editTextAmount.setHint(
+            limiterEditor.getUnit().isEmpty() ? "amount" : limiterEditor.getUnit());
         textViewExpenditureAvailable.setText(
-            String.valueOf(choreList.getAvailableExpenditure(limiter)));
+            String.format("%s %s", limiterEditor.getAvailable(), limiterEditor.getUnit()));
     }
 
     private void showSettingsDialog()
@@ -245,9 +244,9 @@ public class LimiterActivity extends AppCompatActivity
         Button buttonCancel = dialogView.findViewById(R.id.buttonCancel);
         Button buttonOk = dialogView.findViewById(R.id.buttonOk);
 
-        editTextName.setText(limiter.getName());
-        editTextUnit.setText(limiter.getUnit());
-        editTextIncrementPerDay.setText(String.valueOf(limiter.getIncrementPerDay()));
+        editTextName.setText(limiterEditor.getName());
+        editTextUnit.setText(limiterEditor.getUnit());
+        editTextIncrementPerDay.setText(String.valueOf(limiterEditor.getIncrementPerDay()));
 
         AlertDialog dialog = builder.create();
 
@@ -259,10 +258,10 @@ public class LimiterActivity extends AppCompatActivity
 
             if (!incrementPerDay.isEmpty())
             {
-                limiter.setName(editTextName.getText().toString());
-                limiter.setUnit(editTextUnit.getText().toString());
+                limiterEditor.setName(editTextName.getText().toString());
+                limiterEditor.setUnit(editTextUnit.getText().toString());
 
-                choreList.setLimiterIncrementPerDay(limiter, Integer.parseInt(incrementPerDay));
+                limiterEditor.setIncrementPerDay(Integer.parseInt(incrementPerDay));
                 choreList.save();
 
                 dialog.dismiss();
@@ -290,7 +289,7 @@ public class LimiterActivity extends AppCompatActivity
         editTextName.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 
         final EditText editTextAmount = new EditText(this);
-        editTextAmount.setHint(limiter.getUnit());
+        editTextAmount.setHint(limiterEditor.getUnit());
         editTextAmount.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
 
         if (initialName != null) editTextName.setText(initialName);

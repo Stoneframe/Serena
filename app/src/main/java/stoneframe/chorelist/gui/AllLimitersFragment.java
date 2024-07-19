@@ -1,6 +1,10 @@
 package stoneframe.chorelist.gui;
 
+import static java.lang.String.format;
+
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,9 +17,11 @@ import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
 
-import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import stoneframe.chorelist.R;
+import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
+import stoneframe.chorelist.gui.util.EditTextCriteria;
 import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.limiters.Limiter;
 
@@ -26,6 +32,7 @@ public class AllLimitersFragment extends Fragment
     private GlobalState globalState;
     private ChoreList choreList;
 
+    @SuppressLint("DefaultLocale")
     @Override
     public View onCreateView(
         LayoutInflater inflater,
@@ -40,7 +47,7 @@ public class AllLimitersFragment extends Fragment
         limiterListAdapter = new SimpleListAdapter<>(
             requireContext(),
             choreList::getLimiters,
-            Limiter::getName);
+            l -> format("%s (%d)", l.getName(), l.getAvailable(LocalDateTime.now())));
         ListView limiterListView = rootView.findViewById(R.id.all_limiters);
         limiterListView.setAdapter(limiterListAdapter);
         limiterListView.setOnItemClickListener((parent, view, position, id) ->
@@ -65,9 +72,8 @@ public class AllLimitersFragment extends Fragment
             {
                 String limiterName = limiterNameText.getText().toString();
 
-                Limiter limiter = new Limiter(limiterName, LocalDate.now(), 300);
+                Limiter limiter = choreList.createLimiter(limiterName);
 
-                choreList.addLimiter(limiter);
                 choreList.save();
 
                 limiterListAdapter.notifyDataSetChanged();
@@ -79,6 +85,10 @@ public class AllLimitersFragment extends Fragment
 
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
+
+            new EditTextButtonEnabledLink(
+                alertDialog.getButton(DialogInterface.BUTTON_POSITIVE),
+                new EditTextCriteria(limiterNameText, EditTextCriteria.IS_NOT_EMPTY));
         });
 
         return rootView;

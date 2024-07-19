@@ -10,14 +10,15 @@ import stoneframe.chorelist.model.chores.Chore;
 import stoneframe.chorelist.model.chores.ChoreManager;
 import stoneframe.chorelist.model.chores.ChoreSelector;
 import stoneframe.chorelist.model.chores.EffortTracker;
-import stoneframe.chorelist.model.limiters.Expenditure;
 import stoneframe.chorelist.model.limiters.Limiter;
+import stoneframe.chorelist.model.limiters.LimiterEditor;
 import stoneframe.chorelist.model.limiters.LimiterManager;
 import stoneframe.chorelist.model.routines.PendingProcedure;
 import stoneframe.chorelist.model.routines.Routine;
 import stoneframe.chorelist.model.routines.RoutineManager;
 import stoneframe.chorelist.model.tasks.Task;
 import stoneframe.chorelist.model.tasks.TaskManager;
+import stoneframe.chorelist.model.timeservices.TimeService;
 
 public class ChoreList
 {
@@ -210,28 +211,13 @@ public class ChoreList
         return container.LimiterManager.getLimiters();
     }
 
-    public void addLimiter(Limiter limiter)
+    public Limiter createLimiter(String name)
     {
-        container.LimiterManager.addLimiter(limiter);
+        return container.LimiterManager.createLimiter(name, timeService.getToday());
     }
 
-    public void removeLimiter(Limiter limiter)
+    public LimiterEditor getLimiterEditor(Limiter limiter)
     {
-        container.LimiterManager.removeLimiter(limiter);
-    }
-
-    public void addLimiterExpenditure(Limiter limiter, String name, int expenditureAmount)
-    {
-        limiter.addExpenditure(new Expenditure(name, expenditureAmount, timeService.getNow()));
-    }
-
-    public int getAvailableExpenditure(Limiter limiter)
-    {
-        return limiter.getAvailable(timeService.getNow());
-    }
-
-    public void setLimiterIncrementPerDay(Limiter limiter, int incrementPerDay)
-    {
-        limiter.setIncrementPerDay(timeService.getNow(), incrementPerDay);
+        return container.LimiterManager.getEditor(limiter, timeService);
     }
 }

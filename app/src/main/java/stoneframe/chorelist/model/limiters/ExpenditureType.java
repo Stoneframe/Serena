@@ -2,8 +2,6 @@ package stoneframe.chorelist.model.limiters;
 
 import androidx.annotation.NonNull;
 
-import org.joda.time.LocalDateTime;
-
 public abstract class ExpenditureType
 {
     protected String name;
@@ -28,11 +26,6 @@ public abstract class ExpenditureType
     public void setExpenditure(int amount)
     {
         this.amount = amount;
-    }
-
-    public Expenditure getExpenditure(LocalDateTime now)
-    {
-        return new Expenditure(name, amount, now);
     }
 
     public abstract boolean isQuick();

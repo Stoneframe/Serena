@@ -1,11 +1,12 @@
 package stoneframe.chorelist.model.limiters;
 
+import android.util.Pair;
+
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.joda.time.Minutes;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,7 +18,7 @@ public class Limiter
     private static final double MINUTES_PER_DAY = 24 * 60;
 
     private final List<CustomExpenditureType> expenditureTypes = new LinkedList<>();
-    private final List<Expenditure> expenditures = new LinkedList<>();
+    private final List<Pair<Expenditure, LocalDateTime>> expenditures = new LinkedList<>();
 
     private String name;
     private String unit;
@@ -39,7 +40,7 @@ public class Limiter
         return name;
     }
 
-    public void setName(String name)
+    void setName(String name)
     {
         this.name = name;
     }
@@ -49,14 +50,9 @@ public class Limiter
         return unit != null ? unit : "";
     }
 
-    public void setUnit(String unit)
+    void setUnit(String unit)
     {
         this.unit = unit;
-    }
-
-    public void setStartDate(LocalDate startDate)
-    {
-        this.startDate = startDate;
     }
 
     public int getIncrementPerDay()
@@ -64,7 +60,7 @@ public class Limiter
         return incrementPerDay;
     }
 
-    public void setIncrementPerDay(LocalDateTime now, int incrementPerDay)
+    void setIncrementPerDay(LocalDateTime now, int incrementPerDay)
     {
         int oldCurrentAvailable = getAvailable(now);
 
@@ -86,6 +82,7 @@ public class Limiter
             now);
 
         int recentExpenditures = expenditures.stream()
+            .map(p -> p.first)
             .mapToInt(Expenditure::getAmount)
             .sum();
 
@@ -94,12 +91,12 @@ public class Limiter
             - recentExpenditures;
     }
 
-    public void addExpenditureType(CustomExpenditureType expenditureType)
+    void addExpenditureType(CustomExpenditureType expenditureType)
     {
         expenditureTypes.add(expenditureType);
     }
 
-    public void removeExpenditureType(CustomExpenditureType expenditureType)
+    void removeExpenditureType(CustomExpenditureType expenditureType)
     {
         expenditureTypes.remove(expenditureType);
     }
@@ -112,31 +109,31 @@ public class Limiter
             .collect(Collectors.toList());
     }
 
-    public void addExpenditure(Expenditure expenditure)
+    void addExpenditure(Expenditure expenditure, LocalDateTime now)
     {
-        clearOldExpenditures(expenditure.getTime());
+        clearOldExpenditures(now);
 
-        expenditures.add(expenditure);
+        expenditures.add(new Pair<>(expenditure, now));
     }
 
-    public void removeExpenditure(Expenditure expenditure)
+    void removeExpenditure(Expenditure expenditure)
     {
-        expenditures.remove(expenditure);
+        expenditures.removeIf(p -> p.first.equals(expenditure));
     }
 
     public List<Expenditure> getExpenditures()
     {
-        return Collections.unmodifiableList(expenditures);
+        return expenditures.stream().map(p -> p.first).collect(Collectors.toList());
     }
 
     private void clearOldExpenditures(LocalDateTime now)
     {
-        List<Expenditure> expendituresOlderThanOneDay = expenditures.stream()
-            .filter(c -> c.getTime().isBefore(now.minusDays(1)))
+        List<Pair<Expenditure, LocalDateTime>> expendituresOlderThanOneDay = expenditures.stream()
+            .filter(p -> p.second.isBefore(now.minusDays(1)))
             .collect(Collectors.toList());
 
         previousExpenditure += expendituresOlderThanOneDay.stream()
-            .mapToInt(Expenditure::getAmount)
+            .mapToInt(p -> p.first.getAmount())
             .sum();
 
         expenditures.removeAll(expendituresOlderThanOneDay);

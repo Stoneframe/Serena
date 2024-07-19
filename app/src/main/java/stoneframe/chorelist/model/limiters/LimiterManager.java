@@ -1,9 +1,13 @@
 package stoneframe.chorelist.model.limiters;
 
+import org.joda.time.LocalDate;
+
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import stoneframe.chorelist.model.timeservices.TimeService;
 
 public class LimiterManager
 {
@@ -16,9 +20,18 @@ public class LimiterManager
             .collect(Collectors.toList());
     }
 
-    public void addLimiter(Limiter limiter)
+    public Limiter createLimiter(String name, LocalDate today)
     {
+        Limiter limiter = new Limiter(name, today, 300);
+
         limiters.add(limiter);
+
+        return limiter;
+    }
+
+    public LimiterEditor getEditor(Limiter limiter, TimeService timeService)
+    {
+        return new LimiterEditor(this, limiter, timeService);
     }
 
     public void removeLimiter(Limiter limiter)

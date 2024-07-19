@@ -2,11 +2,10 @@ package stoneframe.chorelist;
 
 import androidx.annotation.NonNull;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
-import stoneframe.chorelist.model.TimeService;
+import stoneframe.chorelist.model.timeservices.TimeService;
 
 public class MockTimeService implements TimeService
 {

@@ -197,6 +197,8 @@ public class TodayFragment extends Fragment
         procedureAdapter.notifyDataSetChanged();
         choreAdapter.notifyDataSetChanged();
         taskAdapter.notifyDataSetChanged();
+
+        updateColors();
     }
 
     private void updateColors()

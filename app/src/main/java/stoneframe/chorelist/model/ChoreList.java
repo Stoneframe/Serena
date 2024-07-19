@@ -4,16 +4,15 @@ import org.joda.time.LocalDateTime;
 
 import java.util.List;
 
-import stoneframe.chorelist.model.calories.CalorieConsumption;
-import stoneframe.chorelist.model.calories.CalorieConsumptionType;
-import stoneframe.chorelist.model.calories.CaloriesManager;
-import stoneframe.chorelist.model.calories.CustomCalorieConsumptionType;
 import stoneframe.chorelist.model.checklists.Checklist;
 import stoneframe.chorelist.model.checklists.ChecklistManager;
 import stoneframe.chorelist.model.chores.Chore;
 import stoneframe.chorelist.model.chores.ChoreManager;
 import stoneframe.chorelist.model.chores.ChoreSelector;
 import stoneframe.chorelist.model.chores.EffortTracker;
+import stoneframe.chorelist.model.limiters.Expenditure;
+import stoneframe.chorelist.model.limiters.Limiter;
+import stoneframe.chorelist.model.limiters.LimiterManager;
 import stoneframe.chorelist.model.routines.PendingProcedure;
 import stoneframe.chorelist.model.routines.Routine;
 import stoneframe.chorelist.model.routines.RoutineManager;
@@ -55,7 +54,7 @@ public class ChoreList
             container.ChoreManager = new ChoreManager(effortTracker, choreSelector);
             container.TaskManager = new TaskManager();
             container.ChecklistManager = new ChecklistManager();
-            container.CaloriesManager = new CaloriesManager(timeService.getToday(), 250);
+            container.LimiterManager = new LimiterManager();
         }
 
         container.TaskManager.clean(timeService.getToday());
@@ -206,44 +205,33 @@ public class ChoreList
         container.ChecklistManager.removeChecklist(checklist);
     }
 
-    public int getCalorieIncrementPerDay()
+    public List<Limiter> getLimiters()
     {
-        return container.CaloriesManager.getIncrementPerDay();
+        return container.LimiterManager.getLimiters();
     }
 
-    public void setCalorieIncrementPerDay(int incrementPerDay)
+    public void addLimiter(Limiter limiter)
     {
-        container.CaloriesManager.setIncrementPerDay(timeService.getNow(), incrementPerDay);
+        container.LimiterManager.addLimiter(limiter);
     }
 
-    public int getAvailableCalories()
+    public void removeLimiter(Limiter limiter)
     {
-        return container.CaloriesManager.getAvailable(timeService.getNow());
+        container.LimiterManager.removeLimiter(limiter);
     }
 
-    public void addCalorieConsumption(String description, int calories)
+    public void addLimiterExpenditure(Limiter limiter, String name, int expenditureAmount)
     {
-        CalorieConsumption consumption = new CalorieConsumption(
-            description,
-            calories,
-            timeService.getNow());
-
-        container.CaloriesManager.addConsumption(consumption);
+        limiter.addExpenditure(new Expenditure(name, expenditureAmount, timeService.getNow()));
     }
 
-    public List<CalorieConsumptionType> getCaloriesConsumptionTypes()
+    public int getAvailableExpenditure(Limiter limiter)
     {
-        return container.CaloriesManager.getConsumptionTypes();
+        return limiter.getAvailable(timeService.getNow());
     }
 
-    public void addCalorieConsumptionType(String name, int calories)
+    public void setLimiterIncrementPerDay(Limiter limiter, int incrementPerDay)
     {
-        container.CaloriesManager.addConsumptionType(
-            new CustomCalorieConsumptionType(name, calories));
-    }
-
-    public void removeCalorieConsumptionType(CustomCalorieConsumptionType consumptionType)
-    {
-        container.CaloriesManager.removeConsumptionType(consumptionType);
+        limiter.setIncrementPerDay(timeService.getNow(), incrementPerDay);
     }
 }

@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    tools:context=".gui.LimiterActivity">
+
+    <TextView
+        android:id="@+id/textViewName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="35sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="50dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +30,7 @@
             android:textSize="30sp" />
 
         <TextView
-            android:id="@+id/textViewCaloriesValue"
+            android:id="@+id/textViewExpenditureAvailable"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -43,18 +53,16 @@
             android:orientation="horizontal">
 
             <Spinner
-                android:id="@+id/spinnerConsumptionType"
+                android:id="@+id/spinnerExpenditureType"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
             <EditText
-                android:id="@+id/editTextCalories"
-                android:layout_width="60sp"
+                android:id="@+id/editTextAmount"
+                android:layout_width="70sp"
                 android:layout_height="50sp"
                 android:layout_marginEnd="8dp"
-                android:hint="kcal"
-                android:inputType="numberSigned"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -77,21 +85,21 @@
                 android:layout_weight="1" />
 
             <Button
-                android:id="@+id/buttonNewConsumptionType"
+                android:id="@+id/buttonNewExpenditureType"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="New..." />
 
             <Button
-                android:id="@+id/buttonEditConsumptionType"
+                android:id="@+id/buttonEditExpenditureType"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Edit..." />'
 
             <Button
-                android:id="@+id/buttonRemoveConsumptionType"
+                android:id="@+id/buttonRemoveExpenditureType"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -108,5 +116,33 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
         android:text="Settings" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/buttonRemove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Remove" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/buttonDone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Done" />
+
+    </LinearLayout>
 
 </LinearLayout>

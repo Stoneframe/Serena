@@ -1,17 +1,17 @@
-package stoneframe.chorelist.model.calories;
+package stoneframe.chorelist.model.limiters;
 
 import org.joda.time.LocalDateTime;
 
-public class CalorieConsumption
+public class Expenditure
 {
     private final String name;
-    private final int calories;
+    private final int amount;
     private final LocalDateTime time;
 
-    public CalorieConsumption(String name, int calories, LocalDateTime now)
+    public Expenditure(String name, int amount, LocalDateTime now)
     {
         this.name = name;
-        this.calories = calories;
+        this.amount = amount;
         this.time = now;
     }
 
@@ -20,9 +20,9 @@ public class CalorieConsumption
         return name;
     }
 
-    public int getCalories()
+    public int getAmount()
     {
-        return calories;
+        return amount;
     }
 
     public LocalDateTime getTime()

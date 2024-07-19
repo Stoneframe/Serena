@@ -1,8 +1,8 @@
-package stoneframe.chorelist.model.calories;
+package stoneframe.chorelist.model.limiters;
 
-public class CustomCalorieConsumptionType extends CalorieConsumptionType
+public class CustomExpenditureType extends ExpenditureType
 {
-    public CustomCalorieConsumptionType(String name, int calories)
+    public CustomExpenditureType(String name, int calories)
     {
         super(name, calories);
     }

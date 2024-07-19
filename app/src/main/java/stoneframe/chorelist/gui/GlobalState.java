@@ -4,6 +4,7 @@ import android.app.Application;
 
 import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.checklists.Checklist;
+import stoneframe.chorelist.model.limiters.Limiter;
 import stoneframe.chorelist.model.routines.Routine;
 
 public class GlobalState extends Application
@@ -13,6 +14,7 @@ public class GlobalState extends Application
     public Routine ActiveRoutine;
 
     private Checklist activeChecklist;
+    private Limiter activeLimiter;
 
     private ChoreList choreList;
 
@@ -50,5 +52,15 @@ public class GlobalState extends Application
     public void setActiveChecklist(Checklist activeChecklist)
     {
         this.activeChecklist = activeChecklist;
+    }
+
+    public Limiter getActiveLimiter()
+    {
+        return activeLimiter;
+    }
+
+    public void setActiveLimiter(Limiter activeLimiter)
+    {
+        this.activeLimiter = activeLimiter;
     }
 }

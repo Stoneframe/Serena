@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragmentClass = AllChecklistsFragment.class;
                 break;
             case R.id.nav_calories:
-                fragmentClass = CaloriesFragment.class;
+                fragmentClass = AllLimitersFragment.class;
                 break;
             case R.id.nav_todays:
             default:

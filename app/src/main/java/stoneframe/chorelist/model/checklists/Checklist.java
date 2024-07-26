@@ -39,4 +39,10 @@ public class Checklist
     {
         items.remove(item);
     }
+
+    public void moveItem(ChecklistItem item, Integer newPosition)
+    {
+        items.remove(item);
+        items.add(newPosition, item);
+    }
 }

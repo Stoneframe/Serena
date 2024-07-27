@@ -2,6 +2,7 @@ package stoneframe.chorelist.gui;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -44,6 +45,7 @@ public class AllChoresFragment extends Fragment
 
     private Chore choreUnderEdit;
 
+    @SuppressLint("DefaultLocale")
     @Override
     public View onCreateView(
         LayoutInflater inflater,
@@ -62,7 +64,7 @@ public class AllChoresFragment extends Fragment
                 .stream()
                 .sorted(getComparator())
                 .collect(Collectors.toList()),
-            Chore::getDescription);
+            c -> String.format("[%d] %s", c.getPriority(), c.getDescription()));
         ListView choreListView = rootView.findViewById(R.id.all_tasks);
         choreListView.setAdapter(choreListAdapter);
         choreListView.setOnItemClickListener((parent, view, position, id) ->

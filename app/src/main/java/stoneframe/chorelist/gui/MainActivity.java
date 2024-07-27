@@ -39,10 +39,6 @@ import stoneframe.chorelist.model.timeservices.RealTimeService;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
-    private static final int ACTIVITY_EDIT_EFFORT = 0;
-    private static final int ACTIVITY_EDIT_STORAGE = 1;
-
-    private ActivityResultLauncher<Intent> editEffortLauncher;
     private ActivityResultLauncher<Intent> editStorageLauncher;
 
     private ChoreList choreList;
@@ -60,25 +56,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item)
     {
         int id = item.getItemId();
-
-        if (id == R.id.action_effort)
-        {
-            WeeklyEffortTracker effortTracker = (WeeklyEffortTracker)choreList.getEffortTracker();
-
-            Intent intent = new Intent(this, EffortActivity.class);
-
-            intent.putExtra("Monday", effortTracker.getMonday());
-            intent.putExtra("Tuesday", effortTracker.getTuesday());
-            intent.putExtra("Wednesday", effortTracker.getWednesday());
-            intent.putExtra("Thursday", effortTracker.getThursday());
-            intent.putExtra("Friday", effortTracker.getFriday());
-            intent.putExtra("Saturday", effortTracker.getSaturday());
-            intent.putExtra("Sunday", effortTracker.getSunday());
-
-            editEffortLauncher.launch(intent);
-
-            return true;
-        }
 
         if (id == R.id.activity_storage)
         {
@@ -204,10 +181,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             RoutineNotifier.scheduleRoutineAlarm(this, nextRoutineProcedureTime);
         }
 
-        editEffortLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            this::editEffortCallback);
-
         editStorageLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             this::editStorageCallback);
@@ -236,59 +209,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onStop();
 
         choreList.save();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK && requestCode == ACTIVITY_EDIT_EFFORT)
-        {
-            WeeklyEffortTracker effortTracker = (WeeklyEffortTracker)choreList.getEffortTracker();
-
-            effortTracker.setMonday(data.getIntExtra("Monday", 0));
-            effortTracker.setTuesday(data.getIntExtra("Tuesday", 0));
-            effortTracker.setWednesday(data.getIntExtra("Wednesday", 0));
-            effortTracker.setThursday(data.getIntExtra("Thursday", 0));
-            effortTracker.setFriday(data.getIntExtra("Friday", 0));
-            effortTracker.setSaturday(data.getIntExtra("Saturday", 0));
-            effortTracker.setSunday(data.getIntExtra("Sunday", 0));
-        }
-
-//        if (resultCode == RESULT_OK && requestCode == ACTIVITY_EDIT_STORAGE)
-//        {
-//            String json = data.getStringExtra("Storage");
-//
-//            Container container = ContainerJsonConverter.fromJson(
-//                json,
-//                new SimpleChoreSelectorConverter(),
-//                new WeeklyEffortTrackerConverter());
-//
-//            storage.save(container);
-//
-//            choreList.load();
-//        }
-    }
-
-    private void editEffortCallback(ActivityResult activityResult)
-    {
-        if (activityResult.getResultCode() != RESULT_OK)
-        {
-            return;
-        }
-
-        WeeklyEffortTracker effortTracker = (WeeklyEffortTracker)choreList.getEffortTracker();
-
-        Intent data = Objects.requireNonNull(activityResult.getData());
-
-        effortTracker.setMonday(data.getIntExtra("Monday", 0));
-        effortTracker.setTuesday(data.getIntExtra("Tuesday", 0));
-        effortTracker.setWednesday(data.getIntExtra("Wednesday", 0));
-        effortTracker.setThursday(data.getIntExtra("Thursday", 0));
-        effortTracker.setFriday(data.getIntExtra("Friday", 0));
-        effortTracker.setSaturday(data.getIntExtra("Saturday", 0));
-        effortTracker.setSunday(data.getIntExtra("Sunday", 0));
     }
 
     private void editStorageCallback(ActivityResult activityResult)

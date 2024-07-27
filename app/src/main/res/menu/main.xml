@@ -2,12 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_effort"
-        android:orderInCategory="100"
-        android:title="Effort"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/activity_storage"
         android:orderInCategory="100"
         android:title="Storage"

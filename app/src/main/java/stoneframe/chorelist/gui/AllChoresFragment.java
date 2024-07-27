@@ -19,13 +19,15 @@ import org.joda.time.LocalDate;
 
 import java.util.Objects;
 
-import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.R;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.chores.Chore;
+import stoneframe.chorelist.model.chores.efforttrackers.WeeklyEffortTracker;
 
 public class AllChoresFragment extends Fragment
 {
     private ActivityResultLauncher<Intent> editChoreLauncher;
+    private ActivityResultLauncher<Intent> editEffortLauncher;
 
     private ChoreList choreList;
 
@@ -58,6 +60,24 @@ public class AllChoresFragment extends Fragment
             startChoreEditor(chore, ChoreActivity.CHORE_ACTION_EDIT);
         });
 
+        Button effortButton = rootView.findViewById(R.id.effort_button);
+        effortButton.setOnClickListener(v ->
+        {
+            WeeklyEffortTracker effortTracker = (WeeklyEffortTracker)choreList.getEffortTracker();
+
+            Intent intent = new Intent(getActivity(), EffortActivity.class);
+
+            intent.putExtra("Monday", effortTracker.getMonday());
+            intent.putExtra("Tuesday", effortTracker.getTuesday());
+            intent.putExtra("Wednesday", effortTracker.getWednesday());
+            intent.putExtra("Thursday", effortTracker.getThursday());
+            intent.putExtra("Friday", effortTracker.getFriday());
+            intent.putExtra("Saturday", effortTracker.getSaturday());
+            intent.putExtra("Sunday", effortTracker.getSunday());
+
+            editEffortLauncher.launch(intent);
+        });
+
         Button addButton = rootView.findViewById(R.id.add_button);
         addButton.setOnClickListener(v ->
         {
@@ -74,6 +94,10 @@ public class AllChoresFragment extends Fragment
         editChoreLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             this::editChoreCallback);
+
+        editEffortLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            this::editEffortCallback);
 
         return rootView;
     }
@@ -96,37 +120,61 @@ public class AllChoresFragment extends Fragment
 
     private void editChoreCallback(ActivityResult activityResult)
     {
-        if (activityResult.getResultCode() == RESULT_OK)
+        if (activityResult.getResultCode() != RESULT_OK)
         {
-            Chore chore = choreUnderEdit;
-
-            Intent intent = Objects.requireNonNull(activityResult.getData());
-
-            switch (intent.getIntExtra("RESULT", -1))
-            {
-                case ChoreActivity.CHORE_RESULT_SAVE:
-                    chore.setNext((LocalDate)intent.getSerializableExtra("Next"));
-                    chore.setDescription(intent.getStringExtra("Description"));
-                    chore.setPriority(intent.getIntExtra("Priority", 1));
-                    chore.setEffort(intent.getIntExtra("Effort", 1));
-                    chore.setIntervalUnit(intent.getIntExtra("IntervalUnit", 1));
-                    chore.setIntervalLength(intent.getIntExtra("IntervalLength", 1));
-
-                    if (intent.getIntExtra("ACTION", -1) == ChoreActivity.CHORE_ACTION_ADD)
-                    {
-                        choreList.addChore(chore);
-                    }
-
-                    break;
-
-                case ChoreActivity.CHORE_RESULT_REMOVE:
-                    choreList.removeChore(chore);
-                    break;
-            }
-
-            choreList.save();
-
-            choreListAdapter.notifyDataSetChanged();
+            return;
         }
+
+        Chore chore = choreUnderEdit;
+
+        Intent intent = Objects.requireNonNull(activityResult.getData());
+
+        switch (intent.getIntExtra("RESULT", -1))
+        {
+            case ChoreActivity.CHORE_RESULT_SAVE:
+                chore.setNext((LocalDate)intent.getSerializableExtra("Next"));
+                chore.setDescription(intent.getStringExtra("Description"));
+                chore.setPriority(intent.getIntExtra("Priority", 1));
+                chore.setEffort(intent.getIntExtra("Effort", 1));
+                chore.setIntervalUnit(intent.getIntExtra("IntervalUnit", 1));
+                chore.setIntervalLength(intent.getIntExtra("IntervalLength", 1));
+
+                if (intent.getIntExtra("ACTION", -1) == ChoreActivity.CHORE_ACTION_ADD)
+                {
+                    choreList.addChore(chore);
+                }
+
+                break;
+
+            case ChoreActivity.CHORE_RESULT_REMOVE:
+                choreList.removeChore(chore);
+                break;
+        }
+
+        choreList.save();
+
+        choreListAdapter.notifyDataSetChanged();
+    }
+
+    private void editEffortCallback(ActivityResult activityResult)
+    {
+        if (activityResult.getResultCode() != RESULT_OK)
+        {
+            return;
+        }
+
+        WeeklyEffortTracker effortTracker = (WeeklyEffortTracker)choreList.getEffortTracker();
+
+        Intent data = Objects.requireNonNull(activityResult.getData());
+
+        effortTracker.setMonday(data.getIntExtra("Monday", 0));
+        effortTracker.setTuesday(data.getIntExtra("Tuesday", 0));
+        effortTracker.setWednesday(data.getIntExtra("Wednesday", 0));
+        effortTracker.setThursday(data.getIntExtra("Thursday", 0));
+        effortTracker.setFriday(data.getIntExtra("Friday", 0));
+        effortTracker.setSaturday(data.getIntExtra("Saturday", 0));
+        effortTracker.setSunday(data.getIntExtra("Sunday", 0));
+
+        choreList.save();
     }
 }

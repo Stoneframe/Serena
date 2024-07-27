@@ -15,6 +15,14 @@
             android:layout_marginBottom="50dp"/>
 
         <Button
+            android:id="@+id/sort_by_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:text="Sort by" />
+
+        <Button
             android:id="@+id/effort_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

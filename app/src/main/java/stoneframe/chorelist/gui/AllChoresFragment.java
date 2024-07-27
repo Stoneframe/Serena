@@ -2,6 +2,7 @@ package stoneframe.chorelist.gui;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RadioButton;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
@@ -17,7 +19,9 @@ import androidx.fragment.app.Fragment;
 
 import org.joda.time.LocalDate;
 
+import java.util.Comparator;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.ChoreList;
@@ -26,6 +30,11 @@ import stoneframe.chorelist.model.chores.efforttrackers.WeeklyEffortTracker;
 
 public class AllChoresFragment extends Fragment
 {
+    private static final int SORT_BY_DESCRIPTION = 0;
+    private static final int SORT_BY_PRIORITY = 1;
+
+    private int sortBy = SORT_BY_DESCRIPTION;
+
     private ActivityResultLauncher<Intent> editChoreLauncher;
     private ActivityResultLauncher<Intent> editEffortLauncher;
 
@@ -49,7 +58,10 @@ public class AllChoresFragment extends Fragment
 
         choreListAdapter = new SimpleListAdapter<>(
             requireContext(),
-            choreList::getAllChores,
+            () -> choreList.getAllChores()
+                .stream()
+                .sorted(getComparator())
+                .collect(Collectors.toList()),
             Chore::getDescription);
         ListView choreListView = rootView.findViewById(R.id.all_tasks);
         choreListView.setAdapter(choreListAdapter);
@@ -59,6 +71,9 @@ public class AllChoresFragment extends Fragment
             assert chore != null;
             startChoreEditor(chore, ChoreActivity.CHORE_ACTION_EDIT);
         });
+
+        Button sortByButton = rootView.findViewById(R.id.sort_by_button);
+        sortByButton.setOnClickListener(v -> showSortByDialog());
 
         Button effortButton = rootView.findViewById(R.id.effort_button);
         effortButton.setOnClickListener(v ->
@@ -100,6 +115,21 @@ public class AllChoresFragment extends Fragment
             this::editEffortCallback);
 
         return rootView;
+    }
+
+    private Comparator<Chore> getComparator()
+    {
+        if (sortBy == SORT_BY_DESCRIPTION)
+        {
+            return Comparator.comparing(Chore::getDescription);
+        }
+
+        if (sortBy == SORT_BY_PRIORITY)
+        {
+            return Comparator.comparing(Chore::getPriority);
+        }
+
+        return Comparator.comparing(Chore::getDescription);
     }
 
     private void startChoreEditor(Chore chore, int mode)
@@ -176,5 +206,37 @@ public class AllChoresFragment extends Fragment
         effortTracker.setSunday(data.getIntExtra("Sunday", 0));
 
         choreList.save();
+    }
+
+    private void showSortByDialog()
+    {
+        final Dialog dialog = new Dialog(requireContext());
+        dialog.setContentView(R.layout.dialog_sort_chores_by);
+
+        RadioButton descriptionRadioButton = dialog.findViewById(R.id.descriptionRadioButton);
+        RadioButton priorityRadioButton = dialog.findViewById(R.id.priorityRadioButton);
+        Button buttonOK = dialog.findViewById(R.id.buttonOK);
+
+        descriptionRadioButton.setChecked(sortBy == SORT_BY_DESCRIPTION);
+        priorityRadioButton.setChecked(sortBy == SORT_BY_PRIORITY);
+
+        buttonOK.setOnClickListener(v ->
+        {
+            if (descriptionRadioButton.isChecked())
+            {
+                sortBy = SORT_BY_DESCRIPTION;
+            }
+
+            if (priorityRadioButton.isChecked())
+            {
+                sortBy = SORT_BY_PRIORITY;
+            }
+
+            choreListAdapter.notifyDataSetChanged();
+
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 }

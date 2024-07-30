@@ -15,8 +15,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import stoneframe.chorelist.model.ChoreList;
+import java.util.Comparator;
+import java.util.stream.Collectors;
+
 import stoneframe.chorelist.R;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.checklists.Checklist;
 
 public class AllChecklistsFragment extends Fragment
@@ -42,7 +45,10 @@ public class AllChecklistsFragment extends Fragment
         ListView checklistListView = rootView.findViewById(R.id.listView);
         checklistAdapter = new SimpleListAdapter<>(
             requireContext(),
-            choreList::getChecklists,
+            () -> choreList.getChecklists()
+                .stream()
+                .sorted(Comparator.comparing(Checklist::getName))
+                .collect(Collectors.toList()),
             Checklist::getName);
         checklistListView.setAdapter(checklistAdapter);
         checklistListView.setOnItemClickListener((parent, view, position, id) ->

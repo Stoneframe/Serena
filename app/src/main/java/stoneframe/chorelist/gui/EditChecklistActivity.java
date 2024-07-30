@@ -188,14 +188,11 @@ public class EditChecklistActivity extends Activity
                 int iconLeft = itemView.getRight() - iconMargin - deleteIcon.getIntrinsicWidth();
                 int iconRight = itemView.getRight() - iconMargin;
 
-                drawIcon(
-                    c,
-                    dX,
-                    itemView,
-                    iconLeft,
-                    iconRight,
-                    deleteIcon,
-                    deleteBackground);
+                int backgroundLeft = itemView.getRight() + dX - backgroundCornerOffset;
+                int backgroundRight = itemView.getRight();
+
+                drawBackground(c, itemView, backgroundLeft, backgroundRight, deleteBackground);
+                drawIcon(c, itemView, iconLeft, iconRight, deleteIcon);
             }
 
             private void showEditIcon(@NonNull Canvas c, int dX, View itemView)
@@ -205,38 +202,42 @@ public class EditChecklistActivity extends Activity
                 int iconLeft = itemView.getLeft() + iconMargin;
                 int iconRight = itemView.getLeft() + iconMargin + editIcon.getIntrinsicWidth();
 
-                drawIcon(
-                    c,
-                    dX,
-                    itemView,
-                    iconLeft,
-                    iconRight,
-                    editIcon,
-                    editBackground);
+                int backgroundLeft = itemView.getLeft();
+                int backgroundRight = itemView.getLeft() + dX + backgroundCornerOffset;
+
+                drawBackground(c, itemView, backgroundLeft, backgroundRight, editBackground);
+                drawIcon(c, itemView, iconLeft, iconRight, editIcon);
             }
 
             private void drawIcon(
                 @NonNull Canvas c,
-                int dX,
                 View itemView,
                 int iconLeft,
                 int iconRight,
-                Drawable icon,
-                ColorDrawable background)
+                Drawable icon)
             {
                 int iconTop = itemView.getTop() + (itemView.getHeight() - icon.getIntrinsicHeight()) / 2;
                 int iconBottom = iconTop + icon.getIntrinsicHeight();
 
                 icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
 
+                icon.draw(c);
+            }
+
+            private void drawBackground(
+                @NonNull Canvas c,
+                View itemView,
+                int backgroundLeft,
+                int backgroundRight,
+                ColorDrawable background)
+            {
                 background.setBounds(
-                    itemView.getLeft(),
+                    backgroundLeft,
                     itemView.getTop(),
-                    itemView.getLeft() + dX + backgroundCornerOffset,
+                    backgroundRight,
                     itemView.getBottom());
 
                 background.draw(c);
-                icon.draw(c);
             }
 
             private void clearIcons()
@@ -264,19 +265,18 @@ public class EditChecklistActivity extends Activity
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(checklistItemsListView);
 
-        removeButton.setOnClickListener(v ->
-            DialogUtils.showConfirmationDialog(
-                this,
-                "Remove Checklist",
-                "Are you sure you want to remove the checklist?",
-                isConfirmed ->
-                {
-                    if (!isConfirmed) return;
+        removeButton.setOnClickListener(v -> DialogUtils.showConfirmationDialog(
+            this,
+            "Remove Checklist",
+            "Are you sure you want to remove the checklist?",
+            isConfirmed ->
+            {
+                if (!isConfirmed) return;
 
-                    choreList.removeChecklist(checklist);
-                    setResult(REMOVE);
-                    finish();
-                }));
+                choreList.removeChecklist(checklist);
+                setResult(REMOVE);
+                finish();
+            }));
 
         buttonAddItem.setOnClickListener(v ->
         {

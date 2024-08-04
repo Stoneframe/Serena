@@ -1,4 +1,4 @@
-package stoneframe.chorelist.gui.routines;
+package stoneframe.chorelist.gui.routines.days;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -130,10 +130,8 @@ public class DayRoutineActivity extends AppCompatActivity
 
     public void addProcedureClick(View view)
     {
-        ProcedureEditDialog.create(this, null, null, (time, description) ->
+        DayProcedureEditDialog.create(this, procedure ->
         {
-            Procedure procedure = new Procedure(description, time);
-
             routine.addProcedure(procedure);
 
             procedureListAdapter.add(procedure);
@@ -147,16 +145,13 @@ public class DayRoutineActivity extends AppCompatActivity
 
         assert procedure != null;
 
-        ProcedureEditDialog.edit(
+        DayProcedureEditDialog.edit(
             this,
-            procedure.getTime(),
-            procedure.getDescription(),
-            (time, description) ->
+            procedure,
+            editedProcedure ->
             {
-                Procedure newProcedure = new Procedure(description, time);
-
                 routine.removeProcedure(procedure);
-                routine.addProcedure(newProcedure);
+                routine.addProcedure(editedProcedure);
 
                 procedureListAdapter.clear();
                 procedureListAdapter.addAll(routine.getAllProcedures());
@@ -192,14 +187,11 @@ public class DayRoutineActivity extends AppCompatActivity
 
     private void copyProcedure(Procedure procedure)
     {
-        ProcedureEditDialog.create(
+        DayProcedureEditDialog.copy(
             this,
-            procedure.getTime(),
-            procedure.getDescription(),
-            (time, description) ->
+            procedure,
+            copiedProcedure ->
             {
-                Procedure copiedProcedure = new Procedure(description, time);
-
                 routine.addProcedure(copiedProcedure);
 
                 procedureListAdapter.add(copiedProcedure);

@@ -28,9 +28,9 @@
         </activity>
         <activity android:name=".gui.chores.ChoreActivity"/>
         <activity android:name=".gui.tasks.TaskActivity" />
-        <activity android:name=".gui.routines.DayRoutineActivity" />
-        <activity android:name=".gui.routines.WeekRoutineActivity" />
-        <activity android:name=".gui.routines.FortnightRoutineActivity" />
+        <activity android:name=".gui.routines.days.DayRoutineActivity" />
+        <activity android:name=".gui.routines.weeks.WeekRoutineActivity" />
+        <activity android:name=".gui.routines.fortnights.FortnightRoutineActivity" />
         <activity android:name=".gui.checklists.ChecklistActivity"/>
         <activity android:name=".gui.checklists.EditChecklistActivity"/>
         <activity android:name=".gui.chores.EffortActivity" />

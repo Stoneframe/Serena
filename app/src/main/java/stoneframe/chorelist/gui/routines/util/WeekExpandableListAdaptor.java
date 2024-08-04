@@ -1,4 +1,4 @@
-package stoneframe.chorelist.gui.routines;
+package stoneframe.chorelist.gui.routines.util;
 
 import android.content.Context;
 import android.graphics.Typeface;

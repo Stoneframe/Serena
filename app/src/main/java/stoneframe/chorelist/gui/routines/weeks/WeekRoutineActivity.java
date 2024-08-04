@@ -1,4 +1,4 @@
-package stoneframe.chorelist.gui.routines;
+package stoneframe.chorelist.gui.routines.weeks;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -11,12 +11,13 @@ import android.widget.ExpandableListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import stoneframe.chorelist.gui.GlobalState;
-import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.R;
+import stoneframe.chorelist.gui.GlobalState;
+import stoneframe.chorelist.gui.routines.util.WeekExpandableListAdaptor;
 import stoneframe.chorelist.gui.util.DialogUtils;
 import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.routines.Procedure;
 import stoneframe.chorelist.model.routines.Routine;
 import stoneframe.chorelist.model.routines.WeekRoutine;
@@ -132,11 +133,9 @@ public class WeekRoutineActivity extends AppCompatActivity
 
     public void addProcedureClick(View view)
     {
-        ProcedureEditDialog.create(this, null, null, (time, description, dayOfWeek) ->
+        WeekProcedureEditDialog.create(this, (createdProcedure, dayOfWeek) ->
         {
-            Procedure procedure = new Procedure(description, time);
-
-            routine.getWeekDay(dayOfWeek).addProcedure(procedure);
+            routine.getWeekDay(dayOfWeek).addProcedure(createdProcedure);
 
             weekExpandableListAdaptor.notifyDataSetChanged();
             weekExpandableList.expandGroup(dayOfWeek - 1);
@@ -149,19 +148,16 @@ public class WeekRoutineActivity extends AppCompatActivity
             groupPosition,
             childPosition);
 
-        Routine.Day weekDay = (Routine.Day)weekExpandableListAdaptor.getGroup(
-            groupPosition);
-
-        ProcedureEditDialog.edit(
+        WeekProcedureEditDialog.edit(
             this,
-            procedure.getTime(),
-            procedure.getDescription(),
-            (time, description) ->
+            procedure,
+            groupPosition,
+            (editedProcedure, dayOfWeek) ->
             {
-                Procedure newProcedure = new Procedure(description, time);
+                Routine.Day weekDay = routine.getWeekDay(dayOfWeek);
 
                 weekDay.removeProcedure(procedure);
-                weekDay.addProcedure(newProcedure);
+                weekDay.addProcedure(editedProcedure);
 
                 weekExpandableListAdaptor.notifyDataSetChanged();
             });
@@ -193,7 +189,7 @@ public class WeekRoutineActivity extends AppCompatActivity
                 .setPositiveButton("Remove", (dialog, removeButtonId) ->
                     removeProcedure(weekDay, procedure))
                 .setNegativeButton("Copy", (dialog, copyButtonId) ->
-                    copyProcedure(procedure))
+                    copyProcedure(procedure, groupPosition))
                 .setNeutralButton("Cancel", (dialog, cancelButtonId) -> dialog.cancel());
 
             AlertDialog alert = builder.create();
@@ -210,17 +206,15 @@ public class WeekRoutineActivity extends AppCompatActivity
         weekExpandableListAdaptor.notifyDataSetChanged();
     }
 
-    private void copyProcedure(Procedure procedure)
+    private void copyProcedure(Procedure procedure, int dayOfWeek)
     {
-        ProcedureEditDialog.create(
+        WeekProcedureEditDialog.copy(
             this,
-            procedure.getTime(),
-            procedure.getDescription(),
-            (time, description, dayOfWeek) ->
+            procedure,
+            dayOfWeek,
+            (copiedProcedure, copiedDayOfWeek) ->
             {
-                Procedure newProcedure = new Procedure(description, time);
-
-                routine.getWeekDay(dayOfWeek).addProcedure(newProcedure);
+                routine.getWeekDay(copiedDayOfWeek).addProcedure(copiedProcedure);
 
                 weekExpandableListAdaptor.notifyDataSetChanged();
                 weekExpandableList.expandGroup(dayOfWeek - 1);

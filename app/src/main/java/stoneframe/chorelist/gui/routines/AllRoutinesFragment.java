@@ -21,6 +21,9 @@ import org.joda.time.LocalDateTime;
 import java.util.Objects;
 
 import stoneframe.chorelist.gui.GlobalState;
+import stoneframe.chorelist.gui.routines.days.DayRoutineActivity;
+import stoneframe.chorelist.gui.routines.fortnights.FortnightRoutineActivity;
+import stoneframe.chorelist.gui.routines.weeks.WeekRoutineActivity;
 import stoneframe.chorelist.gui.util.SimpleListAdapter;
 import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.R;

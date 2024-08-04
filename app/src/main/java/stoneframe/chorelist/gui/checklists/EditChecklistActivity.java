@@ -1,4 +1,4 @@
-package stoneframe.chorelist.gui;
+package stoneframe.chorelist.gui.checklists;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,6 +21,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import stoneframe.chorelist.R;
+import stoneframe.chorelist.gui.GlobalState;
+import stoneframe.chorelist.gui.util.RecyclerAdapter;
 import stoneframe.chorelist.gui.util.DialogUtils;
 import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;

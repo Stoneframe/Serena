@@ -1,4 +1,4 @@
-package stoneframe.chorelist.gui;
+package stoneframe.chorelist.gui.tasks;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -19,6 +19,8 @@ import org.joda.time.LocalDate;
 
 import java.util.Objects;
 
+import stoneframe.chorelist.gui.util.CheckboxListAdapter;
+import stoneframe.chorelist.gui.GlobalState;
 import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.tasks.Task;

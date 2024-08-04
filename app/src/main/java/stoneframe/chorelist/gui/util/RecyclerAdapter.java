@@ -1,4 +1,4 @@
-package stoneframe.chorelist.gui;
+package stoneframe.chorelist.gui.util;
 
 import android.view.LayoutInflater;
 import android.view.View;

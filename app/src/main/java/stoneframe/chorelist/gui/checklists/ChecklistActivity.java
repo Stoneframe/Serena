@@ -1,4 +1,4 @@
-package stoneframe.chorelist.gui;
+package stoneframe.chorelist.gui.checklists;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import stoneframe.chorelist.R;
+import stoneframe.chorelist.gui.GlobalState;
+import stoneframe.chorelist.gui.util.SimpleCheckboxListAdapter;
 import stoneframe.chorelist.model.checklists.Checklist;
 import stoneframe.chorelist.model.checklists.ChecklistItem;
 

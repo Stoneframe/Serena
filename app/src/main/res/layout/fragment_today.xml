@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="stoneframe.chorelist.gui.TodayFragment">
+    tools:context="stoneframe.chorelist.gui.today.TodayFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"

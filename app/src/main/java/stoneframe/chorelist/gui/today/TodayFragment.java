@@ -1,4 +1,4 @@
-package stoneframe.chorelist.gui;
+package stoneframe.chorelist.gui.today;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -16,6 +16,9 @@ import androidx.fragment.app.Fragment;
 
 import org.joda.time.LocalDate;
 
+import stoneframe.chorelist.gui.GlobalState;
+import stoneframe.chorelist.gui.util.SimpleCheckboxListAdapter;
+import stoneframe.chorelist.gui.routines.RoutineNotifier;
 import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.chores.Chore;

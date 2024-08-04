@@ -1,4 +1,4 @@
-package stoneframe.chorelist.gui;
+package stoneframe.chorelist.gui.chores;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -25,6 +25,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import stoneframe.chorelist.R;
+import stoneframe.chorelist.gui.GlobalState;
+import stoneframe.chorelist.gui.util.SimpleListAdapter;
 import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.chores.Chore;
 import stoneframe.chorelist.model.chores.efforttrackers.WeeklyEffortTracker;

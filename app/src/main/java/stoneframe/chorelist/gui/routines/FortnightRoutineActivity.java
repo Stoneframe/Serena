@@ -1,4 +1,4 @@
-package stoneframe.chorelist.gui;
+package stoneframe.chorelist.gui.routines;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
+import stoneframe.chorelist.gui.GlobalState;
 import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.util.DialogUtils;

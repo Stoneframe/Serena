@@ -1,4 +1,4 @@
-package stoneframe.chorelist.gui;
+package stoneframe.chorelist.gui.tasks;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;

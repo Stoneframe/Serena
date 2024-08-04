@@ -26,18 +26,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".gui.ChoreActivity"/>
-        <activity android:name=".gui.TaskActivity" />
-        <activity android:name=".gui.DayRoutineActivity" />
-        <activity android:name=".gui.WeekRoutineActivity" />
-        <activity android:name=".gui.FortnightRoutineActivity" />
-        <activity android:name=".gui.ChecklistActivity"/>
-        <activity android:name=".gui.EditChecklistActivity"/>
-        <activity android:name=".gui.EffortActivity" />
+        <activity android:name=".gui.chores.ChoreActivity"/>
+        <activity android:name=".gui.tasks.TaskActivity" />
+        <activity android:name=".gui.routines.DayRoutineActivity" />
+        <activity android:name=".gui.routines.WeekRoutineActivity" />
+        <activity android:name=".gui.routines.FortnightRoutineActivity" />
+        <activity android:name=".gui.checklists.ChecklistActivity"/>
+        <activity android:name=".gui.checklists.EditChecklistActivity"/>
+        <activity android:name=".gui.chores.EffortActivity" />
         <activity android:name=".gui.StorageActivity" />
-        <activity android:name=".gui.LimiterActivity" />
+        <activity android:name=".gui.limiters.LimiterActivity" />
 
-        <receiver android:name=".gui.RoutineNotifierReceiver"/>
+        <receiver android:name=".gui.routines.RoutineNotifierReceiver"/>
     </application>
 
 </manifest>

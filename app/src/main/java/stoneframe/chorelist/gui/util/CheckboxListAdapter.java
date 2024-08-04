@@ -1,4 +1,4 @@
-package stoneframe.chorelist.gui;
+package stoneframe.chorelist.gui.util;
 
 import android.content.Context;
 import android.graphics.Color;

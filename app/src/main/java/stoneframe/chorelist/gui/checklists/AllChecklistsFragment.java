@@ -1,4 +1,4 @@
-package stoneframe.chorelist.gui;
+package stoneframe.chorelist.gui.checklists;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -19,6 +19,8 @@ import java.util.Comparator;
 import java.util.stream.Collectors;
 
 import stoneframe.chorelist.R;
+import stoneframe.chorelist.gui.GlobalState;
+import stoneframe.chorelist.gui.util.SimpleListAdapter;
 import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.checklists.Checklist;
 

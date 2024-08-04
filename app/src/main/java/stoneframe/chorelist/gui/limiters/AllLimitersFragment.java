@@ -1,4 +1,4 @@
-package stoneframe.chorelist.gui;
+package stoneframe.chorelist.gui.limiters;
 
 import static java.lang.String.format;
 
@@ -20,6 +20,8 @@ import androidx.fragment.app.Fragment;
 import org.joda.time.LocalDateTime;
 
 import stoneframe.chorelist.R;
+import stoneframe.chorelist.gui.GlobalState;
+import stoneframe.chorelist.gui.util.SimpleListAdapter;
 import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
 import stoneframe.chorelist.model.ChoreList;

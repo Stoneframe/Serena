@@ -1,4 +1,4 @@
-package stoneframe.chorelist.gui;
+package stoneframe.chorelist.gui.routines;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;

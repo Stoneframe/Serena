@@ -1,4 +1,4 @@
-package stoneframe.chorelist.gui;
+package stoneframe.chorelist.gui.routines;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
@@ -17,6 +17,7 @@ import org.joda.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import stoneframe.chorelist.gui.MainActivity;
 import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.routines.PendingProcedure;

@@ -1,4 +1,4 @@
-package stoneframe.chorelist.gui;
+package stoneframe.chorelist.gui.chores;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;

@@ -25,6 +25,7 @@ import org.joda.time.LocalDateTime;
 
 import java.util.Objects;
 
+import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.checklists.AllChecklistsFragment;
 import stoneframe.chorelist.gui.chores.AllChoresFragment;
 import stoneframe.chorelist.gui.limiters.AllLimitersFragment;
@@ -32,11 +33,10 @@ import stoneframe.chorelist.gui.routines.AllRoutinesFragment;
 import stoneframe.chorelist.gui.routines.RoutineNotifier;
 import stoneframe.chorelist.gui.tasks.AllTasksFragment;
 import stoneframe.chorelist.gui.today.TodayFragment;
-import stoneframe.chorelist.model.ChoreList;
-import stoneframe.chorelist.R;
 import stoneframe.chorelist.json.ContainerJsonConverter;
 import stoneframe.chorelist.json.SimpleChoreSelectorConverter;
 import stoneframe.chorelist.json.WeeklyEffortTrackerConverter;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.Storage;
 import stoneframe.chorelist.model.chores.choreselectors.SimpleChoreSelector;
 import stoneframe.chorelist.model.chores.efforttrackers.WeeklyEffortTracker;
@@ -47,6 +47,8 @@ import stoneframe.chorelist.model.timeservices.RealTimeService;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
     private ActivityResultLauncher<Intent> editStorageLauncher;
+
+    private Class<?> fragmentClass;
 
     private ChoreList choreList;
     private Storage storage;
@@ -86,50 +88,58 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item)
     {
-        Fragment fragment;
-        Class<?> fragmentClass;
-
         switch (item.getItemId())
         {
             case R.id.nav_all_chores:
-                fragmentClass = AllChoresFragment.class;
-                break;
+                return goToFragment(AllChoresFragment.class);
             case R.id.nav_all_tasks:
-                fragmentClass = AllTasksFragment.class;
-                break;
+                return goToFragment(AllTasksFragment.class);
             case R.id.nav_all_routines:
-                fragmentClass = AllRoutinesFragment.class;
-                break;
+                return goToFragment(AllRoutinesFragment.class);
             case R.id.nav_all_checklists:
-                fragmentClass = AllChecklistsFragment.class;
-                break;
+                return goToFragment(AllChecklistsFragment.class);
             case R.id.nav_calories:
-                fragmentClass = AllLimitersFragment.class;
-                break;
+                return goToFragment(AllLimitersFragment.class);
             case R.id.nav_todays:
             default:
-                fragmentClass = TodayFragment.class;
+                return goToFragment(TodayFragment.class);
         }
+    }
+
+    private boolean goToFragment(Class<?> fragmentClass)
+    {
+        this.fragmentClass = fragmentClass;
 
         try
         {
-            fragment = (Fragment)fragmentClass.newInstance();
+            Fragment fragment = (Fragment)this.fragmentClass.newInstance();
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+
+            DrawerLayout drawer = findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+
+            setTitle(getFragmentTitle(fragmentClass));
         }
         catch (Exception e)
         {
-            e.printStackTrace();
             return false;
         }
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-
-        setTitle(item.getTitle());
-
         return true;
+    }
+
+    private String getFragmentTitle(Class<?> fragmentClass)
+    {
+        if (fragmentClass == TodayFragment.class) return "Today";
+        if (fragmentClass == AllRoutinesFragment.class) return "Routines";
+        if (fragmentClass == AllChoresFragment.class) return "Chores";
+        if (fragmentClass == AllTasksFragment.class) return "Tasks";
+        if (fragmentClass == AllChecklistsFragment.class) return "Checklists";
+        if (fragmentClass == AllLimitersFragment.class) return "Limiters";
+
+        return "Chore List";
     }
 
     @Override
@@ -201,6 +211,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (drawer.isDrawerOpen(GravityCompat.START))
                 {
                     drawer.closeDrawer(GravityCompat.START);
+                }
+                else if (fragmentClass != TodayFragment.class)
+                {
+                    goToFragment(TodayFragment.class);
+
+                    NavigationView navigationView = findViewById(R.id.nav_view);
+
+                    navigationView.setCheckedItem(R.id.nav_todays);
                 }
                 else
                 {

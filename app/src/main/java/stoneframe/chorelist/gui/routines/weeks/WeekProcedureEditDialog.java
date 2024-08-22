@@ -30,7 +30,7 @@ public class WeekProcedureEditDialog
 
     public static void create(Context context, final WeekProcedureListener listener)
     {
-        showDialog(context, "Add procedure", new LocalTime(), "", 0, listener);
+        showDialog(context, "Add procedure", new LocalTime(0, 0), "", 0, listener);
     }
 
     public static void copy(

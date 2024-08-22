@@ -24,7 +24,7 @@ public class DayProcedureEditDialog
 
     public static void create(Context context, final DayProcedureListener listener)
     {
-        showDialog(context, "Create Procedure", new LocalTime(), "", listener);
+        showDialog(context, "Create Procedure", new LocalTime(0, 0), "", listener);
     }
 
     public static void copy(

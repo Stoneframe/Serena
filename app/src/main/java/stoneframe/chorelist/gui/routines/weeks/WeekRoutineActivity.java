@@ -154,10 +154,11 @@ public class WeekRoutineActivity extends AppCompatActivity
             groupPosition,
             (editedProcedure, dayOfWeek) ->
             {
-                Routine.Day weekDay = routine.getWeekDay(dayOfWeek);
+                Routine.Day oldWeekDay = routine.getWeekDay(groupPosition + 1);
+                Routine.Day newWeekDay = routine.getWeekDay(dayOfWeek);
 
-                weekDay.removeProcedure(procedure);
-                weekDay.addProcedure(editedProcedure);
+                oldWeekDay.removeProcedure(procedure);
+                newWeekDay.addProcedure(editedProcedure);
 
                 weekExpandableListAdaptor.notifyDataSetChanged();
             });

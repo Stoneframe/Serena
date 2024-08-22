@@ -33,7 +33,7 @@ public class FortnightProcedureEditDialog
 
     public static void create(Context context, final FortnightProcedureListener listener)
     {
-        showDialog(context, "Add Procedure", new LocalTime(), "", 1, 0, listener);
+        showDialog(context, "Add Procedure", new LocalTime(0, 0), "", 1, 0, listener);
     }
 
     public static void copy(

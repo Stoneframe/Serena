@@ -169,14 +169,17 @@ public class FortnightRoutineActivity extends AppCompatActivity
             groupPosition,
             (editedProcedure, editedWeek, editedDayOfWeek) ->
             {
-                Routine.Week week = routine.getWeek(editedWeek);
+                Routine.Week oldWeek = routine.getWeek(weekNumber);
+                Routine.Week newWeek = routine.getWeek(editedWeek);
 
-                Routine.Day weekDay = week.getWeekDay(editedDayOfWeek);
+                Routine.Day oldWeekDay = oldWeek.getWeekDay(groupPosition + 1);
+                Routine.Day newWeekDay = newWeek.getWeekDay(editedDayOfWeek);
 
-                weekDay.removeProcedure(procedure);
-                weekDay.addProcedure(editedProcedure);
+                oldWeekDay.removeProcedure(procedure);
+                newWeekDay.addProcedure(editedProcedure);
 
-                weekExpandableListAdaptor.notifyDataSetChanged();
+                week1ExpandableListAdaptor.notifyDataSetChanged();
+                week2ExpandableListAdaptor.notifyDataSetChanged();
             });
     }
 

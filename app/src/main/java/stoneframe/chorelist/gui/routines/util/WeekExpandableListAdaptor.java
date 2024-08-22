@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
+import org.joda.time.LocalDate;
+
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.routines.Procedure;
 import stoneframe.chorelist.model.routines.Routine;
@@ -83,7 +85,15 @@ public class WeekExpandableListAdaptor extends BaseExpandableListAdapter
         TextView listTitleTextView = view.findViewById(R.id.listTitle);
 
         listTitleTextView.setTypeface(null, Typeface.BOLD);
-        listTitleTextView.setText(weekDay.getName());
+
+        if (weekDay.isToday(LocalDate.now()))
+        {
+            listTitleTextView.setText(String.format("> %s <", weekDay.getName()));
+        }
+        else
+        {
+            listTitleTextView.setText(weekDay.getName());
+        }
 
         return view;
     }

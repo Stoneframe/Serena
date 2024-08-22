@@ -187,6 +187,18 @@ public abstract class Routine
                 .sorted()
                 .collect(Collectors.toList());
         }
+
+        public boolean isToday(LocalDate today)
+        {
+            LocalDate nextTime = startDate;
+
+            while (nextTime.isBefore(today))
+            {
+                nextTime = nextTime.plusDays(interval);
+            }
+
+            return nextTime.equals(today);
+        }
     }
 
     public static class Week

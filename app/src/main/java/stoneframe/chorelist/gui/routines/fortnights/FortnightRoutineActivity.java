@@ -78,6 +78,11 @@ public class FortnightRoutineActivity extends AppCompatActivity
             {
                 DateTime startDate = new DateTime(year, month + 1, dayOfMonth, 0, 0);
                 startDateEditText.setText(startDate.toString("yyyy-MM-dd"));
+
+                routine.setStartDate(LocalDate.parse(startDateEditText.getText().toString()));
+
+                week1ExpandableListAdaptor.notifyDataSetChanged();
+                week2ExpandableListAdaptor.notifyDataSetChanged();
             },
             routine.getStartDate().getYear(),
             routine.getStartDate().getMonthOfYear() - 1,
@@ -228,7 +233,6 @@ public class FortnightRoutineActivity extends AppCompatActivity
 
         routine.setName(nameEditText.getText().toString().trim());
         routine.setEnabled(enabledCheckBox.isChecked());
-        routine.setStartDate(LocalDate.parse(startDateEditText.getText().toString()));
 
         Intent intent = new Intent();
 

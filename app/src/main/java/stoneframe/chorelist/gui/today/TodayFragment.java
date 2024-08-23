@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import org.joda.time.LocalDate;
 
 import stoneframe.chorelist.gui.GlobalState;
+import stoneframe.chorelist.gui.util.DialogUtils;
 import stoneframe.chorelist.gui.util.SimpleCheckboxListAdapter;
 import stoneframe.chorelist.gui.routines.RoutineNotifier;
 import stoneframe.chorelist.model.ChoreList;
@@ -152,12 +154,23 @@ public class TodayFragment extends Fragment
         {
             LocalDate today = LocalDate.now();
 
+            Task task = (Task)taskAdapter.getItem(position);
+
+            if (task.getDeadline().isEqual(task.getIgnoreBefore()))
+            {
+                DialogUtils.showWarningDialog(
+                    requireContext(),
+                    "Deadline is today!",
+                    "Cannot ignore after deadline.");
+
+                return true;
+            }
+
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setMessage("Until when do you want to ignore this task?")
                 .setCancelable(false)
                 .setPositiveButton("Tomorrow", (dialog, skipButtonId) ->
                 {
-                    Task task = (Task)taskAdapter.getItem(position);
                     task.setIgnoreBefore(today.plusDays(1));
                     taskAdapter.notifyDataSetChanged();
                     choreList.save();
@@ -170,7 +183,6 @@ public class TodayFragment extends Fragment
                         {
                             LocalDate ignoreBefore = new LocalDate(year, month + 1, dayOfMonth);
 
-                            Task task = (Task)taskAdapter.getItem(position);
                             task.setIgnoreBefore(ignoreBefore);
                             taskAdapter.notifyDataSetChanged();
                             choreList.save();
@@ -178,6 +190,10 @@ public class TodayFragment extends Fragment
                         today.getYear(),
                         today.getMonthOfYear() - 1,
                         today.getDayOfMonth());
+
+                    DatePicker datePicker = datePickerDialog.getDatePicker();
+                    datePicker.setMinDate(LocalDate.now().toDateTimeAtStartOfDay().getMillis());
+                    datePicker.setMaxDate(task.getDeadline().toDateTimeAtStartOfDay().getMillis());
 
                     datePickerDialog.show();
                 })

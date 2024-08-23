@@ -16,6 +16,7 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -101,6 +102,9 @@ public class EditChecklistActivity extends Activity
             ChecklistItem::getDescription);
         checklistItemsListView.setLayoutManager(new LinearLayoutManager(this));
         checklistItemsListView.setAdapter(checklistItemsAdapter);
+        checklistItemsListView.addItemDecoration(new DividerItemDecoration(
+            getBaseContext(),
+            LinearLayoutManager.VERTICAL));
 
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP | ItemTouchHelper.DOWN,

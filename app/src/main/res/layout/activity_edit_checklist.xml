@@ -7,17 +7,21 @@
         android:id="@+id/editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:hint="Enter Text" />
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="Enter Text"
+        android:textSize="25sp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/buttonDone"
-        android:layout_below="@id/editText"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"/>
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="16dp"
+        android:layout_above="@+id/buttonAddItem"
+        android:layout_below="@+id/editText" />
 
     <Button
         android:id="@+id/buttonRemove"

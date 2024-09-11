@@ -1,7 +1,6 @@
 package stoneframe.chorelist.gui.util;
 
 import android.content.Context;
-import android.content.DialogInterface;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -27,7 +26,22 @@ public class DialogUtils
         new AlertDialog.Builder(context)
             .setTitle(title)
             .setMessage(message)
-            .setPositiveButton("OK", (dialogInterface, i) -> {})
+            .setPositiveButton("OK", (dialogInterface, i) ->
+            {})
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .show();
+    }
+
+    public static void showWarningDialog(
+        Context context,
+        String title,
+        String message,
+        Runnable callback)
+    {
+        new AlertDialog.Builder(context)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("OK", (dialogInterface, i) -> callback.run())
             .setIcon(android.R.drawable.ic_dialog_alert)
             .show();
     }

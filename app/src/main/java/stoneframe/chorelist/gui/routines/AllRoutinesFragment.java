@@ -2,8 +2,16 @@ package stoneframe.chorelist.gui.routines;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.Manifest;
+import android.app.AlarmManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +21,7 @@ import android.widget.ListView;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import org.joda.time.LocalDate;
@@ -20,13 +29,14 @@ import org.joda.time.LocalDateTime;
 
 import java.util.Objects;
 
+import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.GlobalState;
 import stoneframe.chorelist.gui.routines.days.DayRoutineActivity;
 import stoneframe.chorelist.gui.routines.fortnights.FortnightRoutineActivity;
 import stoneframe.chorelist.gui.routines.weeks.WeekRoutineActivity;
+import stoneframe.chorelist.gui.util.DialogUtils;
 import stoneframe.chorelist.gui.util.SimpleListAdapter;
 import stoneframe.chorelist.model.ChoreList;
-import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.routines.DayRoutine;
 import stoneframe.chorelist.model.routines.FortnightRoutine;
 import stoneframe.chorelist.model.routines.Routine;
@@ -34,6 +44,7 @@ import stoneframe.chorelist.model.routines.WeekRoutine;
 
 public class AllRoutinesFragment extends Fragment
 {
+    private ActivityResultLauncher<String> requestNotificationPermissionLauncher;
     private ActivityResultLauncher<Intent> editRoutineLauncher;
 
     private ChoreList choreList;
@@ -96,6 +107,29 @@ public class AllRoutinesFragment extends Fragment
             new ActivityResultContracts.StartActivityForResult(),
             this::editRoutineCallback);
 
+        requestNotificationPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            this::requestPermissionsCallback
+        );
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        {
+            if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED)
+            {
+                requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+            else
+            {
+                checkPermissionToScheduleExactAlarms();
+            }
+        }
+        else
+        {
+            checkPermissionToScheduleExactAlarms();
+        }
+
         return rootView;
     }
 
@@ -129,6 +163,22 @@ public class AllRoutinesFragment extends Fragment
         editRoutineLauncher.launch(intent);
     }
 
+    private void requestPermissionsCallback(Boolean isGranted)
+    {
+        if (isGranted)
+        {
+            // Permission was granted, you can now send notifications
+            Log.d("NotificationPermission", "Notification permission granted.");
+        }
+        else
+        {
+            // Permission was denied, handle accordingly
+            Log.d("NotificationPermission", "Notification permission denied.");
+        }
+
+        checkPermissionToScheduleExactAlarms();
+    }
+
     private void editRoutineCallback(ActivityResult activityResult)
     {
         if (activityResult.getResultCode() == RESULT_OK)
@@ -149,7 +199,6 @@ public class AllRoutinesFragment extends Fragment
                     break;
 
                 case DayRoutineActivity.ROUTINE_RESULT_REMOVE:
-//                    routineAdapter.remove(routine);
                     choreList.removeRoutine(routine);
                     break;
             }
@@ -168,6 +217,28 @@ public class AllRoutinesFragment extends Fragment
         else
         {
             RoutineNotifier.scheduleRoutineAlarm(requireContext(), nextAlarmTime);
+        }
+    }
+
+    private void checkPermissionToScheduleExactAlarms()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+        {
+            AlarmManager alarmManager = (AlarmManager)requireActivity().getSystemService(Context.ALARM_SERVICE);
+
+            if (!alarmManager.canScheduleExactAlarms())
+            {
+                DialogUtils.showWarningDialog(
+                    requireContext(),
+                    "Alarms Permission",
+                    "You need to allow ChoreList to set alarms. Enable \"Allow setting alarms and reminders\"",
+                    () ->
+                    {
+                        Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+                        intent.setData(Uri.parse("package:" + requireActivity().getPackageName()));  // Directs the intent to your app's settings
+                        startActivity(intent);
+                    });
+            }
         }
     }
 }

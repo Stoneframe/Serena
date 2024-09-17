@@ -81,7 +81,9 @@ public class LimiterActivity extends AppCompatActivity
         SimpleListAdapter<ExpenditureType> expenditureTypeAdapter = new SimpleListAdapter<>(
             this,
             limiterEditor::getExpenditureTypes,
-            ExpenditureType::getName);
+            ExpenditureType::getName,
+            l -> "",
+            l -> "");
 
         spinnerExpenditureType.setAdapter(expenditureTypeAdapter);
         spinnerExpenditureType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()

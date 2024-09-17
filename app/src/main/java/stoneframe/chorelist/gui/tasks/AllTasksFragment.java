@@ -51,7 +51,8 @@ public class AllTasksFragment extends Fragment
             requireContext(),
             choreList::getAllTasks,
             Task::getDescription,
-            Task::isDone);
+            Task::isDone,
+            t -> String.format("Deadline: %s", t.getDeadline()));
         taskAdapter.setCheckboxChangedListener((task, isChecked) ->
         {
             if (isChecked)

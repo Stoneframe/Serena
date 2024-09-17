@@ -49,7 +49,9 @@ public class AllLimitersFragment extends Fragment
         limiterListAdapter = new SimpleListAdapter<>(
             requireContext(),
             choreList::getLimiters,
-            l -> format("%s (%d)", l.getName(), l.getAvailable(LocalDateTime.now())));
+            Limiter::getName,
+            l -> String.format("Remaining: %d", l.getAvailable(LocalDateTime.now())),
+            l -> "");
         ListView limiterListView = rootView.findViewById(R.id.all_limiters);
         limiterListView.setAdapter(limiterListAdapter);
         limiterListView.setOnItemClickListener((parent, view, position, id) ->

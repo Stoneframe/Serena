@@ -18,27 +18,32 @@ import java.util.function.Supplier;
 
 import stoneframe.chorelist.R;
 
-/** @noinspection unchecked*/
+/**
+ * @noinspection unchecked
+ */
 public class CheckboxListAdapter<T> extends BaseAdapter
 {
     private final Context context;
 
     private final Supplier<List<T>> listFunction;
-    private final Function<T, String> textFunction;
+    private final Function<T, String> mainTextFunction;
     private final Function<T, Boolean> isCheckedFunction;
+    private final Function<T, String> bottomTextFunction;
 
     private CheckboxCheckedChangeListener<T> checkboxCheckedChangeListener;
 
     public CheckboxListAdapter(
         @NonNull Context context,
         Supplier<List<T>> listFunction,
-        Function<T, String> textFunction,
-        Function<T, Boolean> isCheckedFunction)
+        Function<T, String> mainTextFunction,
+        Function<T, Boolean> isCheckedFunction,
+        Function<T, String> bottomTextFunction)
     {
         this.context = context;
         this.listFunction = listFunction;
-        this.textFunction = textFunction;
+        this.mainTextFunction = mainTextFunction;
         this.isCheckedFunction = isCheckedFunction;
+        this.bottomTextFunction = bottomTextFunction;
     }
 
     @Override
@@ -70,9 +75,10 @@ public class CheckboxListAdapter<T> extends BaseAdapter
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_item_check_box, parent, false);
 
-            holder.textView = convertView.findViewById(R.id.txtName);
+            holder.mainTextView = convertView.findViewById(R.id.mainText);
             holder.checkBox = convertView.findViewById(R.id.checkBox);
             holder.checkBox.setOnClickListener(this::onCheckBoxClicked);
+            holder.bottomTextView = convertView.findViewById(R.id.bottomText);
 
             convertView.setTag(holder);
         }
@@ -85,13 +91,25 @@ public class CheckboxListAdapter<T> extends BaseAdapter
 
         assert item != null;
 
-        String text = textFunction.apply(item);
+        String mainText = mainTextFunction.apply(item);
         boolean isChecked = isCheckedFunction.apply(item);
+        String bottomText = bottomTextFunction.apply(item);
 
-        holder.textView.setText(text);
-        holder.textView.setTextColor(isChecked ? Color.LTGRAY : Color.BLACK);
+        holder.mainTextView.setText(mainText);
+        holder.mainTextView.setTextColor(isChecked ? Color.LTGRAY : Color.BLACK);
         holder.checkBox.setChecked(isChecked);
         holder.checkBox.setTag(holder);
+
+        if (bottomText.isEmpty())
+        {
+            holder.bottomTextView.setVisibility(View.GONE);
+        }
+        else
+        {
+            holder.bottomTextView.setVisibility(View.VISIBLE);
+            holder.bottomTextView.setText(bottomText);
+        }
+
         holder.item = item;
 
         return convertView;
@@ -106,7 +124,7 @@ public class CheckboxListAdapter<T> extends BaseAdapter
     {
         Holder holder = (Holder)view.getTag();
 
-        holder.textView.setTextColor(isCheckedFunction.apply(holder.item) ? Color.LTGRAY : Color.BLACK);
+        holder.mainTextView.setTextColor(isCheckedFunction.apply(holder.item) ? Color.LTGRAY : Color.BLACK);
 
         notifyCheckboxCheckedChanged(holder);
         notifyDataSetChanged();
@@ -124,8 +142,9 @@ public class CheckboxListAdapter<T> extends BaseAdapter
 
     private class Holder
     {
+        public TextView mainTextView;
         public CheckBox checkBox;
-        public TextView textView;
+        public TextView bottomTextView;
         public T item;
     }
 

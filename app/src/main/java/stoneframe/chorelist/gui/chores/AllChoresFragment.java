@@ -66,7 +66,9 @@ public class AllChoresFragment extends Fragment
                 .stream()
                 .sorted(getComparator())
                 .collect(Collectors.toList()),
-            c -> String.format("[%d] %s", c.getPriority(), c.getDescription()));
+            Chore::getDescription,
+            c -> c.getNext().toString(),
+            c -> String.format("Priority: %d, Effort: %d", c.getPriority(), c.getEffort()));
         ListView choreListView = rootView.findViewById(R.id.all_tasks);
         choreListView.setAdapter(choreListAdapter);
         choreListView.setOnItemClickListener((parent, view, position, id) ->

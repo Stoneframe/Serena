@@ -69,7 +69,9 @@ public class AllRoutinesFragment extends Fragment
         routineListAdapter = new SimpleListAdapter<>(
             requireContext(),
             choreList::getAllRoutines,
-            Routine::getName);
+            Routine::getName,
+            r -> "",
+            r -> "");
         ListView routineListView = rootView.findViewById(R.id.all_routines);
         routineListView.setAdapter(routineListAdapter);
         routineListView.setOnItemClickListener((parent, view, position, id) ->

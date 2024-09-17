@@ -51,7 +51,9 @@ public class AllChecklistsFragment extends Fragment
                 .stream()
                 .sorted(Comparator.comparing(Checklist::getName))
                 .collect(Collectors.toList()),
-            Checklist::getName);
+            Checklist::getName,
+            c -> "",
+            c -> "");
         checklistListView.setAdapter(checklistAdapter);
         checklistListView.setOnItemClickListener((parent, view, position, id) ->
         {

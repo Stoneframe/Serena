@@ -23,7 +23,7 @@ public abstract class ExpenditureType
         return amount;
     }
 
-    public void setExpenditure(int amount)
+    void setAmount(int amount)
     {
         this.amount = amount;
     }

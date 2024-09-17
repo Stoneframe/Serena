@@ -28,11 +28,14 @@ public class Limiter
     private LocalDate startDate;
     private int incrementPerDay;
 
-    public Limiter(String name, LocalDate startDate, int incrementPerDay)
+    private boolean allowQuick;
+
+    public Limiter(String name, LocalDate startDate, int incrementPerDay, boolean allowQuick)
     {
         this.name = name;
         this.startDate = startDate;
         this.incrementPerDay = incrementPerDay;
+        this.allowQuick = allowQuick;
     }
 
     public String getName()
@@ -58,6 +61,21 @@ public class Limiter
     public int getIncrementPerDay()
     {
         return incrementPerDay;
+    }
+
+    public boolean isQuickDisableable()
+    {
+        return !expenditureTypes.isEmpty();
+    }
+
+    public boolean isQuickAllowed()
+    {
+        return allowQuick;
+    }
+
+    public void setAllowQuick(boolean allowQuick)
+    {
+        this.allowQuick = allowQuick;
     }
 
     void setIncrementPerDay(LocalDateTime now, int incrementPerDay)
@@ -103,6 +121,13 @@ public class Limiter
 
     public List<ExpenditureType> getExpenditureTypes()
     {
+        if (!allowQuick)
+        {
+            return expenditureTypes.stream()
+                .sorted(Comparator.comparing(ExpenditureType::getName))
+                .collect(Collectors.toList());
+        }
+
         return Stream.concat(
                 Stream.of(new QuickExpenditureType()),
                 expenditureTypes.stream().sorted(Comparator.comparing(ExpenditureType::getName)))

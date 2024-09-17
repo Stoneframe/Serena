@@ -22,7 +22,7 @@ public class LimiterManager
 
     public Limiter createLimiter(String name, LocalDate today)
     {
-        Limiter limiter = new Limiter(name, today, 300);
+        Limiter limiter = new Limiter(name, today, 300, true);
 
         limiters.add(limiter);
 

@@ -35,6 +35,8 @@ public class AllChoresFragment extends Fragment
 {
     private static final int SORT_BY_DESCRIPTION = 0;
     private static final int SORT_BY_PRIORITY = 1;
+    private static final int SORT_BY_EFFORT = 2;
+    private static final int SORT_BY_NEXT = 3;
 
     private int sortBy = SORT_BY_DESCRIPTION;
 
@@ -135,6 +137,16 @@ public class AllChoresFragment extends Fragment
             return Comparator.comparing(Chore::getPriority);
         }
 
+        if (sortBy == SORT_BY_EFFORT)
+        {
+            return Comparator.comparing(Chore::getEffort);
+        }
+
+        if (sortBy == SORT_BY_NEXT)
+        {
+            return Comparator.comparing(Chore::getNext);
+        }
+
         return Comparator.comparing(Chore::getDescription);
     }
 
@@ -221,10 +233,14 @@ public class AllChoresFragment extends Fragment
 
         RadioButton descriptionRadioButton = dialog.findViewById(R.id.descriptionRadioButton);
         RadioButton priorityRadioButton = dialog.findViewById(R.id.priorityRadioButton);
+        RadioButton effortRadioButton = dialog.findViewById(R.id.effortRadioButton);
+        RadioButton nextRadioButton = dialog.findViewById(R.id.nextRadioButton);
         Button buttonOK = dialog.findViewById(R.id.buttonOK);
 
         descriptionRadioButton.setChecked(sortBy == SORT_BY_DESCRIPTION);
         priorityRadioButton.setChecked(sortBy == SORT_BY_PRIORITY);
+        effortRadioButton.setChecked(sortBy == SORT_BY_EFFORT);
+        nextRadioButton.setChecked(sortBy == SORT_BY_NEXT);
 
         buttonOK.setOnClickListener(v ->
         {
@@ -236,6 +252,16 @@ public class AllChoresFragment extends Fragment
             if (priorityRadioButton.isChecked())
             {
                 sortBy = SORT_BY_PRIORITY;
+            }
+
+            if (effortRadioButton.isChecked())
+            {
+                sortBy = SORT_BY_EFFORT;
+            }
+
+            if (nextRadioButton.isChecked())
+            {
+                sortBy = SORT_BY_NEXT;
             }
 
             choreListAdapter.notifyDataSetChanged();

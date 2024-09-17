@@ -23,6 +23,18 @@
             android:layout_height="wrap_content"
             android:text="Priority" />
 
+        <RadioButton
+            android:id="@+id/effortRadioButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Effort" />
+
+        <RadioButton
+            android:id="@+id/nextRadioButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Next" />
+
     </RadioGroup>
 
     <Button

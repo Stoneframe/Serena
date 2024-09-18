@@ -220,6 +220,14 @@ public class TodayFragment extends Fragment
         updateColors();
     }
 
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        updateColors();
+    }
+
     private void updateColors()
     {
         updateColorsOf(procedureAdapter, rootView.findViewById(R.id.routines_text));

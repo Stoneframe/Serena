@@ -14,7 +14,26 @@
         android:id="@+id/storageText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/save_button"
         android:inputType="textMultiLine" />
+
+    <Button
+        android:id="@+id/paste_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:onClick="onPasteClick"
+        android:text="Paste" />
+
+    <Button
+        android:id="@+id/copy_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/paste_button"
+        android:onClick="onCopyClick"
+        android:text="Copy" />
 
     <Button
         android:id="@+id/save_button"

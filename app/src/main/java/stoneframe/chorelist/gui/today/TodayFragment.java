@@ -1,7 +1,10 @@
 package stoneframe.chorelist.gui.today;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,20 +12,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
 import org.joda.time.LocalDate;
 
+import java.util.Objects;
+
+import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.GlobalState;
+import stoneframe.chorelist.gui.routines.RoutineNotifier;
+import stoneframe.chorelist.gui.tasks.TaskActivity;
 import stoneframe.chorelist.gui.util.DialogUtils;
 import stoneframe.chorelist.gui.util.SimpleCheckboxListAdapter;
-import stoneframe.chorelist.gui.routines.RoutineNotifier;
 import stoneframe.chorelist.model.ChoreList;
-import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.chores.Chore;
 import stoneframe.chorelist.model.routines.PendingProcedure;
 import stoneframe.chorelist.model.tasks.Task;
@@ -30,6 +41,9 @@ import stoneframe.chorelist.model.tasks.Task;
 public class TodayFragment extends Fragment
 {
     private ChoreList choreList;
+
+    private ActivityResultLauncher<Intent> editTaskLauncher;
+    private Task taskUnderEdit;
 
     private SimpleCheckboxListAdapter<PendingProcedure> procedureAdapter;
     private SimpleCheckboxListAdapter<Chore> choreAdapter;
@@ -205,6 +219,44 @@ public class TodayFragment extends Fragment
             return true;
         });
 
+        ImageButton clearRoutinesButton = rootView.findViewById(R.id.clearRoutinesButton);
+        clearRoutinesButton.setOnClickListener(v ->
+        {
+            choreList.getPendingProcedures().forEach(p -> choreList.procedureDone(p));
+            choreList.save();
+
+            procedureAdapter.notifyDataSetChanged();
+        });
+
+        ImageButton refreshChoresButton = rootView.findViewById(R.id.refreshChoresButton);
+        refreshChoresButton.setOnClickListener(v ->
+        {
+            choreList.getEffortTracker().reset(LocalDate.now());
+            choreList.save();
+
+            choreAdapter.notifyDataSetChanged();
+        });
+
+        editTaskLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            this::editTaskCallback);
+
+        ImageButton addTaskButton = rootView.findViewById(R.id.addTaskButton);
+        addTaskButton.setOnClickListener(v ->
+        {
+            taskUnderEdit = new Task("", LocalDate.now(), LocalDate.now());
+
+            Intent intent = new Intent(getActivity(), TaskActivity.class);
+
+            intent.putExtra("ACTION", TaskActivity.TASK_ACTION_ADD);
+            intent.putExtra("Description", taskUnderEdit.getDescription());
+            intent.putExtra("Deadline", taskUnderEdit.getDeadline());
+            intent.putExtra("IgnoreBefore", taskUnderEdit.getIgnoreBefore());
+            intent.putExtra("IsDone", taskUnderEdit.isDone());
+
+            editTaskLauncher.launch(intent);
+        });
+
         return rootView;
     }
 
@@ -239,14 +291,53 @@ public class TodayFragment extends Fragment
     {
         final int darkGreen = Color.parseColor("#228C22");
 
+        RelativeLayout parent = (RelativeLayout)textView.getParent();
+
         if (adapter.isEmpty())
         {
-            textView.setBackgroundColor(darkGreen);
+            parent.setBackgroundColor(darkGreen);
         }
         else
         {
-            textView.setBackgroundColor(Color.BLACK);
+            parent.setBackgroundColor(Color.BLACK);
         }
+    }
+
+    private void editTaskCallback(ActivityResult activityResult)
+    {
+        if (activityResult.getResultCode() != RESULT_OK)
+        {
+            return;
+        }
+
+        Task task = taskUnderEdit;
+
+        Intent intent = Objects.requireNonNull(activityResult.getData());
+
+        task.setDescription(intent.getStringExtra("Description"));
+        task.setDeadline((LocalDate)intent.getSerializableExtra("Deadline"));
+        task.setIgnoreBefore((LocalDate)intent.getSerializableExtra("IgnoreBefore"));
+
+        if (intent.getIntExtra("ACTION", -1) == TaskActivity.TASK_ACTION_ADD)
+        {
+            choreList.addTask(task);
+        }
+
+        boolean isDone = intent.getBooleanExtra("IsDone", false);
+
+        if (isDone != task.isDone())
+        {
+            if (isDone)
+            {
+                choreList.taskDone(task);
+            }
+            else
+            {
+                choreList.taskUndone(task);
+            }
+        }
+
+        choreList.save();
     }
 
     private static void waitTwoSeconds()

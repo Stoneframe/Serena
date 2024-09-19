@@ -176,6 +176,35 @@ public class WeeklyEffortTracker implements EffortTracker
         }
     }
 
+    @Override
+    public void reset(LocalDate today)
+    {
+        remaining = getEffortFor(today);
+    }
+
+    private int getEffortFor(LocalDate today)
+    {
+        switch (today.getDayOfWeek())
+        {
+            case DateTimeConstants.MONDAY:
+                return getMonday();
+            case DateTimeConstants.TUESDAY:
+                return getTuesday();
+            case DateTimeConstants.WEDNESDAY:
+                return getWednesday();
+            case DateTimeConstants.THURSDAY:
+                return getThursday();
+            case DateTimeConstants.FRIDAY:
+                return getFriday();
+            case DateTimeConstants.SATURDAY:
+                return getSaturday();
+            case DateTimeConstants.SUNDAY:
+                return getSunday();
+            default:
+                throw new RuntimeException("Unexpected week day constant");
+        }
+    }
+
     private boolean isSameDay(LocalDate d1, LocalDate d2)
     {
         return d1 != null && d2 != null

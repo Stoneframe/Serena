@@ -50,6 +50,12 @@ public class SimpleEffortTracker implements EffortTracker
         }
     }
 
+    @Override
+    public void reset(LocalDate today)
+    {
+        remainingEffort = maxEffort;
+    }
+
     private boolean isSameDay(LocalDate d1, LocalDate d2)
     {
         return d1 != null && d2 != null

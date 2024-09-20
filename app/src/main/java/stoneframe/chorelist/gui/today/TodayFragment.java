@@ -221,21 +221,36 @@ public class TodayFragment extends Fragment
 
         ImageButton clearRoutinesButton = rootView.findViewById(R.id.clearRoutinesButton);
         clearRoutinesButton.setOnClickListener(v ->
-        {
-            choreList.getPendingProcedures().forEach(p -> choreList.procedureDone(p));
-            choreList.save();
+            DialogUtils.showConfirmationDialog(
+                requireContext(),
+                "Clear routines",
+                "Are you sure you want to clear all routines?",
+                isConfirmed ->
+                {
+                    if (!isConfirmed) return;
 
-            procedureAdapter.notifyDataSetChanged();
-        });
+                    choreList.getPendingProcedures().forEach(p -> choreList.procedureDone(p));
+                    choreList.save();
+
+                    procedureAdapter.notifyDataSetChanged();
+                }));
 
         ImageButton refreshChoresButton = rootView.findViewById(R.id.refreshChoresButton);
         refreshChoresButton.setOnClickListener(v ->
-        {
-            choreList.getEffortTracker().reset(LocalDate.now());
-            choreList.save();
+            DialogUtils.showConfirmationDialog(
+                requireContext(),
+                "Refresh chores",
+                "Are you sure you want to refresh chores?",
+                isConfirmed ->
+                {
+                    if (!isConfirmed) return;
 
-            choreAdapter.notifyDataSetChanged();
-        });
+                    choreList.getEffortTracker().reset(LocalDate.now());
+                    choreList.save();
+
+                    choreAdapter.notifyDataSetChanged();
+                }
+            ));
 
         editTaskLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),

@@ -233,6 +233,8 @@ public class TodayFragment extends Fragment
                     choreList.save();
 
                     procedureAdapter.notifyDataSetChanged();
+
+                    RoutineNotifier.updateNotification(getContext(), choreList);
                 }));
 
         ImageButton refreshChoresButton = rootView.findViewById(R.id.refreshChoresButton);

@@ -13,8 +13,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.annotation.CheckForNull;
-
 public abstract class Routine
 {
     public static final int DAY_ROUTINE = 0;
@@ -65,7 +63,6 @@ public abstract class Routine
 
     public abstract List<Procedure> getAllProcedures();
 
-    @CheckForNull
     public abstract LocalDateTime getNextProcedureTime(LocalDateTime now);
 
     public abstract List<PendingProcedure> getPendingProcedures(LocalDateTime now);

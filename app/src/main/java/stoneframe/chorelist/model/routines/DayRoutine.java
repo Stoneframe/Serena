@@ -8,8 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.annotation.CheckForNull;
-
 public class DayRoutine extends Routine
 {
     private final List<Procedure> procedures = new LinkedList<>();
@@ -28,7 +26,6 @@ public class DayRoutine extends Routine
     }
 
     @Override
-    @CheckForNull
     public LocalDateTime getNextProcedureTime(LocalDateTime now)
     {
         if (procedures.isEmpty()) return null;

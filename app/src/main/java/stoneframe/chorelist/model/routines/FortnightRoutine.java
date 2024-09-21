@@ -11,8 +11,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.annotation.CheckForNull;
-
 public class FortnightRoutine extends Routine
 {
     private final Week week1;
@@ -99,7 +97,6 @@ public class FortnightRoutine extends Routine
         }
     }
 
-    @CheckForNull
     private LocalDateTime getNextProcedureTime(Week week, LocalDateTime now)
     {
         return week.getNextProcedureTime(now);

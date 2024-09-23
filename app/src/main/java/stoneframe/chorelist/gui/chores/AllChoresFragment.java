@@ -156,6 +156,7 @@ public class AllChoresFragment extends Fragment
 
         Intent intent = new Intent(getActivity(), ChoreActivity.class);
         intent.putExtra("ACTION", mode);
+        intent.putExtra("IsEnabled", chore.isEnabled());
         intent.putExtra("Next", chore.getNext());
         intent.putExtra("Description", chore.getDescription());
         intent.putExtra("Priority", chore.getPriority());
@@ -180,6 +181,7 @@ public class AllChoresFragment extends Fragment
         switch (intent.getIntExtra("RESULT", -1))
         {
             case ChoreActivity.CHORE_RESULT_SAVE:
+                chore.setEnabled(intent.getBooleanExtra("IsEnabled", false));
                 chore.setNext((LocalDate)intent.getSerializableExtra("Next"));
                 chore.setDescription(intent.getStringExtra("Description"));
                 chore.setPriority(intent.getIntExtra("Priority", 1));

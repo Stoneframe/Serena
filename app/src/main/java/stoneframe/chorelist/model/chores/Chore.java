@@ -13,6 +13,8 @@ public class Chore
     public static final int MONTHS = 2;
     public static final int YEARS = 3;
 
+    private boolean isEnabled;
+
     private LocalDate next;
     private LocalDate postpone;
 
@@ -39,6 +41,16 @@ public class Chore
         this.postpone = null;
         this.intervalUnit = intervalUnit;
         this.intervalLength = intervalLength;
+    }
+
+    public boolean isEnabled()
+    {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled)
+    {
+        isEnabled = enabled;
     }
 
     public LocalDate getNext()
@@ -158,7 +170,7 @@ public class Chore
         return description;
     }
 
-    boolean isTimeToDo(LocalDate now)
+    boolean isNotTimeToDo(LocalDate now)
     {
         return getNextOrPostpone().isAfter(now);
     }

@@ -51,11 +51,11 @@ public class ChoreManager
 
         for (Chore chore : chores)
         {
-            if (chore.isTimeToDo(now))
+            if (chore.isNotTimeToDo(now))
             {
                 break;
             }
-            else
+            else if (chore.isEnabled())
             {
                 list.add(chore);
             }

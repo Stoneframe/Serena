@@ -8,6 +8,7 @@ import android.text.InputType;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -31,6 +32,7 @@ public class ChoreActivity extends AppCompatActivity
 
     private int action;
 
+    private boolean isEnabled;
     private LocalDate next;
     private String description;
     private int priority;
@@ -40,6 +42,7 @@ public class ChoreActivity extends AppCompatActivity
 
     private DatePickerDialog datePickerDialog;
 
+    private CheckBox enabledCheckbox;
     private EditText nextEditText;
     private EditText descriptionEditText;
     private EditText priorityEditText;
@@ -63,6 +66,7 @@ public class ChoreActivity extends AppCompatActivity
         Button button = findViewById(R.id.removeButton);
         button.setVisibility(action == CHORE_ACTION_EDIT ? Button.VISIBLE : Button.INVISIBLE);
 
+        isEnabled = intent.getBooleanExtra("IsEnabled", false);
         next = (LocalDate)intent.getSerializableExtra("Next");
         description = intent.getStringExtra("Description");
         priority = intent.getIntExtra("Priority", 1);
@@ -76,6 +80,7 @@ public class ChoreActivity extends AppCompatActivity
             nextEditText.setText(next.toString("yyyy-MM-dd"));
         }, next.getYear(), next.getMonthOfYear() - 1, next.getDayOfMonth());
 
+        enabledCheckbox = findViewById(R.id.enableCheckbox);
         nextEditText = findViewById(R.id.nextEditText);
         descriptionEditText = findViewById(R.id.choreDescriptionEditText);
         priorityEditText = findViewById(R.id.priorityEditText);
@@ -89,6 +94,7 @@ public class ChoreActivity extends AppCompatActivity
             android.R.layout.simple_list_item_1,
             new String[]{"Days", "Weeks", "Months", "Years"}));
 
+        enabledCheckbox.setChecked(isEnabled);
         nextEditText.setText(next.toString("yyyy-MM-dd"));
         descriptionEditText.setText(description);
         priorityEditText.setText(Integer.toString(priority), TextView.BufferType.EDITABLE);
@@ -111,6 +117,7 @@ public class ChoreActivity extends AppCompatActivity
 
     public void saveClick(View view)
     {
+        isEnabled = enabledCheckbox.isChecked();
         description = descriptionEditText.getText().toString().trim();
         priority = Integer.parseInt(priorityEditText.getText().toString());
         effort = Integer.parseInt(effortEditText.getText().toString());
@@ -121,6 +128,7 @@ public class ChoreActivity extends AppCompatActivity
 
         intent.putExtra("RESULT", CHORE_RESULT_SAVE);
         intent.putExtra("ACTION", action);
+        intent.putExtra("IsEnabled", isEnabled);
         intent.putExtra("Next", next);
         intent.putExtra("Description", description);
         intent.putExtra("Priority", priority);

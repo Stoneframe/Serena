@@ -150,6 +150,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(this));
+
         GlobalState globalState = (GlobalState)getApplication();
 
         choreList = globalState.getChoreList();

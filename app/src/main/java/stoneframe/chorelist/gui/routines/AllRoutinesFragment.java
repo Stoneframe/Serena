@@ -70,7 +70,7 @@ public class AllRoutinesFragment extends Fragment
             requireContext(),
             choreList::getAllRoutines,
             Routine::getName,
-            r -> "",
+            this::getRoutineTypeName,
             r -> "");
         ListView routineListView = rootView.findViewById(R.id.all_routines);
         routineListView.setAdapter(routineListAdapter);
@@ -134,6 +134,22 @@ public class AllRoutinesFragment extends Fragment
 
         return rootView;
     }
+
+    private String getRoutineTypeName(Routine routine)
+    {
+        switch (routine.getRoutineType())
+        {
+            case Routine.DAY_ROUTINE:
+                return "Day";
+            case Routine.WEEK_ROUTINE:
+                return "Week";
+            case Routine.FORTNIGHT_ROUTINE:
+                return "Fortnight";
+            default:
+                return "Unknown";
+        }
+    }
+
 
     private void startRoutineEditor(Routine routine, int mode)
     {

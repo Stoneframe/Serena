@@ -400,7 +400,7 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
 
         final EditText editTextAmount = new EditText(this);
         editTextAmount.setHint(limiterEditor.getUnit());
-        editTextAmount.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+        editTextAmount.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED);
 
         if (initialName != null) editTextName.setText(initialName);
         if (initialCalories != null) editTextAmount.setText(initialCalories.toString());
@@ -429,6 +429,6 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
         new EditTextButtonEnabledLink(
             dialog.getButton(AlertDialog.BUTTON_POSITIVE),
             new EditTextCriteria(editTextName, EditTextCriteria.IS_NOT_EMPTY),
-            new EditTextCriteria(editTextAmount, EditTextCriteria.IS_NOT_EMPTY));
+            new EditTextCriteria(editTextAmount, EditTextCriteria.IS_VALID_INT));
     }
 }

@@ -369,10 +369,29 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
 
             if (!incrementPerDay.isEmpty())
             {
-                limiterEditor.setName(editTextName.getText().toString());
-                limiterEditor.setUnit(editTextUnit.getText().toString());
-                limiterEditor.setAllowQuick(checkBoxAllowQuick.isChecked());
-                limiterEditor.setIncrementPerDay(Integer.parseInt(incrementPerDay));
+                String name = editTextName.getText().toString();
+                if (!limiterEditor.getName().equals(name))
+                {
+                    limiterEditor.setName(name);
+                }
+
+                String unit = editTextUnit.getText().toString();
+                if (!limiterEditor.getUnit().equals(unit))
+                {
+                    limiterEditor.setUnit(unit);
+                }
+
+                boolean isAllowed = checkBoxAllowQuick.isChecked();
+                if (limiterEditor.isQuickAllowed() != isAllowed)
+                {
+                    limiterEditor.setAllowQuick(isAllowed);
+                }
+
+                int increment = Integer.parseInt(incrementPerDay);
+                if (limiterEditor.getIncrementPerDay() != increment)
+                {
+                    limiterEditor.setIncrementPerDay(increment);
+                }
 
                 choreList.save();
 

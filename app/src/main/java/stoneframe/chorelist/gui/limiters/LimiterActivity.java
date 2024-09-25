@@ -12,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -413,35 +412,31 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
         Integer initialCalories,
         BiConsumer<String, Integer> okClickListener)
     {
-        final EditText editTextName = new EditText(this);
-        editTextName.setHint("Name");
-        editTextName.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_expenditure_type, null);
+        builder.setView(dialogView);
 
-        final EditText editTextAmount = new EditText(this);
-        editTextAmount.setHint(limiterEditor.getUnit());
-        editTextAmount.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED);
+        EditText editTextName = dialogView.findViewById(R.id.editTextName);
+        EditText editTextAmount = dialogView.findViewById(R.id.editTextAmount);
+        Button buttonCancel = dialogView.findViewById(R.id.buttonCancel);
+        Button buttonOk = dialogView.findViewById(R.id.buttonOk);
 
         if (initialName != null) editTextName.setText(initialName);
         if (initialCalories != null) editTextAmount.setText(initialCalories.toString());
 
-        LinearLayout layout = new LinearLayout(this);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setPadding(16, 16, 16, 16);
-        layout.addView(editTextName);
-        layout.addView(editTextAmount);
+        AlertDialog dialog = builder.create();
 
-        AlertDialog dialog = new AlertDialog.Builder(this)
-            .setTitle("Expenditure Type")
-            .setView(layout)
-            .setPositiveButton("OK", (d, which) ->
-            {
-                String name = editTextName.getText().toString();
-                int amount = Integer.parseInt(editTextAmount.getText().toString());
+        buttonCancel.setOnClickListener(v -> dialog.dismiss());
+        buttonOk.setOnClickListener(v ->
+        {
+            String name = editTextName.getText().toString();
+            int amount = Integer.parseInt(editTextAmount.getText().toString());
 
-                okClickListener.accept(name, amount);
-            })
-            .setNegativeButton("Cancel", null)
-            .create();
+            dialog.dismiss();
+
+            okClickListener.accept(name, amount);
+        });
 
         dialog.show();
 

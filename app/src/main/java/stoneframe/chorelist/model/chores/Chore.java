@@ -41,6 +41,8 @@ public class Chore
         this.postpone = null;
         this.intervalUnit = intervalUnit;
         this.intervalLength = intervalLength;
+
+        isEnabled = true;
     }
 
     public boolean isEnabled()

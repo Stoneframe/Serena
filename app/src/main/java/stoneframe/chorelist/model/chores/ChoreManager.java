@@ -1,11 +1,14 @@
 package stoneframe.chorelist.model.chores;
 
+import androidx.annotation.NonNull;
+
 import org.joda.time.LocalDate;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ChoreManager
 {
@@ -41,35 +44,32 @@ public class ChoreManager
         return Collections.unmodifiableList(chores);
     }
 
-    public List<Chore> getChores(LocalDate now)
+    public List<Chore> getChores(LocalDate today)
     {
-        chores.sort(new Chore.ChoreComparator(now));
+        List<Chore> eligibleChores = getAllEligibleChores(today);
 
-        int effort = effortTracker.getTodaysEffort(now);
+        return choreSelector.selectChores(eligibleChores, effortTracker.getTodaysEffort(today))
+            .stream()
+            .sorted(new Chore.ChoreComparator(today))
+            .collect(Collectors.toList());
+    }
 
-        List<Chore> list = new LinkedList<>();
-
-        for (Chore chore : chores)
-        {
-            if (chore.isNotTimeToDo(now))
-            {
-                break;
-            }
-            else if (chore.isEnabled())
-            {
-                list.add(chore);
-            }
-        }
-
-        list = choreSelector.selectChores(list, effort);
-
-        return Collections.unmodifiableList(list);
+    private @NonNull List<Chore> getAllEligibleChores(LocalDate today)
+    {
+        return chores.stream()
+            .sorted(new Chore.ChoreComparator(today))
+            .filter(Chore::isEnabled)
+            .filter(c -> c.isTimeToDo(today))
+            .collect(Collectors.toList());
     }
 
     public void complete(Chore chore, LocalDate today)
     {
+        int effortSpent = getEffortSpent(chore, today);
+
+        effortTracker.spend(effortSpent);
+
         chore.reschedule(today);
-        effortTracker.spend(chore.getEffort());
     }
 
     public void skip(Chore chore, LocalDate today)
@@ -93,5 +93,32 @@ public class ChoreManager
         ChoreManager other = (ChoreManager)obj;
 
         return this.chores.equals(other.chores);
+    }
+
+    private int getEffortSpent(Chore chore, LocalDate today)
+    {
+        List<Chore> todaysChores = getChores(today);
+
+        if (todaysChores.size() <= 1 || !isLastChoreInList(chore, todaysChores))
+        {
+            return chore.getEffort();
+        }
+
+        return effortTracker.getTodaysEffort(today) - getSumOfEffortExceptLast(todaysChores);
+    }
+
+    private static boolean isLastChoreInList(Chore chore, List<Chore> todaysChores)
+    {
+        Chore lastChoreInList = todaysChores.get(todaysChores.size() - 1);
+
+        return lastChoreInList.equals(chore);
+    }
+
+    private static int getSumOfEffortExceptLast(List<Chore> todaysChores)
+    {
+        return todaysChores.stream()
+            .limit(todaysChores.size() - 1)
+            .mapToInt(Chore::getEffort)
+            .sum();
     }
 }

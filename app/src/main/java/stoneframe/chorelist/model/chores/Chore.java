@@ -172,9 +172,9 @@ public class Chore
         return description;
     }
 
-    boolean isNotTimeToDo(LocalDate now)
+    boolean isTimeToDo(LocalDate today)
     {
-        return getNextOrPostpone().isAfter(now);
+        return !getNextOrPostpone().isAfter(today);
     }
 
     private LocalDate getNextOrPostpone()
@@ -204,6 +204,7 @@ public class Chore
             {
                 if ((i = Integer.compare(o1.priority, o2.priority)) != 0) return i;
                 if ((i = Integer.compare(o1.effort, o2.effort)) != 0) return i;
+                if ((i = o1.getNextOrPostpone().compareTo(o2.getNextOrPostpone())) != 0) return i;
             }
 
             return o1.description.compareTo(o2.description);

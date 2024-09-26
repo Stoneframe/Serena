@@ -67,6 +67,14 @@ public class AllChecklistsFragment extends Fragment
         return rootView;
     }
 
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+
+        checklistAdapter.notifyDataSetChanged();
+    }
+
     private void onAddButtonClicked()
     {
         final EditText checklistNameText = new EditText(getContext());

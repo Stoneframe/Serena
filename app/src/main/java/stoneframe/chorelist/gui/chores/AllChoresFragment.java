@@ -125,6 +125,14 @@ public class AllChoresFragment extends Fragment
         return rootView;
     }
 
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+
+        choreListAdapter.notifyDataSetChanged();
+    }
+
     private Comparator<Chore> getComparator()
     {
         if (sortBy == SORT_BY_DESCRIPTION)

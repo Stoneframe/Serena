@@ -135,6 +135,14 @@ public class AllRoutinesFragment extends Fragment
         return rootView;
     }
 
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+
+        routineListAdapter.notifyDataSetChanged();
+    }
+
     private String getRoutineTypeName(Routine routine)
     {
         switch (routine.getRoutineType())

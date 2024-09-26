@@ -93,9 +93,9 @@ public class AllTasksFragment extends Fragment
     }
 
     @Override
-    public void onResume()
+    public void onStart()
     {
-        super.onResume();
+        super.onStart();
 
         taskAdapter.notifyDataSetChanged();
     }

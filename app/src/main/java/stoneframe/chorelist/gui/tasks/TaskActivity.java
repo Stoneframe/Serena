@@ -1,18 +1,30 @@
 package stoneframe.chorelist.gui.tasks;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import org.joda.time.LocalDate;
+
+import java.util.List;
 
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.util.DialogUtils;
@@ -38,6 +50,10 @@ public class TaskActivity extends AppCompatActivity
     private EditText deadlineEditText;
     private EditText ignoreBeforeEditText;
     private CheckBox isDoneCheckBox;
+
+    private SpeechRecognizer speechRecognizer;
+    private Intent speechRecognizerIntent;
+    private ImageButton speakButton;
 
     public void saveClick(View view)
     {
@@ -119,6 +135,16 @@ public class TaskActivity extends AppCompatActivity
         new EditTextButtonEnabledLink(
             saveButton,
             new EditTextCriteria(descriptionEditText, EditTextCriteria.IS_NOT_EMPTY));
+
+        setupSpeechRecognizer();
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        speechRecognizer.destroy();
     }
 
     private void showDeadlineDatePickerDialog()
@@ -164,5 +190,145 @@ public class TaskActivity extends AppCompatActivity
         datePicker.setMaxDate(deadline.toDateTimeAtStartOfDay().getMillis());
 
         ignoreBeforePickerDialog.show();
+    }
+
+    private void setupSpeechRecognizer()
+    {
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "sv-SE");
+        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, false);
+        speechRecognizerIntent.putExtra(
+            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+
+        speakButton = findViewById(R.id.speakButton);
+        speakButton.setOnClickListener(v ->
+        {
+            if (hasMicrophonePermission())
+            {
+                requestMicrophonePermission();
+            }
+            else
+            {
+                speechRecognizer.startListening(speechRecognizerIntent);
+            }
+
+        });
+
+        speechRecognizer.setRecognitionListener(new RecognitionListener()
+        {
+            @Override
+            public void onReadyForSpeech(Bundle params)
+            {
+                descriptionEditText.setText("");
+                descriptionEditText.setHint("Ready...");
+            }
+
+            @Override
+            public void onBeginningOfSpeech()
+            {
+                descriptionEditText.setText("");
+                descriptionEditText.setHint("Listening...");
+            }
+
+            @Override
+            public void onRmsChanged(float rmsdB)
+            {
+            }
+
+            @Override
+            public void onBufferReceived(byte[] buffer) {}
+
+            @Override
+            public void onEndOfSpeech()
+            {
+                descriptionEditText.setText("");
+                descriptionEditText.setHint("Processing...");
+            }
+
+            @Override
+            public void onError(int error)
+            {
+                String message = getErrorMessage(error);
+
+                descriptionEditText.setHint("");
+
+                Toast.makeText(TaskActivity.this, error + " Error: " + message, Toast.LENGTH_SHORT)
+                    .show();
+            }
+
+            private @NonNull String getErrorMessage(int error)
+            {
+                switch (error)
+                {
+                    case SpeechRecognizer.ERROR_AUDIO:
+                        return "Audio recording error";
+                    case SpeechRecognizer.ERROR_CLIENT:
+                        return "Client side error";
+                    case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
+                        return "Insufficient permissions";
+                    case SpeechRecognizer.ERROR_NETWORK:
+                        return "Network error";
+                    case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
+                        return "Network timeout";
+                    case SpeechRecognizer.ERROR_NO_MATCH:
+                        return "No match";
+                    case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
+                        return "Recognizer busy";
+                    case SpeechRecognizer.ERROR_SERVER:
+                        return "Server error";
+                    case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
+                        return "No speech input";
+                    case SpeechRecognizer.ERROR_LANGUAGE_NOT_SUPPORTED:
+                        return "Language not supported";
+                    default:
+                        return "Unknown error";
+                }
+            }
+
+            @Override
+            public void onResults(Bundle results)
+            {
+                List<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+
+                if (matches != null)
+                {
+                    String text = matches.get(0);
+
+                    descriptionEditText.setText(capitalizeFirstLetter(text));
+                }
+            }
+
+            @Override
+            public void onPartialResults(Bundle partialResults) {}
+
+            @Override
+            public void onEvent(int eventType, Bundle params) {}
+        });
+    }
+
+    private boolean hasMicrophonePermission()
+    {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+            != PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestMicrophonePermission()
+    {
+        ActivityCompat.requestPermissions(
+            this,
+            new String[]{Manifest.permission.RECORD_AUDIO},
+            1);
+    }
+
+    private String capitalizeFirstLetter(String text)
+    {
+        if (text == null || text.isEmpty())
+        {
+            return text;
+        }
+
+        return text.substring(0, 1).toUpperCase() + text.substring(1);
     }
 }

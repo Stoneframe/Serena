@@ -37,15 +37,34 @@
                     android:labelFor="@+id/taskDescriptionEditText"
                     android:text="Description" />
 
-                <EditText
-                    android:id="@+id/taskDescriptionEditText"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:importantForAutofill="no"
-                    android:inputType="textCapSentences"
-                    android:maxLines="1"
-                    android:minHeight="48dp"
-                    android:nextFocusDown="@+id/priorityEditText" />
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/taskDescriptionEditText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:importantForAutofill="no"
+                        android:inputType="textCapSentences"
+                        android:maxLines="1"
+                        android:minHeight="48dp"
+                        android:nextFocusDown="@+id/priorityEditText" />
+
+                    <ImageButton
+                        android:id="@+id/speakButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Record audio"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_mic" />
+
+                </LinearLayout>
+
+
             </LinearLayout>
 
             <!-- Deadline Section -->

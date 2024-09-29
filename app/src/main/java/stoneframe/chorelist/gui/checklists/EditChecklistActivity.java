@@ -36,8 +36,8 @@ public class EditChecklistActivity extends Activity
     public static final int DONE = 0;
     public static final int REMOVE = 1;
 
-    private final ColorDrawable editBackground = new ColorDrawable(Color.BLUE);
-    private final ColorDrawable deleteBackground = new ColorDrawable(Color.RED);
+    private final ColorDrawable editBackground = new ColorDrawable(Color.parseColor("#AECCE4"));
+    private final ColorDrawable deleteBackground = new ColorDrawable(Color.parseColor("#FF8164"));
 
     private RecyclerAdapter<ChecklistItem> checklistItemsAdapter;
 
@@ -73,9 +73,9 @@ public class EditChecklistActivity extends Activity
         buttonAddItem = findViewById(R.id.buttonAddItem);
         buttonDone = findViewById(R.id.buttonDone);
 
-        editIcon = ContextCompat.getDrawable(this, android.R.drawable.ic_menu_edit);
+        editIcon = ContextCompat.getDrawable(this, R.drawable.ic_edit);
 
-        deleteIcon = ContextCompat.getDrawable(this, android.R.drawable.ic_delete);
+        deleteIcon = ContextCompat.getDrawable(this, R.drawable.ic_delete);
 
         checklistNameEditText.setText(checklist.getName());
         checklistNameEditText.addTextChangedListener(new TextWatcher()

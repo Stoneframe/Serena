@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import stoneframe.chorelist.R;
+
 public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder>
 {
     private final Supplier<List<T>> getList;
@@ -30,7 +32,7 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.Vie
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
         View view = LayoutInflater.from(parent.getContext())
-            .inflate(android.R.layout.simple_list_item_1, parent, false);
+            .inflate(R.layout.list_checklist_item, parent, false);
 
         return new ViewHolder(view);
     }
@@ -58,7 +60,7 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.Vie
         ViewHolder(View itemView)
         {
             super(itemView);
-            itemText = itemView.findViewById(android.R.id.text1);
+            itemText = itemView.findViewById(R.id.nameTextView);
         }
     }
 }

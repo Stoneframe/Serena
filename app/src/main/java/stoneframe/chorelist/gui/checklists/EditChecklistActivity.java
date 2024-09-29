@@ -23,10 +23,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.GlobalState;
-import stoneframe.chorelist.gui.util.RecyclerAdapter;
 import stoneframe.chorelist.gui.util.DialogUtils;
 import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
+import stoneframe.chorelist.gui.util.RecyclerAdapter;
 import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.checklists.Checklist;
 import stoneframe.chorelist.model.checklists.ChecklistItem;
@@ -138,8 +138,22 @@ public class EditChecklistActivity extends Activity
 
                 if (direction == ItemTouchHelper.LEFT)
                 {
-                    checklist.removeItem(item);
-                    checklistItemsAdapter.notifyItemRemoved(position);
+                    DialogUtils.showConfirmationDialog(
+                        EditChecklistActivity.this,
+                        "Remove checklist item",
+                        "Are you sure you want to remove this checklist item?",
+                        isConfirmed ->
+                        {
+                            if (isConfirmed)
+                            {
+                                checklist.removeItem(item);
+                                checklistItemsAdapter.notifyItemRemoved(position);
+                            }
+                            else
+                            {
+                                checklistItemsAdapter.notifyItemChanged(position);
+                            }
+                        });
                 }
 
                 if (direction == ItemTouchHelper.RIGHT)

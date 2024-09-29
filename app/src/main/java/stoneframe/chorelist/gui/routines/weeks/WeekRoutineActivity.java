@@ -218,7 +218,7 @@ public class WeekRoutineActivity extends AppCompatActivity
                 routine.getWeekDay(copiedDayOfWeek).addProcedure(copiedProcedure);
 
                 weekExpandableListAdaptor.notifyDataSetChanged();
-                weekExpandableList.expandGroup(dayOfWeek - 1);
+                weekExpandableList.expandGroup(copiedDayOfWeek - 1);
             });
     }
 }

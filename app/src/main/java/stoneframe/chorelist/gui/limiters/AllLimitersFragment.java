@@ -1,7 +1,5 @@
 package stoneframe.chorelist.gui.limiters;
 
-import static java.lang.String.format;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -51,7 +49,16 @@ public class AllLimitersFragment extends Fragment
             choreList::getLimiters,
             Limiter::getName,
             l -> String.format("Remaining: %d", l.getAvailable(LocalDateTime.now())),
-            l -> "");
+            l ->
+            {
+                LocalDateTime now = LocalDateTime.now();
+
+                String when = l.getAvailable(now) < 0
+                    ? l.getReplenishTime(now).toString("yyyy-MM-dd HH:mm")
+                    : "Now";
+
+                return String.format("Replenished: %s", when);
+            });
         ListView limiterListView = rootView.findViewById(R.id.all_limiters);
         limiterListView.setAdapter(limiterListAdapter);
         limiterListView.setOnItemClickListener((parent, view, position, id) ->

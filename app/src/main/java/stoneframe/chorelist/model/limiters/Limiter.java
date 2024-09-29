@@ -78,19 +78,23 @@ public class Limiter
         this.allowQuick = allowQuick;
     }
 
-    void setIncrementPerDay(LocalDateTime now, int incrementPerDay)
+    public LocalDateTime getReplenishTime(LocalDateTime now)
     {
-        int oldCurrentAvailable = getAvailable(now);
+        int available = getAvailable(now);
 
-        this.startDate = now.toLocalDate();
-        this.incrementPerDay = incrementPerDay;
+        if (available >= 0)
+        {
+            return now;
+        }
 
-        expenditures.clear();
-        previousExpenditure = 0;
+        double remaining = Math.abs((double)available / getIncrementPerDay());
 
-        int newCurrentAvailable = getAvailable(now);
+        int days = (int)remaining;
 
-        previousExpenditure = newCurrentAvailable - oldCurrentAvailable;
+        double hours = 24 * (remaining - days);
+        double minutes = 60 * (hours - (int)hours);
+
+        return now.plusDays(days).plusHours((int)hours).plusMinutes((int)minutes);
     }
 
     public int getAvailable(LocalDateTime now)
@@ -109,16 +113,6 @@ public class Limiter
             - recentExpenditures;
     }
 
-    void addExpenditureType(CustomExpenditureType expenditureType)
-    {
-        expenditureTypes.add(expenditureType);
-    }
-
-    void removeExpenditureType(CustomExpenditureType expenditureType)
-    {
-        expenditureTypes.remove(expenditureType);
-    }
-
     public List<ExpenditureType> getExpenditureTypes()
     {
         if (!allowQuick)
@@ -134,6 +128,36 @@ public class Limiter
             .collect(Collectors.toList());
     }
 
+    public List<Expenditure> getExpenditures()
+    {
+        return expenditures.stream().map(p -> p.first).collect(Collectors.toList());
+    }
+
+    void setIncrementPerDay(LocalDateTime now, int incrementPerDay)
+    {
+        int oldCurrentAvailable = getAvailable(now);
+
+        this.startDate = now.toLocalDate();
+        this.incrementPerDay = incrementPerDay;
+
+        expenditures.clear();
+        previousExpenditure = 0;
+
+        int newCurrentAvailable = getAvailable(now);
+
+        previousExpenditure = newCurrentAvailable - oldCurrentAvailable;
+    }
+
+    void addExpenditureType(CustomExpenditureType expenditureType)
+    {
+        expenditureTypes.add(expenditureType);
+    }
+
+    void removeExpenditureType(CustomExpenditureType expenditureType)
+    {
+        expenditureTypes.remove(expenditureType);
+    }
+
     void addExpenditure(Expenditure expenditure, LocalDateTime now)
     {
         clearOldExpenditures(now);
@@ -144,11 +168,6 @@ public class Limiter
     void removeExpenditure(Expenditure expenditure)
     {
         expenditures.removeIf(p -> p.first.equals(expenditure));
-    }
-
-    public List<Expenditure> getExpenditures()
-    {
-        return expenditures.stream().map(p -> p.first).collect(Collectors.toList());
     }
 
     private void clearOldExpenditures(LocalDateTime now)

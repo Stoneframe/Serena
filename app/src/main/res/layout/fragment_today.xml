@@ -26,27 +26,28 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="35dp"
+                    android:layout_height="wrap_content"
                     android:background="#000000">
 
                     <TextView
                         android:id="@+id/routines_text"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="10dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:paddingStart="10dp"
                         android:text="Routines"
                         android:textColor="#FFFFFF"
-                        android:textSize="20dp" />
+                        android:textSize="20sp" />
 
                     <ImageButton
                         android:id="@+id/clearRoutinesButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="Clear all routines"
-                        android:padding="10dp"
+                        android:paddingRight="10dp"
                         android:src="@drawable/ic_clear_all"
                         app:tint="@android:color/white" />
 
@@ -57,6 +58,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dip" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -68,27 +70,28 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="35dp"
+                    android:layout_height="wrap_content"
                     android:background="#000000">
 
                     <TextView
                         android:id="@+id/chores_text"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
                         android:paddingLeft="10dp"
                         android:text="Chores"
                         android:textColor="#FFFFFF"
-                        android:textSize="20dp" />
+                        android:textSize="20sp" />
 
                     <ImageButton
                         android:id="@+id/refreshChoresButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="Refresh"
-                        android:padding="10dp"
+                        android:paddingEnd="10dp"
                         android:src="@drawable/ic_refresh"
                         app:tint="@android:color/white" />
 
@@ -110,27 +113,28 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="35dp"
+                    android:layout_height="wrap_content"
                     android:background="#000000">
 
                     <TextView
                         android:id="@+id/tasks_text"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="10dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:paddingStart="10dp"
                         android:text="Tasks"
                         android:textColor="#FFFFFF"
-                        android:textSize="20dp" />
+                        android:textSize="20sp" />
 
                     <ImageButton
                         android:id="@+id/addTaskButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="Add task"
-                        android:padding="10dp"
+                        android:paddingEnd="10dp"
                         android:src="@drawable/ic_add"
                         app:tint="@android:color/white" />
 

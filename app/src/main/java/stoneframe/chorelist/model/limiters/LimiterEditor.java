@@ -1,5 +1,7 @@
 package stoneframe.chorelist.model.limiters;
 
+import org.joda.time.LocalDateTime;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,9 +39,11 @@ public class LimiterEditor
 
     public void setName(String name)
     {
-        limiter.setName(name);
-
-        listeners.forEach(LimiterEditorListener::nameChanged);
+        if (!name.equals(limiter.getName()))
+        {
+            limiter.setName(name);
+            listeners.forEach(LimiterEditorListener::nameChanged);
+        }
     }
 
     public String getUnit()
@@ -49,9 +53,11 @@ public class LimiterEditor
 
     public void setUnit(String unit)
     {
-        limiter.setUnit(unit);
-
-        listeners.forEach(LimiterEditorListener::unitChanged);
+        if (!unit.equals(limiter.getUnit()))
+        {
+            limiter.setUnit(unit);
+            listeners.forEach(LimiterEditorListener::unitChanged);
+        }
     }
 
     public int getIncrementPerDay()
@@ -61,9 +67,11 @@ public class LimiterEditor
 
     public void setIncrementPerDay(int incrementPerDay)
     {
-        limiter.setIncrementPerDay(timeService.getNow(), incrementPerDay);
-
-        listeners.forEach(LimiterEditorListener::incrementPerDayChanged);
+        if (incrementPerDay != limiter.getIncrementPerDay())
+        {
+            limiter.setIncrementPerDay(timeService.getNow(), incrementPerDay);
+            listeners.forEach(LimiterEditorListener::incrementPerDayChanged);
+        }
     }
 
     public boolean hasMaxValue()
@@ -78,9 +86,11 @@ public class LimiterEditor
 
     public void setMaxValue(Integer maxValue)
     {
-        limiter.setMaxValue(maxValue, timeService.getNow());
-
-        listeners.forEach(LimiterEditorListener::availableChanged);
+        if (hasMaxValueChanged(maxValue))
+        {
+            limiter.setMaxValue(maxValue, LocalDateTime.now());
+            listeners.forEach(LimiterEditorListener::availableChanged);
+        }
     }
 
     public boolean isQuickDisableable()
@@ -95,9 +105,11 @@ public class LimiterEditor
 
     public void setAllowQuick(boolean allowQuick)
     {
-        limiter.setAllowQuick(allowQuick);
-
-        listeners.forEach(l -> l.isQuickChanged(allowQuick));
+        if (allowQuick != limiter.isQuickAllowed())
+        {
+            limiter.setAllowQuick(allowQuick);
+            listeners.forEach(l -> l.isQuickChanged(allowQuick));
+        }
     }
 
     public List<ExpenditureType> getExpenditureTypes()
@@ -157,6 +169,12 @@ public class LimiterEditor
 
         listeners.forEach(l -> l.expenditureTypeEdited(expenditureType));
         listeners.forEach(LimiterEditorListener::expenditureTypesChanged);
+    }
+
+    private boolean hasMaxValueChanged(Integer maxValue)
+    {
+        return maxValue == null && limiter.hasMaxValue()
+            || maxValue != null && maxValue != limiter.getMaxValue();
     }
 
     public interface LimiterEditorListener

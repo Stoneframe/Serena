@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.common.util.BiConsumer;
@@ -148,6 +149,7 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
     @Override
     public void unitChanged()
     {
+        updateAvailable();
         updateHint();
     }
 
@@ -376,47 +378,11 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
 
             if (!incrementPerDay.isEmpty())
             {
-                String name = editTextName.getText().toString();
-                if (!limiterEditor.getName().equals(name))
-                {
-                    limiterEditor.setName(name);
-                }
-
-                String unit = editTextUnit.getText().toString();
-                if (!limiterEditor.getUnit().equals(unit))
-                {
-                    limiterEditor.setUnit(unit);
-                }
-
-                String maxValueStr = editTextMaxValue.getText().toString();
-                if (maxValueStr.isEmpty())
-                {
-                    if (limiterEditor.hasMaxValue())
-                    {
-                        limiterEditor.setMaxValue(null);
-                    }
-                }
-                else
-                {
-                    int maxValue = Integer.parseInt(maxValueStr);
-
-                    if (maxValue != limiterEditor.getMaxValue())
-                    {
-                        limiterEditor.setMaxValue(maxValue);
-                    }
-                }
-
-                boolean isAllowed = checkBoxAllowQuick.isChecked();
-                if (limiterEditor.isQuickAllowed() != isAllowed)
-                {
-                    limiterEditor.setAllowQuick(isAllowed);
-                }
-
-                int increment = Integer.parseInt(incrementPerDay);
-                if (limiterEditor.getIncrementPerDay() != increment)
-                {
-                    limiterEditor.setIncrementPerDay(increment);
-                }
+                limiterEditor.setName(editTextName.getText().toString());
+                limiterEditor.setUnit(editTextUnit.getText().toString());
+                limiterEditor.setMaxValue(getMaxValue(editTextMaxValue));
+                limiterEditor.setAllowQuick(checkBoxAllowQuick.isChecked());
+                limiterEditor.setIncrementPerDay(Integer.parseInt(incrementPerDay));
 
                 choreList.save();
 
@@ -430,6 +396,12 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
             buttonOk,
             new EditTextCriteria(editTextName, EditTextCriteria.IS_NOT_EMPTY),
             new EditTextCriteria(editTextIncrementPerDay, EditTextCriteria.IS_VALID_INT));
+    }
+
+    private static @Nullable Integer getMaxValue(EditText editTextMaxValue)
+    {
+        String maxValueStr = editTextMaxValue.getText().toString();
+        return maxValueStr.isEmpty() ? null : Integer.parseInt(maxValueStr);
     }
 
     @SuppressLint("SetTextI18n")

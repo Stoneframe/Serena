@@ -66,6 +66,30 @@ public class LimiterEditor
         listeners.forEach(LimiterEditorListener::incrementPerDayChanged);
     }
 
+    public boolean hasMaxValue()
+    {
+        return limiter.hasMaxValue();
+    }
+
+    public void setHasMaxValue(boolean hasMaxValue)
+    {
+        limiter.setHasMaxValue(hasMaxValue);
+
+        listeners.forEach(LimiterEditorListener::availableChanged);
+    }
+
+    public int getMaxValue()
+    {
+        return limiter.getMaxValue();
+    }
+
+    public void setMaxValue(int maxValue)
+    {
+        limiter.setMaxValue(maxValue, timeService.getNow());
+
+        listeners.forEach(LimiterEditorListener::availableChanged);
+    }
+
     public boolean isQuickDisableable()
     {
         return limiter.isQuickDisableable();
@@ -161,5 +185,7 @@ public class LimiterEditor
         void expenditureTypeRemoved(CustomExpenditureType expenditureType);
 
         void expenditureAdded();
+
+        void availableChanged();
     }
 }

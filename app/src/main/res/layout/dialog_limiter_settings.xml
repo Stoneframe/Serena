@@ -54,6 +54,20 @@
         android:hint="Increment per day"
         android:inputType="number" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Enter max value:"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/editTextMaxValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Max value"
+        android:inputType="number" />
+
     <CheckBox
         android:id="@+id/checkBoxAllowQuick"
         android:layout_width="match_parent"

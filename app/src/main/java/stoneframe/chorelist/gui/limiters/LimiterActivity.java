@@ -220,6 +220,12 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
         updateAvailable();
     }
 
+    @Override
+    public void availableChanged()
+    {
+        updateAvailable();
+    }
+
     private void addExpenditureType()
     {
         showExpenditureTypeDialog(null, null, (name, calories) ->
@@ -348,6 +354,7 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
         EditText editTextName = dialogView.findViewById(R.id.editTextName);
         EditText editTextUnit = dialogView.findViewById(R.id.editTextUnit);
         EditText editTextIncrementPerDay = dialogView.findViewById(R.id.editTextExpenditurePerDay);
+        EditText editTextMaxValue = dialogView.findViewById(R.id.editTextMaxValue);
         CheckBox checkBoxAllowQuick = dialogView.findViewById(R.id.checkBoxAllowQuick);
         Button buttonCancel = dialogView.findViewById(R.id.buttonCancel);
         Button buttonOk = dialogView.findViewById(R.id.buttonOk);
@@ -355,6 +362,7 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
         editTextName.setText(limiterEditor.getName());
         editTextUnit.setText(limiterEditor.getUnit());
         editTextIncrementPerDay.setText(String.valueOf(limiterEditor.getIncrementPerDay()));
+        editTextMaxValue.setText(limiterEditor.hasMaxValue() ? Integer.toString(limiterEditor.getMaxValue()) : "");
         checkBoxAllowQuick.setChecked(limiterEditor.isQuickAllowed());
         checkBoxAllowQuick.setEnabled(limiterEditor.isQuickDisableable());
 
@@ -378,6 +386,29 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
                 if (!limiterEditor.getUnit().equals(unit))
                 {
                     limiterEditor.setUnit(unit);
+                }
+
+                String maxValueStr = editTextMaxValue.getText().toString();
+                if (maxValueStr.isEmpty())
+                {
+                    if (limiterEditor.hasMaxValue())
+                    {
+                        limiterEditor.setHasMaxValue(false);
+                    }
+                }
+                else
+                {
+                    if (!limiterEditor.hasMaxValue())
+                    {
+                        limiterEditor.setHasMaxValue(true);
+                    }
+
+                    int maxValue = Integer.parseInt(maxValueStr);
+
+                    if (maxValue != limiterEditor.getMaxValue())
+                    {
+                        limiterEditor.setMaxValue(maxValue);
+                    }
                 }
 
                 boolean isAllowed = checkBoxAllowQuick.isChecked();

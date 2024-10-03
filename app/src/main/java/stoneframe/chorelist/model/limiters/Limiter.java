@@ -28,8 +28,7 @@ public class Limiter
     private LocalDate startDate;
     private int incrementPerDay;
 
-    private boolean hasMaxValue;
-    private int maxValue;
+    private Integer maxValue;
 
     private boolean allowQuick;
 
@@ -78,25 +77,15 @@ public class Limiter
 
     public boolean hasMaxValue()
     {
-        return hasMaxValue;
-    }
-
-    void setHasMaxValue(boolean hasMaxValue)
-    {
-        this.hasMaxValue = hasMaxValue;
-
-        if (!hasMaxValue)
-        {
-            maxValue = Integer.MAX_VALUE;
-        }
+        return maxValue != null;
     }
 
     public int getMaxValue()
     {
-        return maxValue;
+        return maxValue != null ? maxValue : Integer.MAX_VALUE;
     }
 
-    void setMaxValue(int maxValue, LocalDateTime now)
+    void setMaxValue(Integer maxValue, LocalDateTime now)
     {
         this.maxValue = maxValue;
 
@@ -131,7 +120,7 @@ public class Limiter
     {
         int totalAvailable = getTotalAvailable(now);
 
-        return hasMaxValue ? Math.min(totalAvailable, maxValue) : totalAvailable;
+        return maxValue != null ? Math.min(totalAvailable, maxValue) : totalAvailable;
     }
 
     public List<ExpenditureType> getExpenditureTypes()
@@ -194,7 +183,7 @@ public class Limiter
 
     private void updatePreviousExpenditures(LocalDateTime now)
     {
-        if (!hasMaxValue) return;
+        if (maxValue == null) return;
 
         int totalAvailable = getTotalAvailable(now);
 

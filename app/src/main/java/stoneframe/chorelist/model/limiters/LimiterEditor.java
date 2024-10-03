@@ -71,19 +71,12 @@ public class LimiterEditor
         return limiter.hasMaxValue();
     }
 
-    public void setHasMaxValue(boolean hasMaxValue)
-    {
-        limiter.setHasMaxValue(hasMaxValue);
-
-        listeners.forEach(LimiterEditorListener::availableChanged);
-    }
-
     public int getMaxValue()
     {
         return limiter.getMaxValue();
     }
 
-    public void setMaxValue(int maxValue)
+    public void setMaxValue(Integer maxValue)
     {
         limiter.setMaxValue(maxValue, timeService.getNow());
 

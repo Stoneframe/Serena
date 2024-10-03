@@ -393,16 +393,11 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
                 {
                     if (limiterEditor.hasMaxValue())
                     {
-                        limiterEditor.setHasMaxValue(false);
+                        limiterEditor.setMaxValue(null);
                     }
                 }
                 else
                 {
-                    if (!limiterEditor.hasMaxValue())
-                    {
-                        limiterEditor.setHasMaxValue(true);
-                    }
-
                     int maxValue = Integer.parseInt(maxValueStr);
 
                     if (maxValue != limiterEditor.getMaxValue())

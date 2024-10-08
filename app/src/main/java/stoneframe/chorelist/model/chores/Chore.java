@@ -196,16 +196,12 @@ public class Chore
         {
             int i;
 
-            if (o1.getNextOrPostpone().isAfter(today) || o2.getNextOrPostpone().isAfter(today))
-            {
-                if ((i = o1.getNextOrPostpone().compareTo(o2.getNextOrPostpone())) != 0) return i;
-            }
-            else
+            if (!o1.getNextOrPostpone().isAfter(today) && !o2.getNextOrPostpone().isAfter(today))
             {
                 if ((i = Integer.compare(o1.priority, o2.priority)) != 0) return i;
                 if ((i = Integer.compare(o1.effort, o2.effort)) != 0) return i;
-                if ((i = o1.getNextOrPostpone().compareTo(o2.getNextOrPostpone())) != 0) return i;
             }
+            if ((i = o1.getNextOrPostpone().compareTo(o2.getNextOrPostpone())) != 0) return i;
 
             return o1.description.compareTo(o2.description);
         }

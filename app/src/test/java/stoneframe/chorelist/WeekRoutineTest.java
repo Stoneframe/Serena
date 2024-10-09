@@ -13,18 +13,18 @@ import java.util.List;
 
 import stoneframe.chorelist.model.routines.PendingProcedure;
 import stoneframe.chorelist.model.routines.Procedure;
-import stoneframe.chorelist.model.routines.WeekRoutineData;
+import stoneframe.chorelist.model.routines.WeekRoutine;
 
 public class WeekRoutineTest
 {
     private final LocalDateTime now = new LocalDateTime(2024, 1, 1, 0, 0);
 
-    private WeekRoutineData routine;
+    private WeekRoutine routine;
 
     @Before
     public void before()
     {
-        routine = new WeekRoutineData("Week Routing", now);
+        routine = new WeekRoutine("Week Routing", now);
     }
 
     @Test

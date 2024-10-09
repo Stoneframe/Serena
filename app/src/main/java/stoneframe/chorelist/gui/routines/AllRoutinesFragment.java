@@ -40,7 +40,6 @@ import stoneframe.chorelist.model.routines.WeekRoutine;
 
 public class AllRoutinesFragment extends Fragment
 {
-    private ActivityResultLauncher<String> requestNotificationPermissionLauncher;
     private ActivityResultLauncher<Intent> editRoutineLauncher;
 
     private ChoreList choreList;
@@ -104,28 +103,7 @@ public class AllRoutinesFragment extends Fragment
             new ActivityResultContracts.StartActivityForResult(),
             this::editRoutineCallback);
 
-        requestNotificationPermissionLauncher = registerForActivityResult(
-            new ActivityResultContracts.RequestPermission(),
-            this::requestPermissionsCallback
-        );
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-        {
-            if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED)
-            {
-                requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
-            }
-            else
-            {
-                checkPermissionToScheduleExactAlarms();
-            }
-        }
-        else
-        {
-            checkPermissionToScheduleExactAlarms();
-        }
+        checkNotificationAndExactAlarmsPermissions();
 
         return rootView;
     }
@@ -179,6 +157,31 @@ public class AllRoutinesFragment extends Fragment
         intent.putExtra("ACTION", mode);
 
         editRoutineLauncher.launch(intent);
+    }
+
+    private void checkNotificationAndExactAlarmsPermissions()
+    {
+        ActivityResultLauncher<String> requestNotificationPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            this::requestPermissionsCallback);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        {
+            if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED)
+            {
+                requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+            else
+            {
+                checkPermissionToScheduleExactAlarms();
+            }
+        }
+        else
+        {
+            checkPermissionToScheduleExactAlarms();
+        }
     }
 
     private void requestPermissionsCallback(Boolean isGranted)

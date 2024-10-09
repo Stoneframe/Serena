@@ -51,7 +51,6 @@ public class AllRoutinesFragment extends Fragment
 
     private SimpleListAdapter<Routine> routineListAdapter;
 
-    private Routine routineUnderEdit;
     private GlobalState globalState;
 
     @Override
@@ -160,8 +159,6 @@ public class AllRoutinesFragment extends Fragment
 
     private void startRoutineEditor(Routine routine, int mode)
     {
-        routineUnderEdit = routine;
-
         globalState.setActiveRoutine(routine);
 
         Intent intent;
@@ -208,7 +205,7 @@ public class AllRoutinesFragment extends Fragment
     {
         if (activityResult.getResultCode() == RESULT_OK)
         {
-            Routine routine = routineUnderEdit;
+            Routine routine = globalState.getActiveRoutine();
 
             Intent intent = Objects.requireNonNull(activityResult.getData());
 

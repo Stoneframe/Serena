@@ -2,7 +2,6 @@ package stoneframe.chorelist.gui.routines;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -40,6 +39,8 @@ public abstract class RoutineActivity<T extends Routine> extends AppCompatActivi
     protected Button saveButton;
     protected Button removeButton;
 
+    protected Button addProcedureButton;
+
     /**
      * @noinspection unchecked
      */
@@ -64,9 +65,14 @@ public abstract class RoutineActivity<T extends Routine> extends AppCompatActivi
         enabledCheckBox = findViewById(R.id.enabledCheckbox);
 
         saveButton = findViewById(R.id.saveButton);
+        saveButton.setOnClickListener(v -> saveRoutine());
 
         removeButton = findViewById(R.id.removeButton);
         removeButton.setVisibility(action == ROUTINE_ACTION_EDIT ? Button.VISIBLE : Button.INVISIBLE);
+        removeButton.setOnClickListener(v -> removeRoutine());
+
+        addProcedureButton = findViewById(R.id.addProcedureButton);
+        addProcedureButton.setOnClickListener(v -> addProcedure());
 
         nameEditText.setText(routine.getName());
         enabledCheckBox.setChecked(routine.isEnabled());
@@ -87,12 +93,11 @@ public abstract class RoutineActivity<T extends Routine> extends AppCompatActivi
         });
     }
 
-    public void addProcedureClick(View view)
-    {
-        addProcedure();
-    }
+    protected abstract int getRoutineContentView();
 
-    public void saveClick(View view)
+    protected abstract void addProcedure();
+
+    private void saveRoutine()
     {
         if (enabledCheckBox.isChecked() && !routine.isEnabled())
         {
@@ -112,7 +117,7 @@ public abstract class RoutineActivity<T extends Routine> extends AppCompatActivi
         finish();
     }
 
-    public void removeClick(View view)
+    private void removeRoutine()
     {
         DialogUtils.showConfirmationDialog(
             this,
@@ -130,8 +135,4 @@ public abstract class RoutineActivity<T extends Routine> extends AppCompatActivi
                 finish();
             });
     }
-
-    protected abstract int getRoutineContentView();
-
-    protected abstract void addProcedure();
 }

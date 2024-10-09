@@ -1,48 +1,43 @@
 package stoneframe.chorelist.model.checklists;
 
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
-public class Checklist
+import stoneframe.chorelist.model.util.Revertible;
+
+public class Checklist extends Revertible<ChecklistData>
 {
-    private final List<ChecklistItem> items = new LinkedList<>();
-
-    private String name;
-
     public Checklist(String name)
     {
-        this.name = name;
+        super(new ChecklistData(name));
     }
 
     public String getName()
     {
-        return name;
+        return data().getName();
     }
 
     public void setName(String name)
     {
-        this.name = name;
+        data().setName(name);
     }
 
     public List<ChecklistItem> getItems()
     {
-        return Collections.unmodifiableList(items);
+        return data().getItems();
     }
 
     public void addItem(ChecklistItem item)
     {
-        items.add(item);
+        data().addItem(item);
     }
 
     public void removeItem(ChecklistItem item)
     {
-        items.remove(item);
+        data().removeItem(item);
     }
 
     public void moveItem(ChecklistItem item, Integer newPosition)
     {
-        items.remove(item);
-        items.add(newPosition, item);
+        data().moveItem(item, newPosition);
     }
 }

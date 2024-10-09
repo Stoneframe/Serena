@@ -67,8 +67,8 @@ public class ChecklistActivity extends AppCompatActivity
             }
         });
 
-        editButton = findViewById(R.id.buttonEditChecklist);
-        doneButton = findViewById(R.id.buttonDone);
+        editButton = findViewById(R.id.editChecklistButton);
+        doneButton = findViewById(R.id.doneButton);
 
         editButton.setOnClickListener(v ->
         {

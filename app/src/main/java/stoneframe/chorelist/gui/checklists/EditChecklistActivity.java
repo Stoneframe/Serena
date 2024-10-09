@@ -1,20 +1,19 @@
 package stoneframe.chorelist.gui.checklists;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -32,7 +31,7 @@ import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.checklists.Checklist;
 import stoneframe.chorelist.model.checklists.ChecklistItem;
 
-public class EditChecklistActivity extends Activity
+public class EditChecklistActivity extends AppCompatActivity
 {
     public static final int DONE = 0;
     public static final int REMOVE = 1;
@@ -46,13 +45,14 @@ public class EditChecklistActivity extends Activity
     private RecyclerView checklistItemsListView;
 
     private Button removeButton;
-    private Button buttonAddItem;
-    private Button buttonDone;
+    private Button addItemButton;
+    private Button saveButton;
 
     private Drawable editIcon;
     private Drawable deleteIcon;
 
     private ChoreList choreList;
+
     private Checklist checklist;
 
     @Override
@@ -64,14 +64,16 @@ public class EditChecklistActivity extends Activity
         GlobalState globalState = GlobalState.getInstance();
 
         choreList = globalState.getChoreList();
-        checklist = globalState.getActiveChecklist();
 
-        checklistNameEditText = findViewById(R.id.editText);
+        checklist = globalState.getActiveChecklist();
+        checklist.edit();
+
+        checklistNameEditText = findViewById(R.id.nameEditText);
         checklistItemsListView = findViewById(R.id.listView);
 
-        removeButton = findViewById(R.id.buttonRemove);
-        buttonAddItem = findViewById(R.id.buttonAddItem);
-        buttonDone = findViewById(R.id.buttonDone);
+        removeButton = findViewById(R.id.removeButton);
+        addItemButton = findViewById(R.id.addItemButton);
+        saveButton = findViewById(R.id.saveButton);
 
         editIcon = ContextCompat.getDrawable(this, R.drawable.ic_edit);
 
@@ -278,11 +280,13 @@ public class EditChecklistActivity extends Activity
                 if (!isConfirmed) return;
 
                 choreList.removeChecklist(checklist);
+                choreList.save();
+
                 setResult(REMOVE);
                 finish();
             }));
 
-        buttonAddItem.setOnClickListener(v ->
+        addItemButton.setOnClickListener(v ->
         {
             ChecklistItem item = new ChecklistItem("");
 
@@ -293,15 +297,27 @@ public class EditChecklistActivity extends Activity
             });
         });
 
-        buttonDone.setOnClickListener(v ->
+        saveButton.setOnClickListener(v ->
         {
+            checklist.save();
+            choreList.save();
+
             setResult(DONE);
             finish();
         });
 
         new EditTextButtonEnabledLink(
-            buttonDone,
+            saveButton,
             new EditTextCriteria(checklistNameEditText, EditTextCriteria.IS_NOT_EMPTY));
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true)
+        {
+            @Override
+            public void handleOnBackPressed()
+            {
+                back();
+            }
+        });
     }
 
     private void showChecklistItemDialog(ChecklistItem checklistItem, Runnable onOk)
@@ -311,6 +327,27 @@ public class EditChecklistActivity extends Activity
         checklistItemDescriptionText.setText(checklistItem.getDescription());
         checklistItemDescriptionText.setInputType(EditorInfo.TYPE_TEXT_FLAG_CAP_SENTENCES);
 
+        AlertDialog.Builder builder = getBuilder(
+            checklistItem,
+            onOk,
+            checklistItemDescriptionText);
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+        Button okButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+
+        new EditTextButtonEnabledLink(
+            okButton,
+            new EditTextCriteria(checklistItemDescriptionText, EditTextCriteria.IS_NOT_EMPTY));
+    }
+
+    @NonNull
+    private AlertDialog.Builder getBuilder(
+        ChecklistItem checklistItem,
+        Runnable onOk,
+        EditText checklistItemDescriptionText)
+    {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Checklist item");
         builder.setView(checklistItemDescriptionText);
@@ -328,13 +365,12 @@ public class EditChecklistActivity extends Activity
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+        return builder;
+    }
 
-        Button okButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-
-        new EditTextButtonEnabledLink(
-            okButton,
-            new EditTextCriteria(checklistItemDescriptionText, EditTextCriteria.IS_NOT_EMPTY));
+    private void back()
+    {
+        checklist.revert();
+        finish();
     }
 }

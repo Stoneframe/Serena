@@ -1,5 +1,7 @@
 package stoneframe.chorelist.model.storages.versions;
 
+import static stoneframe.chorelist.json.JsonUtils.removeAllAttributes;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,16 +42,5 @@ public class UpgradeScriptVersion10 implements UpgradeScript
         }
 
         return jsonObject;
-    }
-
-    private static void removeAllAttributes(JSONObject routine)
-    {
-        Iterator<String> keys = routine.keys();
-
-        while (keys.hasNext())
-        {
-            keys.next();
-            keys.remove();
-        }
     }
 }

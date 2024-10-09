@@ -11,9 +11,8 @@ public class GlobalState extends Application
 {
     private static GlobalState instance;
 
-    public Routine ActiveRoutine;
-
     private Checklist activeChecklist;
+    private Routine activeRoutine;
     private Limiter activeLimiter;
 
     private ChoreList choreList;
@@ -42,6 +41,16 @@ public class GlobalState extends Application
     public void setChoreList(ChoreList choreList)
     {
         this.choreList = choreList;
+    }
+
+    public Routine getActiveRoutine()
+    {
+        return activeRoutine;
+    }
+
+    public void setActiveRoutine(Routine activeRoutine)
+    {
+        this.activeRoutine = activeRoutine;
     }
 
     public Checklist getActiveChecklist()

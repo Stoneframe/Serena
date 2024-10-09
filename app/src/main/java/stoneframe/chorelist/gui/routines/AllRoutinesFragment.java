@@ -163,7 +163,7 @@ public class AllRoutinesFragment extends Fragment
     {
         routineUnderEdit = routine;
 
-        globalState.ActiveRoutine = routine;
+        globalState.setActiveRoutine(routine);
 
         Intent intent;
 

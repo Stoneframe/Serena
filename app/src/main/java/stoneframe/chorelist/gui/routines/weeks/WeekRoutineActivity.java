@@ -52,7 +52,7 @@ public class WeekRoutineActivity extends AppCompatActivity
         GlobalState globalState = GlobalState.getInstance();
 
         choreList = globalState.getChoreList();
-        routine = (WeekRoutine)globalState.ActiveRoutine;
+        routine = (WeekRoutine)globalState.getActiveRoutine();
         routine.edit();
 
         Intent intent = getIntent();

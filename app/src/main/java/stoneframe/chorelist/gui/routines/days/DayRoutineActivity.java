@@ -51,7 +51,7 @@ public class DayRoutineActivity extends AppCompatActivity
         GlobalState globalState = GlobalState.getInstance();
 
         choreList = globalState.getChoreList();
-        routine = (DayRoutine)globalState.ActiveRoutine;
+        routine = (DayRoutine)globalState.getActiveRoutine();
         routine.edit();
 
         Intent intent = getIntent();

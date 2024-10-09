@@ -63,7 +63,7 @@ public class FortnightRoutineActivity extends AppCompatActivity
         GlobalState globalState = GlobalState.getInstance();
 
         choreList = globalState.getChoreList();
-        routine = (FortnightRoutine)globalState.ActiveRoutine;
+        routine = (FortnightRoutine)globalState.getActiveRoutine();
         routine.edit();
 
         Intent intent = getIntent();

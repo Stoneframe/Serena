@@ -35,7 +35,7 @@ public class WeekRoutine extends Routine
     }
 
     @Override
-    protected RoutineData data()
+    RoutineData data()
     {
         return data;
     }

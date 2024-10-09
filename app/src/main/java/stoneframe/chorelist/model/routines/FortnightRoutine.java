@@ -56,7 +56,7 @@ public class FortnightRoutine extends Routine
     }
 
     @Override
-    protected RoutineData data()
+    RoutineData data()
     {
         return data;
     }

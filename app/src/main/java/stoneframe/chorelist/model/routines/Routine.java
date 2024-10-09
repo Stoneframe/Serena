@@ -81,5 +81,5 @@ public abstract class Routine
 
     public abstract void revert();
 
-    protected abstract RoutineData data();
+    abstract RoutineData data();
 }

@@ -27,6 +27,7 @@ import stoneframe.chorelist.gui.util.DialogUtils;
 import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
 import stoneframe.chorelist.gui.util.RecyclerAdapter;
+import stoneframe.chorelist.gui.util.TextChangedListener;
 import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.checklists.Checklist;
 import stoneframe.chorelist.model.checklists.ChecklistItem;
@@ -50,7 +51,6 @@ public class EditChecklistActivity extends Activity
 
     private Drawable editIcon;
     private Drawable deleteIcon;
-
 
     private ChoreList choreList;
     private Checklist checklist;
@@ -78,24 +78,8 @@ public class EditChecklistActivity extends Activity
         deleteIcon = ContextCompat.getDrawable(this, R.drawable.ic_delete);
 
         checklistNameEditText.setText(checklist.getName());
-        checklistNameEditText.addTextChangedListener(new TextWatcher()
-        {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after)
-            {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s)
-            {
-                checklist.setName(checklistNameEditText.getText().toString());
-            }
-        });
+        checklistNameEditText.addTextChangedListener(
+            new TextChangedListener(str -> checklist.setName(str)));
 
         checklistItemsAdapter = new RecyclerAdapter<>(
             checklist::getItems,

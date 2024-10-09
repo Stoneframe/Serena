@@ -4,7 +4,9 @@ import org.joda.time.LocalDateTime;
 
 import java.util.List;
 
-public abstract class Routine
+import stoneframe.chorelist.model.util.Revertible;
+
+public abstract class Routine<T extends RoutineData> extends Revertible<T>
 {
     public static final int DAY_ROUTINE = 0;
     public static final int WEEK_ROUTINE = 1;
@@ -12,8 +14,10 @@ public abstract class Routine
 
     private final int routineType;
 
-    protected Routine(int routineType)
+    protected Routine(int routineType, T data)
     {
+        super(data);
+
         this.routineType = routineType;
     }
 
@@ -71,15 +75,4 @@ public abstract class Routine
     {
         data().reset(now);
     }
-
-    public void edit()
-    {
-        save();
-    }
-
-    public abstract void save();
-
-    public abstract void revert();
-
-    abstract RoutineData data();
 }

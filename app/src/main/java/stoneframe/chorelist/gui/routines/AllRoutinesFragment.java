@@ -44,7 +44,7 @@ public class AllRoutinesFragment extends Fragment
 
     private ChoreList choreList;
 
-    private SimpleListAdapter<Routine> routineListAdapter;
+    private SimpleListAdapter<Routine<?>> routineListAdapter;
 
     private GlobalState globalState;
 
@@ -70,7 +70,7 @@ public class AllRoutinesFragment extends Fragment
         routineListView.setAdapter(routineListAdapter);
         routineListView.setOnItemClickListener((parent, view, position, id) ->
         {
-            Routine routine = (Routine)routineListAdapter.getItem(position);
+            Routine<?> routine = (Routine<?>)routineListAdapter.getItem(position);
             assert routine != null;
             startRoutineEditor(routine, RoutineActivity.ROUTINE_ACTION_EDIT);
         });
@@ -78,21 +78,21 @@ public class AllRoutinesFragment extends Fragment
         Button addDayButton = rootView.findViewById(R.id.add_day_button);
         addDayButton.setOnClickListener(v ->
         {
-            Routine routine = new DayRoutine("", LocalDateTime.now());
+            Routine<?> routine = new DayRoutine("", LocalDateTime.now());
             startRoutineEditor(routine, RoutineActivity.ROUTINE_ACTION_ADD);
         });
 
         Button addWeekButton = rootView.findViewById(R.id.add_week_button);
         addWeekButton.setOnClickListener(v ->
         {
-            Routine routine = new WeekRoutine("", LocalDateTime.now());
+            Routine<?> routine = new WeekRoutine("", LocalDateTime.now());
             startRoutineEditor(routine, WeekRoutineActivity.ROUTINE_ACTION_ADD);
         });
 
         Button addFortnightButton = rootView.findViewById(R.id.add_fortnight_button);
         addFortnightButton.setOnClickListener(v ->
         {
-            Routine routine = new FortnightRoutine(
+            Routine<?> routine = new FortnightRoutine(
                 "",
                 LocalDate.now(),
                 LocalDateTime.now());
@@ -116,7 +116,7 @@ public class AllRoutinesFragment extends Fragment
         routineListAdapter.notifyDataSetChanged();
     }
 
-    private String getRoutineTypeName(Routine routine)
+    private String getRoutineTypeName(Routine<?> routine)
     {
         switch (routine.getRoutineType())
         {
@@ -131,7 +131,7 @@ public class AllRoutinesFragment extends Fragment
         }
     }
 
-    private void startRoutineEditor(Routine routine, int mode)
+    private void startRoutineEditor(Routine<?> routine, int mode)
     {
         globalState.setActiveRoutine(routine);
 

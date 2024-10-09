@@ -151,17 +151,17 @@ public class ChoreList
         container.TaskManager.postpone(task, timeService.getToday());
     }
 
-    public List<Routine> getAllRoutines()
+    public List<Routine<?>> getAllRoutines()
     {
         return container.RoutineManager.getAllRoutines();
     }
 
-    public void addRoutine(Routine routine)
+    public void addRoutine(Routine<?> routine)
     {
         container.RoutineManager.addRoutine(routine);
     }
 
-    public void removeRoutine(Routine routine)
+    public void removeRoutine(Routine<?> routine)
     {
         container.RoutineManager.removeRoutine(routine);
     }
@@ -186,7 +186,7 @@ public class ChoreList
         container.RoutineManager.procedureDone(procedure);
     }
 
-    public void resetRoutine(Routine routine)
+    public void resetRoutine(Routine<?> routine)
     {
         container.RoutineManager.resetRoutine(routine, timeService.getNow());
     }

@@ -11,19 +11,19 @@ import java.util.stream.Stream;
 
 public class RoutineManager
 {
-    private final List<Routine> routines = new LinkedList<>();
+    private final List<Routine<?>> routines = new LinkedList<>();
 
-    public void addRoutine(Routine routine)
+    public void addRoutine(Routine<?> routine)
     {
         routines.add(routine);
     }
 
-    public void removeRoutine(Routine routine)
+    public void removeRoutine(Routine<?> routine)
     {
         routines.remove(routine);
     }
 
-    public List<Routine> getAllRoutines()
+    public List<Routine<?>> getAllRoutines()
     {
         return routines.stream()
             .sorted(Comparator.comparing(Routine::getName))
@@ -62,7 +62,7 @@ public class RoutineManager
 
     public void procedureDone(PendingProcedure procedure)
     {
-        Routine routine = routines.stream()
+        Routine<?> routine = routines.stream()
             .filter(r -> r.getAllProcedures().contains(procedure.getProcedure()))
             .findFirst()
             .orElse(null);
@@ -72,7 +72,7 @@ public class RoutineManager
         routine.procedureDone(procedure);
     }
 
-    public void resetRoutine(Routine routine, LocalDateTime now)
+    public void resetRoutine(Routine<?> routine, LocalDateTime now)
     {
         routine.reset(now);
     }

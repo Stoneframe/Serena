@@ -12,14 +12,15 @@ import org.joda.time.LocalDate;
 
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.model.routines.Procedure;
-import stoneframe.chorelist.model.routines.Routine;
+import stoneframe.chorelist.model.routines.Day;
+import stoneframe.chorelist.model.routines.Week;
 
 public class WeekExpandableListAdaptor extends BaseExpandableListAdapter
 {
     private final Context context;
-    private final Routine.Week week;
+    private final Week week;
 
-    public WeekExpandableListAdaptor(Context context, Routine.Week week)
+    public WeekExpandableListAdaptor(Context context, Week week)
     {
         this.context = context;
         this.week = week;
@@ -72,7 +73,7 @@ public class WeekExpandableListAdaptor extends BaseExpandableListAdapter
     @Override
     public View getGroupView(int listPosition, boolean isExpanded, View view, ViewGroup viewGroup)
     {
-        Routine.Day weekDay = (Routine.Day)getGroup(listPosition);
+        Day weekDay = (Day)getGroup(listPosition);
 
         if (view == null)
         {

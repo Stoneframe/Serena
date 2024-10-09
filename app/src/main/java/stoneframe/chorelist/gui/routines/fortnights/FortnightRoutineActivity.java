@@ -12,21 +12,23 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
+import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.GlobalState;
 import stoneframe.chorelist.gui.routines.util.WeekExpandableListAdaptor;
-import stoneframe.chorelist.model.ChoreList;
-import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.util.DialogUtils;
 import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.routines.FortnightRoutine;
 import stoneframe.chorelist.model.routines.Procedure;
-import stoneframe.chorelist.model.routines.Routine;
+import stoneframe.chorelist.model.routines.Day;
+import stoneframe.chorelist.model.routines.Week;
 
 public class FortnightRoutineActivity extends AppCompatActivity
 {
@@ -62,6 +64,7 @@ public class FortnightRoutineActivity extends AppCompatActivity
 
         choreList = globalState.getChoreList();
         routine = (FortnightRoutine)globalState.ActiveRoutine;
+        routine.edit();
 
         Intent intent = getIntent();
 
@@ -127,6 +130,17 @@ public class FortnightRoutineActivity extends AppCompatActivity
         new EditTextButtonEnabledLink(
             saveButton,
             new EditTextCriteria(nameEditText, EditTextCriteria.IS_NOT_EMPTY));
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true)
+        {
+            @Override
+            public void handleOnBackPressed()
+            {
+                routine.revert();
+
+                finish();
+            }
+        });
     }
 
     private boolean editProcedureWeek1(int groupPosition, int childPosition)
@@ -174,11 +188,11 @@ public class FortnightRoutineActivity extends AppCompatActivity
             groupPosition,
             (editedProcedure, editedWeek, editedDayOfWeek) ->
             {
-                Routine.Week oldWeek = routine.getWeek(weekNumber);
-                Routine.Week newWeek = routine.getWeek(editedWeek);
+                Week oldWeek = routine.getWeek(weekNumber);
+                Week newWeek = routine.getWeek(editedWeek);
 
-                Routine.Day oldWeekDay = oldWeek.getWeekDay(groupPosition + 1);
-                Routine.Day newWeekDay = newWeek.getWeekDay(editedDayOfWeek);
+                Day oldWeekDay = oldWeek.getWeekDay(groupPosition + 1);
+                Day newWeekDay = newWeek.getWeekDay(editedDayOfWeek);
 
                 oldWeekDay.removeProcedure(procedure);
                 newWeekDay.addProcedure(editedProcedure);
@@ -207,8 +221,7 @@ public class FortnightRoutineActivity extends AppCompatActivity
                 groupPosition,
                 childPosition);
 
-            Routine.Day weekDay = (Routine.Day)week1ExpandableListAdaptor.getGroup(
-                groupPosition);
+            Day weekDay = (Day)week1ExpandableListAdaptor.getGroup(groupPosition);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Select option")
@@ -233,6 +246,7 @@ public class FortnightRoutineActivity extends AppCompatActivity
 
         routine.setName(nameEditText.getText().toString().trim());
         routine.setEnabled(enabledCheckBox.isChecked());
+        routine.save();
 
         Intent intent = new Intent();
 
@@ -240,12 +254,6 @@ public class FortnightRoutineActivity extends AppCompatActivity
         intent.putExtra("ACTION", action);
 
         setResult(RESULT_OK, intent);
-        finish();
-    }
-
-    public void cancelClick(View view)
-    {
-        setResult(RESULT_CANCELED);
         finish();
     }
 
@@ -280,7 +288,7 @@ public class FortnightRoutineActivity extends AppCompatActivity
         });
     }
 
-    private void removeProcedure(Routine.Day weekDay, Procedure procedure)
+    private void removeProcedure(Day weekDay, Procedure procedure)
     {
         weekDay.removeProcedure(procedure);
 

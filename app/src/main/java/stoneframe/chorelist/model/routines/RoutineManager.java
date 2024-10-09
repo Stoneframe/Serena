@@ -74,6 +74,6 @@ public class RoutineManager
 
     public void resetRoutine(Routine routine, LocalDateTime now)
     {
-        routine.lastCompleted = now;
+        routine.reset(now);
     }
 }

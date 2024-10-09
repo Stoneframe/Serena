@@ -8,9 +8,9 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
+import stoneframe.chorelist.model.routines.Routine;
 import stoneframe.chorelist.model.routines.DayRoutine;
 import stoneframe.chorelist.model.routines.FortnightRoutine;
-import stoneframe.chorelist.model.routines.Routine;
 import stoneframe.chorelist.model.routines.WeekRoutine;
 
 public class RoutineConverter implements JsonDeserializer<Routine>

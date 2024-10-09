@@ -13,24 +13,24 @@ import java.util.List;
 
 import stoneframe.chorelist.model.routines.PendingProcedure;
 import stoneframe.chorelist.model.routines.Procedure;
-import stoneframe.chorelist.model.routines.WeekRoutine;
+import stoneframe.chorelist.model.routines.WeekRoutineData;
 
 public class WeekRoutineTest
 {
     private final LocalDateTime now = new LocalDateTime(2024, 1, 1, 0, 0);
 
-    private WeekRoutine routine;
+    private WeekRoutineData routine;
 
     @Before
     public void before()
     {
-        routine = new WeekRoutine("Week Routing", now);
+        routine = new WeekRoutineData("Week Routing", now);
     }
 
     @Test
     public void getNextProcedureTime_Monday10AndNowIsDay1_returnCorrectTime()
     {
-        routine.getWeekDay(DateTimeConstants.MONDAY)
+        routine.getWeek().getWeekDay(DateTimeConstants.MONDAY)
             .addProcedure(new Procedure("Procedure", new LocalTime(10, 0)));
 
         LocalDateTime next = routine.getNextProcedureTime(now);
@@ -41,7 +41,7 @@ public class WeekRoutineTest
     @Test
     public void getNextProcedureTime_Monday10AndNowIsDay1Hour12_returnCorrectTime()
     {
-        routine.getWeekDay(DateTimeConstants.MONDAY)
+        routine.getWeek().getWeekDay(DateTimeConstants.MONDAY)
             .addProcedure(new Procedure("Procedure", new LocalTime(10, 0)));
 
         LocalDateTime next = routine.getNextProcedureTime(now.plusHours(12));
@@ -60,7 +60,7 @@ public class WeekRoutineTest
     @Test
     public void getPendingProcedures_Monday10AndNowIsDay1Hour0_returnEmptyList()
     {
-        routine.getWeekDay(DateTimeConstants.MONDAY)
+        routine.getWeek().getWeekDay(DateTimeConstants.MONDAY)
             .addProcedure(new Procedure("Procedure", new LocalTime(10, 0)));
 
         List<PendingProcedure> pendingProcedures = routine.getPendingProcedures(now);
@@ -71,7 +71,7 @@ public class WeekRoutineTest
     @Test
     public void getPendingProcedures_Monday10AndNowIsDay2Hour0_listContainsMonday10Procedure()
     {
-        routine.getWeekDay(DateTimeConstants.MONDAY)
+        routine.getWeek().getWeekDay(DateTimeConstants.MONDAY)
             .addProcedure(new Procedure("Procedure", new LocalTime(10, 0)));
 
         List<PendingProcedure> pendingProcedures = routine.getPendingProcedures(now.plusDays(2));
@@ -83,7 +83,7 @@ public class WeekRoutineTest
     @Test
     public void getPendingProcedures_Monday10AndNowIsDay1Hour10_listContainsMonday10Procedure()
     {
-        routine.getWeekDay(DateTimeConstants.MONDAY)
+        routine.getWeek().getWeekDay(DateTimeConstants.MONDAY)
             .addProcedure(new Procedure("Procedure", new LocalTime(10, 0)));
 
         List<PendingProcedure> pendingProcedures = routine.getPendingProcedures(now.plusHours(10));
@@ -95,10 +95,10 @@ public class WeekRoutineTest
     @Test
     public void getPendingProcedures_Monday15AndFriday23NowIsDay3Hour0_listContainsMonday10Procedure()
     {
-        routine.getWeekDay(DateTimeConstants.MONDAY)
+        routine.getWeek().getWeekDay(DateTimeConstants.MONDAY)
             .addProcedure(new Procedure("Procedure 1", new LocalTime(15, 0)));
 
-        routine.getWeekDay(DateTimeConstants.FRIDAY)
+        routine.getWeek().getWeekDay(DateTimeConstants.FRIDAY)
             .addProcedure(new Procedure("Procedure 2", new LocalTime(23, 0)));
 
         List<PendingProcedure> pendingProcedures = routine.getPendingProcedures(now.plusDays(3));
@@ -110,10 +110,10 @@ public class WeekRoutineTest
     @Test
     public void getPendingProcedures_Monday15AndFriday23NowIsDay6Hour0_listContainsMonday10AndFriday23Procedures()
     {
-        routine.getWeekDay(DateTimeConstants.MONDAY)
+        routine.getWeek().getWeekDay(DateTimeConstants.MONDAY)
             .addProcedure(new Procedure("Procedure 1", new LocalTime(15, 0)));
 
-        routine.getWeekDay(DateTimeConstants.FRIDAY)
+        routine.getWeek().getWeekDay(DateTimeConstants.FRIDAY)
             .addProcedure(new Procedure("Procedure 2", new LocalTime(23, 0)));
 
         List<PendingProcedure> pendingProcedures = routine.getPendingProcedures(now.plusDays(6));
@@ -126,10 +126,10 @@ public class WeekRoutineTest
     @Test
     public void getPendingProcedures_Monday15AndFriday23NowIsDay9Hour0_listContainsFriday23AndMonday10Procedures()
     {
-        routine.getWeekDay(DateTimeConstants.MONDAY)
+        routine.getWeek().getWeekDay(DateTimeConstants.MONDAY)
             .addProcedure(new Procedure("Procedure 1", new LocalTime(15, 0)));
 
-        routine.getWeekDay(DateTimeConstants.FRIDAY)
+        routine.getWeek().getWeekDay(DateTimeConstants.FRIDAY)
             .addProcedure(new Procedure("Procedure 2", new LocalTime(23, 0)));
 
         List<PendingProcedure> pendingProcedures = routine.getPendingProcedures(now.plusDays(9));
@@ -145,7 +145,7 @@ public class WeekRoutineTest
     {
         Procedure procedure = new Procedure("Procedure", new LocalTime(10, 0));
 
-        routine.getWeekDay(DateTimeConstants.MONDAY).addProcedure(procedure);
+        routine.getWeek().getWeekDay(DateTimeConstants.MONDAY).addProcedure(procedure);
 
         PendingProcedure pendingProcedure = routine.getPendingProcedure(now.plusDays(2));
 
@@ -162,8 +162,8 @@ public class WeekRoutineTest
         Procedure procedure1 = new Procedure("Procedure 1", new LocalTime(10, 0));
         Procedure procedure2 = new Procedure("Procedure 2", new LocalTime(15, 0));
 
-        routine.getWeekDay(DateTimeConstants.MONDAY).addProcedure(procedure1);
-        routine.getWeekDay(DateTimeConstants.TUESDAY).addProcedure(procedure2);
+        routine.getWeek().getWeekDay(DateTimeConstants.MONDAY).addProcedure(procedure1);
+        routine.getWeek().getWeekDay(DateTimeConstants.TUESDAY).addProcedure(procedure2);
 
         PendingProcedure pendingProcedure = routine.getPendingProcedure(now.plusDays(2));
 

@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 
 import stoneframe.chorelist.R;
@@ -19,8 +20,8 @@ import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
 import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.routines.Procedure;
-import stoneframe.chorelist.model.routines.Routine;
 import stoneframe.chorelist.model.routines.WeekRoutine;
+import stoneframe.chorelist.model.routines.Day;
 
 public class WeekRoutineActivity extends AppCompatActivity
 {
@@ -52,6 +53,7 @@ public class WeekRoutineActivity extends AppCompatActivity
 
         choreList = globalState.getChoreList();
         routine = (WeekRoutine)globalState.ActiveRoutine;
+        routine.edit();
 
         Intent intent = getIntent();
 
@@ -85,6 +87,17 @@ public class WeekRoutineActivity extends AppCompatActivity
         new EditTextButtonEnabledLink(
             saveButton,
             new EditTextCriteria(nameEditText, EditTextCriteria.IS_NOT_EMPTY));
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true)
+        {
+            @Override
+            public void handleOnBackPressed()
+            {
+                routine.revert();
+
+                finish();
+            }
+        });
     }
 
     public void saveClick(View view)
@@ -96,6 +109,7 @@ public class WeekRoutineActivity extends AppCompatActivity
 
         routine.setName(nameEditText.getText().toString());
         routine.setEnabled(enabledCheckBox.isChecked());
+        routine.save();
 
         Intent intent = new Intent();
 
@@ -103,12 +117,6 @@ public class WeekRoutineActivity extends AppCompatActivity
         intent.putExtra("ACTION", action);
 
         setResult(RESULT_OK, intent);
-        finish();
-    }
-
-    public void cancelClick(View view)
-    {
-        setResult(RESULT_CANCELED);
         finish();
     }
 
@@ -135,7 +143,7 @@ public class WeekRoutineActivity extends AppCompatActivity
     {
         WeekProcedureEditDialog.create(this, (createdProcedure, dayOfWeek) ->
         {
-            routine.getWeekDay(dayOfWeek).addProcedure(createdProcedure);
+            routine.getWeek().getWeekDay(dayOfWeek).addProcedure(createdProcedure);
 
             weekExpandableListAdaptor.notifyDataSetChanged();
             weekExpandableList.expandGroup(dayOfWeek - 1);
@@ -154,8 +162,8 @@ public class WeekRoutineActivity extends AppCompatActivity
             groupPosition,
             (editedProcedure, dayOfWeek) ->
             {
-                Routine.Day oldWeekDay = routine.getWeekDay(groupPosition + 1);
-                Routine.Day newWeekDay = routine.getWeekDay(dayOfWeek);
+                Day oldWeekDay = routine.getWeek().getWeekDay(groupPosition + 1);
+                Day newWeekDay = routine.getWeek().getWeekDay(dayOfWeek);
 
                 oldWeekDay.removeProcedure(procedure);
                 newWeekDay.addProcedure(editedProcedure);
@@ -181,7 +189,7 @@ public class WeekRoutineActivity extends AppCompatActivity
                 groupPosition,
                 childPosition);
 
-            Routine.Day weekDay = (Routine.Day)weekExpandableListAdaptor.getGroup(
+            Day weekDay = (Day)weekExpandableListAdaptor.getGroup(
                 groupPosition);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -200,7 +208,7 @@ public class WeekRoutineActivity extends AppCompatActivity
         return true;
     }
 
-    private void removeProcedure(Routine.Day weekDay, Procedure procedure)
+    private void removeProcedure(Day weekDay, Procedure procedure)
     {
         weekDay.removeProcedure(procedure);
 
@@ -215,7 +223,7 @@ public class WeekRoutineActivity extends AppCompatActivity
             dayOfWeek,
             (copiedProcedure, copiedDayOfWeek) ->
             {
-                routine.getWeekDay(copiedDayOfWeek).addProcedure(copiedProcedure);
+                routine.getWeek().getWeekDay(copiedDayOfWeek).addProcedure(copiedProcedure);
 
                 weekExpandableListAdaptor.notifyDataSetChanged();
                 weekExpandableList.expandGroup(copiedDayOfWeek - 1);

@@ -10,14 +10,15 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 
-import stoneframe.chorelist.gui.GlobalState;
-import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.R;
+import stoneframe.chorelist.gui.GlobalState;
 import stoneframe.chorelist.gui.util.DialogUtils;
 import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.routines.DayRoutine;
 import stoneframe.chorelist.model.routines.Procedure;
 
@@ -51,6 +52,7 @@ public class DayRoutineActivity extends AppCompatActivity
 
         choreList = globalState.getChoreList();
         routine = (DayRoutine)globalState.ActiveRoutine;
+        routine.edit();
 
         Intent intent = getIntent();
 
@@ -82,6 +84,17 @@ public class DayRoutineActivity extends AppCompatActivity
         new EditTextButtonEnabledLink(
             saveButton,
             new EditTextCriteria(nameEditText, EditTextCriteria.IS_NOT_EMPTY));
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true)
+        {
+            @Override
+            public void handleOnBackPressed()
+            {
+                routine.revert();
+
+                finish();
+            }
+        });
     }
 
     public void saveClick(View view)
@@ -93,6 +106,7 @@ public class DayRoutineActivity extends AppCompatActivity
 
         routine.setName(nameEditText.getText().toString());
         routine.setEnabled(enabledCheckBox.isChecked());
+        routine.save();
 
         Intent intent = new Intent();
 
@@ -100,12 +114,6 @@ public class DayRoutineActivity extends AppCompatActivity
         intent.putExtra("ACTION", action);
 
         setResult(RESULT_OK, intent);
-        finish();
-    }
-
-    public void cancelClick(View view)
-    {
-        setResult(RESULT_CANCELED);
         finish();
     }
 

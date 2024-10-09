@@ -92,6 +92,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:onClick="saveClick"
-        android:text="DONE" />
+        android:text="SAVE" />
 
 </RelativeLayout>

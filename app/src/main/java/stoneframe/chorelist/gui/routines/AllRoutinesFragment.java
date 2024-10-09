@@ -158,7 +158,6 @@ public class AllRoutinesFragment extends Fragment
         }
     }
 
-
     private void startRoutineEditor(Routine routine, int mode)
     {
         routineUnderEdit = routine;

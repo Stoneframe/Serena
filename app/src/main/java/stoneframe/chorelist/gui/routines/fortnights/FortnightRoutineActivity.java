@@ -1,51 +1,25 @@
 package stoneframe.chorelist.gui.routines.fortnights;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
-import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
-
-import androidx.activity.OnBackPressedCallback;
-import androidx.appcompat.app.AppCompatActivity;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import stoneframe.chorelist.R;
-import stoneframe.chorelist.gui.GlobalState;
+import stoneframe.chorelist.gui.routines.RoutineActivity;
 import stoneframe.chorelist.gui.routines.util.WeekExpandableListAdaptor;
-import stoneframe.chorelist.gui.util.DialogUtils;
-import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
-import stoneframe.chorelist.gui.util.EditTextCriteria;
-import stoneframe.chorelist.model.ChoreList;
+import stoneframe.chorelist.model.routines.Day;
 import stoneframe.chorelist.model.routines.FortnightRoutine;
 import stoneframe.chorelist.model.routines.Procedure;
-import stoneframe.chorelist.model.routines.Day;
 import stoneframe.chorelist.model.routines.Week;
 
-public class FortnightRoutineActivity extends AppCompatActivity
+public class FortnightRoutineActivity extends RoutineActivity<FortnightRoutine>
 {
-    public static final int ROUTINE_ACTION_ADD = 0;
-    public static final int ROUTINE_ACTION_EDIT = 1;
-
-    public static final int ROUTINE_RESULT_SAVE = 0;
-    public static final int ROUTINE_RESULT_REMOVE = 1;
-
-    private int action;
-
-    private FortnightRoutine routine;
-
-    private ChoreList choreList;
-
-    private EditText nameEditText;
-    private CheckBox enabledCheckBox;
     private EditText startDateEditText;
 
     private ExpandableListView week1ExpandableList;
@@ -58,22 +32,6 @@ public class FortnightRoutineActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_routine_fortnight);
-
-        GlobalState globalState = GlobalState.getInstance();
-
-        choreList = globalState.getChoreList();
-        routine = (FortnightRoutine)globalState.getActiveRoutine();
-        routine.edit();
-
-        Intent intent = getIntent();
-
-        action = intent.getIntExtra("ACTION", -1);
-
-        Button removeButton = findViewById(R.id.removeButton);
-        removeButton.setVisibility(action == ROUTINE_ACTION_EDIT ? Button.VISIBLE : Button.INVISIBLE);
-
-        Button saveButton = findViewById(R.id.saveButton);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(
             this,
@@ -91,8 +49,6 @@ public class FortnightRoutineActivity extends AppCompatActivity
             routine.getStartDate().getMonthOfYear() - 1,
             routine.getStartDate().getDayOfMonth());
 
-        nameEditText = findViewById(R.id.fortnight_routine_name_edit);
-        enabledCheckBox = findViewById(R.id.fortnight_routine_enabled_checkbox);
         startDateEditText = findViewById(R.id.fortnight_routine_start_date_edit);
         startDateEditText.setText(routine.getStartDate().toString("yyyy-MM-dd"));
         startDateEditText.setInputType(InputType.TYPE_NULL);
@@ -123,23 +79,23 @@ public class FortnightRoutineActivity extends AppCompatActivity
         {
             week2ExpandableList.expandGroup(i);
         }
+    }
 
-        nameEditText.setText(routine.getName());
-        enabledCheckBox.setChecked(routine.isEnabled());
+    @Override
+    protected int getRoutineContentView()
+    {
+        return R.layout.activity_routine_fortnight;
+    }
 
-        new EditTextButtonEnabledLink(
-            saveButton,
-            new EditTextCriteria(nameEditText, EditTextCriteria.IS_NOT_EMPTY));
-
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true)
+    @Override
+    protected void addProcedure()
+    {
+        FortnightProcedureEditDialog.create(this, (procedure, week, weekDay) ->
         {
-            @Override
-            public void handleOnBackPressed()
-            {
-                routine.revert();
+            routine.getWeek(week).getWeekDay(weekDay).addProcedure(procedure);
 
-                finish();
-            }
+            week1ExpandableListAdaptor.notifyDataSetChanged();
+            week2ExpandableListAdaptor.notifyDataSetChanged();
         });
     }
 
@@ -235,57 +191,6 @@ public class FortnightRoutineActivity extends AppCompatActivity
             AlertDialog alert = builder.create();
             alert.show();
         }
-    }
-
-    public void saveClick(View view)
-    {
-        if (enabledCheckBox.isChecked() && !routine.isEnabled())
-        {
-            choreList.resetRoutine(routine);
-        }
-
-        routine.setName(nameEditText.getText().toString().trim());
-        routine.setEnabled(enabledCheckBox.isChecked());
-        routine.save();
-
-        Intent intent = new Intent();
-
-        intent.putExtra("RESULT", ROUTINE_RESULT_SAVE);
-        intent.putExtra("ACTION", action);
-
-        setResult(RESULT_OK, intent);
-        finish();
-    }
-
-    public void removeClick(View view)
-    {
-        DialogUtils.showConfirmationDialog(
-            this,
-            "Remove Routine",
-            "Are you sure you want to remove the routine?",
-            isConfirmed ->
-            {
-                if (!isConfirmed) return;
-
-                Intent intent = new Intent();
-
-                intent.putExtra("RESULT", ROUTINE_RESULT_REMOVE);
-
-                setResult(RESULT_OK, intent);
-                finish();
-            });
-    }
-
-    @SuppressLint("SetTextI18n")
-    public void addProcedureClick(View view)
-    {
-        FortnightProcedureEditDialog.create(this, (procedure, week, weekDay) ->
-        {
-            routine.getWeek(week).getWeekDay(weekDay).addProcedure(procedure);
-
-            week1ExpandableListAdaptor.notifyDataSetChanged();
-            week2ExpandableListAdaptor.notifyDataSetChanged();
-        });
     }
 
     private void removeProcedure(Day weekDay, Procedure procedure)

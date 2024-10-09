@@ -30,7 +30,7 @@
                 android:text="Name:" />
 
             <EditText
-                android:id="@+id/fortnight_routine_name_edit"
+                android:id="@+id/nameTextEdit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -43,7 +43,7 @@
                 android:minHeight="48dp" />
 
             <CheckBox
-                android:id="@+id/fortnight_routine_enabled_checkbox"
+                android:id="@+id/enabledCheckbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

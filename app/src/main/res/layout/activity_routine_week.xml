@@ -30,7 +30,7 @@
                 android:layout_marginRight="8dp"/>
 
             <EditText
-                android:id="@+id/week_routine_name_edit"
+                android:id="@+id/nameTextEdit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -41,7 +41,7 @@
                 android:layout_marginRight="9dp"/>
 
             <CheckBox
-                android:id="@+id/week_routine_enabled_checkbox"
+                android:id="@+id/enabledCheckbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Enable"

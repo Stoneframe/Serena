@@ -1,7 +1,5 @@
 package stoneframe.chorelist.gui.routines;
 
-import static android.app.Activity.RESULT_OK;
-
 import android.Manifest;
 import android.app.AlarmManager;
 import android.content.Context;
@@ -26,8 +24,6 @@ import androidx.fragment.app.Fragment;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
-
-import java.util.Objects;
 
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.GlobalState;
@@ -77,14 +73,14 @@ public class AllRoutinesFragment extends Fragment
         {
             Routine routine = (Routine)routineListAdapter.getItem(position);
             assert routine != null;
-            startRoutineEditor(routine, DayRoutineActivity.ROUTINE_ACTION_EDIT);
+            startRoutineEditor(routine, RoutineActivity.ROUTINE_ACTION_EDIT);
         });
 
         Button addDayButton = rootView.findViewById(R.id.add_day_button);
         addDayButton.setOnClickListener(v ->
         {
             Routine routine = new DayRoutine("", LocalDateTime.now());
-            startRoutineEditor(routine, DayRoutineActivity.ROUTINE_ACTION_ADD);
+            startRoutineEditor(routine, RoutineActivity.ROUTINE_ACTION_ADD);
         });
 
         Button addWeekButton = rootView.findViewById(R.id.add_week_button);
@@ -203,33 +199,13 @@ public class AllRoutinesFragment extends Fragment
 
     private void editRoutineCallback(ActivityResult activityResult)
     {
-        if (activityResult.getResultCode() == RESULT_OK)
-        {
-            Routine routine = globalState.getActiveRoutine();
-
-            Intent intent = Objects.requireNonNull(activityResult.getData());
-
-            switch (intent.getIntExtra("RESULT", -1))
-            {
-                case DayRoutineActivity.ROUTINE_RESULT_SAVE:
-
-                    if (intent.getIntExtra("ACTION", -1) == DayRoutineActivity.ROUTINE_ACTION_ADD)
-                    {
-                        choreList.addRoutine(routine);
-                    }
-
-                    break;
-
-                case DayRoutineActivity.ROUTINE_RESULT_REMOVE:
-                    choreList.removeRoutine(routine);
-                    break;
-            }
-        }
-
-        choreList.save();
-
         routineListAdapter.notifyDataSetChanged();
 
+        scheduleNextRoutineAlarm();
+    }
+
+    private void scheduleNextRoutineAlarm()
+    {
         LocalDateTime nextAlarmTime = choreList.getNextRoutineProcedureTime();
 
         if (nextAlarmTime == null)

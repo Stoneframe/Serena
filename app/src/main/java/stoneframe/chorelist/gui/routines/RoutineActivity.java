@@ -23,9 +23,6 @@ public abstract class RoutineActivity<T extends Routine> extends AppCompatActivi
     public static final int ROUTINE_ACTION_ADD = 0;
     public static final int ROUTINE_ACTION_EDIT = 1;
 
-    public static final int ROUTINE_RESULT_SAVE = 0;
-    public static final int ROUTINE_RESULT_REMOVE = 1;
-
     protected int action;
 
     protected GlobalState globalState;
@@ -86,9 +83,7 @@ public abstract class RoutineActivity<T extends Routine> extends AppCompatActivi
             @Override
             public void handleOnBackPressed()
             {
-                routine.revert();
-
-                finish();
+                back();
             }
         });
     }
@@ -108,12 +103,14 @@ public abstract class RoutineActivity<T extends Routine> extends AppCompatActivi
         routine.setEnabled(enabledCheckBox.isChecked());
         routine.save();
 
-        Intent intent = new Intent();
+        if (action == ROUTINE_ACTION_ADD)
+        {
+            choreList.addRoutine(routine);
+        }
 
-        intent.putExtra("RESULT", ROUTINE_RESULT_SAVE);
-        intent.putExtra("ACTION", action);
+        choreList.save();
 
-        setResult(RESULT_OK, intent);
+        setResult(RESULT_OK);
         finish();
     }
 
@@ -127,12 +124,17 @@ public abstract class RoutineActivity<T extends Routine> extends AppCompatActivi
             {
                 if (!isConfirmed) return;
 
-                Intent intent = new Intent();
+                choreList.removeRoutine(routine);
+                choreList.save();
 
-                intent.putExtra("RESULT", ROUTINE_RESULT_REMOVE);
-
-                setResult(RESULT_OK, intent);
+                setResult(RESULT_OK);
                 finish();
             });
+    }
+
+    private void back()
+    {
+        routine.revert();
+        finish();
     }
 }

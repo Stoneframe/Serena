@@ -12,7 +12,7 @@ public class GlobalState extends Application
     private static GlobalState instance;
 
     private Checklist activeChecklist;
-    private Routine activeRoutine;
+    private Routine<?> activeRoutine;
     private Limiter activeLimiter;
 
     private ChoreList choreList;
@@ -43,12 +43,12 @@ public class GlobalState extends Application
         this.choreList = choreList;
     }
 
-    public Routine getActiveRoutine()
+    public Routine<?> getActiveRoutine()
     {
         return activeRoutine;
     }
 
-    public void setActiveRoutine(Routine activeRoutine)
+    public void setActiveRoutine(Routine<?> activeRoutine)
     {
         this.activeRoutine = activeRoutine;
     }

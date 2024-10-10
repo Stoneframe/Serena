@@ -2,6 +2,9 @@ package stoneframe.chorelist.gui.routines;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -18,7 +21,7 @@ import stoneframe.chorelist.gui.util.EditTextCriteria;
 import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.routines.Routine;
 
-public abstract class RoutineActivity<T extends Routine> extends AppCompatActivity
+public abstract class RoutineActivity<T extends Routine<?>> extends AppCompatActivity
 {
     public static final int ROUTINE_ACTION_ADD = 0;
     public static final int ROUTINE_ACTION_EDIT = 1;
@@ -34,9 +37,42 @@ public abstract class RoutineActivity<T extends Routine> extends AppCompatActivi
     protected CheckBox enabledCheckBox;
 
     protected Button saveButton;
-    protected Button removeButton;
 
     protected Button addProcedureButton;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.edit_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        MenuItem removeItem = menu.findItem(R.id.action_remove);
+
+        if (removeItem != null)
+        {
+            removeItem.setVisible(action == ROUTINE_ACTION_EDIT);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if (item.getItemId() == R.id.action_remove)
+        {
+            removeRoutine();
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     /**
      * @noinspection unchecked
@@ -63,10 +99,6 @@ public abstract class RoutineActivity<T extends Routine> extends AppCompatActivi
 
         saveButton = findViewById(R.id.saveButton);
         saveButton.setOnClickListener(v -> saveRoutine());
-
-        removeButton = findViewById(R.id.removeButton);
-        removeButton.setVisibility(action == ROUTINE_ACTION_EDIT ? Button.VISIBLE : Button.INVISIBLE);
-        removeButton.setOnClickListener(v -> removeRoutine());
 
         addProcedureButton = findViewById(R.id.addProcedureButton);
         addProcedureButton.setOnClickListener(v -> addProcedure());

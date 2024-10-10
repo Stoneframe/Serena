@@ -6,6 +6,9 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -44,7 +47,6 @@ public class EditChecklistActivity extends AppCompatActivity
     private EditText checklistNameEditText;
     private RecyclerView checklistItemsListView;
 
-    private Button removeButton;
     private Button addItemButton;
     private Button saveButton;
 
@@ -54,6 +56,40 @@ public class EditChecklistActivity extends AppCompatActivity
     private ChoreList choreList;
 
     private Checklist checklist;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.edit_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if (item.getItemId() == R.id.action_remove)
+        {
+            DialogUtils.showConfirmationDialog(
+                this,
+                "Remove Checklist",
+                "Are you sure you want to remove the checklist?",
+                isConfirmed ->
+                {
+                    if (!isConfirmed) return;
+
+                    choreList.removeChecklist(checklist);
+                    choreList.save();
+
+                    setResult(REMOVE);
+                    finish();
+                });
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -73,7 +109,6 @@ public class EditChecklistActivity extends AppCompatActivity
         checklistNameEditText = findViewById(R.id.nameEditText);
         checklistItemsListView = findViewById(R.id.listView);
 
-        removeButton = findViewById(R.id.removeButton);
         addItemButton = findViewById(R.id.addItemButton);
         saveButton = findViewById(R.id.saveButton);
 
@@ -272,21 +307,6 @@ public class EditChecklistActivity extends AppCompatActivity
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(checklistItemsListView);
-
-        removeButton.setOnClickListener(v -> DialogUtils.showConfirmationDialog(
-            this,
-            "Remove Checklist",
-            "Are you sure you want to remove the checklist?",
-            isConfirmed ->
-            {
-                if (!isConfirmed) return;
-
-                choreList.removeChecklist(checklist);
-                choreList.save();
-
-                setResult(REMOVE);
-                finish();
-            }));
 
         addItemButton.setOnClickListener(v ->
         {

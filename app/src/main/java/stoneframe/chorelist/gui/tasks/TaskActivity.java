@@ -9,6 +9,9 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.text.InputType;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -55,6 +58,53 @@ public class TaskActivity extends AppCompatActivity
     private Intent speechRecognizerIntent;
     private ImageButton speakButton;
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.edit_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        MenuItem removeItem = menu.findItem(R.id.action_remove);
+
+        if (removeItem != null)
+        {
+            removeItem.setVisible(action == TASK_ACTION_EDIT);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if (item.getItemId() == R.id.action_remove)
+        {
+            DialogUtils.showConfirmationDialog(
+                this,
+                "Remove Task",
+                "Are you sure you want to remove the task?",
+                isConfirmed ->
+                {
+                    if (!isConfirmed) return;
+
+                    Intent intent = new Intent();
+                    intent.putExtra("RESULT", TASK_RESULT_REMOVE);
+
+                    setResult(RESULT_OK, intent);
+                    finish();
+                });
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     public void saveClick(View view)
     {
         description = descriptionEditText.getText().toString().trim();
@@ -78,24 +128,6 @@ public class TaskActivity extends AppCompatActivity
         finish();
     }
 
-    public void removeClick(View view)
-    {
-        DialogUtils.showConfirmationDialog(
-            this,
-            "Remove Task",
-            "Are you sure you want to remove the task?",
-            isConfirmed ->
-            {
-                if (!isConfirmed) return;
-
-                Intent intent = new Intent();
-                intent.putExtra("RESULT", TASK_RESULT_REMOVE);
-
-                setResult(RESULT_OK, intent);
-                finish();
-            });
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -107,9 +139,6 @@ public class TaskActivity extends AppCompatActivity
         Intent intent = getIntent();
 
         action = intent.getIntExtra("ACTION", -1);
-
-        Button removeButton = findViewById(R.id.removeButton);
-        removeButton.setVisibility(action == TASK_ACTION_EDIT ? Button.VISIBLE : Button.INVISIBLE);
 
         Button saveButton = findViewById(R.id.saveButton);
 

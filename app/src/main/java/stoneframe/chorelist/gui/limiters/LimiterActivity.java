@@ -6,6 +6,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -43,13 +46,33 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
     private Button buttonAddExpenditure;
     private Button buttonSettings;
     private Button buttonDone;
-    private Button buttonRemove;
 
     private SimpleListAdapter<ExpenditureType> expenditureTypeAdapter;
 
     private ChoreList choreList;
 
     private LimiterEditor limiterEditor;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.edit_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if (item.getItemId() == R.id.action_remove)
+        {
+            removeLimiter();
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -77,7 +100,6 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
         buttonSettings = findViewById(R.id.buttonSettings);
 
         buttonDone = findViewById(R.id.buttonDone);
-        buttonRemove = findViewById(R.id.buttonRemove);
 
         expenditureTypeAdapter = new SimpleListAdapter<>(
             this,
@@ -111,7 +133,6 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
         buttonSettings.setOnClickListener(v -> showSettingsDialog());
 
         buttonDone.setOnClickListener(v -> finish());
-        buttonRemove.setOnClickListener(v -> removeLimiter());
 
         new EditTextButtonEnabledLink(
             buttonAddExpenditure,

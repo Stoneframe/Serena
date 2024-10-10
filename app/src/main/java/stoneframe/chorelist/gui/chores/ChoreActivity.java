@@ -5,6 +5,9 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -52,6 +55,54 @@ public class ChoreActivity extends AppCompatActivity
 
     private Button saveButton;
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.edit_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        MenuItem removeItem = menu.findItem(R.id.action_remove);
+
+        if (removeItem != null)
+        {
+            removeItem.setVisible(action == CHORE_ACTION_EDIT);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if (item.getItemId() == R.id.action_remove)
+        {
+            DialogUtils.showConfirmationDialog(
+                this,
+                "Remove Chore",
+                "Are you sure you want to remove the chore?",
+                isConfirmed ->
+                {
+                    if (!isConfirmed) return;
+
+                    Intent intent = new Intent();
+
+                    intent.putExtra("RESULT", CHORE_RESULT_REMOVE);
+
+                    setResult(RESULT_OK, intent);
+                    finish();
+                });
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -64,9 +115,6 @@ public class ChoreActivity extends AppCompatActivity
         Intent intent = getIntent();
 
         action = intent.getIntExtra("ACTION", -1);
-
-        Button button = findViewById(R.id.removeButton);
-        button.setVisibility(action == CHORE_ACTION_EDIT ? Button.VISIBLE : Button.INVISIBLE);
 
         isEnabled = intent.getBooleanExtra("IsEnabled", false);
         next = (LocalDate)intent.getSerializableExtra("Next");
@@ -146,24 +194,5 @@ public class ChoreActivity extends AppCompatActivity
     {
         setResult(RESULT_CANCELED);
         finish();
-    }
-
-    public void removeClick(View view)
-    {
-        DialogUtils.showConfirmationDialog(
-            this,
-            "Remove Chore",
-            "Are you sure you want to remove the chore?",
-            isConfirmed ->
-            {
-                if (!isConfirmed) return;
-
-                Intent intent = new Intent();
-
-                intent.putExtra("RESULT", CHORE_RESULT_REMOVE);
-
-                setResult(RESULT_OK, intent);
-                finish();
-            });
     }
 }

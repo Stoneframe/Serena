@@ -102,6 +102,8 @@ public class TaskActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
 
+        setTitle("Task");
+
         Intent intent = getIntent();
 
         action = intent.getIntExtra("ACTION", -1);

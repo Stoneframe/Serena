@@ -57,6 +57,8 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_limiter);
 
+        setTitle("Limiter");
+
         choreList = GlobalState.getInstance().getChoreList();
 
         limiterEditor = choreList.getLimiterEditor(GlobalState.getInstance().getActiveLimiter());

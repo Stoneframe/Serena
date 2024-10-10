@@ -61,6 +61,8 @@ public class EditChecklistActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_checklist);
 
+        setTitle("Edit Checklist");
+
         GlobalState globalState = GlobalState.getInstance();
 
         choreList = globalState.getChoreList();

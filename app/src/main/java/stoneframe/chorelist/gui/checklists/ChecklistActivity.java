@@ -36,6 +36,8 @@ public class ChecklistActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checklist);
 
+        setTitle("Checklist");
+
         GlobalState globalState = GlobalState.getInstance();
 
         checklist = globalState.getActiveChecklist();

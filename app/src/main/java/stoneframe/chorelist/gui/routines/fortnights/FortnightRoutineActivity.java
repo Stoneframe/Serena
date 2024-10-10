@@ -33,6 +33,8 @@ public class FortnightRoutineActivity extends RoutineActivity<FortnightRoutine>
     {
         super.onCreate(savedInstanceState);
 
+        setTitle("Fortnight Routine");
+
         DatePickerDialog datePickerDialog = new DatePickerDialog(
             this,
             (view1, year, month, dayOfMonth) ->

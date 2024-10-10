@@ -21,6 +21,8 @@ public class WeekRoutineActivity extends RoutineActivity<WeekRoutine>
     {
         super.onCreate(savedInstanceState);
 
+        setTitle("Week Routine");
+
         weekExpandableListAdaptor = new WeekExpandableListAdaptor(this, routine.getWeek());
 
         weekExpandableList = findViewById(R.id.week_procedure_list);

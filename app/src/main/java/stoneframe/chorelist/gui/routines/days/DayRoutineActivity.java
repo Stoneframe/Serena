@@ -20,6 +20,8 @@ public class DayRoutineActivity extends RoutineActivity<DayRoutine>
     {
         super.onCreate(savedInstanceState);
 
+        setTitle("Day Routine");
+
         procedureListAdapter = new ArrayAdapter<>(
             getBaseContext(),
             android.R.layout.simple_list_item_1);

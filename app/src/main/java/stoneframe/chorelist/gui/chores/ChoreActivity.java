@@ -59,6 +59,8 @@ public class ChoreActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chore);
 
+        setTitle("Chore");
+
         Intent intent = getIntent();
 
         action = intent.getIntExtra("ACTION", -1);

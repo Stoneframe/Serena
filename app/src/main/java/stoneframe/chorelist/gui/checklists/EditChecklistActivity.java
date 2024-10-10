@@ -47,6 +47,7 @@ public class EditChecklistActivity extends AppCompatActivity
     private EditText checklistNameEditText;
     private RecyclerView checklistItemsListView;
 
+    private Button cancelButton;
     private Button addItemButton;
     private Button saveButton;
 
@@ -109,6 +110,7 @@ public class EditChecklistActivity extends AppCompatActivity
         checklistNameEditText = findViewById(R.id.nameEditText);
         checklistItemsListView = findViewById(R.id.listView);
 
+        cancelButton = findViewById(R.id.cancelButton);
         addItemButton = findViewById(R.id.addItemButton);
         saveButton = findViewById(R.id.saveButton);
 
@@ -308,6 +310,8 @@ public class EditChecklistActivity extends AppCompatActivity
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(checklistItemsListView);
 
+        cancelButton.setOnClickListener(v -> cancel());
+
         addItemButton.setOnClickListener(v ->
         {
             ChecklistItem item = new ChecklistItem("");
@@ -337,7 +341,7 @@ public class EditChecklistActivity extends AppCompatActivity
             @Override
             public void handleOnBackPressed()
             {
-                back();
+                cancel();
             }
         });
     }
@@ -390,7 +394,7 @@ public class EditChecklistActivity extends AppCompatActivity
         return builder;
     }
 
-    private void back()
+    private void cancel()
     {
         checklist.revert();
         finish();

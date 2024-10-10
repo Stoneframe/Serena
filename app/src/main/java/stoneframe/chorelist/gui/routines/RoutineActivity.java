@@ -36,6 +36,7 @@ public abstract class RoutineActivity<T extends Routine<?>> extends AppCompatAct
     protected EditText nameEditText;
     protected CheckBox enabledCheckBox;
 
+    protected Button cancelButton;
     protected Button saveButton;
 
     protected Button addProcedureButton;
@@ -97,6 +98,9 @@ public abstract class RoutineActivity<T extends Routine<?>> extends AppCompatAct
         nameEditText = findViewById(R.id.nameTextEdit);
         enabledCheckBox = findViewById(R.id.enabledCheckbox);
 
+        cancelButton = findViewById(R.id.cancelButton);
+        cancelButton.setOnClickListener(v -> cancel());
+
         saveButton = findViewById(R.id.saveButton);
         saveButton.setOnClickListener(v -> saveRoutine());
 
@@ -115,7 +119,7 @@ public abstract class RoutineActivity<T extends Routine<?>> extends AppCompatAct
             @Override
             public void handleOnBackPressed()
             {
-                back();
+                cancel();
             }
         });
     }
@@ -164,7 +168,7 @@ public abstract class RoutineActivity<T extends Routine<?>> extends AppCompatAct
             });
     }
 
-    private void back()
+    private void cancel()
     {
         routine.revert();
         finish();

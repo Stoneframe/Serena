@@ -8,7 +8,6 @@ import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -21,27 +20,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.joda.time.LocalDate;
 
 import stoneframe.chorelist.R;
+import stoneframe.chorelist.gui.GlobalState;
 import stoneframe.chorelist.gui.util.DialogUtils;
 import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
+import stoneframe.chorelist.model.ChoreList;
+import stoneframe.chorelist.model.chores.Chore;
 
 public class ChoreActivity extends AppCompatActivity
 {
     public static final int CHORE_ACTION_ADD = 0;
     public static final int CHORE_ACTION_EDIT = 1;
 
-    public static final int CHORE_RESULT_SAVE = 0;
-    public static final int CHORE_RESULT_REMOVE = 1;
-
     private int action;
 
-    private boolean isEnabled;
     private LocalDate next;
-    private String description;
-    private int priority;
-    private int effort;
-    private int intervalUnit;
-    private int intervalLength;
 
     private DatePickerDialog datePickerDialog;
 
@@ -53,7 +46,12 @@ public class ChoreActivity extends AppCompatActivity
     private Spinner intervalUnitSpinner;
     private EditText intervalLengthEditText;
 
+    private Button cancelButton;
     private Button saveButton;
+
+    private ChoreList choreList;
+
+    private Chore chore;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -81,21 +79,7 @@ public class ChoreActivity extends AppCompatActivity
     {
         if (item.getItemId() == R.id.action_remove)
         {
-            DialogUtils.showConfirmationDialog(
-                this,
-                "Remove Chore",
-                "Are you sure you want to remove the chore?",
-                isConfirmed ->
-                {
-                    if (!isConfirmed) return;
-
-                    Intent intent = new Intent();
-
-                    intent.putExtra("RESULT", CHORE_RESULT_REMOVE);
-
-                    setResult(RESULT_OK, intent);
-                    finish();
-                });
+            removeChore();
 
             return true;
         }
@@ -112,17 +96,16 @@ public class ChoreActivity extends AppCompatActivity
 
         setTitle("Chore");
 
+        GlobalState globalState = GlobalState.getInstance();
+
+        choreList = globalState.getChoreList();
+        chore = globalState.getActiveChore();
+
         Intent intent = getIntent();
 
         action = intent.getIntExtra("ACTION", -1);
 
-        isEnabled = intent.getBooleanExtra("IsEnabled", false);
-        next = (LocalDate)intent.getSerializableExtra("Next");
-        description = intent.getStringExtra("Description");
-        priority = intent.getIntExtra("Priority", 1);
-        effort = intent.getIntExtra("Effort", 1);
-        intervalUnit = intent.getIntExtra("IntervalUnit", 0);
-        intervalLength = intent.getIntExtra("IntervalLength", 1);
+        next = chore.getNext();
 
         datePickerDialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) ->
         {
@@ -137,6 +120,7 @@ public class ChoreActivity extends AppCompatActivity
         effortEditText = findViewById(R.id.effortEditText);
         intervalUnitSpinner = findViewById(R.id.intervalUnitSpinner);
         intervalLengthEditText = findViewById(R.id.intervalLengthEditText);
+        cancelButton = findViewById(R.id.cancelButton);
         saveButton = findViewById(R.id.saveButton);
 
         intervalUnitSpinner.setAdapter(new ArrayAdapter<>(
@@ -144,18 +128,23 @@ public class ChoreActivity extends AppCompatActivity
             android.R.layout.simple_list_item_1,
             new String[]{"Days", "Weeks", "Months", "Years"}));
 
-        enabledCheckbox.setChecked(isEnabled);
+        enabledCheckbox.setChecked(chore.isEnabled());
         nextEditText.setText(next.toString("yyyy-MM-dd"));
-        descriptionEditText.setText(description);
-        priorityEditText.setText(Integer.toString(priority), TextView.BufferType.EDITABLE);
-        effortEditText.setText(Integer.toString(effort), TextView.BufferType.EDITABLE);
-        intervalUnitSpinner.setSelection(intervalUnit);
+        descriptionEditText.setText(chore.getDescription());
+        priorityEditText.setText(
+            Integer.toString(chore.getPriority()),
+            TextView.BufferType.EDITABLE);
+        effortEditText.setText(Integer.toString(chore.getEffort()), TextView.BufferType.EDITABLE);
+        intervalUnitSpinner.setSelection(chore.getIntervalUnit());
         intervalLengthEditText.setText(
-            Integer.toString(intervalLength),
+            Integer.toString(chore.getIntervalLength()),
             TextView.BufferType.EDITABLE);
 
         nextEditText.setInputType(InputType.TYPE_NULL);
         nextEditText.setOnClickListener(view -> datePickerDialog.show());
+
+        cancelButton.setOnClickListener(v -> cancelClick());
+        saveButton.setOnClickListener(v -> saveClick());
 
         new EditTextButtonEnabledLink(
             saveButton,
@@ -165,34 +154,55 @@ public class ChoreActivity extends AppCompatActivity
             new EditTextCriteria(intervalLengthEditText, EditTextCriteria.IS_NOT_EMPTY));
     }
 
-    public void saveClick(View view)
+    private void saveClick()
     {
-        isEnabled = enabledCheckbox.isChecked();
-        description = descriptionEditText.getText().toString().trim();
-        priority = Integer.parseInt(priorityEditText.getText().toString());
-        effort = Integer.parseInt(effortEditText.getText().toString());
-        intervalUnit = (int)intervalUnitSpinner.getSelectedItemId();
-        intervalLength = Integer.parseInt(intervalLengthEditText.getText().toString());
+        boolean isEnabled = enabledCheckbox.isChecked();
+        String description = descriptionEditText.getText().toString().trim();
+        int priority = Integer.parseInt(priorityEditText.getText().toString());
+        int effort = Integer.parseInt(effortEditText.getText().toString());
+        int intervalUnit = (int)intervalUnitSpinner.getSelectedItemId();
+        int intervalLength = Integer.parseInt(intervalLengthEditText.getText().toString());
 
-        Intent intent = new Intent();
+        chore.setEnabled(isEnabled);
+        chore.setDescription(description);
+        chore.setNext(next);
+        chore.setPriority(priority);
+        chore.setEffort(effort);
+        chore.setIntervalUnit(intervalUnit);
+        chore.setIntervalLength(intervalLength);
 
-        intent.putExtra("RESULT", CHORE_RESULT_SAVE);
-        intent.putExtra("ACTION", action);
-        intent.putExtra("IsEnabled", isEnabled);
-        intent.putExtra("Next", next);
-        intent.putExtra("Description", description);
-        intent.putExtra("Priority", priority);
-        intent.putExtra("Effort", effort);
-        intent.putExtra("IntervalUnit", intervalUnit);
-        intent.putExtra("IntervalLength", intervalLength);
+        if (action == CHORE_ACTION_ADD)
+        {
+            choreList.addChore(chore);
+        }
 
-        setResult(RESULT_OK, intent);
+        choreList.save();
+
+        setResult(RESULT_OK);
         finish();
     }
 
-    public void cancelClick(View view)
+    private void cancelClick()
     {
         setResult(RESULT_CANCELED);
         finish();
+    }
+
+    private void removeChore()
+    {
+        DialogUtils.showConfirmationDialog(
+            this,
+            "Remove Chore",
+            "Are you sure you want to remove the chore?",
+            isConfirmed ->
+            {
+                if (!isConfirmed) return;
+
+                choreList.removeChore(chore);
+                choreList.save();
+
+                setResult(RESULT_OK);
+                finish();
+            });
     }
 }

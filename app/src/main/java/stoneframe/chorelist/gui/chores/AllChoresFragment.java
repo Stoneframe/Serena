@@ -43,11 +43,10 @@ public class AllChoresFragment extends Fragment
     private ActivityResultLauncher<Intent> editChoreLauncher;
     private ActivityResultLauncher<Intent> editEffortLauncher;
 
+    private GlobalState globalState;
     private ChoreList choreList;
 
     private SimpleListAdapter<Chore> choreListAdapter;
-
-    private Chore choreUnderEdit;
 
     @SuppressLint("DefaultLocale")
     @Override
@@ -56,7 +55,7 @@ public class AllChoresFragment extends Fragment
         ViewGroup container,
         Bundle savedInstanceState)
     {
-        GlobalState globalState = GlobalState.getInstance();
+        globalState = GlobalState.getInstance();
 
         choreList = globalState.getChoreList();
 
@@ -158,59 +157,18 @@ public class AllChoresFragment extends Fragment
         return Comparator.comparing(Chore::getDescription);
     }
 
-    private void startChoreEditor(Chore chore, int mode)
+    private void startChoreEditor(Chore chore, int action)
     {
-        choreUnderEdit = chore;
+        globalState.setActiveChore(chore);
 
         Intent intent = new Intent(getActivity(), ChoreActivity.class);
-        intent.putExtra("ACTION", mode);
-        intent.putExtra("IsEnabled", chore.isEnabled());
-        intent.putExtra("Next", chore.getNext());
-        intent.putExtra("Description", chore.getDescription());
-        intent.putExtra("Priority", chore.getPriority());
-        intent.putExtra("Effort", chore.getEffort());
-        intent.putExtra("IntervalUnit", chore.getIntervalUnit());
-        intent.putExtra("IntervalLength", chore.getIntervalLength());
+        intent.putExtra("ACTION", action);
 
         editChoreLauncher.launch(intent);
     }
 
     private void editChoreCallback(ActivityResult activityResult)
     {
-        if (activityResult.getResultCode() != RESULT_OK)
-        {
-            return;
-        }
-
-        Chore chore = choreUnderEdit;
-
-        Intent intent = Objects.requireNonNull(activityResult.getData());
-
-        switch (intent.getIntExtra("RESULT", -1))
-        {
-            case ChoreActivity.CHORE_RESULT_SAVE:
-                chore.setEnabled(intent.getBooleanExtra("IsEnabled", false));
-                chore.setNext((LocalDate)intent.getSerializableExtra("Next"));
-                chore.setDescription(intent.getStringExtra("Description"));
-                chore.setPriority(intent.getIntExtra("Priority", 1));
-                chore.setEffort(intent.getIntExtra("Effort", 1));
-                chore.setIntervalUnit(intent.getIntExtra("IntervalUnit", 1));
-                chore.setIntervalLength(intent.getIntExtra("IntervalLength", 1));
-
-                if (intent.getIntExtra("ACTION", -1) == ChoreActivity.CHORE_ACTION_ADD)
-                {
-                    choreList.addChore(chore);
-                }
-
-                break;
-
-            case ChoreActivity.CHORE_RESULT_REMOVE:
-                choreList.removeChore(chore);
-                break;
-        }
-
-        choreList.save();
-
         choreListAdapter.notifyDataSetChanged();
     }
 

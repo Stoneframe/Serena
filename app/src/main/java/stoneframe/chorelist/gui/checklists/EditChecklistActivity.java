@@ -5,10 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -16,7 +12,6 @@ import android.widget.EditText;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -24,21 +19,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import stoneframe.chorelist.R;
-import stoneframe.chorelist.gui.GlobalState;
+import stoneframe.chorelist.gui.EditActivity;
 import stoneframe.chorelist.gui.util.DialogUtils;
 import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
 import stoneframe.chorelist.gui.util.RecyclerAdapter;
 import stoneframe.chorelist.gui.util.TextChangedListener;
-import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.checklists.Checklist;
 import stoneframe.chorelist.model.checklists.ChecklistItem;
 
-public class EditChecklistActivity extends AppCompatActivity
+public class EditChecklistActivity extends EditActivity
 {
-    public static final int DONE = 0;
-    public static final int REMOVE = 1;
-
     private final ColorDrawable editBackground = new ColorDrawable(Color.parseColor("#AECCE4"));
     private final ColorDrawable deleteBackground = new ColorDrawable(Color.parseColor("#FF8164"));
 
@@ -47,75 +38,43 @@ public class EditChecklistActivity extends AppCompatActivity
     private EditText checklistNameEditText;
     private RecyclerView checklistItemsListView;
 
-    private Button cancelButton;
     private Button addItemButton;
-    private Button saveButton;
 
     private Drawable editIcon;
     private Drawable deleteIcon;
 
-    private ChoreList choreList;
-
     private Checklist checklist;
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+    protected int getActivityLayoutId()
     {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.edit_menu, menu);
-        return true;
+        return R.layout.activity_edit_checklist;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    protected String getActivityTitle()
     {
-        if (item.getItemId() == R.id.action_remove)
-        {
-            DialogUtils.showConfirmationDialog(
-                this,
-                "Remove Checklist",
-                "Are you sure you want to remove the checklist?",
-                isConfirmed ->
-                {
-                    if (!isConfirmed) return;
-
-                    choreList.removeChecklist(checklist);
-                    choreList.save();
-
-                    setResult(REMOVE);
-                    finish();
-                });
-
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        return "Edit Checklist";
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    protected String getEditedObjectName()
     {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_checklist);
+        return "Checklist";
+    }
 
-        setTitle("Edit Checklist");
-
-        GlobalState globalState = GlobalState.getInstance();
-
-        choreList = globalState.getChoreList();
-
+    @Override
+    protected void createActivity()
+    {
         checklist = globalState.getActiveChecklist();
         checklist.edit();
 
         checklistNameEditText = findViewById(R.id.nameEditText);
         checklistItemsListView = findViewById(R.id.listView);
 
-        cancelButton = findViewById(R.id.cancelButton);
         addItemButton = findViewById(R.id.addItemButton);
-        saveButton = findViewById(R.id.saveButton);
 
         editIcon = ContextCompat.getDrawable(this, R.drawable.ic_edit);
-
         deleteIcon = ContextCompat.getDrawable(this, R.drawable.ic_delete);
 
         checklistNameEditText.setText(checklist.getName());
@@ -130,6 +89,33 @@ public class EditChecklistActivity extends AppCompatActivity
         checklistItemsListView.addItemDecoration(new DividerItemDecoration(
             getBaseContext(),
             LinearLayoutManager.VERTICAL));
+
+        addItemButton.setOnClickListener(v ->
+        {
+            ChecklistItem item = new ChecklistItem("");
+
+            showChecklistItemDialog(item, () ->
+            {
+                checklist.addItem(item);
+                checklistItemsAdapter.notifyItemInserted(checklist.getItems().size() - 1);
+            });
+        });
+
+        new EditTextButtonEnabledLink(
+            saveButton,
+            new EditTextCriteria(checklistNameEditText, EditTextCriteria.IS_NOT_EMPTY));
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true)
+        {
+            @Override
+            public void handleOnBackPressed()
+            {
+                onCancel();
+
+                setResult(RESULT_CANCEL);
+                finish();
+            }
+        });
 
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP | ItemTouchHelper.DOWN,
@@ -309,41 +295,26 @@ public class EditChecklistActivity extends AppCompatActivity
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(checklistItemsListView);
+    }
 
-        cancelButton.setOnClickListener(v -> cancel());
+    @Override
+    protected void onCancel()
+    {
+        checklist.revert();
+    }
 
-        addItemButton.setOnClickListener(v ->
-        {
-            ChecklistItem item = new ChecklistItem("");
+    @Override
+    protected void onSave(int action)
+    {
+        checklist.save();
+        checklist.save();
+    }
 
-            showChecklistItemDialog(item, () ->
-            {
-                checklist.addItem(item);
-                checklistItemsAdapter.notifyItemInserted(checklist.getItems().size() - 1);
-            });
-        });
-
-        saveButton.setOnClickListener(v ->
-        {
-            checklist.save();
-            choreList.save();
-
-            setResult(DONE);
-            finish();
-        });
-
-        new EditTextButtonEnabledLink(
-            saveButton,
-            new EditTextCriteria(checklistNameEditText, EditTextCriteria.IS_NOT_EMPTY));
-
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true)
-        {
-            @Override
-            public void handleOnBackPressed()
-            {
-                cancel();
-            }
-        });
+    @Override
+    protected void onRemove()
+    {
+        choreList.removeChecklist(checklist);
+        checklist.save();
     }
 
     private void showChecklistItemDialog(ChecklistItem checklistItem, Runnable onOk)
@@ -392,11 +363,5 @@ public class EditChecklistActivity extends AppCompatActivity
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
         return builder;
-    }
-
-    private void cancel()
-    {
-        checklist.revert();
-        finish();
     }
 }

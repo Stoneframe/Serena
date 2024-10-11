@@ -74,7 +74,9 @@ public class ChecklistActivity extends AppCompatActivity
 
         editButton.setOnClickListener(v ->
         {
-            Intent intent = new Intent(this, EditChecklistActivity.class);
+            Intent intent = new Intent(this, EditChecklistActivity.class)
+                .putExtra("ACTION", EditChecklistActivity.ACTION_EDIT);
+
             editChecklistLauncher.launch(intent);
         });
 
@@ -83,7 +85,7 @@ public class ChecklistActivity extends AppCompatActivity
 
     private void editChecklistCallback(ActivityResult result)
     {
-        if (result.getResultCode() == EditChecklistActivity.REMOVE)
+        if (result.getResultCode() == EditChecklistActivity.RESULT_REMOVE)
         {
             finish();
         }

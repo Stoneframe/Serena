@@ -132,7 +132,7 @@ public abstract class EditActivity extends AppCompatActivity
 
                 onRemove();
 
-                setResult(RESULT_OK);
+                setResult(RESULT_REMOVE);
                 finish();
             });
     }

@@ -2,76 +2,77 @@ package stoneframe.chorelist.model.limiters;
 
 import org.joda.time.LocalDateTime;
 
-import java.util.LinkedList;
 import java.util.List;
 
+import stoneframe.chorelist.model.Editor;
 import stoneframe.chorelist.model.timeservices.TimeService;
 
-public class LimiterEditor
+public class LimiterEditor extends Editor<LimiterEditor.LimiterEditorListener>
 {
-    private final List<LimiterEditorListener> listeners = new LinkedList<>();
-
     private final LimiterManager limiterManager;
     private final Limiter limiter;
-    private final TimeService timeService;
+
+    private final PropertyUtil<String> nameProperty;
+    private final PropertyUtil<String> unitProperty;
+    private final PropertyUtil<Integer> incrementPerDayProperty;
+    private final PropertyUtil<Boolean> isQuickAllowableProperty;
 
     public LimiterEditor(LimiterManager limiterManager, Limiter limiter, TimeService timeService)
     {
+        super(timeService);
+
         this.limiterManager = limiterManager;
         this.limiter = limiter;
-        this.timeService = timeService;
-    }
 
-    public void addListener(LimiterEditorListener listener)
-    {
-        listeners.add(listener);
-    }
+        nameProperty = new PropertyUtil<>(
+            limiter::getName,
+            limiter::setName,
+            v -> notifyListeners(LimiterEditorListener::nameChanged));
 
-    public void removeListener(LimiterEditorListener listener)
-    {
-        listeners.remove(listener);
+        unitProperty = new PropertyUtil<>(
+            limiter::getUnit,
+            limiter::setUnit,
+            v -> notifyListeners(LimiterEditorListener::unitChanged));
+
+        incrementPerDayProperty = new PropertyUtil<>(
+            limiter::getIncrementPerDay,
+            v -> limiter.setIncrementPerDay(timeService.getNow(), v),
+            v -> notifyListeners(LimiterEditorListener::incrementPerDayChanged));
+
+        isQuickAllowableProperty = new PropertyUtil<>(
+            limiter::isQuickAllowed,
+            limiter::setAllowQuick,
+            v -> notifyListeners(l -> l.isQuickChanged(v)));
     }
 
     public String getName()
     {
-        return limiter.getName();
+        return nameProperty.getValue();
     }
 
     public void setName(String name)
     {
-        if (!name.equals(limiter.getName()))
-        {
-            limiter.setName(name);
-            listeners.forEach(LimiterEditorListener::nameChanged);
-        }
+        nameProperty.setValue(name);
     }
 
     public String getUnit()
     {
-        return limiter.getUnit();
+        return unitProperty.getValue();
     }
 
     public void setUnit(String unit)
     {
-        if (!unit.equals(limiter.getUnit()))
-        {
-            limiter.setUnit(unit);
-            listeners.forEach(LimiterEditorListener::unitChanged);
-        }
+        unitProperty.setValue(unit);
     }
 
     public int getIncrementPerDay()
     {
-        return limiter.getIncrementPerDay();
+        return incrementPerDayProperty.getValue();
     }
 
     public void setIncrementPerDay(int incrementPerDay)
     {
-        if (incrementPerDay != limiter.getIncrementPerDay())
-        {
-            limiter.setIncrementPerDay(timeService.getNow(), incrementPerDay);
-            listeners.forEach(LimiterEditorListener::incrementPerDayChanged);
-        }
+        incrementPerDayProperty.setValue(incrementPerDay);
     }
 
     public boolean hasMaxValue()
@@ -89,7 +90,7 @@ public class LimiterEditor
         if (hasMaxValueChanged(maxValue))
         {
             limiter.setMaxValue(maxValue, LocalDateTime.now());
-            listeners.forEach(LimiterEditorListener::availableChanged);
+            notifyListeners(LimiterEditorListener::availableChanged);
         }
     }
 
@@ -100,16 +101,12 @@ public class LimiterEditor
 
     public boolean isQuickAllowed()
     {
-        return limiter.isQuickAllowed();
+        return isQuickAllowableProperty.getValue();
     }
 
     public void setAllowQuick(boolean allowQuick)
     {
-        if (allowQuick != limiter.isQuickAllowed())
-        {
-            limiter.setAllowQuick(allowQuick);
-            listeners.forEach(l -> l.isQuickChanged(allowQuick));
-        }
+        isQuickAllowableProperty.setValue(allowQuick);
     }
 
     public List<ExpenditureType> getExpenditureTypes()
@@ -121,8 +118,8 @@ public class LimiterEditor
     {
         limiter.addExpenditureType(expenditureType);
 
-        listeners.forEach(l -> l.expenditureTypeAdded(expenditureType));
-        listeners.forEach(LimiterEditorListener::expenditureTypesChanged);
+        notifyListeners(l -> l.expenditureTypeAdded(expenditureType));
+        notifyListeners(LimiterEditorListener::expenditureTypesChanged);
     }
 
     public void removeExpenditureType(CustomExpenditureType expenditureType)
@@ -134,20 +131,19 @@ public class LimiterEditor
             limiter.setAllowQuick(true);
         }
 
-        listeners.forEach(l -> l.expenditureTypeRemoved(expenditureType));
-        listeners.forEach(LimiterEditorListener::expenditureTypesChanged);
+        notifyListeners(l -> l.expenditureTypeRemoved(expenditureType));
     }
 
     public void addExpenditure(String name, int expenditureAmount)
     {
-        limiter.addExpenditure(new Expenditure(name, expenditureAmount), timeService.getNow());
+        limiter.addExpenditure(new Expenditure(name, expenditureAmount), getNow());
 
-        listeners.forEach(LimiterEditorListener::expenditureAdded);
+        notifyListeners(LimiterEditorListener::expenditureAdded);
     }
 
     public int getAvailable()
     {
-        return limiter.getAvailable(timeService.getNow());
+        return limiter.getAvailable(getNow());
     }
 
     public void delete()
@@ -159,16 +155,16 @@ public class LimiterEditor
     {
         expenditureType.setName(name);
 
-        listeners.forEach(l -> l.expenditureTypeEdited(expenditureType));
-        listeners.forEach(LimiterEditorListener::expenditureTypesChanged);
+        notifyListeners(l -> l.expenditureTypeEdited(expenditureType));
+        notifyListeners(LimiterEditorListener::expenditureTypesChanged);
     }
 
     public void setExpenditureTypeAmount(CustomExpenditureType expenditureType, int amount)
     {
         expenditureType.setAmount(amount);
 
-        listeners.forEach(l -> l.expenditureTypeEdited(expenditureType));
-        listeners.forEach(LimiterEditorListener::expenditureTypesChanged);
+        notifyListeners(l -> l.expenditureTypeEdited(expenditureType));
+        notifyListeners(LimiterEditorListener::expenditureTypesChanged);
     }
 
     private boolean hasMaxValueChanged(Integer maxValue)

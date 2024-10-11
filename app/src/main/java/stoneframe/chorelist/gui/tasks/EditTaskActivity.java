@@ -87,11 +87,16 @@ public class EditTaskActivity extends EditActivity
         ignoreBeforeEditText.setInputType(InputType.TYPE_NULL);
         ignoreBeforeEditText.setOnClickListener(view -> showIgnoreBeforeDatePickerDialog());
 
-        new EditTextButtonEnabledLink(
-            saveButton,
-            new EditTextCriteria(descriptionEditText, EditTextCriteria.IS_NOT_EMPTY));
-
         setupSpeechRecognizer();
+    }
+
+    @Override
+    protected EditTextCriteria[] getSaveEnabledCriteria()
+    {
+        return new EditTextCriteria[]
+            {
+                new EditTextCriteria(descriptionEditText, EditTextCriteria.IS_NOT_EMPTY),
+            };
     }
 
     @Override

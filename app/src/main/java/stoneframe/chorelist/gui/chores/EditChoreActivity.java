@@ -93,13 +93,18 @@ public class EditChoreActivity extends EditActivity
 
         nextEditText.setInputType(InputType.TYPE_NULL);
         nextEditText.setOnClickListener(view -> nextPickerDialog.show());
+    }
 
-        new EditTextButtonEnabledLink(
-            saveButton,
-            new EditTextCriteria(descriptionEditText, EditTextCriteria.IS_NOT_EMPTY),
-            new EditTextCriteria(priorityEditText, EditTextCriteria.IS_NOT_EMPTY),
-            new EditTextCriteria(effortEditText, EditTextCriteria.IS_NOT_EMPTY),
-            new EditTextCriteria(intervalLengthEditText, EditTextCriteria.IS_NOT_EMPTY));
+    @Override
+    protected EditTextCriteria[] getSaveEnabledCriteria()
+    {
+        return new EditTextCriteria[]
+            {
+                new EditTextCriteria(descriptionEditText, EditTextCriteria.IS_NOT_EMPTY),
+                new EditTextCriteria(priorityEditText, EditTextCriteria.IS_NOT_EMPTY),
+                new EditTextCriteria(effortEditText, EditTextCriteria.IS_NOT_EMPTY),
+                new EditTextCriteria(intervalLengthEditText, EditTextCriteria.IS_NOT_EMPTY),
+            };
     }
 
     @Override

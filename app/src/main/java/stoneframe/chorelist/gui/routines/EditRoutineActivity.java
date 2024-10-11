@@ -6,7 +6,6 @@ import android.widget.EditText;
 
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.EditActivity;
-import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
 import stoneframe.chorelist.model.routines.Routine;
 
@@ -51,10 +50,15 @@ public abstract class EditRoutineActivity<T extends Routine<?>> extends EditActi
         addProcedureButton.setOnClickListener(v -> addProcedure());
 
         createSpecialisedActivity();
+    }
 
-        new EditTextButtonEnabledLink(
-            saveButton,
-            new EditTextCriteria(nameEditText, EditTextCriteria.IS_NOT_EMPTY));
+    @Override
+    protected EditTextCriteria[] getSaveEnabledCriteria()
+    {
+        return new EditTextCriteria[]
+            {
+                new EditTextCriteria(nameEditText, EditTextCriteria.IS_NOT_EMPTY),
+            };
     }
 
     @Override

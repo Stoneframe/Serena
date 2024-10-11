@@ -100,10 +100,6 @@ public class EditChecklistActivity extends EditActivity
             });
         });
 
-        new EditTextButtonEnabledLink(
-            saveButton,
-            new EditTextCriteria(checklistNameEditText, EditTextCriteria.IS_NOT_EMPTY));
-
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP | ItemTouchHelper.DOWN,
             ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT)
@@ -282,6 +278,15 @@ public class EditChecklistActivity extends EditActivity
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(checklistItemsListView);
+    }
+
+    @Override
+    protected EditTextCriteria[] getSaveEnabledCriteria()
+    {
+        return new EditTextCriteria[]
+            {
+                new EditTextCriteria(checklistNameEditText, EditTextCriteria.IS_NOT_EMPTY),
+            };
     }
 
     @Override

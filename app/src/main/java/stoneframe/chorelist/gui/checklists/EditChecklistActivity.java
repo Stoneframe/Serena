@@ -10,7 +10,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -104,18 +103,6 @@ public class EditChecklistActivity extends EditActivity
         new EditTextButtonEnabledLink(
             saveButton,
             new EditTextCriteria(checklistNameEditText, EditTextCriteria.IS_NOT_EMPTY));
-
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true)
-        {
-            @Override
-            public void handleOnBackPressed()
-            {
-                onCancel();
-
-                setResult(RESULT_CANCEL);
-                finish();
-            }
-        });
 
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP | ItemTouchHelper.DOWN,

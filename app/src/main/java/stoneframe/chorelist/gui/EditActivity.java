@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -84,6 +85,15 @@ public abstract class EditActivity extends AppCompatActivity
 
         globalState = GlobalState.getInstance();
         choreList = globalState.getChoreList();
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true)
+        {
+            @Override
+            public void handleOnBackPressed()
+            {
+                cancelClick();
+            }
+        });
 
         createActivity();
     }

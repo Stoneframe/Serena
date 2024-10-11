@@ -4,8 +4,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import androidx.activity.OnBackPressedCallback;
-
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.EditActivity;
 import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
@@ -57,17 +55,6 @@ public abstract class EditRoutineActivity<T extends Routine<?>> extends EditActi
         new EditTextButtonEnabledLink(
             saveButton,
             new EditTextCriteria(nameEditText, EditTextCriteria.IS_NOT_EMPTY));
-
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true)
-        {
-            @Override
-            public void handleOnBackPressed()
-            {
-                onCancel();
-                setResult(RESULT_CANCEL);
-                finish();
-            }
-        });
     }
 
     @Override

@@ -10,6 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import stoneframe.chorelist.model.timeservices.TimeService;
+
 public class TaskManager
 {
     private final List<Task> tasks = new LinkedList<>();
@@ -23,6 +25,23 @@ public class TaskManager
 
         return Collections.unmodifiableList(sortedTasks);
     }
+
+    public TaskEditor getEditor(Task task, TimeService timeService)
+    {
+        return new TaskEditor(this, task, timeService);
+    }
+
+//    public TaskEditor createTask(String description, TimeService timeService)
+//    {
+//        Task task = new Task(description, timeService.getToday(), timeService.getToday());
+//
+//        return new TaskEditor(this, task, timeService);
+//    }
+//
+//    public TaskEditor editTask(Task task, TimeService timeService)
+//    {
+//        return new TaskEditor(this, task, timeService);
+//    }
 
     public void addTask(Task task)
     {
@@ -59,6 +78,11 @@ public class TaskManager
     public void clean(LocalDate today)
     {
         tasks.removeIf(t -> t.isDone() && t.getCompleted().plusWeeks(1).isBefore(today));
+    }
+
+    boolean containsTask(Task task)
+    {
+        return tasks.contains(task);
     }
 
     @NonNull

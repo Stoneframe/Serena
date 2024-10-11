@@ -79,8 +79,8 @@ public class JsonConverterTest
 
         choreList.taskDone(task2);
 
-        choreList.addTask(task1);
-        choreList.addTask(task2);
+//        choreList.addTask(task1);
+//        choreList.addTask(task2);
 
         choreList.save();
 

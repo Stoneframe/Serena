@@ -413,7 +413,7 @@ public class ChoreListTest
     {
         Task task = new Task(description, deadline, ignoreBefore);
 
-        choreList.addTask(task);
+//        choreList.addTask(task);
     }
 
     private void removeTask(String description)

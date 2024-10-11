@@ -25,7 +25,7 @@ public class Task
         return description;
     }
 
-    public void setDescription(String description)
+    void setDescription(String description)
     {
         this.description = description;
     }
@@ -35,7 +35,7 @@ public class Task
         return deadline == null ? new LocalDate(Long.MIN_VALUE) : deadline;
     }
 
-    public void setDeadline(LocalDate deadline)
+    void setDeadline(LocalDate deadline)
     {
         this.deadline = deadline;
     }
@@ -45,7 +45,7 @@ public class Task
         return ignoreBefore == null ? new LocalDate(-292275055, 1, 1) : ignoreBefore;
     }
 
-    public void setIgnoreBefore(LocalDate ignoreBefore)
+    void setIgnoreBefore(LocalDate ignoreBefore)
     {
         this.ignoreBefore = ignoreBefore;
     }

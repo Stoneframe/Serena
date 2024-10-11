@@ -66,7 +66,7 @@ public class AllTasksFragment extends Fragment
         {
             Task task = (Task)taskAdapter.getItem(position);
             assert task != null;
-            startTaskEditor(task, TaskActivity.TASK_ACTION_EDIT);
+            startTaskEditor(task, EditTaskActivity.ACTION_EDIT);
         });
 
         Button addButton = rootView.findViewById(R.id.add_button);
@@ -77,7 +77,7 @@ public class AllTasksFragment extends Fragment
                 LocalDate.now(),
                 LocalDate.now());
 
-            startTaskEditor(task, TaskActivity.TASK_ACTION_ADD);
+            startTaskEditor(task, EditTaskActivity.ACTION_ADD);
         });
 
         editTaskLauncher = registerForActivityResult(
@@ -99,7 +99,7 @@ public class AllTasksFragment extends Fragment
     {
         globalState.setActiveTask(task);
 
-        Intent intent = new Intent(getActivity(), TaskActivity.class)
+        Intent intent = new Intent(getActivity(), EditTaskActivity.class)
             .putExtra("ACTION", action);
 
         editTaskLauncher.launch(intent);

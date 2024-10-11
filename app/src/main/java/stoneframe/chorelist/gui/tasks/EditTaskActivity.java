@@ -9,10 +9,6 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.text.InputType;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -20,7 +16,6 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -29,20 +24,13 @@ import org.joda.time.LocalDate;
 import java.util.List;
 
 import stoneframe.chorelist.R;
-import stoneframe.chorelist.gui.GlobalState;
-import stoneframe.chorelist.gui.util.DialogUtils;
+import stoneframe.chorelist.gui.EditActivity;
 import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
-import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.tasks.Task;
 
-public class TaskActivity extends AppCompatActivity
+public class EditTaskActivity extends EditActivity
 {
-    public static final int TASK_ACTION_ADD = 0;
-    public static final int TASK_ACTION_EDIT = 1;
-
-    private int action;
-
     private LocalDate deadline;
     private LocalDate ignoreBefore;
 
@@ -51,67 +39,34 @@ public class TaskActivity extends AppCompatActivity
     private EditText ignoreBeforeEditText;
     private CheckBox isDoneCheckBox;
 
-    private Button cancelButton;
-    private Button saveButton;
-
     private SpeechRecognizer speechRecognizer;
     private Intent speechRecognizerIntent;
     private ImageButton speakButton;
 
-    private ChoreList choreList;
-
     private Task task;
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+    protected int getActivityLayoutId()
     {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.edit_menu, menu);
-        return true;
+        return R.layout.activity_task;
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
+    protected String getActivityTitle()
     {
-        MenuItem removeItem = menu.findItem(R.id.action_remove);
-
-        if (removeItem != null)
-        {
-            removeItem.setVisible(action == TASK_ACTION_EDIT);
-        }
-
-        return super.onPrepareOptionsMenu(menu);
+        return "Task";
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    protected String getEditedObjectName()
     {
-        if (item.getItemId() == R.id.action_remove)
-        {
-            removeTask();
-
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        return "Task";
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    protected void createActivity()
     {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_task);
-
-        setTitle("Task");
-
-        GlobalState globalState = GlobalState.getInstance();
-
-        choreList = globalState.getChoreList();
         task = globalState.getActiveTask();
-
-        Intent intent = getIntent();
-
-        action = intent.getIntExtra("ACTION", -1);
 
         deadline = task.getDeadline();
         ignoreBefore = task.getIgnoreBefore();
@@ -120,9 +75,6 @@ public class TaskActivity extends AppCompatActivity
         deadlineEditText = findViewById(R.id.deadlineEditText);
         ignoreBeforeEditText = findViewById(R.id.ignoreBeforeEditText);
         isDoneCheckBox = findViewById(R.id.isDoneCheckBox);
-
-        cancelButton = findViewById(R.id.cancelButton);
-        saveButton = findViewById(R.id.saveButton);
 
         descriptionEditText.setText(task.getDescription());
         deadlineEditText.setText(deadline.toString("yyyy-MM-dd"));
@@ -135,9 +87,6 @@ public class TaskActivity extends AppCompatActivity
         ignoreBeforeEditText.setInputType(InputType.TYPE_NULL);
         ignoreBeforeEditText.setOnClickListener(view -> showIgnoreBeforeDatePickerDialog());
 
-        cancelButton.setOnClickListener(v -> cancelClick());
-        saveButton.setOnClickListener(v -> saveClick());
-
         new EditTextButtonEnabledLink(
             saveButton,
             new EditTextCriteria(descriptionEditText, EditTextCriteria.IS_NOT_EMPTY));
@@ -146,14 +95,13 @@ public class TaskActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onDestroy()
+    protected void onCancel()
     {
-        super.onDestroy();
 
-        speechRecognizer.destroy();
     }
 
-    private void saveClick()
+    @Override
+    protected void onSave(int action)
     {
         String description = descriptionEditText.getText().toString().trim();
         boolean isDone = isDoneCheckBox.isChecked();
@@ -174,39 +122,19 @@ public class TaskActivity extends AppCompatActivity
             }
         }
 
-        if (action == TASK_ACTION_ADD)
+        if (action == ACTION_ADD)
         {
             choreList.addTask(task);
         }
 
         choreList.save();
-
-        setResult(RESULT_OK);
-        finish();
     }
 
-    private void cancelClick()
+    @Override
+    protected void onRemove()
     {
-        setResult(RESULT_CANCELED);
-        finish();
-    }
-
-    private void removeTask()
-    {
-        DialogUtils.showConfirmationDialog(
-            this,
-            "Remove Task",
-            "Are you sure you want to remove the task?",
-            isConfirmed ->
-            {
-                if (!isConfirmed) return;
-
-                choreList.removeTask(task);
-                choreList.save();
-
-                setResult(RESULT_OK);
-                finish();
-            });
+        choreList.removeTask(task);
+        choreList.save();
     }
 
     private void showDeadlineDatePickerDialog()
@@ -312,12 +240,11 @@ public class TaskActivity extends AppCompatActivity
             @Override
             public void onError(int error)
             {
-                String message = getErrorMessage(error);
-
                 descriptionEditText.setHint("");
 
-                Toast.makeText(TaskActivity.this, error + " Error: " + message, Toast.LENGTH_SHORT)
-                    .show();
+                String text = error + " Error: " + getErrorMessage(error);
+
+                Toast.makeText(EditTaskActivity.this, text, Toast.LENGTH_SHORT).show();
             }
 
             private @NonNull String getErrorMessage(int error)

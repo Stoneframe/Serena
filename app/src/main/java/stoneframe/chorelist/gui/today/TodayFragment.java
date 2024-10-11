@@ -28,7 +28,7 @@ import org.joda.time.LocalDate;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.GlobalState;
 import stoneframe.chorelist.gui.routines.RoutineNotifier;
-import stoneframe.chorelist.gui.tasks.TaskActivity;
+import stoneframe.chorelist.gui.tasks.EditTaskActivity;
 import stoneframe.chorelist.gui.util.DialogUtils;
 import stoneframe.chorelist.gui.util.SimpleCheckboxListAdapter;
 import stoneframe.chorelist.model.ChoreList;
@@ -260,8 +260,8 @@ public class TodayFragment extends Fragment
         {
             globalState.setActiveTask(new Task("", LocalDate.now(), LocalDate.now()));
 
-            Intent intent = new Intent(getActivity(), TaskActivity.class)
-                .putExtra("ACTION", TaskActivity.TASK_ACTION_ADD);
+            Intent intent = new Intent(getActivity(), EditTaskActivity.class)
+                .putExtra("ACTION", EditTaskActivity.ACTION_ADD);
 
             editTaskLauncher.launch(intent);
         });

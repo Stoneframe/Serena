@@ -25,11 +25,11 @@ import java.util.List;
 
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.EditActivity;
-import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
 import stoneframe.chorelist.model.tasks.Task;
+import stoneframe.chorelist.model.tasks.TaskEditor;
 
-public class EditTaskActivity extends EditActivity
+public class EditTaskActivity extends EditActivity implements TaskEditor.TaskEditorListener
 {
     private LocalDate deadline;
     private LocalDate ignoreBefore;
@@ -43,7 +43,30 @@ public class EditTaskActivity extends EditActivity
     private Intent speechRecognizerIntent;
     private ImageButton speakButton;
 
-    private Task task;
+    private TaskEditor taskEditor;
+
+    @Override
+    public void descriptionChanged()
+    {
+    }
+
+    @Override
+    public void deadlineChanged()
+    {
+
+    }
+
+    @Override
+    public void ignoreBeforeChanged()
+    {
+
+    }
+
+    @Override
+    public void isDoneChanged()
+    {
+
+    }
 
     @Override
     protected int getActivityLayoutId()
@@ -66,20 +89,22 @@ public class EditTaskActivity extends EditActivity
     @Override
     protected void createActivity()
     {
-        task = globalState.getActiveTask();
+        Task task = globalState.getActiveTask();
 
-        deadline = task.getDeadline();
-        ignoreBefore = task.getIgnoreBefore();
+        taskEditor = choreList.getTaskEditor(task);
+
+        deadline = taskEditor.getDeadline();
+        ignoreBefore = taskEditor.getIgnoreBefore();
 
         descriptionEditText = findViewById(R.id.taskDescriptionEditText);
         deadlineEditText = findViewById(R.id.deadlineEditText);
         ignoreBeforeEditText = findViewById(R.id.ignoreBeforeEditText);
         isDoneCheckBox = findViewById(R.id.isDoneCheckBox);
 
-        descriptionEditText.setText(task.getDescription());
+        descriptionEditText.setText(taskEditor.getDescription());
         deadlineEditText.setText(deadline.toString("yyyy-MM-dd"));
         ignoreBeforeEditText.setText(ignoreBefore.toString("yyyy-MM-dd"));
-        isDoneCheckBox.setChecked(task.isDone());
+        isDoneCheckBox.setChecked(taskEditor.isDone());
 
         deadlineEditText.setInputType(InputType.TYPE_NULL);
         deadlineEditText.setOnClickListener(view -> showDeadlineDatePickerDialog());
@@ -88,6 +113,22 @@ public class EditTaskActivity extends EditActivity
         ignoreBeforeEditText.setOnClickListener(view -> showIgnoreBeforeDatePickerDialog());
 
         setupSpeechRecognizer();
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        taskEditor.addListener(this);
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+
+        taskEditor.removeListener(this);
     }
 
     @Override
@@ -111,26 +152,12 @@ public class EditTaskActivity extends EditActivity
         String description = descriptionEditText.getText().toString().trim();
         boolean isDone = isDoneCheckBox.isChecked();
 
-        task.setDescription(description);
-        task.setDeadline(deadline);
-        task.setIgnoreBefore(ignoreBefore);
+        taskEditor.setDescription(description);
+        taskEditor.setDeadline(deadline);
+        taskEditor.setIgnoreBefore(ignoreBefore);
+        taskEditor.setDone(isDone);
 
-        if (isDone != task.isDone())
-        {
-            if (isDone)
-            {
-                choreList.taskDone(task);
-            }
-            else
-            {
-                choreList.taskUndone(task);
-            }
-        }
-
-        if (action == ACTION_ADD)
-        {
-            choreList.addTask(task);
-        }
+        taskEditor.save();
 
         choreList.save();
     }
@@ -138,7 +165,7 @@ public class EditTaskActivity extends EditActivity
     @Override
     protected void onRemove()
     {
-        choreList.removeTask(task);
+        taskEditor.remove();
         choreList.save();
     }
 

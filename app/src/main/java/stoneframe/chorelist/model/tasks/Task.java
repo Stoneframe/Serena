@@ -25,29 +25,14 @@ public class Task
         return description;
     }
 
-    public void setDescription(String description)
-    {
-        this.description = description;
-    }
-
     public LocalDate getDeadline()
     {
         return deadline == null ? new LocalDate(Long.MIN_VALUE) : deadline;
     }
 
-    public void setDeadline(LocalDate deadline)
-    {
-        this.deadline = deadline;
-    }
-
     public LocalDate getIgnoreBefore()
     {
         return ignoreBefore == null ? new LocalDate(-292275055, 1, 1) : ignoreBefore;
-    }
-
-    public void setIgnoreBefore(LocalDate ignoreBefore)
-    {
-        this.ignoreBefore = ignoreBefore;
     }
 
     public boolean isDone()
@@ -58,6 +43,21 @@ public class Task
     public LocalDate getCompleted()
     {
         return completed;
+    }
+
+    void setDescription(String description)
+    {
+        this.description = description;
+    }
+
+    void setDeadline(LocalDate deadline)
+    {
+        this.deadline = deadline;
+    }
+
+    void setIgnoreBefore(LocalDate ignoreBefore)
+    {
+        this.ignoreBefore = ignoreBefore;
     }
 
     void setDone(boolean done, LocalDate now)

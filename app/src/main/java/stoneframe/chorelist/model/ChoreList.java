@@ -17,6 +17,7 @@ import stoneframe.chorelist.model.routines.PendingProcedure;
 import stoneframe.chorelist.model.routines.Routine;
 import stoneframe.chorelist.model.routines.RoutineManager;
 import stoneframe.chorelist.model.tasks.Task;
+import stoneframe.chorelist.model.tasks.TaskEditor;
 import stoneframe.chorelist.model.tasks.TaskManager;
 import stoneframe.chorelist.model.timeservices.TimeService;
 
@@ -121,14 +122,9 @@ public class ChoreList
         return container.TaskManager.getAllTasks(includeCompleted);
     }
 
-    public void addTask(Task task)
+    public Task createTask()
     {
-        container.TaskManager.addTask(task);
-    }
-
-    public void removeTask(Task task)
-    {
-        container.TaskManager.removeTask(task);
+        return container.TaskManager.createTask(timeService);
     }
 
     public List<Task> getTodaysTasks()
@@ -146,9 +142,9 @@ public class ChoreList
         container.TaskManager.undo(task);
     }
 
-    public void taskPostpone(Task task)
+    public TaskEditor getTaskEditor(Task task)
     {
-        container.TaskManager.postpone(task, timeService.getToday());
+        return container.TaskManager.getEditor(task, timeService);
     }
 
     public List<Routine<?>> getAllRoutines()

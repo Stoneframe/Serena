@@ -35,6 +35,7 @@ import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.chores.Chore;
 import stoneframe.chorelist.model.routines.PendingProcedure;
 import stoneframe.chorelist.model.tasks.Task;
+import stoneframe.chorelist.model.tasks.TaskEditor;
 
 public class TodayFragment extends Fragment
 {
@@ -182,7 +183,10 @@ public class TodayFragment extends Fragment
                 .setCancelable(false)
                 .setPositiveButton("Tomorrow", (dialog, skipButtonId) ->
                 {
-                    task.setIgnoreBefore(today.plusDays(1));
+                    TaskEditor taskEditor = choreList.getTaskEditor(task);
+                    taskEditor.setIgnoreBefore(today.plusDays(1));
+                    taskEditor.save();
+
                     taskAdapter.notifyDataSetChanged();
                     choreList.save();
                 })
@@ -194,7 +198,10 @@ public class TodayFragment extends Fragment
                         {
                             LocalDate ignoreBefore = new LocalDate(year, month + 1, dayOfMonth);
 
-                            task.setIgnoreBefore(ignoreBefore);
+                            TaskEditor taskEditor = choreList.getTaskEditor(task);
+                            taskEditor.setIgnoreBefore(ignoreBefore);
+                            taskEditor.save();
+
                             taskAdapter.notifyDataSetChanged();
                             choreList.save();
                         },

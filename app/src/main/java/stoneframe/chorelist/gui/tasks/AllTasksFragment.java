@@ -13,8 +13,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
-import org.joda.time.LocalDate;
-
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.GlobalState;
 import stoneframe.chorelist.gui.util.CheckboxListAdapter;
@@ -72,10 +70,7 @@ public class AllTasksFragment extends Fragment
         Button addButton = rootView.findViewById(R.id.add_button);
         addButton.setOnClickListener(v ->
         {
-            Task task = new Task(
-                "",
-                LocalDate.now(),
-                LocalDate.now());
+            Task task = choreList.createTask();
 
             startTaskEditor(task, EditTaskActivity.ACTION_ADD);
         });

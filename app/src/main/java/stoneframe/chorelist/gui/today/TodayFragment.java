@@ -25,8 +25,6 @@ import androidx.fragment.app.Fragment;
 
 import org.joda.time.LocalDate;
 
-import java.util.Objects;
-
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.GlobalState;
 import stoneframe.chorelist.gui.routines.RoutineNotifier;
@@ -43,7 +41,6 @@ public class TodayFragment extends Fragment
     private ChoreList choreList;
 
     private ActivityResultLauncher<Intent> editTaskLauncher;
-    private Task taskUnderEdit;
 
     private SimpleCheckboxListAdapter<PendingProcedure> procedureAdapter;
     private SimpleCheckboxListAdapter<Chore> choreAdapter;
@@ -261,15 +258,10 @@ public class TodayFragment extends Fragment
         ImageButton addTaskButton = rootView.findViewById(R.id.addTaskButton);
         addTaskButton.setOnClickListener(v ->
         {
-            taskUnderEdit = new Task("", LocalDate.now(), LocalDate.now());
+            globalState.setActiveTask(new Task("", LocalDate.now(), LocalDate.now()));
 
-            Intent intent = new Intent(getActivity(), TaskActivity.class);
-
-            intent.putExtra("ACTION", TaskActivity.TASK_ACTION_ADD);
-            intent.putExtra("Description", taskUnderEdit.getDescription());
-            intent.putExtra("Deadline", taskUnderEdit.getDeadline());
-            intent.putExtra("IgnoreBefore", taskUnderEdit.getIgnoreBefore());
-            intent.putExtra("IsDone", taskUnderEdit.isDone());
+            Intent intent = new Intent(getActivity(), TaskActivity.class)
+                .putExtra("ACTION", TaskActivity.TASK_ACTION_ADD);
 
             editTaskLauncher.launch(intent);
         });
@@ -327,34 +319,7 @@ public class TodayFragment extends Fragment
             return;
         }
 
-        Task task = taskUnderEdit;
-
-        Intent intent = Objects.requireNonNull(activityResult.getData());
-
-        task.setDescription(intent.getStringExtra("Description"));
-        task.setDeadline((LocalDate)intent.getSerializableExtra("Deadline"));
-        task.setIgnoreBefore((LocalDate)intent.getSerializableExtra("IgnoreBefore"));
-
-        if (intent.getIntExtra("ACTION", -1) == TaskActivity.TASK_ACTION_ADD)
-        {
-            choreList.addTask(task);
-        }
-
-        boolean isDone = intent.getBooleanExtra("IsDone", false);
-
-        if (isDone != task.isDone())
-        {
-            if (isDone)
-            {
-                choreList.taskDone(task);
-            }
-            else
-            {
-                choreList.taskUndone(task);
-            }
-        }
-
-        choreList.save();
+        taskAdapter.notifyDataSetChanged();
     }
 
     private static void waitTwoSeconds()

@@ -136,9 +136,8 @@
         android:id="@+id/cancelButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:onClick="cancelClick"
+        android:layout_alignParentBottom="true"
         android:text="Cancel"
         tools:ignore="ButtonOrder" />
 
@@ -148,7 +147,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:onClick="saveClick"
         android:text="Save" />
 
 </RelativeLayout>

@@ -7,6 +7,7 @@ import stoneframe.chorelist.model.checklists.Checklist;
 import stoneframe.chorelist.model.chores.Chore;
 import stoneframe.chorelist.model.limiters.Limiter;
 import stoneframe.chorelist.model.routines.Routine;
+import stoneframe.chorelist.model.tasks.Task;
 
 public class GlobalState extends Application
 {
@@ -14,6 +15,7 @@ public class GlobalState extends Application
 
     private Routine<?> activeRoutine;
     private Chore activeChore;
+    private Task activeTask;
     private Checklist activeChecklist;
     private Limiter activeLimiter;
 
@@ -63,6 +65,16 @@ public class GlobalState extends Application
     public void setActiveChore(Chore activeChore)
     {
         this.activeChore = activeChore;
+    }
+
+    public Task getActiveTask()
+    {
+        return activeTask;
+    }
+
+    public void setActiveTask(Task activeTask)
+    {
+        this.activeTask = activeTask;
     }
 
     public Checklist getActiveChecklist()

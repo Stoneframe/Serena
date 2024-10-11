@@ -12,7 +12,6 @@ import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -30,33 +29,38 @@ import org.joda.time.LocalDate;
 import java.util.List;
 
 import stoneframe.chorelist.R;
+import stoneframe.chorelist.gui.GlobalState;
 import stoneframe.chorelist.gui.util.DialogUtils;
 import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
+import stoneframe.chorelist.model.ChoreList;
+import stoneframe.chorelist.model.tasks.Task;
 
 public class TaskActivity extends AppCompatActivity
 {
     public static final int TASK_ACTION_ADD = 0;
     public static final int TASK_ACTION_EDIT = 1;
 
-    public static final int TASK_RESULT_SAVE = 0;
-    public static final int TASK_RESULT_REMOVE = 1;
-
     private int action;
 
-    private String description;
     private LocalDate deadline;
     private LocalDate ignoreBefore;
-    private boolean isDone;
 
     private EditText descriptionEditText;
     private EditText deadlineEditText;
     private EditText ignoreBeforeEditText;
     private CheckBox isDoneCheckBox;
 
+    private Button cancelButton;
+    private Button saveButton;
+
     private SpeechRecognizer speechRecognizer;
     private Intent speechRecognizerIntent;
     private ImageButton speakButton;
+
+    private ChoreList choreList;
+
+    private Task task;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -84,48 +88,12 @@ public class TaskActivity extends AppCompatActivity
     {
         if (item.getItemId() == R.id.action_remove)
         {
-            DialogUtils.showConfirmationDialog(
-                this,
-                "Remove Task",
-                "Are you sure you want to remove the task?",
-                isConfirmed ->
-                {
-                    if (!isConfirmed) return;
-
-                    Intent intent = new Intent();
-                    intent.putExtra("RESULT", TASK_RESULT_REMOVE);
-
-                    setResult(RESULT_OK, intent);
-                    finish();
-                });
+            removeTask();
 
             return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void saveClick(View view)
-    {
-        description = descriptionEditText.getText().toString().trim();
-        isDone = isDoneCheckBox.isChecked();
-
-        Intent intent = new Intent();
-        intent.putExtra("RESULT", TASK_RESULT_SAVE);
-        intent.putExtra("ACTION", action);
-        intent.putExtra("Description", description);
-        intent.putExtra("Deadline", deadline);
-        intent.putExtra("IgnoreBefore", ignoreBefore);
-        intent.putExtra("IsDone", isDone);
-
-        setResult(RESULT_OK, intent);
-        finish();
-    }
-
-    public void cancelClick(View view)
-    {
-        setResult(RESULT_CANCELED);
-        finish();
     }
 
     @Override
@@ -136,32 +104,39 @@ public class TaskActivity extends AppCompatActivity
 
         setTitle("Task");
 
+        GlobalState globalState = GlobalState.getInstance();
+
+        choreList = globalState.getChoreList();
+        task = globalState.getActiveTask();
+
         Intent intent = getIntent();
 
         action = intent.getIntExtra("ACTION", -1);
 
-        Button saveButton = findViewById(R.id.saveButton);
-
-        description = intent.getStringExtra("Description");
-        deadline = (LocalDate)intent.getSerializableExtra("Deadline");
-        ignoreBefore = (LocalDate)intent.getSerializableExtra("IgnoreBefore");
-        isDone = intent.getBooleanExtra("IsDone", false);
+        deadline = task.getDeadline();
+        ignoreBefore = task.getIgnoreBefore();
 
         descriptionEditText = findViewById(R.id.taskDescriptionEditText);
         deadlineEditText = findViewById(R.id.deadlineEditText);
         ignoreBeforeEditText = findViewById(R.id.ignoreBeforeEditText);
         isDoneCheckBox = findViewById(R.id.isDoneCheckBox);
 
-        descriptionEditText.setText(description);
+        cancelButton = findViewById(R.id.cancelButton);
+        saveButton = findViewById(R.id.saveButton);
+
+        descriptionEditText.setText(task.getDescription());
         deadlineEditText.setText(deadline.toString("yyyy-MM-dd"));
         ignoreBeforeEditText.setText(ignoreBefore.toString("yyyy-MM-dd"));
-        isDoneCheckBox.setChecked(isDone);
+        isDoneCheckBox.setChecked(task.isDone());
 
         deadlineEditText.setInputType(InputType.TYPE_NULL);
         deadlineEditText.setOnClickListener(view -> showDeadlineDatePickerDialog());
 
         ignoreBeforeEditText.setInputType(InputType.TYPE_NULL);
         ignoreBeforeEditText.setOnClickListener(view -> showIgnoreBeforeDatePickerDialog());
+
+        cancelButton.setOnClickListener(v -> cancelClick());
+        saveButton.setOnClickListener(v -> saveClick());
 
         new EditTextButtonEnabledLink(
             saveButton,
@@ -176,6 +151,62 @@ public class TaskActivity extends AppCompatActivity
         super.onDestroy();
 
         speechRecognizer.destroy();
+    }
+
+    private void saveClick()
+    {
+        String description = descriptionEditText.getText().toString().trim();
+        boolean isDone = isDoneCheckBox.isChecked();
+
+        task.setDescription(description);
+        task.setDeadline(deadline);
+        task.setIgnoreBefore(ignoreBefore);
+
+        if (isDone != task.isDone())
+        {
+            if (isDone)
+            {
+                choreList.taskDone(task);
+            }
+            else
+            {
+                choreList.taskUndone(task);
+            }
+        }
+
+        if (action == TASK_ACTION_ADD)
+        {
+            choreList.addTask(task);
+        }
+
+        choreList.save();
+
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    private void cancelClick()
+    {
+        setResult(RESULT_CANCELED);
+        finish();
+    }
+
+    private void removeTask()
+    {
+        DialogUtils.showConfirmationDialog(
+            this,
+            "Remove Task",
+            "Are you sure you want to remove the task?",
+            isConfirmed ->
+            {
+                if (!isConfirmed) return;
+
+                choreList.removeTask(task);
+                choreList.save();
+
+                setResult(RESULT_OK);
+                finish();
+            });
     }
 
     private void showDeadlineDatePickerDialog()

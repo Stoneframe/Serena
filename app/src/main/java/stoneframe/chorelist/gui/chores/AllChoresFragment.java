@@ -76,7 +76,7 @@ public class AllChoresFragment extends Fragment
         {
             Chore chore = (Chore)choreListAdapter.getItem(position);
             assert chore != null;
-            startChoreEditor(chore, ChoreActivity.CHORE_ACTION_EDIT);
+            startChoreEditor(chore, EditChoreActivity.ACTION_EDIT);
         });
 
         Button sortByButton = rootView.findViewById(R.id.sort_by_button);
@@ -110,7 +110,7 @@ public class AllChoresFragment extends Fragment
                 LocalDate.now(),
                 1,
                 Chore.DAYS);
-            startChoreEditor(chore, ChoreActivity.CHORE_ACTION_ADD);
+            startChoreEditor(chore, EditChoreActivity.ACTION_ADD);
         });
 
         editChoreLauncher = registerForActivityResult(
@@ -161,7 +161,7 @@ public class AllChoresFragment extends Fragment
     {
         globalState.setActiveChore(chore);
 
-        Intent intent = new Intent(getActivity(), ChoreActivity.class);
+        Intent intent = new Intent(getActivity(), EditChoreActivity.class);
         intent.putExtra("ACTION", action);
 
         editChoreLauncher.launch(intent);

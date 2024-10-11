@@ -28,7 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".gui.chores.ChoreActivity" />
+        <activity android:name=".gui.chores.EditChoreActivity" />
         <activity android:name=".gui.tasks.EditTaskActivity" />
         <activity android:name=".gui.routines.days.DayRoutineActivity" />
         <activity android:name=".gui.routines.weeks.WeekRoutineActivity" />

@@ -72,21 +72,21 @@ public class AllRoutinesFragment extends Fragment
         {
             Routine<?> routine = (Routine<?>)routineListAdapter.getItem(position);
             assert routine != null;
-            startRoutineEditor(routine, RoutineActivity.ROUTINE_ACTION_EDIT);
+            startRoutineEditor(routine, EditRoutineActivity.ACTION_EDIT);
         });
 
         Button addDayButton = rootView.findViewById(R.id.add_day_button);
         addDayButton.setOnClickListener(v ->
         {
             Routine<?> routine = new DayRoutine("", LocalDateTime.now());
-            startRoutineEditor(routine, RoutineActivity.ROUTINE_ACTION_ADD);
+            startRoutineEditor(routine, DayRoutineActivity.ACTION_ADD);
         });
 
         Button addWeekButton = rootView.findViewById(R.id.add_week_button);
         addWeekButton.setOnClickListener(v ->
         {
             Routine<?> routine = new WeekRoutine("", LocalDateTime.now());
-            startRoutineEditor(routine, WeekRoutineActivity.ROUTINE_ACTION_ADD);
+            startRoutineEditor(routine, WeekRoutineActivity.ACTION_ADD);
         });
 
         Button addFortnightButton = rootView.findViewById(R.id.add_fortnight_button);
@@ -96,7 +96,7 @@ public class AllRoutinesFragment extends Fragment
                 "",
                 LocalDate.now(),
                 LocalDateTime.now());
-            startRoutineEditor(routine, FortnightRoutineActivity.ROUTINE_ACTION_ADD);
+            startRoutineEditor(routine, FortnightRoutineActivity.ACTION_ADD);
         });
 
         editRoutineLauncher = registerForActivityResult(

@@ -1,27 +1,28 @@
 package stoneframe.chorelist.gui.routines.days;
 
 import android.app.AlertDialog;
-import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import stoneframe.chorelist.R;
-import stoneframe.chorelist.gui.routines.RoutineActivity;
+import stoneframe.chorelist.gui.routines.EditRoutineActivity;
 import stoneframe.chorelist.model.routines.DayRoutine;
 import stoneframe.chorelist.model.routines.Procedure;
 
-public class DayRoutineActivity extends RoutineActivity<DayRoutine>
+public class DayRoutineActivity extends EditRoutineActivity<DayRoutine>
 {
     private ListView procedureListView;
     private ArrayAdapter<Procedure> procedureListAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    protected String getActivityTitle()
     {
-        super.onCreate(savedInstanceState);
+        return "Day Routine";
+    }
 
-        setTitle("Day Routine");
-
+    @Override
+    protected void createSpecialisedActivity()
+    {
         procedureListAdapter = new ArrayAdapter<>(
             getBaseContext(),
             android.R.layout.simple_list_item_1);

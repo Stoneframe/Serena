@@ -2,7 +2,6 @@ package stoneframe.chorelist.gui.routines.fortnights;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.os.Bundle;
 import android.text.InputType;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
@@ -11,14 +10,14 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import stoneframe.chorelist.R;
-import stoneframe.chorelist.gui.routines.RoutineActivity;
+import stoneframe.chorelist.gui.routines.EditRoutineActivity;
 import stoneframe.chorelist.gui.routines.util.WeekExpandableListAdaptor;
 import stoneframe.chorelist.model.routines.Day;
 import stoneframe.chorelist.model.routines.FortnightRoutine;
 import stoneframe.chorelist.model.routines.Procedure;
 import stoneframe.chorelist.model.routines.Week;
 
-public class FortnightRoutineActivity extends RoutineActivity<FortnightRoutine>
+public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRoutine>
 {
     private EditText startDateEditText;
 
@@ -29,12 +28,14 @@ public class FortnightRoutineActivity extends RoutineActivity<FortnightRoutine>
     private WeekExpandableListAdaptor week2ExpandableListAdaptor;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    protected String getActivityTitle()
     {
-        super.onCreate(savedInstanceState);
+        return "Fortnight Routine";
+    }
 
-        setTitle("Fortnight Routine");
-
+    @Override
+    protected void createSpecialisedActivity()
+    {
         DatePickerDialog datePickerDialog = new DatePickerDialog(
             this,
             (view1, year, month, dayOfMonth) ->

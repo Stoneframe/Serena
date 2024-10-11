@@ -1,28 +1,29 @@
 package stoneframe.chorelist.gui.routines.weeks;
 
 import android.app.AlertDialog;
-import android.os.Bundle;
 import android.widget.ExpandableListView;
 
 import stoneframe.chorelist.R;
-import stoneframe.chorelist.gui.routines.RoutineActivity;
+import stoneframe.chorelist.gui.routines.EditRoutineActivity;
 import stoneframe.chorelist.gui.routines.util.WeekExpandableListAdaptor;
 import stoneframe.chorelist.model.routines.Day;
 import stoneframe.chorelist.model.routines.Procedure;
 import stoneframe.chorelist.model.routines.WeekRoutine;
 
-public class WeekRoutineActivity extends RoutineActivity<WeekRoutine>
+public class WeekRoutineActivity extends EditRoutineActivity<WeekRoutine>
 {
     private ExpandableListView weekExpandableList;
     private WeekExpandableListAdaptor weekExpandableListAdaptor;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    protected String getActivityTitle()
     {
-        super.onCreate(savedInstanceState);
+        return "Week Routine";
+    }
 
-        setTitle("Week Routine");
-
+    @Override
+    protected void createSpecialisedActivity()
+    {
         weekExpandableListAdaptor = new WeekExpandableListAdaptor(this, routine.getWeek());
 
         weekExpandableList = findViewById(R.id.week_procedure_list);

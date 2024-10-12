@@ -45,16 +45,6 @@ public class TaskManager
         return new Task("", timeService.getToday(), timeService.getToday());
     }
 
-    public void addTask(Task task)
-    {
-        tasks.add(task);
-    }
-
-    public void removeTask(Task task)
-    {
-        tasks.remove(task);
-    }
-
     public void complete(Task task, LocalDate today)
     {
         task.setDone(true, today);
@@ -68,6 +58,16 @@ public class TaskManager
     boolean containsTask(Task task)
     {
         return tasks.contains(task);
+    }
+
+    void addTask(Task task)
+    {
+        tasks.add(task);
+    }
+
+    void removeTask(Task task)
+    {
+        tasks.remove(task);
     }
 
     private void removeOldCompletedTasks(LocalDate today)

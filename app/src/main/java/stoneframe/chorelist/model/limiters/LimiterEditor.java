@@ -1,5 +1,7 @@
 package stoneframe.chorelist.model.limiters;
 
+import androidx.annotation.NonNull;
+
 import org.joda.time.LocalDateTime;
 
 import java.util.List;
@@ -24,25 +26,10 @@ public class LimiterEditor extends Editor<LimiterEditor.LimiterEditorListener>
         this.limiterManager = limiterManager;
         this.limiter = limiter;
 
-        nameProperty = new PropertyUtil<>(
-            limiter::getName,
-            limiter::setName,
-            v -> notifyListeners(LimiterEditorListener::nameChanged));
-
-        unitProperty = new PropertyUtil<>(
-            limiter::getUnit,
-            limiter::setUnit,
-            v -> notifyListeners(LimiterEditorListener::unitChanged));
-
-        incrementPerDayProperty = new PropertyUtil<>(
-            limiter::getIncrementPerDay,
-            v -> limiter.setIncrementPerDay(timeService.getNow(), v),
-            v -> notifyListeners(LimiterEditorListener::incrementPerDayChanged));
-
-        isQuickAllowableProperty = new PropertyUtil<>(
-            limiter::isQuickAllowed,
-            limiter::setAllowQuick,
-            v -> notifyListeners(l -> l.isQuickChanged(v)));
+        nameProperty = getNameProperty();
+        unitProperty = getUnitProperty();
+        incrementPerDayProperty = getIncrementPerDayProperty();
+        isQuickAllowableProperty = getIsQuickAllowableProperty();
     }
 
     public String getName()
@@ -171,6 +158,38 @@ public class LimiterEditor extends Editor<LimiterEditor.LimiterEditorListener>
     {
         return maxValue == null && limiter.hasMaxValue()
             || maxValue != null && maxValue != limiter.getMaxValue();
+    }
+
+    private @NonNull PropertyUtil<String> getNameProperty()
+    {
+        return new PropertyUtil<>(
+            limiter::getName,
+            limiter::setName,
+            v -> notifyListeners(LimiterEditorListener::nameChanged));
+    }
+
+    private @NonNull PropertyUtil<String> getUnitProperty()
+    {
+        return new PropertyUtil<>(
+            limiter::getUnit,
+            limiter::setUnit,
+            v -> notifyListeners(LimiterEditorListener::unitChanged));
+    }
+
+    private @NonNull PropertyUtil<Integer> getIncrementPerDayProperty()
+    {
+        return new PropertyUtil<>(
+            limiter::getIncrementPerDay,
+            v -> limiter.setIncrementPerDay(getNow(), v),
+            v -> notifyListeners(LimiterEditorListener::incrementPerDayChanged));
+    }
+
+    private @NonNull PropertyUtil<Boolean> getIsQuickAllowableProperty()
+    {
+        return new PropertyUtil<>(
+            limiter::isQuickAllowed,
+            limiter::setAllowQuick,
+            v -> notifyListeners(l -> l.isQuickChanged(v)));
     }
 
     public interface LimiterEditorListener

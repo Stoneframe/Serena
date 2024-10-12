@@ -1,5 +1,7 @@
 package stoneframe.chorelist.model.tasks;
 
+import androidx.annotation.NonNull;
+
 import org.joda.time.LocalDate;
 
 import stoneframe.chorelist.model.Editor;
@@ -22,35 +24,10 @@ public class TaskEditor extends Editor<TaskEditor.TaskEditorListener>
         this.taskManager = taskManager;
         this.task = task;
 
-        descriptionProperty = new PropertyUtil<>(
-            task::getDescription,
-            task::setDescription,
-            v -> notifyListeners(TaskEditorListener::descriptionChanged));
-
-        deadlineProperty = new PropertyUtil<>(
-            task::getDeadline,
-            task::setDeadline,
-            v -> notifyListeners(TaskEditorListener::deadlineChanged));
-
-        ignoreBeforeProperty = new PropertyUtil<>(
-            task::getIgnoreBefore,
-            task::setIgnoreBefore,
-            v -> notifyListeners(TaskEditorListener::ignoreBeforeChanged));
-
-        isDoneProperty = new PropertyUtil<>(
-            task::isDone,
-            isDone ->
-            {
-                if (isDone)
-                {
-                    taskManager.complete(task, timeService.getToday());
-                }
-                else
-                {
-                    taskManager.undo(task);
-                }
-            },
-            v -> notifyListeners(TaskEditorListener::isDoneChanged));
+        descriptionProperty = getDescriptionProperty();
+        deadlineProperty = getDeadlineProperty();
+        ignoreBeforeProperty = getIgnoreBeforeProperty();
+        isDoneProperty = getIsDoneProperty();
     }
 
     public String getDescription()
@@ -107,6 +84,48 @@ public class TaskEditor extends Editor<TaskEditor.TaskEditorListener>
         {
             taskManager.removeTask(task);
         }
+    }
+
+    private @NonNull PropertyUtil<String> getDescriptionProperty()
+    {
+        return new PropertyUtil<>(
+            task::getDescription,
+            task::setDescription,
+            v -> notifyListeners(TaskEditorListener::descriptionChanged));
+    }
+
+    private @NonNull PropertyUtil<LocalDate> getDeadlineProperty()
+    {
+        return new PropertyUtil<>(
+            task::getDeadline,
+            task::setDeadline,
+            v -> notifyListeners(TaskEditorListener::deadlineChanged));
+    }
+
+    private @NonNull PropertyUtil<LocalDate> getIgnoreBeforeProperty()
+    {
+        return new PropertyUtil<>(
+            task::getIgnoreBefore,
+            task::setIgnoreBefore,
+            v -> notifyListeners(TaskEditorListener::ignoreBeforeChanged));
+    }
+
+    private @NonNull PropertyUtil<Boolean> getIsDoneProperty()
+    {
+        return new PropertyUtil<>(
+            task::isDone,
+            isDone ->
+            {
+                if (isDone)
+                {
+                    taskManager.complete(task, getToday());
+                }
+                else
+                {
+                    taskManager.undo(task);
+                }
+            },
+            v -> notifyListeners(TaskEditorListener::isDoneChanged));
     }
 
     public interface TaskEditorListener

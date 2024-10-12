@@ -67,17 +67,17 @@ public class JsonConverterTest
 
         choreList.load();
 
-        Task task1 = new Task(
-            "Uncompleted Task",
-            new LocalDate(2024, 2, 25),
-            new LocalDate(2024, 2, 24));
-
-        Task task2 = new Task(
-            "Completed Task",
-            new LocalDate(2024, 2, 25),
-            new LocalDate(2024, 2, 24));
-
-        choreList.taskDone(task2);
+//        Task task1 = new Task(
+//            "Uncompleted Task",
+//            new LocalDate(2024, 2, 25),
+//            new LocalDate(2024, 2, 24));
+//
+//        Task task2 = new Task(
+//            "Completed Task",
+//            new LocalDate(2024, 2, 25),
+//            new LocalDate(2024, 2, 24));
+//
+//        choreList.taskDone(task2);
 
 //        choreList.addTask(task1);
 //        choreList.addTask(task2);

@@ -12,7 +12,7 @@ public class Task
     private LocalDate completed;
     private boolean isDone;
 
-    public Task(String description, LocalDate deadline, LocalDate ignoreBefore)
+    Task(String description, LocalDate deadline, LocalDate ignoreBefore)
     {
         this.description = description;
         this.deadline = deadline;

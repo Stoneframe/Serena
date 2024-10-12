@@ -265,7 +265,9 @@ public class TodayFragment extends Fragment
         ImageButton addTaskButton = rootView.findViewById(R.id.addTaskButton);
         addTaskButton.setOnClickListener(v ->
         {
-            globalState.setActiveTask(new Task("", LocalDate.now(), LocalDate.now()));
+            Task task = choreList.createTask();
+
+            globalState.setActiveTask(task);
 
             Intent intent = new Intent(getActivity(), EditTaskActivity.class)
                 .putExtra("ACTION", EditTaskActivity.ACTION_ADD);

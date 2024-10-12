@@ -16,8 +16,17 @@ public class TaskManager
 {
     private final List<Task> tasks = new LinkedList<>();
 
-    public List<Task> getAllTasks(boolean includeCompleted)
+    public List<Task> getTodaysTasks(LocalDate today)
     {
+        return getAllTasks(false, today).stream()
+            .filter(t -> t.getIgnoreBefore().isBefore(today) || t.getIgnoreBefore().isEqual(today))
+            .collect(Collectors.toList());
+    }
+
+    public List<Task> getAllTasks(boolean includeCompleted, LocalDate today)
+    {
+        removeOldCompletedTasks(today);
+
         List<Task> sortedTasks = tasks.stream()
             .filter(t -> !t.isDone() || includeCompleted)
             .sorted(getTaskComparator())
@@ -46,13 +55,6 @@ public class TaskManager
         tasks.remove(task);
     }
 
-    public List<Task> getTodaysTasks(LocalDate today)
-    {
-        return getAllTasks(false).stream()
-            .filter(t -> t.getIgnoreBefore().isBefore(today) || t.getIgnoreBefore().isEqual(today))
-            .collect(Collectors.toList());
-    }
-
     public void complete(Task task, LocalDate today)
     {
         task.setDone(true, today);
@@ -63,14 +65,14 @@ public class TaskManager
         task.setDone(false, null);
     }
 
-    public void clean(LocalDate today)
-    {
-        tasks.removeIf(t -> t.isDone() && t.getCompleted().plusWeeks(1).isBefore(today));
-    }
-
     boolean containsTask(Task task)
     {
         return tasks.contains(task);
+    }
+
+    private void removeOldCompletedTasks(LocalDate today)
+    {
+        tasks.removeIf(t -> t.isDone() && t.getCompleted().plusWeeks(1).isBefore(today));
     }
 
     @NonNull

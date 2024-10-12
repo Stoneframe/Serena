@@ -58,8 +58,6 @@ public class ChoreList
             container.ChecklistManager = new ChecklistManager();
             container.LimiterManager = new LimiterManager();
         }
-
-        container.TaskManager.clean(timeService.getToday());
     }
 
     public void save()
@@ -114,12 +112,12 @@ public class ChoreList
 
     public List<Task> getAllTasks()
     {
-        return container.TaskManager.getAllTasks(true);
+        return container.TaskManager.getAllTasks(true, timeService.getToday());
     }
 
     public List<Task> getAllTasks(boolean includeCompleted)
     {
-        return container.TaskManager.getAllTasks(includeCompleted);
+        return container.TaskManager.getAllTasks(includeCompleted, timeService.getToday());
     }
 
     public Task createTask()

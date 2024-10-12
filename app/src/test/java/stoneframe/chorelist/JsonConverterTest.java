@@ -95,7 +95,7 @@ public class JsonConverterTest
 
         Container container = jsonConverter.fromJson(version0Json);
 
-        List<Task> allTasks = container.TaskManager.getAllTasks(true);
+        List<Task> allTasks = container.TaskManager.getAllTasks(true, LocalDate.now());
 
         assertFalse(allTasks.get(0).isDone());
         assertNull(allTasks.get(0).getCompleted());

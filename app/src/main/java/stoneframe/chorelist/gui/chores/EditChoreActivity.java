@@ -13,11 +13,11 @@ import org.joda.time.LocalDate;
 
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.EditActivity;
-import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
 import stoneframe.chorelist.model.chores.Chore;
+import stoneframe.chorelist.model.chores.ChoreEditor;
 
-public class EditChoreActivity extends EditActivity
+public class EditChoreActivity extends EditActivity implements ChoreEditor.ChoreEditorListener
 {
     private DatePickerDialog nextPickerDialog;
     private LocalDate next;
@@ -30,7 +30,49 @@ public class EditChoreActivity extends EditActivity
     private Spinner intervalUnitSpinner;
     private EditText intervalLengthEditText;
 
-    private Chore chore;
+    private ChoreEditor choreEditor;
+
+    @Override
+    public void isEnabledChanged()
+    {
+
+    }
+
+    @Override
+    public void nextChanged()
+    {
+
+    }
+
+    @Override
+    public void descriptionChanged()
+    {
+
+    }
+
+    @Override
+    public void priorityChanged()
+    {
+
+    }
+
+    @Override
+    public void effortChanged()
+    {
+
+    }
+
+    @Override
+    public void intervalUnitChanged()
+    {
+
+    }
+
+    @Override
+    public void intervalLengthChanged()
+    {
+
+    }
 
     @Override
     protected int getActivityLayoutId()
@@ -54,9 +96,11 @@ public class EditChoreActivity extends EditActivity
     @Override
     protected void createActivity()
     {
-        chore = globalState.getActiveChore();
+        Chore chore = globalState.getActiveChore();
 
-        next = chore.getNext();
+        choreEditor = choreList.getChoreEditor(chore);
+
+        next = choreEditor.getNext();
 
         nextPickerDialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) ->
         {
@@ -79,20 +123,36 @@ public class EditChoreActivity extends EditActivity
             android.R.layout.simple_list_item_1,
             new String[]{"Days", "Weeks", "Months", "Years"}));
 
-        enabledCheckbox.setChecked(chore.isEnabled());
+        enabledCheckbox.setChecked(choreEditor.isEnabled());
         nextEditText.setText(next.toString("yyyy-MM-dd"));
-        descriptionEditText.setText(chore.getDescription());
+        descriptionEditText.setText(choreEditor.getDescription());
         priorityEditText.setText(
-            Integer.toString(chore.getPriority()),
+            Integer.toString(choreEditor.getPriority()),
             TextView.BufferType.EDITABLE);
-        effortEditText.setText(Integer.toString(chore.getEffort()), TextView.BufferType.EDITABLE);
-        intervalUnitSpinner.setSelection(chore.getIntervalUnit());
+        effortEditText.setText(Integer.toString(choreEditor.getEffort()), TextView.BufferType.EDITABLE);
+        intervalUnitSpinner.setSelection(choreEditor.getIntervalUnit());
         intervalLengthEditText.setText(
-            Integer.toString(chore.getIntervalLength()),
+            Integer.toString(choreEditor.getIntervalLength()),
             TextView.BufferType.EDITABLE);
 
         nextEditText.setInputType(InputType.TYPE_NULL);
         nextEditText.setOnClickListener(view -> nextPickerDialog.show());
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        choreEditor.addListener(this);
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+
+        choreEditor.removeListener(this);
     }
 
     @Override
@@ -123,18 +183,15 @@ public class EditChoreActivity extends EditActivity
         int intervalUnit = (int)intervalUnitSpinner.getSelectedItemId();
         int intervalLength = Integer.parseInt(intervalLengthEditText.getText().toString());
 
-        chore.setEnabled(isEnabled);
-        chore.setDescription(description);
-        chore.setNext(next);
-        chore.setPriority(priority);
-        chore.setEffort(effort);
-        chore.setIntervalUnit(intervalUnit);
-        chore.setIntervalLength(intervalLength);
+        choreEditor.setEnabled(isEnabled);
+        choreEditor.setDescription(description);
+        choreEditor.setNext(next);
+        choreEditor.setPriority(priority);
+        choreEditor.setEffort(effort);
+        choreEditor.setIntervalUnit(intervalUnit);
+        choreEditor.setIntervalLength(intervalLength);
 
-        if (action == ACTION_ADD)
-        {
-            choreList.addChore(chore);
-        }
+        choreEditor.save();
 
         choreList.save();
     }
@@ -142,7 +199,7 @@ public class EditChoreActivity extends EditActivity
     @Override
     protected void onRemove()
     {
-        choreList.removeChore(chore);
+        choreEditor.remove();
         choreList.save();
     }
 }

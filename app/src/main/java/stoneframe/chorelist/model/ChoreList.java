@@ -7,6 +7,7 @@ import java.util.List;
 import stoneframe.chorelist.model.checklists.Checklist;
 import stoneframe.chorelist.model.checklists.ChecklistManager;
 import stoneframe.chorelist.model.chores.Chore;
+import stoneframe.chorelist.model.chores.ChoreEditor;
 import stoneframe.chorelist.model.chores.ChoreManager;
 import stoneframe.chorelist.model.chores.ChoreSelector;
 import stoneframe.chorelist.model.chores.EffortTracker;
@@ -70,14 +71,14 @@ public class ChoreList
         return container.ChoreManager.getAllChores();
     }
 
-    public void addChore(Chore chore)
+    public ChoreEditor getChoreEditor(Chore chore)
     {
-        container.ChoreManager.addChore(chore);
+        return container.ChoreManager.getChoreEditor(chore, timeService);
     }
 
-    public void removeChore(Chore chore)
+    public Chore createChore()
     {
-        container.ChoreManager.removeChore(chore);
+        return container.ChoreManager.createChore(timeService.getToday());
     }
 
     public List<Chore> getTodaysChores()

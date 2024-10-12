@@ -19,13 +19,14 @@ public class Chore
     private LocalDate postpone;
 
     private String description;
+
     private int priority;
     private int effort;
 
     private int intervalUnit;
     private int intervalLength;
 
-    public Chore(
+    Chore(
         String description,
         int priority,
         int effort,
@@ -50,20 +51,9 @@ public class Chore
         return isEnabled;
     }
 
-    public void setEnabled(boolean enabled)
-    {
-        isEnabled = enabled;
-    }
-
     public LocalDate getNext()
     {
         return new LocalDate(next);
-    }
-
-    public void setNext(LocalDate next)
-    {
-        this.next = next;
-        this.postpone = null;
     }
 
     public String getDescription()
@@ -71,19 +61,9 @@ public class Chore
         return description;
     }
 
-    public void setDescription(String description)
-    {
-        this.description = description;
-    }
-
     public int getPriority()
     {
         return priority;
-    }
-
-    public void setPriority(int priority)
-    {
-        this.priority = priority;
     }
 
     public int getEffort()
@@ -91,29 +71,14 @@ public class Chore
         return effort;
     }
 
-    public void setEffort(int effort)
-    {
-        this.effort = effort;
-    }
-
     public int getIntervalUnit()
     {
         return intervalUnit;
     }
 
-    public void setIntervalUnit(int intervalUnit)
-    {
-        this.intervalUnit = intervalUnit;
-    }
-
     public int getIntervalLength()
     {
         return intervalLength;
-    }
-
-    public void setIntervalLength(int intervalLength)
-    {
-        this.intervalLength = intervalLength;
     }
 
     public void reschedule(LocalDate today)
@@ -147,11 +112,6 @@ public class Chore
         postpone = null;
     }
 
-    public void postpone(LocalDate today)
-    {
-        postpone = today.plusDays(1);
-    }
-
     @Override
     public boolean equals(Object obj)
     {
@@ -170,6 +130,47 @@ public class Chore
     public String toString()
     {
         return description;
+    }
+
+    void postpone(LocalDate today)
+    {
+        postpone = today.plusDays(1);
+    }
+
+    void setEnabled(boolean enabled)
+    {
+        isEnabled = enabled;
+    }
+
+    void setNext(LocalDate next)
+    {
+        this.next = next;
+        this.postpone = null;
+    }
+
+    void setDescription(String description)
+    {
+        this.description = description;
+    }
+
+    void setPriority(int priority)
+    {
+        this.priority = priority;
+    }
+
+    void setEffort(int effort)
+    {
+        this.effort = effort;
+    }
+
+    void setIntervalUnit(int intervalUnit)
+    {
+        this.intervalUnit = intervalUnit;
+    }
+
+    void setIntervalLength(int intervalLength)
+    {
+        this.intervalLength = intervalLength;
     }
 
     boolean isTimeToDo(LocalDate today)

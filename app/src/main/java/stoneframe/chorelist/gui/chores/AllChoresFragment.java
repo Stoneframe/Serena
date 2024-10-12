@@ -18,8 +18,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
-import org.joda.time.LocalDate;
-
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -103,13 +101,8 @@ public class AllChoresFragment extends Fragment
         Button addButton = rootView.findViewById(R.id.add_button);
         addButton.setOnClickListener(v ->
         {
-            Chore chore = new Chore(
-                "",
-                1,
-                1,
-                LocalDate.now(),
-                1,
-                Chore.DAYS);
+            Chore chore = choreList.createChore();
+
             startChoreEditor(chore, EditChoreActivity.ACTION_ADD);
         });
 

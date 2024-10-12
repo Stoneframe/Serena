@@ -10,6 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import stoneframe.chorelist.model.timeservices.TimeService;
+
 public class ChoreManager
 {
     private final EffortTracker effortTracker;
@@ -28,20 +30,25 @@ public class ChoreManager
         return effortTracker;
     }
 
-    public void addChore(Chore chore)
+    public ChoreEditor getChoreEditor(Chore chore, TimeService timeService)
     {
-        chores.add(chore);
+        return new ChoreEditor(this, chore, timeService);
     }
 
-    public void removeChore(Chore chore)
+    public Chore createChore(LocalDate today)
     {
-        chores.remove(chore);
+        return new Chore("", 1, 1, today, 1, Chore.DAYS);
     }
 
     public List<Chore> getAllChores()
     {
         chores.sort(Comparator.comparing(Chore::getDescription));
         return Collections.unmodifiableList(chores);
+    }
+
+    public boolean containsChore(Chore chore)
+    {
+        return chores.contains(chore);
     }
 
     public List<Chore> getChores(LocalDate today)
@@ -51,15 +58,6 @@ public class ChoreManager
         return choreSelector.selectChores(eligibleChores, effortTracker.getTodaysEffort(today))
             .stream()
             .sorted(new Chore.ChoreComparator(today))
-            .collect(Collectors.toList());
-    }
-
-    private @NonNull List<Chore> getAllEligibleChores(LocalDate today)
-    {
-        return chores.stream()
-            .sorted(new Chore.ChoreComparator(today))
-            .filter(Chore::isEnabled)
-            .filter(c -> c.isTimeToDo(today))
             .collect(Collectors.toList());
     }
 
@@ -93,6 +91,25 @@ public class ChoreManager
         ChoreManager other = (ChoreManager)obj;
 
         return this.chores.equals(other.chores);
+    }
+
+    void addChore(Chore chore)
+    {
+        chores.add(chore);
+    }
+
+    void removeChore(Chore chore)
+    {
+        chores.remove(chore);
+    }
+
+    private @NonNull List<Chore> getAllEligibleChores(LocalDate today)
+    {
+        return chores.stream()
+            .sorted(new Chore.ChoreComparator(today))
+            .filter(Chore::isEnabled)
+            .filter(c -> c.isTimeToDo(today))
+            .collect(Collectors.toList());
     }
 
     private int getEffortSpent(Chore chore, LocalDate today)

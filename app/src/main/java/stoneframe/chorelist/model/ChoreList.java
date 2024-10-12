@@ -66,6 +66,10 @@ public class ChoreList
         storage.save(container);
     }
 
+    // ====================================================================
+    // CHORES
+    // ====================================================================
+
     public List<Chore> getAllChores()
     {
         return container.ChoreManager.getAllChores();
@@ -111,6 +115,10 @@ public class ChoreList
         return container.ChoreManager.getEffortTracker();
     }
 
+    // ====================================================================
+    // TASKS
+    // ====================================================================
+
     public List<Task> getAllTasks()
     {
         return container.TaskManager.getAllTasks(true, timeService.getToday());
@@ -119,6 +127,11 @@ public class ChoreList
     public List<Task> getAllTasks(boolean includeCompleted)
     {
         return container.TaskManager.getAllTasks(includeCompleted, timeService.getToday());
+    }
+
+    public TaskEditor getTaskEditor(Task task)
+    {
+        return container.TaskManager.getEditor(task, timeService);
     }
 
     public Task createTask()
@@ -141,10 +154,9 @@ public class ChoreList
         container.TaskManager.undo(task);
     }
 
-    public TaskEditor getTaskEditor(Task task)
-    {
-        return container.TaskManager.getEditor(task, timeService);
-    }
+    // ====================================================================
+    // ROUTINES
+    // ====================================================================
 
     public List<Routine<?>> getAllRoutines()
     {
@@ -186,6 +198,10 @@ public class ChoreList
         container.RoutineManager.resetRoutine(routine, timeService.getNow());
     }
 
+    // ====================================================================
+    // CHECKLISTS
+    // ====================================================================
+
     public List<Checklist> getChecklists()
     {
         return container.ChecklistManager.getChecklists();
@@ -201,18 +217,22 @@ public class ChoreList
         container.ChecklistManager.removeChecklist(checklist);
     }
 
+    // ====================================================================
+    // LIMITERS
+    // ====================================================================
+
     public List<Limiter> getLimiters()
     {
         return container.LimiterManager.getLimiters();
     }
 
-    public Limiter createLimiter(String name)
-    {
-        return container.LimiterManager.createLimiter(name, timeService.getToday());
-    }
-
     public LimiterEditor getLimiterEditor(Limiter limiter)
     {
         return container.LimiterManager.getEditor(limiter, timeService);
+    }
+
+    public Limiter createLimiter(String name)
+    {
+        return container.LimiterManager.createLimiter(name, timeService.getToday());
     }
 }

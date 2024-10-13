@@ -10,37 +10,37 @@ class ChecklistData
 
     private String name;
 
-    public ChecklistData(String name)
+    ChecklistData(String name)
     {
         this.name = name;
     }
 
-    public String getName()
+    String getName()
     {
         return name;
     }
 
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
-    public List<ChecklistItem> getItems()
+    List<ChecklistItem> getItems()
     {
         return Collections.unmodifiableList(items);
     }
 
-    public void addItem(ChecklistItem item)
+    void setName(String name)
+    {
+        this.name = name;
+    }
+
+    void addItem(ChecklistItem item)
     {
         items.add(item);
     }
 
-    public void removeItem(ChecklistItem item)
+    void removeItem(ChecklistItem item)
     {
         items.remove(item);
     }
 
-    public void moveItem(ChecklistItem item, Integer newPosition)
+    void moveItem(ChecklistItem item, Integer newPosition)
     {
         items.remove(item);
         items.add(newPosition, item);

@@ -5,6 +5,7 @@ import org.joda.time.LocalDateTime;
 import java.util.List;
 
 import stoneframe.chorelist.model.checklists.Checklist;
+import stoneframe.chorelist.model.checklists.ChecklistEditor;
 import stoneframe.chorelist.model.checklists.ChecklistManager;
 import stoneframe.chorelist.model.chores.Chore;
 import stoneframe.chorelist.model.chores.ChoreEditor;
@@ -207,14 +208,14 @@ public class ChoreList
         return container.ChecklistManager.getChecklists();
     }
 
+    public ChecklistEditor getChecklistEditor(Checklist checklist)
+    {
+        return container.ChecklistManager.getChecklistEditor(checklist, timeService);
+    }
+
     public void createChecklist(String name)
     {
         container.ChecklistManager.createChecklist(name);
-    }
-
-    public void removeChecklist(Checklist checklist)
-    {
-        container.ChecklistManager.removeChecklist(checklist);
     }
 
     // ====================================================================

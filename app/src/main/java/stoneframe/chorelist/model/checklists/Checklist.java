@@ -6,7 +6,7 @@ import stoneframe.chorelist.model.util.Revertible;
 
 public class Checklist extends Revertible<ChecklistData>
 {
-    public Checklist(String name)
+    Checklist(String name)
     {
         super(new ChecklistData(name));
     }
@@ -16,27 +16,27 @@ public class Checklist extends Revertible<ChecklistData>
         return data().getName();
     }
 
-    public void setName(String name)
-    {
-        data().setName(name);
-    }
-
     public List<ChecklistItem> getItems()
     {
         return data().getItems();
     }
 
-    public void addItem(ChecklistItem item)
+    void setName(String name)
+    {
+        data().setName(name);
+    }
+
+    void addItem(ChecklistItem item)
     {
         data().addItem(item);
     }
 
-    public void removeItem(ChecklistItem item)
+    void removeItem(ChecklistItem item)
     {
         data().removeItem(item);
     }
 
-    public void moveItem(ChecklistItem item, Integer newPosition)
+    void moveItem(ChecklistItem item, Integer newPosition)
     {
         data().moveItem(item, newPosition);
     }

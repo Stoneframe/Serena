@@ -4,17 +4,17 @@ import org.joda.time.LocalDateTime;
 
 public class DayRoutine extends Routine<DayRoutineData>
 {
-    public DayRoutine(String name, LocalDateTime now)
+    DayRoutine(String name, LocalDateTime now)
     {
         super(DAY_ROUTINE, new DayRoutineData(name, now));
     }
 
-    public void addProcedure(Procedure procedure)
+    void addProcedure(Procedure procedure)
     {
         data().addProcedure(procedure);
     }
 
-    public void removeProcedure(Procedure procedure)
+    void removeProcedure(Procedure procedure)
     {
         data().removeProcedure(procedure);
     }

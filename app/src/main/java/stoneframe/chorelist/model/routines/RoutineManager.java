@@ -1,5 +1,6 @@
 package stoneframe.chorelist.model.routines;
 
+import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
 import java.util.Comparator;
@@ -9,9 +10,36 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import stoneframe.chorelist.model.timeservices.TimeService;
+
 public class RoutineManager
 {
     private final List<Routine<?>> routines = new LinkedList<>();
+
+    public DayRoutineEditor getDayRoutineEditor(DayRoutine routine, TimeService timeService)
+    {
+        return new DayRoutineEditor(this, routine, timeService);
+    }
+
+    public WeekRoutineEditor getWeekRoutineEditor(WeekRoutine routine, TimeService timeService)
+    {
+        return new WeekRoutineEditor(this, routine, timeService);
+    }
+
+    public DayRoutine createDayRoutine(LocalDateTime now)
+    {
+        return new DayRoutine("", now);
+    }
+
+    public WeekRoutine createWeekRoutine(LocalDateTime now)
+    {
+        return new WeekRoutine("", now);
+    }
+
+    public FortnightRoutine createFortnightRoutine(LocalDate today, LocalDateTime now)
+    {
+        return new FortnightRoutine("", today, now);
+    }
 
     public void addRoutine(Routine<?> routine)
     {
@@ -28,6 +56,11 @@ public class RoutineManager
         return routines.stream()
             .sorted(Comparator.comparing(Routine::getName))
             .collect(Collectors.toList());
+    }
+
+    public boolean containsRoutine(Routine<?> routine)
+    {
+        return routines.contains(routine);
     }
 
     public LocalDateTime getNextProcedureTime(LocalDateTime now)
@@ -75,5 +108,12 @@ public class RoutineManager
     public void resetRoutine(Routine<?> routine, LocalDateTime now)
     {
         routine.reset(now);
+    }
+
+    public FortnightRoutineEditor getFortnightRoutineEditor(
+        FortnightRoutine routine,
+        TimeService timeService)
+    {
+        return new FortnightRoutineEditor(this, routine, timeService);
     }
 }

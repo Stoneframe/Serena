@@ -7,7 +7,7 @@ import stoneframe.chorelist.model.util.DeepCopy;
 
 public class FortnightRoutine extends Routine<FortnightRoutineData>
 {
-    public FortnightRoutine(String name, LocalDate startDate, LocalDateTime now)
+    FortnightRoutine(String name, LocalDate startDate, LocalDateTime now)
     {
         super(FORTNIGHT_ROUTINE, new FortnightRoutineData(name, startDate, now));
     }
@@ -15,11 +15,6 @@ public class FortnightRoutine extends Routine<FortnightRoutineData>
     public LocalDate getStartDate()
     {
         return data().getStartDate();
-    }
-
-    public void setStartDate(LocalDate startDate)
-    {
-        data().setStartDate(startDate);
     }
 
     public Week getWeek1()
@@ -35,5 +30,10 @@ public class FortnightRoutine extends Routine<FortnightRoutineData>
     public Week getWeek(int nbr)
     {
         return data().getWeek(nbr);
+    }
+
+    void setStartDate(LocalDate startDate)
+    {
+        data().setStartDate(startDate);
     }
 }

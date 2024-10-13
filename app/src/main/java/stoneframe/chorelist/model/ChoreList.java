@@ -15,9 +15,15 @@ import stoneframe.chorelist.model.chores.EffortTracker;
 import stoneframe.chorelist.model.limiters.Limiter;
 import stoneframe.chorelist.model.limiters.LimiterEditor;
 import stoneframe.chorelist.model.limiters.LimiterManager;
+import stoneframe.chorelist.model.routines.DayRoutine;
+import stoneframe.chorelist.model.routines.DayRoutineEditor;
+import stoneframe.chorelist.model.routines.FortnightRoutine;
+import stoneframe.chorelist.model.routines.FortnightRoutineEditor;
 import stoneframe.chorelist.model.routines.PendingProcedure;
 import stoneframe.chorelist.model.routines.Routine;
 import stoneframe.chorelist.model.routines.RoutineManager;
+import stoneframe.chorelist.model.routines.WeekRoutine;
+import stoneframe.chorelist.model.routines.WeekRoutineEditor;
 import stoneframe.chorelist.model.tasks.Task;
 import stoneframe.chorelist.model.tasks.TaskEditor;
 import stoneframe.chorelist.model.tasks.TaskManager;
@@ -162,6 +168,38 @@ public class ChoreList
     public List<Routine<?>> getAllRoutines()
     {
         return container.RoutineManager.getAllRoutines();
+    }
+
+    public DayRoutineEditor getDayRoutineEditor(DayRoutine routine)
+    {
+        return container.RoutineManager.getDayRoutineEditor(routine, timeService);
+    }
+
+    public WeekRoutineEditor getWeekRoutineEditor(WeekRoutine routine)
+    {
+        return container.RoutineManager.getWeekRoutineEditor(routine, timeService);
+    }
+
+    public FortnightRoutineEditor getFortnightRoutineEditor(FortnightRoutine routine)
+    {
+        return container.RoutineManager.getFortnightRoutineEditor(routine, timeService);
+    }
+
+    public DayRoutine createDayRoutine()
+    {
+        return container.RoutineManager.createDayRoutine(timeService.getNow());
+    }
+
+    public WeekRoutine createWeekRoutine()
+    {
+        return container.RoutineManager.createWeekRoutine(timeService.getNow());
+    }
+
+    public FortnightRoutine createFortnightRoutine()
+    {
+        return container.RoutineManager.createFortnightRoutine(
+            timeService.getToday(),
+            timeService.getNow());
     }
 
     public void addRoutine(Routine<?> routine)

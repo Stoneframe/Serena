@@ -6,7 +6,7 @@ import stoneframe.chorelist.model.util.DeepCopy;
 
 public class WeekRoutine extends Routine<WeekRoutineData>
 {
-    public WeekRoutine(String name, LocalDateTime now)
+    WeekRoutine(String name, LocalDateTime now)
     {
         super(WEEK_ROUTINE, new WeekRoutineData(name, now));
     }

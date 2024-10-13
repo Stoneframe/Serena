@@ -11,7 +11,7 @@ public class PendingProcedure implements Comparable<PendingProcedure>
     private final Procedure procedure;
     private final LocalDateTime dateTime;
 
-    public PendingProcedure(Procedure procedure, LocalDateTime dateTime)
+    PendingProcedure(Procedure procedure, LocalDateTime dateTime)
     {
         this.procedure = procedure;
         this.dateTime = dateTime;

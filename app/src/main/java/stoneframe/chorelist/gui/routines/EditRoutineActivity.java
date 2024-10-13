@@ -8,15 +8,16 @@ import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.EditActivity;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
 import stoneframe.chorelist.model.routines.Routine;
+import stoneframe.chorelist.model.routines.RoutineEditor;
 
-public abstract class EditRoutineActivity<T extends Routine<?>> extends EditActivity
+public abstract class EditRoutineActivity<TRoutine extends Routine<?>, TRoutineEditor extends RoutineEditor<?>> extends EditActivity
 {
     protected EditText nameEditText;
     protected CheckBox enabledCheckBox;
 
     protected Button addProcedureButton;
 
-    protected T routine;
+    protected TRoutineEditor routineEditor;
 
     @Override
     protected int getActivityLayoutId()
@@ -36,16 +37,15 @@ public abstract class EditRoutineActivity<T extends Routine<?>> extends EditActi
     @Override
     protected void createActivity()
     {
-        routine = (T)globalState.getActiveRoutine();
-        routine.edit();
+        routineEditor = getRoutineEditor((TRoutine)globalState.getActiveRoutine());
 
         nameEditText = findViewById(R.id.nameTextEdit);
         enabledCheckBox = findViewById(R.id.enabledCheckbox);
 
         addProcedureButton = findViewById(R.id.addProcedureButton);
 
-        nameEditText.setText(routine.getName());
-        enabledCheckBox.setChecked(routine.isEnabled());
+        nameEditText.setText(routineEditor.getName());
+        enabledCheckBox.setChecked(routineEditor.isEnabled());
 
         addProcedureButton.setOnClickListener(v -> addProcedure());
 
@@ -64,25 +64,20 @@ public abstract class EditRoutineActivity<T extends Routine<?>> extends EditActi
     @Override
     protected void onCancel()
     {
-        routine.revert();
+        routineEditor.revert();
     }
 
     @Override
     protected void onSave(int action)
     {
-        if (enabledCheckBox.isChecked() && !routine.isEnabled())
+        if (enabledCheckBox.isChecked() && !routineEditor.isEnabled())
         {
-            choreList.resetRoutine(routine);
+            routineEditor.reset();
         }
 
-        routine.setName(nameEditText.getText().toString().trim());
-        routine.setEnabled(enabledCheckBox.isChecked());
-        routine.save();
-
-        if (action == ACTION_ADD)
-        {
-            choreList.addRoutine(routine);
-        }
+        routineEditor.setName(nameEditText.getText().toString().trim());
+        routineEditor.setEnabled(enabledCheckBox.isChecked());
+        routineEditor.save();
 
         choreList.save();
     }
@@ -90,9 +85,11 @@ public abstract class EditRoutineActivity<T extends Routine<?>> extends EditActi
     @Override
     protected void onRemove()
     {
-        choreList.removeRoutine(routine);
+        routineEditor.remove();
         choreList.save();
     }
+
+    protected abstract TRoutineEditor getRoutineEditor(TRoutine routine);
 
     protected abstract void createSpecialisedActivity();
 

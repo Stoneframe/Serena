@@ -6,18 +6,19 @@ import android.text.InputType;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 
+import androidx.annotation.NonNull;
+
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.routines.EditRoutineActivity;
 import stoneframe.chorelist.gui.routines.util.WeekExpandableListAdaptor;
-import stoneframe.chorelist.model.routines.Day;
 import stoneframe.chorelist.model.routines.FortnightRoutine;
+import stoneframe.chorelist.model.routines.FortnightRoutineEditor;
 import stoneframe.chorelist.model.routines.Procedure;
-import stoneframe.chorelist.model.routines.Week;
 
-public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRoutine>
+public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRoutine, FortnightRoutineEditor> implements FortnightRoutineEditor.FortnightRoutineEditorListener
 {
     private EditText startDateEditText;
 
@@ -28,36 +29,60 @@ public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRouti
     private WeekExpandableListAdaptor week2ExpandableListAdaptor;
 
     @Override
+    public void nameChanged()
+    {
+
+    }
+
+    @Override
+    public void isEnabledChanged()
+    {
+
+    }
+
+    @Override
+    public void startDateChanged()
+    {
+
+    }
+
+    @Override
+    public void procedureAdded()
+    {
+        week1ExpandableListAdaptor.notifyDataSetChanged();
+        week2ExpandableListAdaptor.notifyDataSetChanged();
+    }
+
+    @Override
+    public void procedureRemoved()
+    {
+        week1ExpandableListAdaptor.notifyDataSetChanged();
+        week2ExpandableListAdaptor.notifyDataSetChanged();
+    }
+
+    @Override
     protected String getActivityTitle()
     {
         return "Fortnight Routine";
     }
 
     @Override
+    protected FortnightRoutineEditor getRoutineEditor(FortnightRoutine routine)
+    {
+        return choreList.getFortnightRoutineEditor(routine);
+    }
+
+    @Override
     protected void createSpecialisedActivity()
     {
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-            this,
-            (view1, year, month, dayOfMonth) ->
-            {
-                DateTime startDate = new DateTime(year, month + 1, dayOfMonth, 0, 0);
-                startDateEditText.setText(startDate.toString("yyyy-MM-dd"));
-
-                routine.setStartDate(LocalDate.parse(startDateEditText.getText().toString()));
-
-                week1ExpandableListAdaptor.notifyDataSetChanged();
-                week2ExpandableListAdaptor.notifyDataSetChanged();
-            },
-            routine.getStartDate().getYear(),
-            routine.getStartDate().getMonthOfYear() - 1,
-            routine.getStartDate().getDayOfMonth());
+        DatePickerDialog datePickerDialog = getDatePickerDialog();
 
         startDateEditText = findViewById(R.id.fortnight_routine_start_date_edit);
-        startDateEditText.setText(routine.getStartDate().toString("yyyy-MM-dd"));
+        startDateEditText.setText(routineEditor.getStartDate().toString("yyyy-MM-dd"));
         startDateEditText.setInputType(InputType.TYPE_NULL);
         startDateEditText.setOnClickListener(view -> datePickerDialog.show());
 
-        week1ExpandableListAdaptor = new WeekExpandableListAdaptor(this, routine.getWeek1());
+        week1ExpandableListAdaptor = new WeekExpandableListAdaptor(this, routineEditor.getWeek1());
         week1ExpandableList = findViewById(R.id.week1_procedure_list);
         week1ExpandableList.setAdapter(week1ExpandableListAdaptor);
         week1ExpandableList.setOnChildClickListener((parent, v, groupPosition, childPosition, id) ->
@@ -70,7 +95,7 @@ public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRouti
             week1ExpandableList.expandGroup(i);
         }
 
-        week2ExpandableListAdaptor = new WeekExpandableListAdaptor(this, routine.getWeek2());
+        week2ExpandableListAdaptor = new WeekExpandableListAdaptor(this, routineEditor.getWeek2());
         week2ExpandableList = findViewById(R.id.week2_procedure_list);
         week2ExpandableList.setAdapter(week2ExpandableListAdaptor);
         week2ExpandableList.setOnChildClickListener((parent, v, groupPosition, childPosition, id) ->
@@ -85,6 +110,22 @@ public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRouti
     }
 
     @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        routineEditor.addListener(this);
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+
+        routineEditor.removeListener(this);
+    }
+
+    @Override
     protected int getRoutineContentView()
     {
         return R.layout.activity_routine_fortnight;
@@ -94,12 +135,25 @@ public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRouti
     protected void addProcedure()
     {
         FortnightProcedureEditDialog.create(this, (procedure, week, weekDay) ->
-        {
-            routine.getWeek(week).getWeekDay(weekDay).addProcedure(procedure);
+            routineEditor.addProcedure(week, weekDay, procedure));
+    }
 
-            week1ExpandableListAdaptor.notifyDataSetChanged();
-            week2ExpandableListAdaptor.notifyDataSetChanged();
-        });
+    private @NonNull DatePickerDialog getDatePickerDialog()
+    {
+        LocalDate currentStartDate = routineEditor.getStartDate();
+
+        return new DatePickerDialog(
+            this,
+            (view1, year, month, dayOfMonth) ->
+            {
+                DateTime startDate = new DateTime(year, month + 1, dayOfMonth, 0, 0);
+                startDateEditText.setText(startDate.toString("yyyy-MM-dd"));
+
+                routineEditor.setStartDate(LocalDate.parse(startDateEditText.getText().toString()));
+            },
+            currentStartDate.getYear(),
+            currentStartDate.getMonthOfYear() - 1,
+            currentStartDate.getDayOfMonth());
     }
 
     private boolean editProcedureWeek1(int groupPosition, int childPosition)
@@ -147,17 +201,8 @@ public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRouti
             groupPosition,
             (editedProcedure, editedWeek, editedDayOfWeek) ->
             {
-                Week oldWeek = routine.getWeek(weekNumber);
-                Week newWeek = routine.getWeek(editedWeek);
-
-                Day oldWeekDay = oldWeek.getWeekDay(groupPosition + 1);
-                Day newWeekDay = newWeek.getWeekDay(editedDayOfWeek);
-
-                oldWeekDay.removeProcedure(procedure);
-                newWeekDay.addProcedure(editedProcedure);
-
-                week1ExpandableListAdaptor.notifyDataSetChanged();
-                week2ExpandableListAdaptor.notifyDataSetChanged();
+                routineEditor.removeProcedure(weekNumber, groupPosition + 1, procedure);
+                routineEditor.addProcedure(editedWeek, editedDayOfWeek, editedProcedure);
             });
     }
 
@@ -165,7 +210,7 @@ public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRouti
         ExpandableListView weekExpandableList,
         int weekNumber,
         int position,
-        WeekExpandableListAdaptor week1ExpandableListAdaptor)
+        WeekExpandableListAdaptor weekExpandableListAdaptor)
     {
         long packedPosition = weekExpandableList.getExpandableListPosition(position);
 
@@ -176,17 +221,15 @@ public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRouti
             int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
             int childPosition = ExpandableListView.getPackedPositionChild(packedPosition);
 
-            Procedure procedure = (Procedure)week1ExpandableListAdaptor.getChild(
+            Procedure procedure = (Procedure)weekExpandableListAdaptor.getChild(
                 groupPosition,
                 childPosition);
-
-            Day weekDay = (Day)week1ExpandableListAdaptor.getGroup(groupPosition);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Select option")
                 .setCancelable(false)
                 .setPositiveButton("Remove", (dialog, removeButtonId) ->
-                    removeProcedure(weekDay, procedure))
+                    removeProcedure(weekNumber, groupPosition + 1, procedure))
                 .setNegativeButton("Copy", (dialog, copyButtonId) ->
                     copyProcedure(procedure, weekNumber, groupPosition))
                 .setNeutralButton("Cancel", (dialog, cancelButtonId) -> dialog.cancel());
@@ -196,12 +239,9 @@ public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRouti
         }
     }
 
-    private void removeProcedure(Day weekDay, Procedure procedure)
+    private void removeProcedure(int week, int weekDay, Procedure procedure)
     {
-        weekDay.removeProcedure(procedure);
-
-        week1ExpandableListAdaptor.notifyDataSetChanged();
-        week2ExpandableListAdaptor.notifyDataSetChanged();
+        routineEditor.removeProcedure(week, weekDay, procedure);
     }
 
     private void copyProcedure(Procedure procedure, int weekNumber, int dayOfWeek)
@@ -211,12 +251,6 @@ public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRouti
             procedure,
             weekNumber,
             dayOfWeek,
-            (copiedProcedure, week, weekDay) ->
-            {
-                routine.getWeek(week).getWeekDay(weekDay).addProcedure(copiedProcedure);
-
-                week1ExpandableListAdaptor.notifyDataSetChanged();
-                week2ExpandableListAdaptor.notifyDataSetChanged();
-            });
+            (copiedProcedure, week, weekDay) -> routineEditor.addProcedure(week, weekDay, copiedProcedure));
     }
 }

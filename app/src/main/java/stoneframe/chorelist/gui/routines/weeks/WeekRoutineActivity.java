@@ -9,11 +9,36 @@ import stoneframe.chorelist.gui.routines.util.WeekExpandableListAdaptor;
 import stoneframe.chorelist.model.routines.Day;
 import stoneframe.chorelist.model.routines.Procedure;
 import stoneframe.chorelist.model.routines.WeekRoutine;
+import stoneframe.chorelist.model.routines.WeekRoutineEditor;
 
-public class WeekRoutineActivity extends EditRoutineActivity<WeekRoutine>
+public class WeekRoutineActivity extends EditRoutineActivity<WeekRoutine, WeekRoutineEditor> implements WeekRoutineEditor.WeekRoutineEditorListener
 {
     private ExpandableListView weekExpandableList;
     private WeekExpandableListAdaptor weekExpandableListAdaptor;
+
+    @Override
+    public void nameChanged()
+    {
+
+    }
+
+    @Override
+    public void isEnabledChanged()
+    {
+
+    }
+
+    @Override
+    public void procedureAdded()
+    {
+        weekExpandableListAdaptor.notifyDataSetChanged();
+    }
+
+    @Override
+    public void procedureRemoved()
+    {
+        weekExpandableListAdaptor.notifyDataSetChanged();
+    }
 
     @Override
     protected String getActivityTitle()
@@ -22,9 +47,15 @@ public class WeekRoutineActivity extends EditRoutineActivity<WeekRoutine>
     }
 
     @Override
+    protected WeekRoutineEditor getRoutineEditor(WeekRoutine routine)
+    {
+        return choreList.getWeekRoutineEditor(routine);
+    }
+
+    @Override
     protected void createSpecialisedActivity()
     {
-        weekExpandableListAdaptor = new WeekExpandableListAdaptor(this, routine.getWeek());
+        weekExpandableListAdaptor = new WeekExpandableListAdaptor(this, routineEditor.getWeek());
 
         weekExpandableList = findViewById(R.id.week_procedure_list);
         weekExpandableList.setAdapter(weekExpandableListAdaptor);
@@ -40,6 +71,22 @@ public class WeekRoutineActivity extends EditRoutineActivity<WeekRoutine>
     }
 
     @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        routineEditor.addListener(this);
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+
+        routineEditor.removeListener(this);
+    }
+
+    @Override
     protected int getRoutineContentView()
     {
         return R.layout.activity_routine_week;
@@ -50,7 +97,7 @@ public class WeekRoutineActivity extends EditRoutineActivity<WeekRoutine>
     {
         WeekProcedureEditDialog.create(this, (createdProcedure, dayOfWeek) ->
         {
-            routine.getWeek().getWeekDay(dayOfWeek).addProcedure(createdProcedure);
+            routineEditor.addProcedure(dayOfWeek, createdProcedure);
 
             weekExpandableListAdaptor.notifyDataSetChanged();
             weekExpandableList.expandGroup(dayOfWeek - 1);
@@ -69,13 +116,8 @@ public class WeekRoutineActivity extends EditRoutineActivity<WeekRoutine>
             groupPosition,
             (editedProcedure, dayOfWeek) ->
             {
-                Day oldWeekDay = routine.getWeek().getWeekDay(groupPosition + 1);
-                Day newWeekDay = routine.getWeek().getWeekDay(dayOfWeek);
-
-                oldWeekDay.removeProcedure(procedure);
-                newWeekDay.addProcedure(editedProcedure);
-
-                weekExpandableListAdaptor.notifyDataSetChanged();
+                routineEditor.removeProcedure(groupPosition + 1, procedure);
+                routineEditor.addProcedure(dayOfWeek, editedProcedure);
             });
 
         return true;
@@ -96,16 +138,13 @@ public class WeekRoutineActivity extends EditRoutineActivity<WeekRoutine>
                 groupPosition,
                 childPosition);
 
-            Day weekDay = (Day)weekExpandableListAdaptor.getGroup(
-                groupPosition);
-
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Select option")
                 .setCancelable(false)
                 .setPositiveButton("Remove", (dialog, removeButtonId) ->
-                    removeProcedure(weekDay, procedure))
+                    removeProcedure(groupPosition + 1, procedure))
                 .setNegativeButton("Copy", (dialog, copyButtonId) ->
-                    copyProcedure(procedure, groupPosition))
+                    copyProcedure(groupPosition, procedure))
                 .setNeutralButton("Cancel", (dialog, cancelButtonId) -> dialog.cancel());
 
             AlertDialog alert = builder.create();
@@ -115,24 +154,20 @@ public class WeekRoutineActivity extends EditRoutineActivity<WeekRoutine>
         return true;
     }
 
-    private void removeProcedure(Day weekDay, Procedure procedure)
+    private void removeProcedure(int weekDay, Procedure procedure)
     {
-        weekDay.removeProcedure(procedure);
-
-        weekExpandableListAdaptor.notifyDataSetChanged();
+        routineEditor.removeProcedure(weekDay, procedure);
     }
 
-    private void copyProcedure(Procedure procedure, int dayOfWeek)
+    private void copyProcedure(int weekDay, Procedure procedure)
     {
         WeekProcedureEditDialog.copy(
             this,
             procedure,
-            dayOfWeek,
+            weekDay,
             (copiedProcedure, copiedDayOfWeek) ->
             {
-                routine.getWeek().getWeekDay(copiedDayOfWeek).addProcedure(copiedProcedure);
-
-                weekExpandableListAdaptor.notifyDataSetChanged();
+                routineEditor.addProcedure(copiedDayOfWeek, copiedProcedure);
                 weekExpandableList.expandGroup(copiedDayOfWeek - 1);
             });
     }

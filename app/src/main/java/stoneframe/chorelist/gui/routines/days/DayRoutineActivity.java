@@ -1,18 +1,45 @@
 package stoneframe.chorelist.gui.routines.days;
 
 import android.app.AlertDialog;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import java.util.stream.Collectors;
 
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.routines.EditRoutineActivity;
+import stoneframe.chorelist.gui.util.SimpleListAdapter;
 import stoneframe.chorelist.model.routines.DayRoutine;
+import stoneframe.chorelist.model.routines.DayRoutineEditor;
 import stoneframe.chorelist.model.routines.Procedure;
 
-public class DayRoutineActivity extends EditRoutineActivity<DayRoutine>
+public class DayRoutineActivity extends EditRoutineActivity<DayRoutine, DayRoutineEditor> implements DayRoutineEditor.DayRoutineEditorListener
 {
+    private SimpleListAdapter<Procedure> procedureListAdapter;
     private ListView procedureListView;
-    private ArrayAdapter<Procedure> procedureListAdapter;
+
+    @Override
+    public void nameChanged()
+    {
+
+    }
+
+    @Override
+    public void isEnabledChanged()
+    {
+
+    }
+
+    @Override
+    public void procedureAdded()
+    {
+        procedureListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void procedureRemoved()
+    {
+        procedureListAdapter.notifyDataSetChanged();
+    }
 
     @Override
     protected String getActivityTitle()
@@ -21,13 +48,20 @@ public class DayRoutineActivity extends EditRoutineActivity<DayRoutine>
     }
 
     @Override
+    protected DayRoutineEditor getRoutineEditor(DayRoutine routine)
+    {
+        return choreList.getDayRoutineEditor(routine);
+    }
+
+    @Override
     protected void createSpecialisedActivity()
     {
-        procedureListAdapter = new ArrayAdapter<>(
-            getBaseContext(),
-            android.R.layout.simple_list_item_1);
-
-        procedureListAdapter.addAll(routine.getAllProcedures());
+        procedureListAdapter = new SimpleListAdapter<>(
+            this,
+            () -> routineEditor.getAllProcedures().stream().sorted().collect(Collectors.toList()),
+            Procedure::toString,
+            v -> "",
+            v -> "");
 
         procedureListView = findViewById(R.id.procedures);
         procedureListView.setAdapter(procedureListAdapter);
@@ -35,6 +69,22 @@ public class DayRoutineActivity extends EditRoutineActivity<DayRoutine>
             editProcedure(position));
         procedureListView.setOnItemLongClickListener((parent, view, position, id) ->
             removeOrCopyProcedure(position));
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        routineEditor.addListener(this);
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+
+        routineEditor.removeListener(this);
     }
 
     @Override
@@ -46,18 +96,12 @@ public class DayRoutineActivity extends EditRoutineActivity<DayRoutine>
     @Override
     protected void addProcedure()
     {
-        DayProcedureEditDialog.create(this, procedure ->
-        {
-            routine.addProcedure(procedure);
-
-            procedureListAdapter.add(procedure);
-            procedureListAdapter.sort(Procedure::compareTo);
-        });
+        DayProcedureEditDialog.create(this, procedure -> routineEditor.addProcedure(procedure));
     }
 
     private void editProcedure(int position)
     {
-        Procedure procedure = procedureListAdapter.getItem(position);
+        Procedure procedure = (Procedure)procedureListAdapter.getItem(position);
 
         assert procedure != null;
 
@@ -66,17 +110,14 @@ public class DayRoutineActivity extends EditRoutineActivity<DayRoutine>
             procedure,
             editedProcedure ->
             {
-                routine.removeProcedure(procedure);
-                routine.addProcedure(editedProcedure);
-
-                procedureListAdapter.clear();
-                procedureListAdapter.addAll(routine.getAllProcedures());
+                routineEditor.removeProcedure(procedure);
+                routineEditor.addProcedure(editedProcedure);
             });
     }
 
     private boolean removeOrCopyProcedure(int position)
     {
-        Procedure procedure = procedureListAdapter.getItem(position);
+        Procedure procedure = (Procedure)procedureListAdapter.getItem(position);
 
         assert procedure != null;
 
@@ -97,8 +138,7 @@ public class DayRoutineActivity extends EditRoutineActivity<DayRoutine>
 
     private void removeProcedure(Procedure procedure)
     {
-        routine.removeProcedure(procedure);
-        procedureListAdapter.remove(procedure);
+        routineEditor.removeProcedure(procedure);
     }
 
     private void copyProcedure(Procedure procedure)
@@ -106,12 +146,6 @@ public class DayRoutineActivity extends EditRoutineActivity<DayRoutine>
         DayProcedureEditDialog.copy(
             this,
             procedure,
-            copiedProcedure ->
-            {
-                routine.addProcedure(copiedProcedure);
-
-                procedureListAdapter.add(copiedProcedure);
-                procedureListAdapter.sort(Procedure::compareTo);
-            });
+            copiedProcedure -> routineEditor.addProcedure(copiedProcedure));
     }
 }

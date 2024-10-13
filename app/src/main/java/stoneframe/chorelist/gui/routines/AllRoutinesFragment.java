@@ -78,24 +78,21 @@ public class AllRoutinesFragment extends Fragment
         Button addDayButton = rootView.findViewById(R.id.add_day_button);
         addDayButton.setOnClickListener(v ->
         {
-            Routine<?> routine = new DayRoutine("", LocalDateTime.now());
+            Routine<?> routine = choreList.createDayRoutine();
             startRoutineEditor(routine, DayRoutineActivity.ACTION_ADD);
         });
 
         Button addWeekButton = rootView.findViewById(R.id.add_week_button);
         addWeekButton.setOnClickListener(v ->
         {
-            Routine<?> routine = new WeekRoutine("", LocalDateTime.now());
+            Routine<?> routine = choreList.createWeekRoutine();
             startRoutineEditor(routine, WeekRoutineActivity.ACTION_ADD);
         });
 
         Button addFortnightButton = rootView.findViewById(R.id.add_fortnight_button);
         addFortnightButton.setOnClickListener(v ->
         {
-            Routine<?> routine = new FortnightRoutine(
-                "",
-                LocalDate.now(),
-                LocalDateTime.now());
+            Routine<?> routine = choreList.createFortnightRoutine();
             startRoutineEditor(routine, FortnightRoutineActivity.ACTION_ADD);
         });
 

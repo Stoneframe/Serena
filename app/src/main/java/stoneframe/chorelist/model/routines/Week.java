@@ -21,7 +21,7 @@ public class Week
     private final Day saturday;
     private final Day sunday;
 
-    public Week(int skip, LocalDate startDate)
+    Week(int skip, LocalDate startDate)
     {
         monday = new Day("Monday", startDate.plusDays(0), (skip + 1) * 7);
         tuesday = new Day("Tuesday", startDate.plusDays(1), (skip + 1) * 7);
@@ -70,17 +70,6 @@ public class Week
     public LocalDate getStartDate()
     {
         return monday.getStartDate();
-    }
-
-    public void setStartDate(LocalDate startDate)
-    {
-        monday.setStartDate(startDate.plusDays(0));
-        tuesday.setStartDate(startDate.plusDays(1));
-        wednesday.setStartDate(startDate.plusDays(2));
-        thursday.setStartDate(startDate.plusDays(3));
-        friday.setStartDate(startDate.plusDays(4));
-        saturday.setStartDate(startDate.plusDays(5));
-        sunday.setStartDate(startDate.plusDays(6));
     }
 
     public List<Procedure> getProcedures()
@@ -140,6 +129,17 @@ public class Week
                 getWeekDay(DateTimeConstants.SUNDAY).getPendingProceduresBetween(start, end))
             .sorted()
             .collect(Collectors.toList());
+    }
+
+    void setStartDate(LocalDate startDate)
+    {
+        monday.setStartDate(startDate.plusDays(0));
+        tuesday.setStartDate(startDate.plusDays(1));
+        wednesday.setStartDate(startDate.plusDays(2));
+        thursday.setStartDate(startDate.plusDays(3));
+        friday.setStartDate(startDate.plusDays(4));
+        saturday.setStartDate(startDate.plusDays(5));
+        sunday.setStartDate(startDate.plusDays(6));
     }
 
     @SafeVarargs

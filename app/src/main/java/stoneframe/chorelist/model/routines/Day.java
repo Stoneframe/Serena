@@ -17,7 +17,7 @@ public class Day
 
     private LocalDate startDate;
 
-    public Day(String name, LocalDate startDate, int interval)
+    Day(String name, LocalDate startDate, int interval)
     {
         this.name = name;
         this.interval = interval;
@@ -34,24 +34,9 @@ public class Day
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate)
-    {
-        this.startDate = startDate;
-    }
-
     public List<Procedure> getProcedures()
     {
         return procedures.stream().sorted().collect(Collectors.toList());
-    }
-
-    public void addProcedure(Procedure procedure)
-    {
-        procedures.add(procedure);
-    }
-
-    public void removeProcedure(Procedure procedure)
-    {
-        procedures.remove(procedure);
     }
 
     public LocalDateTime getNextProcedureTime(LocalDateTime now)
@@ -122,5 +107,20 @@ public class Day
         }
 
         return nextTime.equals(today);
+    }
+
+    void setStartDate(LocalDate startDate)
+    {
+        this.startDate = startDate;
+    }
+
+    void addProcedure(Procedure procedure)
+    {
+        procedures.add(procedure);
+    }
+
+    void removeProcedure(Procedure procedure)
+    {
+        procedures.remove(procedure);
     }
 }

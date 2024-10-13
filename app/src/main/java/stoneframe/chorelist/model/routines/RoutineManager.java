@@ -9,9 +9,16 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import stoneframe.chorelist.model.timeservices.TimeService;
+
 public class RoutineManager
 {
     private final List<Routine<?>> routines = new LinkedList<>();
+
+    public DayRoutineEditor getDayRoutineEditor(DayRoutine routine, TimeService timeService)
+    {
+        return new DayRoutineEditor(this, routine, timeService);
+    }
 
     public void addRoutine(Routine<?> routine)
     {
@@ -28,6 +35,11 @@ public class RoutineManager
         return routines.stream()
             .sorted(Comparator.comparing(Routine::getName))
             .collect(Collectors.toList());
+    }
+
+    public boolean containsRoutine(Routine<?> routine)
+    {
+        return routines.contains(routine);
     }
 
     public LocalDateTime getNextProcedureTime(LocalDateTime now)

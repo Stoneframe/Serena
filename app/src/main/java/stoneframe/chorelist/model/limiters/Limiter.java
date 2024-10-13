@@ -32,7 +32,7 @@ public class Limiter
 
     private boolean allowQuick;
 
-    public Limiter(String name, LocalDate startDate, int incrementPerDay, boolean allowQuick)
+    Limiter(String name, LocalDate startDate, int incrementPerDay, boolean allowQuick)
     {
         this.name = name;
         this.startDate = startDate;

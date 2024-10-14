@@ -4,72 +4,70 @@ import androidx.annotation.NonNull;
 
 import org.joda.time.LocalDate;
 
-public class Task
-{
-    private String description;
-    private LocalDate deadline;
-    private LocalDate ignoreBefore;
-    private LocalDate completed;
-    private boolean isDone;
+import stoneframe.chorelist.model.util.Revertible;
 
+public class Task extends Revertible<TaskData>
+{
     Task(String description, LocalDate deadline, LocalDate ignoreBefore)
     {
-        this.description = description;
-        this.deadline = deadline;
-        this.ignoreBefore = ignoreBefore;
-        this.completed = null;
+        super(new TaskData(
+            description,
+            deadline,
+            ignoreBefore,
+            null,
+            false));
     }
 
     public String getDescription()
     {
-        return description;
+        return data().description;
     }
 
     public LocalDate getDeadline()
     {
-        return deadline == null ? new LocalDate(Long.MIN_VALUE) : deadline;
+        return data().deadline == null ? new LocalDate(Long.MIN_VALUE) : data().deadline;
     }
 
     public LocalDate getIgnoreBefore()
     {
-        return ignoreBefore == null ? new LocalDate(-292275055, 1, 1) : ignoreBefore;
+        return data().ignoreBefore == null ? new LocalDate(-292275055, 1, 1) : data().ignoreBefore;
     }
 
     public boolean isDone()
     {
-        return isDone;
+        return data().isDone;
     }
 
     public LocalDate getCompleted()
     {
-        return completed;
+        return data().completed;
     }
 
     void setDescription(String description)
     {
-        this.description = description;
+        data().description = description;
     }
 
     void setDeadline(LocalDate deadline)
     {
-        this.deadline = deadline;
+        data().deadline = deadline;
     }
 
     void setIgnoreBefore(LocalDate ignoreBefore)
     {
-        this.ignoreBefore = ignoreBefore;
+        data().ignoreBefore = ignoreBefore;
     }
 
     void setDone(boolean done, LocalDate now)
     {
-        isDone = done;
-        completed = done ? now : null;
+        data().isDone = done;
+        data().completed = done ? now : null;
     }
 
     @NonNull
     @Override
     public String toString()
     {
-        return description;
+        return data().description;
     }
 }

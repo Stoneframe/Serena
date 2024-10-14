@@ -5,6 +5,7 @@ import org.joda.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -12,11 +13,11 @@ import stoneframe.chorelist.model.timeservices.TimeService;
 
 public class RoutineManager
 {
-    private final RoutineContainer container;
+    private final Supplier<RoutineContainer> container;
 
     private final TimeService timeService;
 
-    public RoutineManager(RoutineContainer container, TimeService timeService)
+    public RoutineManager(Supplier<RoutineContainer> container, TimeService timeService)
     {
         this.container = container;
         this.timeService = timeService;
@@ -54,29 +55,29 @@ public class RoutineManager
 
     public void addRoutine(Routine<?> routine)
     {
-        container.routines.add(routine);
+        getContainer().routines.add(routine);
     }
 
     public void removeRoutine(Routine<?> routine)
     {
-        container.routines.remove(routine);
+        getContainer().routines.remove(routine);
     }
 
     public List<Routine<?>> getAllRoutines()
     {
-        return container.routines.stream()
+        return getContainer().routines.stream()
             .sorted(Comparator.comparing(Routine::getName))
             .collect(Collectors.toList());
     }
 
     public boolean containsRoutine(Routine<?> routine)
     {
-        return container.routines.contains(routine);
+        return getContainer().routines.contains(routine);
     }
 
     public LocalDateTime getNextProcedureTime()
     {
-        return container.routines.stream()
+        return getContainer().routines.stream()
             .filter(Routine::isEnabled)
             .flatMap(r -> Stream.of(r.getNextProcedureTime(timeService.getNow())))
             .filter(Objects::nonNull)
@@ -87,7 +88,7 @@ public class RoutineManager
 
     public List<PendingProcedure> getPendingProcedures()
     {
-        return container.routines.stream()
+        return getContainer().routines.stream()
             .filter(Routine::isEnabled)
             .flatMap(r -> r.getPendingProcedures(timeService.getNow()).stream())
             .sorted()
@@ -96,7 +97,7 @@ public class RoutineManager
 
     public List<PendingProcedure> getFirstPendingProcedures()
     {
-        return container.routines.stream()
+        return getContainer().routines.stream()
             .filter(Routine::isEnabled)
             .map(r -> r.getPendingProcedure(timeService.getNow()))
             .filter(Objects::nonNull)
@@ -106,7 +107,7 @@ public class RoutineManager
 
     public void procedureDone(PendingProcedure procedure)
     {
-        Routine<?> routine = container.routines.stream()
+        Routine<?> routine = getContainer().routines.stream()
             .filter(r -> r.getAllProcedures().contains(procedure.getProcedure()))
             .findFirst()
             .orElse(null);
@@ -119,5 +120,10 @@ public class RoutineManager
     public void resetRoutine(Routine<?> routine)
     {
         routine.reset(timeService.getNow());
+    }
+
+    private RoutineContainer getContainer()
+    {
+        return container.get();
     }
 }

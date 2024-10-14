@@ -7,17 +7,18 @@ import org.joda.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import stoneframe.chorelist.model.timeservices.TimeService;
 
 public class ChoreManager
 {
-    private final ChoreContainer container;
+    private final Supplier<ChoreContainer> container;
 
     private final TimeService timeService;
 
-    public ChoreManager(ChoreContainer container, TimeService timeService)
+    public ChoreManager(Supplier<ChoreContainer> container, TimeService timeService)
     {
         this.container = container;
         this.timeService = timeService;
@@ -25,7 +26,7 @@ public class ChoreManager
 
     public EffortTracker getEffortTracker()
     {
-        return container.effortTracker;
+        return getContainer().effortTracker;
     }
 
     public ChoreEditor getChoreEditor(Chore chore)
@@ -40,13 +41,13 @@ public class ChoreManager
 
     public List<Chore> getAllChores()
     {
-        container.chores.sort(Comparator.comparing(Chore::getDescription));
-        return Collections.unmodifiableList(container.chores);
+        getContainer().chores.sort(Comparator.comparing(Chore::getDescription));
+        return Collections.unmodifiableList(getContainer().chores);
     }
 
     public boolean containsChore(Chore chore)
     {
-        return container.chores.contains(chore);
+        return getContainer().chores.contains(chore);
     }
 
     public List<Chore> getTodaysChores()
@@ -92,22 +93,22 @@ public class ChoreManager
 
         ChoreManager other = (ChoreManager)obj;
 
-        return this.container.chores.equals(other.container.chores);
+        return this.getContainer().chores.equals(other.getContainer().chores);
     }
 
     void addChore(Chore chore)
     {
-        container.chores.add(chore);
+        getContainer().chores.add(chore);
     }
 
     void removeChore(Chore chore)
     {
-        container.chores.remove(chore);
+        getContainer().chores.remove(chore);
     }
 
     private @NonNull List<Chore> getAllEligibleChores(LocalDate today)
     {
-        return container.chores.stream()
+        return getContainer().chores.stream()
             .sorted(new Chore.ChoreComparator(today))
             .filter(Chore::isEnabled)
             .filter(c -> c.isTimeToDo(today))
@@ -123,7 +124,8 @@ public class ChoreManager
             return chore.getEffort();
         }
 
-        return getEffortTracker().getTodaysEffort(timeService.getToday()) - getSumOfEffortExceptLast(todaysChores);
+        return getEffortTracker().getTodaysEffort(timeService.getToday()) - getSumOfEffortExceptLast(
+            todaysChores);
     }
 
     private static boolean isLastChoreInList(Chore chore, List<Chore> todaysChores)
@@ -143,6 +145,11 @@ public class ChoreManager
 
     private ChoreSelector getChoreSelector()
     {
-        return container.choreSelector;
+        return getContainer().choreSelector;
+    }
+
+    private ChoreContainer getContainer()
+    {
+        return container.get();
     }
 }

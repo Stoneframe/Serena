@@ -45,11 +45,11 @@ public class ChoreList
             container = new Container();
 
             container.Version = storage.getCurrentVersion();
-            container.RoutineManager = new RoutineContainer();
-            container.ChoreManager = new ChoreContainer(effortTracker, choreSelector);
-            container.TaskManager = new TaskContainer();
-            container.ChecklistManager = new ChecklistContainer();
-            container.LimiterManager = new LimiterContainer();
+            container.RoutineContainer = new RoutineContainer();
+            container.ChoreContainer = new ChoreContainer(effortTracker, choreSelector);
+            container.TaskContainer = new TaskContainer();
+            container.ChecklistContainer = new ChecklistContainer();
+            container.LimiterContainer = new LimiterContainer();
         }
     }
 
@@ -64,7 +64,7 @@ public class ChoreList
 
     public ChoreManager getChoreManager()
     {
-        return new ChoreManager(container.ChoreManager, timeService);
+        return new ChoreManager(() -> container.ChoreContainer, timeService);
     }
 
     // ====================================================================
@@ -73,7 +73,7 @@ public class ChoreList
 
     public TaskManager getTaskManager()
     {
-        return new TaskManager(container.TaskManager, timeService);
+        return new TaskManager(() -> container.TaskContainer, timeService);
     }
 
     // ====================================================================
@@ -82,7 +82,7 @@ public class ChoreList
 
     public RoutineManager getRoutineManager()
     {
-        return new RoutineManager(container.RoutineManager, timeService);
+        return new RoutineManager(() -> container.RoutineContainer, timeService);
     }
 
     // ====================================================================
@@ -91,7 +91,7 @@ public class ChoreList
 
     public ChecklistManager getChecklistManager()
     {
-        return new ChecklistManager(container.ChecklistManager, timeService);
+        return new ChecklistManager(() -> container.ChecklistContainer, timeService);
     }
 
     // ====================================================================
@@ -100,6 +100,6 @@ public class ChoreList
 
     public LimiterManager getLimiterManager()
     {
-        return new LimiterManager(container.LimiterManager, timeService);
+        return new LimiterManager(() -> container.LimiterContainer, timeService);
     }
 }

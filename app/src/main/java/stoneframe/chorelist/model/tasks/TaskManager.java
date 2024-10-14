@@ -7,17 +7,18 @@ import org.joda.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import stoneframe.chorelist.model.timeservices.TimeService;
 
 public class TaskManager
 {
-    private final TaskContainer container;
+    private final Supplier<TaskContainer> container;
 
     private final TimeService timeService;
 
-    public TaskManager(TaskContainer container, TimeService timeService)
+    public TaskManager(Supplier<TaskContainer> container, TimeService timeService)
     {
         this.container = container;
         this.timeService = timeService;
@@ -27,7 +28,7 @@ public class TaskManager
     {
         removeOldCompletedTasks(timeService.getToday());
 
-        List<Task> sortedTasks = container.tasks.stream()
+        List<Task> sortedTasks = getContainer().tasks.stream()
             .sorted(getTaskComparator())
             .collect(Collectors.toList());
 
@@ -40,7 +41,7 @@ public class TaskManager
 
         removeOldCompletedTasks(today);
 
-        return container.tasks.stream()
+        return getContainer().tasks.stream()
             .filter(t -> !t.isDone())
             .filter(t -> t.getIgnoreBefore().isBefore(today) || t.getIgnoreBefore().isEqual(today))
             .sorted(getTaskComparator())
@@ -69,22 +70,25 @@ public class TaskManager
 
     boolean containsTask(Task task)
     {
-        return container.tasks.contains(task);
+        return getContainer().tasks.contains(task);
     }
 
     void addTask(Task task)
     {
-        container.tasks.add(task);
+        getContainer().tasks.add(task);
     }
 
     void removeTask(Task task)
     {
-        container.tasks.remove(task);
+        getContainer().tasks.remove(task);
     }
 
     private void removeOldCompletedTasks(LocalDate today)
     {
-        container.tasks.removeIf(t -> t.isDone() && t.getCompleted().plusWeeks(1).isBefore(today));
+        getContainer().tasks
+            .removeIf(t -> t.isDone() && t.getCompleted()
+            .plusWeeks(1)
+            .isBefore(today));
     }
 
     @NonNull
@@ -106,5 +110,10 @@ public class TaskManager
 
             return task1.getDeadline().compareTo(task2.getDeadline());
         };
+    }
+
+    private TaskContainer getContainer()
+    {
+        return container.get();
     }
 }

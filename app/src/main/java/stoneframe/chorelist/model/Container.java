@@ -10,13 +10,13 @@ public class Container
 {
     public int Version = 0;
 
-    public ChoreContainer ChoreManager;
+    public ChoreContainer ChoreContainer;
 
-    public TaskContainer TaskManager;
+    public TaskContainer TaskContainer;
 
-    public RoutineContainer RoutineManager;
+    public RoutineContainer RoutineContainer;
 
-    public ChecklistContainer ChecklistManager;
+    public ChecklistContainer ChecklistContainer;
 
-    public LimiterContainer LimiterManager;
+    public LimiterContainer LimiterContainer;
 }

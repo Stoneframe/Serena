@@ -307,6 +307,10 @@ public class TodayFragment extends Fragment
     {
         super.onResume();
 
+        procedureAdapter.notifyDataSetChanged();
+        choreAdapter.notifyDataSetChanged();
+        taskAdapter.notifyDataSetChanged();
+
         updateColors();
     }
 

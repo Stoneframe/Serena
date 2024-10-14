@@ -2,16 +2,17 @@ package stoneframe.chorelist.model.checklists;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 import stoneframe.chorelist.model.timeservices.TimeService;
 
 public class ChecklistManager
 {
-    private final ChecklistContainer container;
+    private final Supplier<ChecklistContainer> container;
 
     private final TimeService timeService;
 
-    public ChecklistManager(ChecklistContainer container, TimeService timeService)
+    public ChecklistManager(Supplier<ChecklistContainer> container, TimeService timeService)
     {
         this.container = container;
         this.timeService = timeService;
@@ -19,7 +20,7 @@ public class ChecklistManager
 
     public List<Checklist> getChecklists()
     {
-        return Collections.unmodifiableList(container.checklists);
+        return Collections.unmodifiableList(getContainer().checklists);
     }
 
     public ChecklistEditor getChecklistEditor(Checklist checklist)
@@ -29,11 +30,16 @@ public class ChecklistManager
 
     public void createChecklist(String name)
     {
-        container.checklists.add(new Checklist(name));
+        getContainer().checklists.add(new Checklist(name));
     }
 
     void removeChecklist(Checklist checklist)
     {
-        container.checklists.remove(checklist);
+        getContainer().checklists.remove(checklist);
+    }
+
+    private ChecklistContainer getContainer()
+    {
+        return container.get();
     }
 }

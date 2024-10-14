@@ -10,9 +10,7 @@ import stoneframe.chorelist.model.chores.ChoreContainer;
 import stoneframe.chorelist.model.chores.ChoreManager;
 import stoneframe.chorelist.model.chores.ChoreSelector;
 import stoneframe.chorelist.model.chores.EffortTracker;
-import stoneframe.chorelist.model.limiters.Limiter;
 import stoneframe.chorelist.model.limiters.LimiterContainer;
-import stoneframe.chorelist.model.limiters.LimiterEditor;
 import stoneframe.chorelist.model.limiters.LimiterManager;
 import stoneframe.chorelist.model.routines.DayRoutine;
 import stoneframe.chorelist.model.routines.DayRoutineEditor;
@@ -20,6 +18,7 @@ import stoneframe.chorelist.model.routines.FortnightRoutine;
 import stoneframe.chorelist.model.routines.FortnightRoutineEditor;
 import stoneframe.chorelist.model.routines.PendingProcedure;
 import stoneframe.chorelist.model.routines.Routine;
+import stoneframe.chorelist.model.routines.RoutineContainer;
 import stoneframe.chorelist.model.routines.RoutineManager;
 import stoneframe.chorelist.model.routines.WeekRoutine;
 import stoneframe.chorelist.model.routines.WeekRoutineEditor;
@@ -59,7 +58,7 @@ public class ChoreList
             container = new Container();
 
             container.Version = storage.getCurrentVersion();
-            container.RoutineManager = new RoutineManager();
+            container.RoutineManager = new RoutineContainer();
             container.ChoreManager = new ChoreContainer(effortTracker, choreSelector);
             container.TaskManager = new TaskManager();
             container.ChecklistManager = new ChecklistContainer();
@@ -119,61 +118,9 @@ public class ChoreList
     // ROUTINES
     // ====================================================================
 
-    public List<Routine<?>> getAllRoutines()
+    public RoutineManager getRoutineManager()
     {
-        return container.RoutineManager.getAllRoutines();
-    }
-
-    public DayRoutineEditor getDayRoutineEditor(DayRoutine routine)
-    {
-        return container.RoutineManager.getDayRoutineEditor(routine, timeService);
-    }
-
-    public WeekRoutineEditor getWeekRoutineEditor(WeekRoutine routine)
-    {
-        return container.RoutineManager.getWeekRoutineEditor(routine, timeService);
-    }
-
-    public FortnightRoutineEditor getFortnightRoutineEditor(FortnightRoutine routine)
-    {
-        return container.RoutineManager.getFortnightRoutineEditor(routine, timeService);
-    }
-
-    public DayRoutine createDayRoutine()
-    {
-        return container.RoutineManager.createDayRoutine(timeService.getNow());
-    }
-
-    public WeekRoutine createWeekRoutine()
-    {
-        return container.RoutineManager.createWeekRoutine(timeService.getNow());
-    }
-
-    public FortnightRoutine createFortnightRoutine()
-    {
-        return container.RoutineManager.createFortnightRoutine(
-            timeService.getToday(),
-            timeService.getNow());
-    }
-
-    public LocalDateTime getNextRoutineProcedureTime()
-    {
-        return container.RoutineManager.getNextProcedureTime(timeService.getNow());
-    }
-
-    public List<PendingProcedure> getPendingProcedures()
-    {
-        return container.RoutineManager.getPendingProcedures(timeService.getNow());
-    }
-
-    public List<PendingProcedure> getFirstPendingProcedures()
-    {
-        return container.RoutineManager.getFirstPendingProcedures(timeService.getNow());
-    }
-
-    public void procedureDone(PendingProcedure procedure)
-    {
-        container.RoutineManager.procedureDone(procedure);
+        return new RoutineManager(container.RoutineManager, timeService);
     }
 
     // ====================================================================

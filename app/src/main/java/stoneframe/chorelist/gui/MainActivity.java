@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         RoutineNotifier.setupNotificationChannel(this);
 
-        LocalDateTime nextRoutineProcedureTime = choreList.getNextRoutineProcedureTime();
+        LocalDateTime nextRoutineProcedureTime = choreList.getRoutineManager().getNextProcedureTime();
 
         if (nextRoutineProcedureTime != null)
         {

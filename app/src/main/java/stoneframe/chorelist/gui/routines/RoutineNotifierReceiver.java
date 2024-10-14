@@ -7,9 +7,9 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 
 import stoneframe.chorelist.gui.GlobalState;
-import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.json.SimpleChoreSelectorConverter;
 import stoneframe.chorelist.json.WeeklyEffortTrackerConverter;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.Storage;
 import stoneframe.chorelist.model.chores.choreselectors.SimpleChoreSelector;
 import stoneframe.chorelist.model.chores.efforttrackers.WeeklyEffortTracker;
@@ -25,7 +25,9 @@ public class RoutineNotifierReceiver extends BroadcastReceiver
         ChoreList choreList = getChoreList(context);
 
         RoutineNotifier.showRoutineNotification(context, choreList);
-        RoutineNotifier.scheduleRoutineAlarm(context, choreList.getNextRoutineProcedureTime());
+        RoutineNotifier.scheduleRoutineAlarm(
+            context,
+            choreList.getRoutineManager().getNextProcedureTime());
     }
 
     @NonNull

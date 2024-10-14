@@ -35,6 +35,7 @@ import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.chores.Chore;
 import stoneframe.chorelist.model.chores.ChoreManager;
 import stoneframe.chorelist.model.routines.PendingProcedure;
+import stoneframe.chorelist.model.routines.RoutineManager;
 import stoneframe.chorelist.model.tasks.Task;
 import stoneframe.chorelist.model.tasks.TaskEditor;
 
@@ -50,6 +51,7 @@ public class TodayFragment extends Fragment
 
     private View rootView;
 
+    private RoutineManager routineManager;
     private ChoreManager choreManager;
 
     @Override
@@ -62,13 +64,14 @@ public class TodayFragment extends Fragment
 
         choreList = globalState.getChoreList();
 
+        routineManager = choreList.getRoutineManager();
         choreManager = choreList.getChoreManager();
 
         rootView = inflater.inflate(R.layout.fragment_today, container, false);
 
         procedureAdapter = new SimpleCheckboxListAdapter<>(
             requireContext(),
-            choreList::getFirstPendingProcedures,
+            routineManager::getFirstPendingProcedures,
             PendingProcedure::toString);
         procedureAdapter.registerDataSetObserver(new TodayDataSetObserver());
         ListView procedureListView = rootView.findViewById(R.id.todays_routines);
@@ -84,7 +87,7 @@ public class TodayFragment extends Fragment
                 waitTwoSeconds();
                 requireActivity().runOnUiThread(() ->
                 {
-                    choreList.procedureDone(procedure);
+                    routineManager.procedureDone(procedure);
                     procedureAdapter.notifyDataSetChanged();
                     RoutineNotifier.updateNotification(getContext(), choreList);
                     choreList.save();
@@ -238,7 +241,8 @@ public class TodayFragment extends Fragment
                 {
                     if (!isConfirmed) return;
 
-                    choreList.getPendingProcedures().forEach(p -> choreList.procedureDone(p));
+                    routineManager.getPendingProcedures()
+                        .forEach(p -> routineManager.procedureDone(p));
                     choreList.save();
 
                     procedureAdapter.notifyDataSetChanged();

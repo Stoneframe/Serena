@@ -76,7 +76,7 @@ public class RoutineNotifier
 
     public static void showRoutineNotification(Context context, ChoreList choreList)
     {
-        List<PendingProcedure> procedures = choreList.getPendingProcedures();
+        List<PendingProcedure> procedures = choreList.getRoutineManager().getPendingProcedures();
 
         if (procedures.isEmpty())
         {
@@ -106,7 +106,7 @@ public class RoutineNotifier
             return;
         }
 
-        List<PendingProcedure> procedures = choreList.getPendingProcedures();
+        List<PendingProcedure> procedures = choreList.getRoutineManager().getPendingProcedures();
 
         if (procedures.isEmpty())
         {

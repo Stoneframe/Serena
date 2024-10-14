@@ -22,7 +22,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
 import stoneframe.chorelist.R;
@@ -36,17 +35,18 @@ import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.routines.DayRoutine;
 import stoneframe.chorelist.model.routines.FortnightRoutine;
 import stoneframe.chorelist.model.routines.Routine;
+import stoneframe.chorelist.model.routines.RoutineManager;
 import stoneframe.chorelist.model.routines.WeekRoutine;
 
 public class AllRoutinesFragment extends Fragment
 {
     private ActivityResultLauncher<Intent> editRoutineLauncher;
 
-    private ChoreList choreList;
-
     private SimpleListAdapter<Routine<?>> routineListAdapter;
 
     private GlobalState globalState;
+    private ChoreList choreList;
+    private RoutineManager routineManager;
 
     @Override
     public View onCreateView(
@@ -57,12 +57,13 @@ public class AllRoutinesFragment extends Fragment
         globalState = GlobalState.getInstance();
 
         choreList = globalState.getChoreList();
+        routineManager = choreList.getRoutineManager();
 
         View rootView = inflater.inflate(R.layout.fragment_all_routines, container, false);
 
         routineListAdapter = new SimpleListAdapter<>(
             requireContext(),
-            choreList::getAllRoutines,
+            routineManager::getAllRoutines,
             Routine::getName,
             this::getRoutineTypeName,
             r -> "");
@@ -78,21 +79,21 @@ public class AllRoutinesFragment extends Fragment
         Button addDayButton = rootView.findViewById(R.id.add_day_button);
         addDayButton.setOnClickListener(v ->
         {
-            Routine<?> routine = choreList.createDayRoutine();
+            Routine<?> routine = routineManager.createDayRoutine();
             startRoutineEditor(routine, DayRoutineActivity.ACTION_ADD);
         });
 
         Button addWeekButton = rootView.findViewById(R.id.add_week_button);
         addWeekButton.setOnClickListener(v ->
         {
-            Routine<?> routine = choreList.createWeekRoutine();
+            Routine<?> routine = routineManager.createWeekRoutine();
             startRoutineEditor(routine, WeekRoutineActivity.ACTION_ADD);
         });
 
         Button addFortnightButton = rootView.findViewById(R.id.add_fortnight_button);
         addFortnightButton.setOnClickListener(v ->
         {
-            Routine<?> routine = choreList.createFortnightRoutine();
+            Routine<?> routine = routineManager.createFortnightRoutine();
             startRoutineEditor(routine, FortnightRoutineActivity.ACTION_ADD);
         });
 
@@ -206,7 +207,7 @@ public class AllRoutinesFragment extends Fragment
 
     private void scheduleNextRoutineAlarm()
     {
-        LocalDateTime nextAlarmTime = choreList.getNextRoutineProcedureTime();
+        LocalDateTime nextAlarmTime = routineManager.getNextProcedureTime();
 
         if (nextAlarmTime == null)
         {

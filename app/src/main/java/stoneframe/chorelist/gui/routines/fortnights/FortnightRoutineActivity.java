@@ -69,7 +69,7 @@ public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRouti
     @Override
     protected FortnightRoutineEditor getRoutineEditor(FortnightRoutine routine)
     {
-        return choreList.getFortnightRoutineEditor(routine);
+        return choreList.getRoutineManager().getFortnightRoutineEditor(routine);
     }
 
     @Override

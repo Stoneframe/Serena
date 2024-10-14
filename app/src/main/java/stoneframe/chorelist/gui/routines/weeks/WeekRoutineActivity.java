@@ -6,7 +6,6 @@ import android.widget.ExpandableListView;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.routines.EditRoutineActivity;
 import stoneframe.chorelist.gui.routines.util.WeekExpandableListAdaptor;
-import stoneframe.chorelist.model.routines.Day;
 import stoneframe.chorelist.model.routines.Procedure;
 import stoneframe.chorelist.model.routines.WeekRoutine;
 import stoneframe.chorelist.model.routines.WeekRoutineEditor;
@@ -49,7 +48,7 @@ public class WeekRoutineActivity extends EditRoutineActivity<WeekRoutine, WeekRo
     @Override
     protected WeekRoutineEditor getRoutineEditor(WeekRoutine routine)
     {
-        return choreList.getWeekRoutineEditor(routine);
+        return choreList.getRoutineManager().getWeekRoutineEditor(routine);
     }
 
     @Override

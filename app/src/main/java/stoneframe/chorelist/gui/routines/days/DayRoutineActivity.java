@@ -50,7 +50,7 @@ public class DayRoutineActivity extends EditRoutineActivity<DayRoutine, DayRouti
     @Override
     protected DayRoutineEditor getRoutineEditor(DayRoutine routine)
     {
-        return choreList.getDayRoutineEditor(routine);
+        return choreList.getRoutineManager().getDayRoutineEditor(routine);
     }
 
     @Override

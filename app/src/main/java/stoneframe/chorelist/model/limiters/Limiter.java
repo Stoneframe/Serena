@@ -45,19 +45,9 @@ public class Limiter
         return name;
     }
 
-    void setName(String name)
-    {
-        this.name = name;
-    }
-
     public String getUnit()
     {
         return unit != null ? unit : "";
-    }
-
-    void setUnit(String unit)
-    {
-        this.unit = unit;
     }
 
     public int getIncrementPerDay()
@@ -83,18 +73,6 @@ public class Limiter
     public int getMaxValue()
     {
         return maxValue != null ? maxValue : Integer.MAX_VALUE;
-    }
-
-    void setMaxValue(Integer maxValue, LocalDateTime now)
-    {
-        this.maxValue = maxValue;
-
-        updatePreviousExpenditures(now);
-    }
-
-    public void setAllowQuick(boolean allowQuick)
-    {
-        this.allowQuick = allowQuick;
     }
 
     public LocalDateTime getReplenishTime(LocalDateTime now)
@@ -143,6 +121,16 @@ public class Limiter
         return expenditures.stream().map(p -> p.first).collect(Collectors.toList());
     }
 
+    void setName(String name)
+    {
+        this.name = name;
+    }
+
+    void setUnit(String unit)
+    {
+        this.unit = unit;
+    }
+
     void setIncrementPerDay(LocalDateTime now, int incrementPerDay)
     {
         int oldCurrentAvailable = getAvailable(now);
@@ -156,6 +144,18 @@ public class Limiter
         int newCurrentAvailable = getAvailable(now);
 
         previousExpenditure = newCurrentAvailable - oldCurrentAvailable;
+    }
+
+    void setMaxValue(Integer maxValue, LocalDateTime now)
+    {
+        this.maxValue = maxValue;
+
+        updatePreviousExpenditures(now);
+    }
+
+    void setAllowQuick(boolean allowQuick)
+    {
+        this.allowQuick = allowQuick;
     }
 
     void addExpenditureType(CustomExpenditureType expenditureType)

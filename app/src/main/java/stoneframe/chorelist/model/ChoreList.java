@@ -112,11 +112,6 @@ public class ChoreList
         container.ChoreManager.postpone(chore, timeService.getToday());
     }
 
-    public int getRemainingEffort()
-    {
-        return container.ChoreManager.getEffortTracker().getTodaysEffort(timeService.getToday());
-    }
-
     public EffortTracker getEffortTracker()
     {
         return container.ChoreManager.getEffortTracker();
@@ -129,11 +124,6 @@ public class ChoreList
     public List<Task> getAllTasks()
     {
         return container.TaskManager.getAllTasks(true, timeService.getToday());
-    }
-
-    public List<Task> getAllTasks(boolean includeCompleted)
-    {
-        return container.TaskManager.getAllTasks(includeCompleted, timeService.getToday());
     }
 
     public TaskEditor getTaskEditor(Task task)
@@ -202,16 +192,6 @@ public class ChoreList
             timeService.getNow());
     }
 
-    public void addRoutine(Routine<?> routine)
-    {
-        container.RoutineManager.addRoutine(routine);
-    }
-
-    public void removeRoutine(Routine<?> routine)
-    {
-        container.RoutineManager.removeRoutine(routine);
-    }
-
     public LocalDateTime getNextRoutineProcedureTime()
     {
         return container.RoutineManager.getNextProcedureTime(timeService.getNow());
@@ -230,11 +210,6 @@ public class ChoreList
     public void procedureDone(PendingProcedure procedure)
     {
         container.RoutineManager.procedureDone(procedure);
-    }
-
-    public void resetRoutine(Routine<?> routine)
-    {
-        container.RoutineManager.resetRoutine(routine, timeService.getNow());
     }
 
     // ====================================================================

@@ -8,71 +8,61 @@ import org.joda.time.LocalTime;
 import org.joda.time.Minutes;
 
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Limiter
+import stoneframe.chorelist.model.util.Revertible;
+
+public class Limiter extends Revertible<LimiterData>
 {
     private static final double MINUTES_PER_DAY = 24 * 60;
 
-    private final List<CustomExpenditureType> expenditureTypes = new LinkedList<>();
-    private final List<Pair<Expenditure, LocalDateTime>> expenditures = new LinkedList<>();
-
-    private String name;
-    private String unit;
-
-    private int previousExpenditure;
-
-    private LocalDate startDate;
-    private int incrementPerDay;
-
-    private Integer maxValue;
-
-    private boolean allowQuick;
-
     Limiter(String name, LocalDate startDate, int incrementPerDay, boolean allowQuick)
     {
-        this.name = name;
-        this.startDate = startDate;
-        this.incrementPerDay = incrementPerDay;
-        this.allowQuick = allowQuick;
+        super(new LimiterData(
+            name,
+            null,
+            0,
+            startDate,
+            incrementPerDay,
+            null,
+            allowQuick));
     }
 
     public String getName()
     {
-        return name;
+        return data().name;
     }
 
     public String getUnit()
     {
-        return unit != null ? unit : "";
+        return data().unit != null ? data().unit : "";
     }
 
     public int getIncrementPerDay()
     {
-        return incrementPerDay;
+        return data().incrementPerDay;
     }
 
     public boolean isQuickDisableable()
     {
-        return !expenditureTypes.isEmpty();
+        return !data().expenditureTypes.isEmpty();
     }
 
     public boolean isQuickAllowed()
     {
-        return allowQuick;
+        return data().allowQuick;
     }
 
     public boolean hasMaxValue()
     {
-        return maxValue != null;
+        return data().maxValue != null;
     }
 
     public int getMaxValue()
     {
-        return maxValue != null ? maxValue : Integer.MAX_VALUE;
+        return data().maxValue != null ? data().maxValue : Integer.MAX_VALUE;
     }
 
     public LocalDateTime getReplenishTime(LocalDateTime now)
@@ -98,74 +88,74 @@ public class Limiter
     {
         int totalAvailable = getTotalAvailable(now);
 
-        return maxValue != null ? Math.min(totalAvailable, maxValue) : totalAvailable;
+        return data().maxValue != null ? Math.min(totalAvailable, data().maxValue) : totalAvailable;
     }
 
     public List<ExpenditureType> getExpenditureTypes()
     {
-        if (!allowQuick)
+        if (!data().allowQuick)
         {
-            return expenditureTypes.stream()
+            return data().expenditureTypes.stream()
                 .sorted(Comparator.comparing(ExpenditureType::getName))
                 .collect(Collectors.toList());
         }
 
         return Stream.concat(
                 Stream.of(new QuickExpenditureType()),
-                expenditureTypes.stream().sorted(Comparator.comparing(ExpenditureType::getName)))
+                data().expenditureTypes.stream().sorted(Comparator.comparing(ExpenditureType::getName)))
             .collect(Collectors.toList());
     }
 
     public List<Expenditure> getExpenditures()
     {
-        return expenditures.stream().map(p -> p.first).collect(Collectors.toList());
+        return data().expenditures.stream().map(p -> p.first).collect(Collectors.toList());
     }
 
     void setName(String name)
     {
-        this.name = name;
+        data().name = name;
     }
 
     void setUnit(String unit)
     {
-        this.unit = unit;
+        data().unit = unit;
     }
 
     void setIncrementPerDay(LocalDateTime now, int incrementPerDay)
     {
         int oldCurrentAvailable = getAvailable(now);
 
-        this.startDate = now.toLocalDate();
-        this.incrementPerDay = incrementPerDay;
+        data().startDate = now.toLocalDate();
+        data().incrementPerDay = incrementPerDay;
 
-        expenditures.clear();
-        previousExpenditure = 0;
+        data().expenditures.clear();
+        data().previousExpenditure = 0;
 
         int newCurrentAvailable = getAvailable(now);
 
-        previousExpenditure = newCurrentAvailable - oldCurrentAvailable;
+        data().previousExpenditure = newCurrentAvailable - oldCurrentAvailable;
     }
 
     void setMaxValue(Integer maxValue, LocalDateTime now)
     {
-        this.maxValue = maxValue;
+        data().maxValue = maxValue;
 
         updatePreviousExpenditures(now);
     }
 
     void setAllowQuick(boolean allowQuick)
     {
-        this.allowQuick = allowQuick;
+        data().allowQuick = allowQuick;
     }
 
     void addExpenditureType(CustomExpenditureType expenditureType)
     {
-        expenditureTypes.add(expenditureType);
+        data().expenditureTypes.add(expenditureType);
     }
 
     void removeExpenditureType(CustomExpenditureType expenditureType)
     {
-        expenditureTypes.remove(expenditureType);
+        data().expenditureTypes.remove(expenditureType);
     }
 
     void addExpenditure(Expenditure expenditure, LocalDateTime now)
@@ -173,52 +163,52 @@ public class Limiter
         updatePreviousExpenditures(now);
         clearOldExpenditures(now);
 
-        expenditures.add(new Pair<>(expenditure, now));
+        data().expenditures.add(new Pair<>(expenditure, now));
     }
 
     void removeExpenditure(Expenditure expenditure)
     {
-        expenditures.removeIf(p -> p.first.equals(expenditure));
+        data().expenditures.removeIf(p -> p.first.equals(expenditure));
     }
 
     private void updatePreviousExpenditures(LocalDateTime now)
     {
-        if (maxValue == null) return;
+        if (data().maxValue == null) return;
 
         int totalAvailable = getTotalAvailable(now);
 
-        if (totalAvailable > maxValue)
+        if (totalAvailable > data().maxValue)
         {
-            previousExpenditure += totalAvailable - maxValue;
+            data().previousExpenditure += totalAvailable - data().maxValue;
         }
     }
 
     private void clearOldExpenditures(LocalDateTime now)
     {
-        List<Pair<Expenditure, LocalDateTime>> expendituresOlderThanOneDay = expenditures.stream()
+        List<Pair<Expenditure, LocalDateTime>> expendituresOlderThanOneDay = data().expenditures.stream()
             .filter(p -> p.second.isBefore(now.minusDays(1)))
             .collect(Collectors.toList());
 
-        previousExpenditure += expendituresOlderThanOneDay.stream()
+        data().previousExpenditure += expendituresOlderThanOneDay.stream()
             .mapToInt(p -> p.first.getAmount())
             .sum();
 
-        expenditures.removeAll(expendituresOlderThanOneDay);
+        data().expenditures.removeAll(expendituresOlderThanOneDay);
     }
 
     private int getTotalAvailable(LocalDateTime now)
     {
         Minutes minutes = Minutes.minutesBetween(
-            startDate.toLocalDateTime(LocalTime.MIDNIGHT),
+            data().startDate.toLocalDateTime(LocalTime.MIDNIGHT),
             now);
 
-        int recentExpenditures = expenditures.stream()
+        int recentExpenditures = data().expenditures.stream()
             .map(p -> p.first)
             .mapToInt(Expenditure::getAmount)
             .sum();
 
-        return (int)(incrementPerDay * minutes.getMinutes() / MINUTES_PER_DAY)
-            - previousExpenditure
+        return (int)(data().incrementPerDay * minutes.getMinutes() / MINUTES_PER_DAY)
+            - data().previousExpenditure
             - recentExpenditures;
     }
 }

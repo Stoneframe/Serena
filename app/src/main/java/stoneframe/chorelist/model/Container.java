@@ -1,10 +1,12 @@
 package stoneframe.chorelist.model;
 
+import stoneframe.chorelist.model.chores.ChoreContainer;
+
 public class Container
 {
     public int Version = 0;
 
-    public stoneframe.chorelist.model.chores.ChoreManager ChoreManager;
+    public ChoreContainer ChoreManager;
 
     public stoneframe.chorelist.model.tasks.TaskManager TaskManager;
 

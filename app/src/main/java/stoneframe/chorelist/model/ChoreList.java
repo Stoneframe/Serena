@@ -7,9 +7,8 @@ import java.util.List;
 import stoneframe.chorelist.model.checklists.Checklist;
 import stoneframe.chorelist.model.checklists.ChecklistEditor;
 import stoneframe.chorelist.model.checklists.ChecklistManager;
-import stoneframe.chorelist.model.chores.Chore;
-import stoneframe.chorelist.model.chores.ChoreEditor;
 import stoneframe.chorelist.model.chores.ChoreManager;
+import stoneframe.chorelist.model.chores.ChoreContainer;
 import stoneframe.chorelist.model.chores.ChoreSelector;
 import stoneframe.chorelist.model.chores.EffortTracker;
 import stoneframe.chorelist.model.limiters.Limiter;
@@ -61,7 +60,7 @@ public class ChoreList
 
             container.Version = storage.getCurrentVersion();
             container.RoutineManager = new RoutineManager();
-            container.ChoreManager = new ChoreManager(effortTracker, choreSelector);
+            container.ChoreManager = new ChoreContainer(effortTracker, choreSelector);
             container.TaskManager = new TaskManager();
             container.ChecklistManager = new ChecklistManager();
             container.LimiterManager = new LimiterManager();
@@ -77,44 +76,9 @@ public class ChoreList
     // CHORES
     // ====================================================================
 
-    public List<Chore> getAllChores()
+    public ChoreManager getChoreManager()
     {
-        return container.ChoreManager.getAllChores();
-    }
-
-    public ChoreEditor getChoreEditor(Chore chore)
-    {
-        return container.ChoreManager.getChoreEditor(chore, timeService);
-    }
-
-    public Chore createChore()
-    {
-        return container.ChoreManager.createChore(timeService.getToday());
-    }
-
-    public List<Chore> getTodaysChores()
-    {
-        return container.ChoreManager.getChores(timeService.getToday());
-    }
-
-    public void choreDone(Chore chore)
-    {
-        container.ChoreManager.complete(chore, timeService.getToday());
-    }
-
-    public void choreSkip(Chore chore)
-    {
-        container.ChoreManager.skip(chore, timeService.getToday());
-    }
-
-    public void chorePostpone(Chore chore)
-    {
-        container.ChoreManager.postpone(chore, timeService.getToday());
-    }
-
-    public EffortTracker getEffortTracker()
-    {
-        return container.ChoreManager.getEffortTracker();
+        return new ChoreManager(container.ChoreManager, timeService);
     }
 
     // ====================================================================

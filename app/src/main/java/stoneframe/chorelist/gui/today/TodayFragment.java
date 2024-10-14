@@ -33,6 +33,7 @@ import stoneframe.chorelist.gui.util.DialogUtils;
 import stoneframe.chorelist.gui.util.SimpleCheckboxListAdapter;
 import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.chores.Chore;
+import stoneframe.chorelist.model.chores.ChoreManager;
 import stoneframe.chorelist.model.routines.PendingProcedure;
 import stoneframe.chorelist.model.tasks.Task;
 import stoneframe.chorelist.model.tasks.TaskEditor;
@@ -49,6 +50,8 @@ public class TodayFragment extends Fragment
 
     private View rootView;
 
+    private ChoreManager choreManager;
+
     @Override
     public View onCreateView(
         LayoutInflater inflater,
@@ -58,6 +61,8 @@ public class TodayFragment extends Fragment
         GlobalState globalState = GlobalState.getInstance();
 
         choreList = globalState.getChoreList();
+
+        choreManager = choreList.getChoreManager();
 
         rootView = inflater.inflate(R.layout.fragment_today, container, false);
 
@@ -89,7 +94,7 @@ public class TodayFragment extends Fragment
 
         choreAdapter = new SimpleCheckboxListAdapter<>(
             requireContext(),
-            choreList::getTodaysChores,
+            choreManager::getTodaysChores,
             Chore::getDescription);
         choreAdapter.registerDataSetObserver(new TodayDataSetObserver());
         ListView choreListView = rootView.findViewById(R.id.todays_chores);
@@ -105,7 +110,7 @@ public class TodayFragment extends Fragment
                 waitTwoSeconds();
                 requireActivity().runOnUiThread(() ->
                 {
-                    choreList.choreDone(chore);
+                    choreManager.complete(chore);
                     choreAdapter.notifyDataSetChanged();
                     choreList.save();
                 });
@@ -118,15 +123,15 @@ public class TodayFragment extends Fragment
                 .setCancelable(false)
                 .setPositiveButton("Skip", (dialog, skipButtonId) ->
                 {
-                    Chore chore = choreList.getTodaysChores().get(position);
-                    choreList.choreSkip(chore);
+                    Chore chore = choreManager.getTodaysChores().get(position);
+                    choreManager.skip(chore);
                     choreAdapter.notifyDataSetChanged();
                     choreList.save();
                 })
                 .setNegativeButton("Postpone", (dialog, postponeButtonId) ->
                 {
-                    Chore chore = choreList.getTodaysChores().get(position);
-                    choreList.chorePostpone(chore);
+                    Chore chore = choreManager.getTodaysChores().get(position);
+                    choreManager.postpone(chore);
                     choreAdapter.notifyDataSetChanged();
                     choreList.save();
                 })
@@ -251,7 +256,7 @@ public class TodayFragment extends Fragment
                 {
                     if (!isConfirmed) return;
 
-                    choreList.getEffortTracker().reset(LocalDate.now());
+                    choreManager.getEffortTracker().reset(LocalDate.now());
                     choreList.save();
 
                     choreAdapter.notifyDataSetChanged();

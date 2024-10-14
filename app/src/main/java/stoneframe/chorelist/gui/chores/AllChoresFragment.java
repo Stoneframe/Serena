@@ -27,6 +27,7 @@ import stoneframe.chorelist.gui.GlobalState;
 import stoneframe.chorelist.gui.util.SimpleListAdapter;
 import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.chores.Chore;
+import stoneframe.chorelist.model.chores.ChoreManager;
 import stoneframe.chorelist.model.chores.efforttrackers.WeeklyEffortTracker;
 
 public class AllChoresFragment extends Fragment
@@ -41,10 +42,11 @@ public class AllChoresFragment extends Fragment
     private ActivityResultLauncher<Intent> editChoreLauncher;
     private ActivityResultLauncher<Intent> editEffortLauncher;
 
+    private SimpleListAdapter<Chore> choreListAdapter;
+
     private GlobalState globalState;
     private ChoreList choreList;
-
-    private SimpleListAdapter<Chore> choreListAdapter;
+    private ChoreManager choreManager;
 
     @SuppressLint("DefaultLocale")
     @Override
@@ -56,12 +58,13 @@ public class AllChoresFragment extends Fragment
         globalState = GlobalState.getInstance();
 
         choreList = globalState.getChoreList();
+        choreManager = choreList.getChoreManager();
 
         View rootView = inflater.inflate(R.layout.fragment_all_chores, container, false);
 
         choreListAdapter = new SimpleListAdapter<>(
             requireContext(),
-            () -> choreList.getAllChores()
+            () -> choreManager.getAllChores()
                 .stream()
                 .sorted(getComparator())
                 .collect(Collectors.toList()),
@@ -83,7 +86,7 @@ public class AllChoresFragment extends Fragment
         Button effortButton = rootView.findViewById(R.id.effort_button);
         effortButton.setOnClickListener(v ->
         {
-            WeeklyEffortTracker effortTracker = (WeeklyEffortTracker)choreList.getEffortTracker();
+            WeeklyEffortTracker effortTracker = (WeeklyEffortTracker)choreManager.getEffortTracker();
 
             Intent intent = new Intent(getActivity(), EffortActivity.class);
 
@@ -101,7 +104,7 @@ public class AllChoresFragment extends Fragment
         Button addButton = rootView.findViewById(R.id.add_button);
         addButton.setOnClickListener(v ->
         {
-            Chore chore = choreList.createChore();
+            Chore chore = choreManager.createChore();
 
             startChoreEditor(chore, EditChoreActivity.ACTION_ADD);
         });
@@ -172,7 +175,7 @@ public class AllChoresFragment extends Fragment
             return;
         }
 
-        WeeklyEffortTracker effortTracker = (WeeklyEffortTracker)choreList.getEffortTracker();
+        WeeklyEffortTracker effortTracker = (WeeklyEffortTracker)choreManager.getEffortTracker();
 
         Intent data = Objects.requireNonNull(activityResult.getData());
 

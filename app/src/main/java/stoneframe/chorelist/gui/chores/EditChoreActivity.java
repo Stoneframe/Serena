@@ -98,7 +98,7 @@ public class EditChoreActivity extends EditActivity implements ChoreEditor.Chore
     {
         Chore chore = globalState.getActiveChore();
 
-        choreEditor = choreList.getChoreEditor(chore);
+        choreEditor = choreList.getChoreManager().getChoreEditor(chore);
 
         next = choreEditor.getNext();
 

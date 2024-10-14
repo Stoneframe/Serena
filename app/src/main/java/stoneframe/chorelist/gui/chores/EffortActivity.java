@@ -13,10 +13,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.stream.IntStream;
 
-import stoneframe.chorelist.gui.GlobalState;
-import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.R;
+import stoneframe.chorelist.gui.GlobalState;
 import stoneframe.chorelist.model.chores.Chore;
+import stoneframe.chorelist.model.chores.ChoreManager;
 
 public class EffortActivity extends AppCompatActivity implements TextWatcher
 {
@@ -124,9 +124,9 @@ public class EffortActivity extends AppCompatActivity implements TextWatcher
     {
         GlobalState globalState = (GlobalState)getApplication();
 
-        ChoreList choreList = globalState.getChoreList();
+        ChoreManager choreManager = globalState.getChoreList().getChoreManager();
 
-        double totalEffortFromChoresPerWeek = choreList.getAllChores()
+        double totalEffortFromChoresPerWeek = choreManager.getAllChores()
             .stream()
             .mapToDouble(c ->
             {

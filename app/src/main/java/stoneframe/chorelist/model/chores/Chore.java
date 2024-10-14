@@ -6,25 +6,14 @@ import org.joda.time.LocalDate;
 
 import java.util.Comparator;
 
-public class Chore
+import stoneframe.chorelist.model.util.Revertible;
+
+public class Chore extends Revertible<ChoreData>
 {
     public static final int DAYS = 0;
     public static final int WEEKS = 1;
     public static final int MONTHS = 2;
     public static final int YEARS = 3;
-
-    private boolean isEnabled;
-
-    private LocalDate next;
-    private LocalDate postpone;
-
-    private String description;
-
-    private int priority;
-    private int effort;
-
-    private int intervalUnit;
-    private int intervalLength;
 
     Chore(
         String description,
@@ -34,82 +23,50 @@ public class Chore
         int intervalLength,
         int intervalUnit)
     {
-        this.description = description;
-        this.priority = priority;
-        this.effort = effort;
-
-        this.next = next;
-        this.postpone = null;
-        this.intervalUnit = intervalUnit;
-        this.intervalLength = intervalLength;
-
-        isEnabled = true;
+        super(new ChoreData(
+            true,
+            next,
+            null,
+            description,
+            priority,
+            effort,
+            intervalUnit,
+            intervalLength));
     }
 
     public boolean isEnabled()
     {
-        return isEnabled;
+        return data().isEnabled;
     }
 
     public LocalDate getNext()
     {
-        return new LocalDate(next);
+        return new LocalDate(data().next);
     }
 
     public String getDescription()
     {
-        return description;
+        return data().description;
     }
 
     public int getPriority()
     {
-        return priority;
+        return data().priority;
     }
 
     public int getEffort()
     {
-        return effort;
+        return data().effort;
     }
 
     public int getIntervalUnit()
     {
-        return intervalUnit;
+        return data().intervalUnit;
     }
 
     public int getIntervalLength()
     {
-        return intervalLength;
-    }
-
-    public void reschedule(LocalDate today)
-    {
-        if (next == null)
-        {
-            next = today;
-        }
-
-        while (!next.isAfter(today))
-        {
-            switch (intervalUnit)
-            {
-                case DAYS:
-                    next = today.plusDays(intervalLength);
-                    break;
-                case WEEKS:
-                    next = next.plusWeeks(intervalLength);
-                    break;
-                case MONTHS:
-                    next = next.plusMonths(intervalLength);
-                    break;
-                case YEARS:
-                    next = next.plusYears(intervalLength);
-                    break;
-                default:
-                    return;
-            }
-        }
-
-        postpone = null;
+        return data().intervalLength;
     }
 
     @Override
@@ -122,55 +79,55 @@ public class Chore
 
         Chore other = (Chore)obj;
 
-        return this.description.equals(other.description);
+        return data().description.equals(other.data().description);
     }
 
     @NonNull
     @Override
     public String toString()
     {
-        return description;
+        return data().description;
     }
 
     void postpone(LocalDate today)
     {
-        postpone = today.plusDays(1);
+        data().postpone = today.plusDays(1);
     }
 
     void setEnabled(boolean enabled)
     {
-        isEnabled = enabled;
+        data().isEnabled = enabled;
     }
 
     void setNext(LocalDate next)
     {
-        this.next = next;
-        this.postpone = null;
+        data().next = next;
+        data().postpone = null;
     }
 
     void setDescription(String description)
     {
-        this.description = description;
+        data().description = description;
     }
 
     void setPriority(int priority)
     {
-        this.priority = priority;
+        data().priority = priority;
     }
 
     void setEffort(int effort)
     {
-        this.effort = effort;
+        data().effort = effort;
     }
 
     void setIntervalUnit(int intervalUnit)
     {
-        this.intervalUnit = intervalUnit;
+        data().intervalUnit = intervalUnit;
     }
 
     void setIntervalLength(int intervalLength)
     {
-        this.intervalLength = intervalLength;
+        data().intervalLength = intervalLength;
     }
 
     boolean isTimeToDo(LocalDate today)
@@ -178,9 +135,40 @@ public class Chore
         return !getNextOrPostpone().isAfter(today);
     }
 
+    void reschedule(LocalDate today)
+    {
+        if (data().next == null)
+        {
+            data().next = today;
+        }
+
+        while (!data().next.isAfter(today))
+        {
+            switch (data().intervalUnit)
+            {
+                case DAYS:
+                    data().next = today.plusDays(data().intervalLength);
+                    break;
+                case WEEKS:
+                    data().next = data().next.plusWeeks(data().intervalLength);
+                    break;
+                case MONTHS:
+                    data().next = data().next.plusMonths(data().intervalLength);
+                    break;
+                case YEARS:
+                    data().next = data().next.plusYears(data().intervalLength);
+                    break;
+                default:
+                    return;
+            }
+        }
+
+        data().postpone = null;
+    }
+
     private LocalDate getNextOrPostpone()
     {
-        return postpone == null ? next : postpone;
+        return data().postpone == null ? data().next : data().postpone;
     }
 
     public static class ChoreComparator implements Comparator<Chore>
@@ -199,12 +187,12 @@ public class Chore
 
             if (!o1.getNextOrPostpone().isAfter(today) && !o2.getNextOrPostpone().isAfter(today))
             {
-                if ((i = Integer.compare(o1.priority, o2.priority)) != 0) return i;
-                if ((i = Integer.compare(o1.effort, o2.effort)) != 0) return i;
+                if ((i = Integer.compare(o1.data().priority, o2.data().priority)) != 0) return i;
+                if ((i = Integer.compare(o1.data().effort, o2.data().effort)) != 0) return i;
             }
             if ((i = o1.getNextOrPostpone().compareTo(o2.getNextOrPostpone())) != 0) return i;
 
-            return o1.description.compareTo(o2.description);
+            return o1.data().description.compareTo(o2.data().description);
         }
     }
 }

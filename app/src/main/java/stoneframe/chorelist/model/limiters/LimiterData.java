@@ -8,7 +8,7 @@ import org.joda.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
-public class LimiterData
+class LimiterData
 {
     final List<CustomExpenditureType> expenditureTypes = new LinkedList<>();
     final List<Pair<Expenditure, LocalDateTime>> expenditures = new LinkedList<>();
@@ -25,7 +25,7 @@ public class LimiterData
 
     boolean allowQuick;
 
-    public LimiterData(
+    LimiterData(
         String name,
         String unit,
         int previousExpenditure,

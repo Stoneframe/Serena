@@ -2,7 +2,7 @@ package stoneframe.chorelist.model.chores;
 
 import org.joda.time.LocalDate;
 
-public class ChoreData
+class ChoreData
 {
     boolean isEnabled;
 
@@ -17,7 +17,7 @@ public class ChoreData
     int intervalUnit;
     int intervalLength;
 
-    public ChoreData(
+    ChoreData(
         boolean isEnabled,
         LocalDate next,
         LocalDate postpone,

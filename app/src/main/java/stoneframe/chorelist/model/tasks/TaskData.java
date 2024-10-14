@@ -2,7 +2,7 @@ package stoneframe.chorelist.model.tasks;
 
 import org.joda.time.LocalDate;
 
-public class TaskData
+class TaskData
 {
     String description;
     LocalDate deadline;
@@ -10,7 +10,7 @@ public class TaskData
     LocalDate completed;
     boolean isDone;
 
-    public TaskData(
+    TaskData(
         String description,
         LocalDate deadline,
         LocalDate ignoreBefore,

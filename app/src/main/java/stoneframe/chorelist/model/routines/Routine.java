@@ -28,51 +28,39 @@ public abstract class Routine<T extends RoutineData> extends Revertible<T>
 
     public String getName()
     {
-        return data().getName();
+        return data().name;
     }
 
     public void setName(String name)
     {
-        data().setName(name);
+        data().name = name;
     }
 
     public boolean isEnabled()
     {
-        return data().isEnabled();
+        return data().isEnabled;
     }
 
     public void setEnabled(boolean isEnabled)
     {
-        data().setEnabled(isEnabled);
-    }
-
-    public List<Procedure> getAllProcedures()
-    {
-        return data().getAllProcedures();
-    }
-
-    public LocalDateTime getNextProcedureTime(LocalDateTime now)
-    {
-        return data().getNextProcedureTime(now);
-    }
-
-    public List<PendingProcedure> getPendingProcedures(LocalDateTime now)
-    {
-        return data().getPendingProcedures(now);
+        data().isEnabled = isEnabled;
     }
 
     public PendingProcedure getPendingProcedure(LocalDateTime now)
     {
-        return data().getPendingProcedure(now);
+        return getPendingProcedures(now).stream().findFirst().orElse(null);
     }
 
-    public void procedureDone(PendingProcedure procedure)
-    {
-        data().procedureDone(procedure);
-    }
+    public abstract List<Procedure> getAllProcedures();
+
+    public abstract LocalDateTime getNextProcedureTime(LocalDateTime now);
+
+    public abstract List<PendingProcedure> getPendingProcedures(LocalDateTime now);
+
+    abstract void procedureDone(PendingProcedure procedure);
 
     void reset(LocalDateTime now)
     {
-        data().reset(now);
+        data().lastCompleted = now;
     }
 }

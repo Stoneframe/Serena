@@ -4,6 +4,7 @@ import stoneframe.chorelist.model.checklists.ChecklistContainer;
 import stoneframe.chorelist.model.chores.ChoreContainer;
 import stoneframe.chorelist.model.limiters.LimiterContainer;
 import stoneframe.chorelist.model.routines.RoutineContainer;
+import stoneframe.chorelist.model.tasks.TaskContainer;
 
 public class Container
 {
@@ -11,7 +12,7 @@ public class Container
 
     public ChoreContainer ChoreManager;
 
-    public stoneframe.chorelist.model.tasks.TaskManager TaskManager;
+    public TaskContainer TaskManager;
 
     public RoutineContainer RoutineManager;
 

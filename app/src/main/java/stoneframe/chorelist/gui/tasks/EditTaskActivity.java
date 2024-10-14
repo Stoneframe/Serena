@@ -91,7 +91,7 @@ public class EditTaskActivity extends EditActivity implements TaskEditor.TaskEdi
     {
         Task task = globalState.getActiveTask();
 
-        taskEditor = choreList.getTaskEditor(task);
+        taskEditor = choreList.getTaskManager().getTaskEditor(task);
 
         deadline = taskEditor.getDeadline();
         ignoreBefore = taskEditor.getIgnoreBefore();

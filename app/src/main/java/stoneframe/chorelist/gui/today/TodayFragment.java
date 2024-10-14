@@ -38,6 +38,7 @@ import stoneframe.chorelist.model.routines.PendingProcedure;
 import stoneframe.chorelist.model.routines.RoutineManager;
 import stoneframe.chorelist.model.tasks.Task;
 import stoneframe.chorelist.model.tasks.TaskEditor;
+import stoneframe.chorelist.model.tasks.TaskManager;
 
 public class TodayFragment extends Fragment
 {
@@ -53,6 +54,7 @@ public class TodayFragment extends Fragment
 
     private RoutineManager routineManager;
     private ChoreManager choreManager;
+    private TaskManager taskManager;
 
     @Override
     public View onCreateView(
@@ -66,6 +68,7 @@ public class TodayFragment extends Fragment
 
         routineManager = choreList.getRoutineManager();
         choreManager = choreList.getChoreManager();
+        taskManager = choreList.getTaskManager();
 
         rootView = inflater.inflate(R.layout.fragment_today, container, false);
 
@@ -148,7 +151,7 @@ public class TodayFragment extends Fragment
 
         taskAdapter = new SimpleCheckboxListAdapter<>(
             requireContext(),
-            choreList::getTodaysTasks,
+            taskManager::getTodaysTasks,
             Task::getDescription);
         taskAdapter.registerDataSetObserver(new TodayDataSetObserver());
         ListView taskListView = rootView.findViewById(R.id.todays_tasks);
@@ -164,7 +167,7 @@ public class TodayFragment extends Fragment
                 waitTwoSeconds();
                 requireActivity().runOnUiThread(() ->
                 {
-                    choreList.taskDone(task);
+                    taskManager.complete(task);
                     taskAdapter.notifyDataSetChanged();
                     choreList.save();
                 });
@@ -191,7 +194,7 @@ public class TodayFragment extends Fragment
                 .setCancelable(false)
                 .setPositiveButton("Tomorrow", (dialog, skipButtonId) ->
                 {
-                    TaskEditor taskEditor = choreList.getTaskEditor(task);
+                    TaskEditor taskEditor = taskManager.getTaskEditor(task);
                     taskEditor.setIgnoreBefore(today.plusDays(1));
                     taskEditor.save();
 
@@ -206,7 +209,7 @@ public class TodayFragment extends Fragment
                         {
                             LocalDate ignoreBefore = new LocalDate(year, month + 1, dayOfMonth);
 
-                            TaskEditor taskEditor = choreList.getTaskEditor(task);
+                            TaskEditor taskEditor = taskManager.getTaskEditor(task);
                             taskEditor.setIgnoreBefore(ignoreBefore);
                             taskEditor.save();
 
@@ -274,7 +277,7 @@ public class TodayFragment extends Fragment
         ImageButton addTaskButton = rootView.findViewById(R.id.addTaskButton);
         addTaskButton.setOnClickListener(v ->
         {
-            Task task = choreList.createTask();
+            Task task = taskManager.createTask();
 
             globalState.setActiveTask(task);
 

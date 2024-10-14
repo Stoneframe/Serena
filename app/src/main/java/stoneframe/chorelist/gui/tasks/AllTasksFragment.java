@@ -18,6 +18,7 @@ import stoneframe.chorelist.gui.GlobalState;
 import stoneframe.chorelist.gui.util.CheckboxListAdapter;
 import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.tasks.Task;
+import stoneframe.chorelist.model.tasks.TaskManager;
 
 public class AllTasksFragment extends Fragment
 {
@@ -27,6 +28,7 @@ public class AllTasksFragment extends Fragment
 
     private GlobalState globalState;
     private ChoreList choreList;
+    private TaskManager taskManager;
 
     @Override
     public View onCreateView(
@@ -37,12 +39,13 @@ public class AllTasksFragment extends Fragment
         globalState = GlobalState.getInstance();
 
         choreList = globalState.getChoreList();
+        taskManager = choreList.getTaskManager();
 
         View rootView = inflater.inflate(R.layout.fragment_all_tasks, container, false);
 
         taskAdapter = new CheckboxListAdapter<>(
             requireContext(),
-            choreList::getAllTasks,
+            taskManager::getAllTasks,
             Task::getDescription,
             Task::isDone,
             t -> String.format("Deadline: %s", t.getDeadline()));
@@ -50,11 +53,11 @@ public class AllTasksFragment extends Fragment
         {
             if (isChecked)
             {
-                choreList.taskDone(task);
+                taskManager.complete(task);
             }
             else
             {
-                choreList.taskUndone(task);
+                taskManager.undo(task);
             }
         });
 
@@ -70,7 +73,7 @@ public class AllTasksFragment extends Fragment
         Button addButton = rootView.findViewById(R.id.add_button);
         addButton.setOnClickListener(v ->
         {
-            Task task = choreList.createTask();
+            Task task = taskManager.createTask();
 
             startTaskEditor(task, EditTaskActivity.ACTION_ADD);
         });

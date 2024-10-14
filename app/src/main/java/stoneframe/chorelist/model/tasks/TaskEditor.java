@@ -118,7 +118,7 @@ public class TaskEditor extends Editor<TaskEditor.TaskEditorListener>
             {
                 if (isDone)
                 {
-                    taskManager.complete(task, getToday());
+                    taskManager.complete(task);
                 }
                 else
                 {

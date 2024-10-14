@@ -1,9 +1,5 @@
 package stoneframe.chorelist.model;
 
-import org.joda.time.LocalDateTime;
-
-import java.util.List;
-
 import stoneframe.chorelist.model.checklists.ChecklistContainer;
 import stoneframe.chorelist.model.checklists.ChecklistManager;
 import stoneframe.chorelist.model.chores.ChoreContainer;
@@ -12,18 +8,9 @@ import stoneframe.chorelist.model.chores.ChoreSelector;
 import stoneframe.chorelist.model.chores.EffortTracker;
 import stoneframe.chorelist.model.limiters.LimiterContainer;
 import stoneframe.chorelist.model.limiters.LimiterManager;
-import stoneframe.chorelist.model.routines.DayRoutine;
-import stoneframe.chorelist.model.routines.DayRoutineEditor;
-import stoneframe.chorelist.model.routines.FortnightRoutine;
-import stoneframe.chorelist.model.routines.FortnightRoutineEditor;
-import stoneframe.chorelist.model.routines.PendingProcedure;
-import stoneframe.chorelist.model.routines.Routine;
 import stoneframe.chorelist.model.routines.RoutineContainer;
 import stoneframe.chorelist.model.routines.RoutineManager;
-import stoneframe.chorelist.model.routines.WeekRoutine;
-import stoneframe.chorelist.model.routines.WeekRoutineEditor;
-import stoneframe.chorelist.model.tasks.Task;
-import stoneframe.chorelist.model.tasks.TaskEditor;
+import stoneframe.chorelist.model.tasks.TaskContainer;
 import stoneframe.chorelist.model.tasks.TaskManager;
 import stoneframe.chorelist.model.timeservices.TimeService;
 
@@ -60,7 +47,7 @@ public class ChoreList
             container.Version = storage.getCurrentVersion();
             container.RoutineManager = new RoutineContainer();
             container.ChoreManager = new ChoreContainer(effortTracker, choreSelector);
-            container.TaskManager = new TaskManager();
+            container.TaskManager = new TaskContainer();
             container.ChecklistManager = new ChecklistContainer();
             container.LimiterManager = new LimiterContainer();
         }
@@ -84,34 +71,9 @@ public class ChoreList
     // TASKS
     // ====================================================================
 
-    public List<Task> getAllTasks()
+    public TaskManager getTaskManager()
     {
-        return container.TaskManager.getAllTasks(true, timeService.getToday());
-    }
-
-    public TaskEditor getTaskEditor(Task task)
-    {
-        return container.TaskManager.getEditor(task, timeService);
-    }
-
-    public Task createTask()
-    {
-        return container.TaskManager.createTask(timeService);
-    }
-
-    public List<Task> getTodaysTasks()
-    {
-        return container.TaskManager.getTodaysTasks(timeService.getToday());
-    }
-
-    public void taskDone(Task task)
-    {
-        container.TaskManager.complete(task, timeService.getToday());
-    }
-
-    public void taskUndone(Task task)
-    {
-        container.TaskManager.undo(task);
+        return new TaskManager(container.TaskManager, timeService);
     }
 
     // ====================================================================

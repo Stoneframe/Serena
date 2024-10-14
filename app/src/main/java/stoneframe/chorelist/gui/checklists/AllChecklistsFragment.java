@@ -23,6 +23,7 @@ import stoneframe.chorelist.gui.GlobalState;
 import stoneframe.chorelist.gui.util.SimpleListAdapter;
 import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.checklists.Checklist;
+import stoneframe.chorelist.model.checklists.ChecklistManager;
 
 public class AllChecklistsFragment extends Fragment
 {
@@ -30,6 +31,7 @@ public class AllChecklistsFragment extends Fragment
 
     private GlobalState globalState;
     private ChoreList choreList;
+    private ChecklistManager checklistManager;
 
     @Nullable
     @Override
@@ -42,12 +44,14 @@ public class AllChecklistsFragment extends Fragment
 
         choreList = globalState.getChoreList();
 
+        checklistManager = choreList.getChecklistManager();
+
         View rootView = inflater.inflate(R.layout.fragment_all_checklists, container, false);
 
         ListView checklistListView = rootView.findViewById(R.id.listView);
         checklistAdapter = new SimpleListAdapter<>(
             requireContext(),
-            () -> choreList.getChecklists()
+            () -> checklistManager.getChecklists()
                 .stream()
                 .sorted(Comparator.comparing(Checklist::getName))
                 .collect(Collectors.toList()),
@@ -89,7 +93,7 @@ public class AllChecklistsFragment extends Fragment
         {
             String checklistName = checklistNameText.getText().toString();
 
-            choreList.createChecklist(checklistName);
+            checklistManager.createChecklist(checklistName);
             checklistAdapter.notifyDataSetChanged();
         });
 

@@ -92,7 +92,7 @@ public class EditChecklistActivity extends EditActivity implements ChecklistEdit
     {
         Checklist checklist = globalState.getActiveChecklist();
 
-        checklistEditor = choreList.getChecklistEditor(checklist);
+        checklistEditor = choreList.getChecklistManager().getChecklistEditor(checklist);
 
         checklistNameEditText = findViewById(R.id.nameEditText);
         checklistItemsListView = findViewById(R.id.listView);

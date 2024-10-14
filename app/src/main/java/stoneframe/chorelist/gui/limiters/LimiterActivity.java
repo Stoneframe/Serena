@@ -32,6 +32,7 @@ import stoneframe.chorelist.gui.util.SimpleListAdapter;
 import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.limiters.CustomExpenditureType;
 import stoneframe.chorelist.model.limiters.ExpenditureType;
+import stoneframe.chorelist.model.limiters.Limiter;
 import stoneframe.chorelist.model.limiters.LimiterEditor;
 
 public class LimiterActivity extends AppCompatActivity implements LimiterEditor.LimiterEditorListener
@@ -82,9 +83,11 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
 
         setTitle("Limiter");
 
+        Limiter limiter = GlobalState.getInstance().getActiveLimiter();
+
         choreList = GlobalState.getInstance().getChoreList();
 
-        limiterEditor = choreList.getLimiterEditor(GlobalState.getInstance().getActiveLimiter());
+        limiterEditor = choreList.getLimiterManager().getLimiterEditor(limiter);
 
         textViewName = findViewById(R.id.textViewName);
 

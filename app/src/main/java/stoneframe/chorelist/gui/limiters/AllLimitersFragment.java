@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import org.joda.time.LocalDateTime;
@@ -24,6 +25,7 @@ import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
 import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.limiters.Limiter;
+import stoneframe.chorelist.model.limiters.LimiterManager;
 
 public class AllLimitersFragment extends Fragment
 {
@@ -31,6 +33,7 @@ public class AllLimitersFragment extends Fragment
 
     private GlobalState globalState;
     private ChoreList choreList;
+    private LimiterManager limiterManager;
 
     @SuppressLint("DefaultLocale")
     @Override
@@ -41,12 +44,13 @@ public class AllLimitersFragment extends Fragment
     {
         globalState = GlobalState.getInstance();
         choreList = globalState.getChoreList();
+        limiterManager = choreList.getLimiterManager();
 
         View rootView = inflater.inflate(R.layout.fragment_all_limiters, container, false);
 
         limiterListAdapter = new SimpleListAdapter<>(
             requireContext(),
-            choreList::getLimiters,
+            limiterManager::getLimiters,
             Limiter::getName,
             l -> String.format("Remaining: %d", l.getAvailable(LocalDateTime.now())),
             l ->
@@ -75,24 +79,7 @@ public class AllLimitersFragment extends Fragment
 
             limiterNameText.setInputType(EditorInfo.TYPE_TEXT_FLAG_CAP_SENTENCES);
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setTitle("Create limiter");
-            builder.setView(limiterNameText);
-
-            builder.setPositiveButton("OK", (dialog, which) ->
-            {
-                String limiterName = limiterNameText.getText().toString();
-
-                Limiter limiter = choreList.createLimiter(limiterName);
-
-                choreList.save();
-
-                limiterListAdapter.notifyDataSetChanged();
-
-                openLimiterActivity(limiter);
-            });
-
-            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+            AlertDialog.Builder builder = getBuilder(limiterNameText);
 
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
@@ -103,6 +90,30 @@ public class AllLimitersFragment extends Fragment
         });
 
         return rootView;
+    }
+
+    @NonNull
+    private AlertDialog.Builder getBuilder(EditText limiterNameText)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Create limiter");
+        builder.setView(limiterNameText);
+
+        builder.setPositiveButton("OK", (dialog, which) ->
+        {
+            String limiterName = limiterNameText.getText().toString();
+
+            Limiter limiter = limiterManager.createLimiter(limiterName);
+
+            choreList.save();
+
+            limiterListAdapter.notifyDataSetChanged();
+
+            openLimiterActivity(limiter);
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        return builder;
     }
 
     @Override

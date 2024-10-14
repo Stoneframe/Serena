@@ -2,6 +2,7 @@ package stoneframe.chorelist.model;
 
 import stoneframe.chorelist.model.checklists.ChecklistContainer;
 import stoneframe.chorelist.model.chores.ChoreContainer;
+import stoneframe.chorelist.model.limiters.LimiterContainer;
 
 public class Container
 {
@@ -15,5 +16,5 @@ public class Container
 
     public ChecklistContainer ChecklistManager;
 
-    public stoneframe.chorelist.model.limiters.LimiterManager LimiterManager;
+    public LimiterContainer LimiterManager;
 }

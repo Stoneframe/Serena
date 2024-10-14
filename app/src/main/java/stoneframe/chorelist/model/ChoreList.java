@@ -11,6 +11,7 @@ import stoneframe.chorelist.model.chores.ChoreManager;
 import stoneframe.chorelist.model.chores.ChoreSelector;
 import stoneframe.chorelist.model.chores.EffortTracker;
 import stoneframe.chorelist.model.limiters.Limiter;
+import stoneframe.chorelist.model.limiters.LimiterContainer;
 import stoneframe.chorelist.model.limiters.LimiterEditor;
 import stoneframe.chorelist.model.limiters.LimiterManager;
 import stoneframe.chorelist.model.routines.DayRoutine;
@@ -62,7 +63,7 @@ public class ChoreList
             container.ChoreManager = new ChoreContainer(effortTracker, choreSelector);
             container.TaskManager = new TaskManager();
             container.ChecklistManager = new ChecklistContainer();
-            container.LimiterManager = new LimiterManager();
+            container.LimiterManager = new LimiterContainer();
         }
     }
 
@@ -188,18 +189,8 @@ public class ChoreList
     // LIMITERS
     // ====================================================================
 
-    public List<Limiter> getLimiters()
+    public LimiterManager getLimiterManager()
     {
-        return container.LimiterManager.getLimiters();
-    }
-
-    public LimiterEditor getLimiterEditor(Limiter limiter)
-    {
-        return container.LimiterManager.getEditor(limiter, timeService);
-    }
-
-    public Limiter createLimiter(String name)
-    {
-        return container.LimiterManager.createLimiter(name, timeService.getToday());
+        return new LimiterManager(container.LimiterManager, timeService);
     }
 }

@@ -13,31 +13,32 @@ public class Checklist extends Revertible<ChecklistData>
 
     public String getName()
     {
-        return data().getName();
+        return data().name;
     }
 
     public List<ChecklistItem> getItems()
     {
-        return data().getItems();
+        return data().items;
     }
 
     void setName(String name)
     {
-        data().setName(name);
+        data().name = name;
     }
 
     void addItem(ChecklistItem item)
     {
-        data().addItem(item);
+        data().items.add(item);
     }
 
     void removeItem(ChecklistItem item)
     {
-        data().removeItem(item);
+        data().items.remove(item);
     }
 
     void moveItem(ChecklistItem item, Integer newPosition)
     {
-        data().moveItem(item, newPosition);
+        data().items.remove(item);
+        data().items.add(newPosition, item);
     }
 }

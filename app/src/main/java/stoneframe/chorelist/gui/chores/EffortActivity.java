@@ -1,11 +1,10 @@
 package stoneframe.chorelist.gui.chores;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -15,8 +14,12 @@ import java.util.stream.IntStream;
 
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.GlobalState;
+import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
+import stoneframe.chorelist.gui.util.EditTextCriteria;
+import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.chores.Chore;
 import stoneframe.chorelist.model.chores.ChoreManager;
+import stoneframe.chorelist.model.chores.efforttrackers.WeeklyEffortTracker;
 
 public class EffortActivity extends AppCompatActivity implements TextWatcher
 {
@@ -28,7 +31,13 @@ public class EffortActivity extends AppCompatActivity implements TextWatcher
     private EditText saturdayEditText;
     private EditText sundayEditText;
 
+    private Button cancelButton;
+    private Button saveButton;
+
     private TextView effortPerWeekTextView;
+
+    private ChoreList choreList;
+    private WeeklyEffortTracker effortTracker;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -36,6 +45,11 @@ public class EffortActivity extends AppCompatActivity implements TextWatcher
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_effort);
+
+        GlobalState globalState = GlobalState.getInstance();
+
+        choreList = globalState.getChoreList();
+        effortTracker = (WeeklyEffortTracker)choreList.getChoreManager().getEffortTracker();
 
         mondayEditText = findViewById(R.id.mondayEditText);
         tuesdayEditText = findViewById(R.id.tuesdayEditText);
@@ -45,17 +59,18 @@ public class EffortActivity extends AppCompatActivity implements TextWatcher
         saturdayEditText = findViewById(R.id.saturdayEditText);
         sundayEditText = findViewById(R.id.sundayEditText);
 
+        cancelButton = findViewById(R.id.cancelButton);
+        saveButton = findViewById(R.id.saveButton);
+
         effortPerWeekTextView = findViewById(R.id.effort_per_week_text);
 
-        Intent intent = getIntent();
-
-        mondayEditText.setText(Integer.toString(intent.getIntExtra("Monday", 0)));
-        tuesdayEditText.setText(Integer.toString(intent.getIntExtra("Tuesday", 0)));
-        wednesdayEditText.setText(Integer.toString(intent.getIntExtra("Wednesday", 0)));
-        thursdayEditText.setText(Integer.toString(intent.getIntExtra("Thursday", 0)));
-        fridayEditText.setText(Integer.toString(intent.getIntExtra("Friday", 0)));
-        saturdayEditText.setText(Integer.toString(intent.getIntExtra("Saturday", 0)));
-        sundayEditText.setText(Integer.toString(intent.getIntExtra("Sunday", 0)));
+        mondayEditText.setText(Integer.toString(effortTracker.getMonday()));
+        tuesdayEditText.setText(Integer.toString(effortTracker.getTuesday()));
+        wednesdayEditText.setText(Integer.toString(effortTracker.getWednesday()));
+        thursdayEditText.setText(Integer.toString(effortTracker.getThursday()));
+        fridayEditText.setText(Integer.toString(effortTracker.getFriday()));
+        saturdayEditText.setText(Integer.toString(effortTracker.getSaturday()));
+        sundayEditText.setText(Integer.toString(effortTracker.getSunday()));
 
         mondayEditText.addTextChangedListener(this);
         tuesdayEditText.addTextChangedListener(this);
@@ -65,40 +80,20 @@ public class EffortActivity extends AppCompatActivity implements TextWatcher
         saturdayEditText.addTextChangedListener(this);
         sundayEditText.addTextChangedListener(this);
 
+        cancelButton.setOnClickListener(v -> onCancelClick());
+        saveButton.setOnClickListener(v -> onSaveClick());
+
+        new EditTextButtonEnabledLink(
+            saveButton,
+            new EditTextCriteria(mondayEditText, EditTextCriteria.IS_VALID_INT),
+            new EditTextCriteria(tuesdayEditText, EditTextCriteria.IS_VALID_INT),
+            new EditTextCriteria(wednesdayEditText, EditTextCriteria.IS_VALID_INT),
+            new EditTextCriteria(thursdayEditText, EditTextCriteria.IS_VALID_INT),
+            new EditTextCriteria(fridayEditText, EditTextCriteria.IS_VALID_INT),
+            new EditTextCriteria(saturdayEditText, EditTextCriteria.IS_VALID_INT),
+            new EditTextCriteria(sundayEditText, EditTextCriteria.IS_VALID_INT));
+
         updateEffortPerWeekText();
-    }
-
-    public void onOkClick(View view)
-    {
-        Intent intent = new Intent();
-        intent.putExtra("Monday", getEffort(mondayEditText));
-        intent.putExtra("Tuesday", getEffort(tuesdayEditText));
-        intent.putExtra("Wednesday", getEffort(wednesdayEditText));
-        intent.putExtra("Thursday", getEffort(thursdayEditText));
-        intent.putExtra("Friday", getEffort(fridayEditText));
-        intent.putExtra("Saturday", getEffort(saturdayEditText));
-        intent.putExtra("Sunday", getEffort(sundayEditText));
-
-        setResult(RESULT_OK, intent);
-        finish();
-    }
-
-    private int getEffort(EditText textEdit)
-    {
-        try
-        {
-            return Integer.parseInt(textEdit.getText().toString());
-        }
-        catch (NumberFormatException e)
-        {
-            return 0;
-        }
-    }
-
-    public void onCancelClick(View view)
-    {
-        setResult(RESULT_CANCELED);
-        finish();
     }
 
     @Override
@@ -117,6 +112,28 @@ public class EffortActivity extends AppCompatActivity implements TextWatcher
     public void afterTextChanged(Editable s)
     {
         updateEffortPerWeekText();
+    }
+
+    private void onSaveClick()
+    {
+        effortTracker.setMonday(getEffort(mondayEditText));
+        effortTracker.setTuesday(getEffort(tuesdayEditText));
+        effortTracker.setWednesday(getEffort(wednesdayEditText));
+        effortTracker.setThursday(getEffort(thursdayEditText));
+        effortTracker.setFriday(getEffort(fridayEditText));
+        effortTracker.setSaturday(getEffort(saturdayEditText));
+        effortTracker.setSunday(getEffort(sundayEditText));
+
+        choreList.save();
+
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    private void onCancelClick()
+    {
+        setResult(RESULT_CANCELED);
+        finish();
     }
 
     @SuppressLint("DefaultLocale")
@@ -159,5 +176,17 @@ public class EffortActivity extends AppCompatActivity implements TextWatcher
             "Required: %.1f, Entered: %d",
             totalEffortFromChoresPerWeek,
             totalEffortEntered));
+    }
+
+    private int getEffort(EditText textEdit)
+    {
+        try
+        {
+            return Integer.parseInt(textEdit.getText().toString());
+        }
+        catch (NumberFormatException e)
+        {
+            return 0;
+        }
     }
 }

@@ -1,7 +1,5 @@
 package stoneframe.chorelist.gui.chores;
 
-import static android.app.Activity.RESULT_OK;
-
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
@@ -19,7 +17,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import stoneframe.chorelist.R;
@@ -28,7 +25,6 @@ import stoneframe.chorelist.gui.util.SimpleListAdapter;
 import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.chores.Chore;
 import stoneframe.chorelist.model.chores.ChoreManager;
-import stoneframe.chorelist.model.chores.efforttrackers.WeeklyEffortTracker;
 
 public class AllChoresFragment extends Fragment
 {
@@ -86,17 +82,7 @@ public class AllChoresFragment extends Fragment
         Button effortButton = rootView.findViewById(R.id.effort_button);
         effortButton.setOnClickListener(v ->
         {
-            WeeklyEffortTracker effortTracker = (WeeklyEffortTracker)choreManager.getEffortTracker();
-
             Intent intent = new Intent(getActivity(), EffortActivity.class);
-
-            intent.putExtra("Monday", effortTracker.getMonday());
-            intent.putExtra("Tuesday", effortTracker.getTuesday());
-            intent.putExtra("Wednesday", effortTracker.getWednesday());
-            intent.putExtra("Thursday", effortTracker.getThursday());
-            intent.putExtra("Friday", effortTracker.getFriday());
-            intent.putExtra("Saturday", effortTracker.getSaturday());
-            intent.putExtra("Sunday", effortTracker.getSunday());
 
             editEffortLauncher.launch(intent);
         });
@@ -170,24 +156,7 @@ public class AllChoresFragment extends Fragment
 
     private void editEffortCallback(ActivityResult activityResult)
     {
-        if (activityResult.getResultCode() != RESULT_OK)
-        {
-            return;
-        }
-
-        WeeklyEffortTracker effortTracker = (WeeklyEffortTracker)choreManager.getEffortTracker();
-
-        Intent data = Objects.requireNonNull(activityResult.getData());
-
-        effortTracker.setMonday(data.getIntExtra("Monday", 0));
-        effortTracker.setTuesday(data.getIntExtra("Tuesday", 0));
-        effortTracker.setWednesday(data.getIntExtra("Wednesday", 0));
-        effortTracker.setThursday(data.getIntExtra("Thursday", 0));
-        effortTracker.setFriday(data.getIntExtra("Friday", 0));
-        effortTracker.setSaturday(data.getIntExtra("Saturday", 0));
-        effortTracker.setSunday(data.getIntExtra("Sunday", 0));
-
-        choreList.save();
+        choreListAdapter.notifyDataSetChanged();
     }
 
     private void showSortByDialog()

@@ -1,142 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_effort"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="stoneframe.chorelist.gui.chores.EffortActivity">
+    android:fillViewport="true">
 
-    <TableLayout
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_effort"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        tools:context="stoneframe.chorelist.gui.chores.EffortActivity">
 
-        <TableRow>
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1">
 
-            <TextView
-                android:labelFor="@+id/mondayEditText"
-                android:text="Monday" />
+            <TableRow>
 
-            <EditText
-                android:id="@+id/mondayEditText"
-                android:layout_width="50dp"
-                android:layout_height="48dp"
-                android:inputType="number"
-                android:autofillHints="" />
-        </TableRow>
+                <TextView
+                    android:labelFor="@+id/mondayEditText"
+                    android:text="Monday" />
 
-        <TableRow>
+                <EditText
+                    android:id="@+id/mondayEditText"
+                    android:layout_width="50dp"
+                    android:layout_height="48dp"
+                    android:autofillHints=""
+                    android:inputType="number" />
 
-            <TextView
-                android:labelFor="@+id/tuesdayEditText"
-                android:text="Tuesday" />
+            </TableRow>
 
-            <EditText
-                android:id="@+id/tuesdayEditText"
-                android:layout_width="50dp"
-                android:layout_height="48dp"
-                android:inputType="number"
-                android:autofillHints="" />
-        </TableRow>
+            <TableRow>
 
-        <TableRow>
+                <TextView
+                    android:labelFor="@+id/tuesdayEditText"
+                    android:text="Tuesday" />
 
-            <TextView
-                android:labelFor="@+id/wednesdayEditText"
-                android:text="Wednesday" />
+                <EditText
+                    android:id="@+id/tuesdayEditText"
+                    android:layout_width="50dp"
+                    android:layout_height="48dp"
+                    android:autofillHints=""
+                    android:inputType="number" />
 
-            <EditText
-                android:id="@+id/wednesdayEditText"
-                android:layout_width="50dp"
-                android:layout_height="48dp"
-                android:inputType="number"
-                android:autofillHints="" />
-        </TableRow>
+            </TableRow>
 
-        <TableRow>
+            <TableRow>
 
-            <TextView
-                android:labelFor="@+id/thursdayEditText"
-                android:text="Thursday" />
+                <TextView
+                    android:labelFor="@+id/wednesdayEditText"
+                    android:text="Wednesday" />
 
-            <EditText
-                android:id="@+id/thursdayEditText"
-                android:layout_width="50dp"
-                android:layout_height="48dp"
-                android:inputType="number"
-                android:autofillHints="" />
-        </TableRow>
+                <EditText
+                    android:id="@+id/wednesdayEditText"
+                    android:layout_width="50dp"
+                    android:layout_height="48dp"
+                    android:autofillHints=""
+                    android:inputType="number" />
 
-        <TableRow>
+            </TableRow>
 
-            <TextView
-                android:labelFor="@+id/fridayEditText"
-                android:text="Friday" />
+            <TableRow>
 
-            <EditText
-                android:id="@+id/fridayEditText"
-                android:layout_width="50dp"
-                android:layout_height="48dp"
-                android:inputType="number"
-                android:autofillHints="" />
-        </TableRow>
+                <TextView
+                    android:labelFor="@+id/thursdayEditText"
+                    android:text="Thursday" />
 
-        <TableRow>
+                <EditText
+                    android:id="@+id/thursdayEditText"
+                    android:layout_width="50dp"
+                    android:layout_height="48dp"
+                    android:autofillHints=""
+                    android:inputType="number" />
 
-            <TextView
-                android:labelFor="@+id/saturdayEditText"
-                android:text="Saturday" />
+            </TableRow>
 
-            <EditText
-                android:id="@+id/saturdayEditText"
-                android:layout_width="50dp"
-                android:layout_height="48dp"
-                android:inputType="number"
-                android:autofillHints="" />
-        </TableRow>
+            <TableRow>
 
-        <TableRow>
+                <TextView
+                    android:labelFor="@+id/fridayEditText"
+                    android:text="Friday" />
 
-            <TextView
-                android:labelFor="@+id/sundayEditText"
-                android:text="Sunday" />
+                <EditText
+                    android:id="@+id/fridayEditText"
+                    android:layout_width="50dp"
+                    android:layout_height="48dp"
+                    android:autofillHints=""
+                    android:inputType="number" />
 
-            <EditText
-                android:id="@+id/sundayEditText"
-                android:layout_width="50dp"
-                android:layout_height="48dp"
-                android:inputType="number"
-                android:autofillHints="" />
-        </TableRow>
-    </TableLayout>
+            </TableRow>
 
-    <TextView
-        android:id="@+id/effort_per_week_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/cancelButton"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/cancelButton"/>
+            <TableRow>
 
-    <Button
-        android:id="@+id/cancelButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@id/saveButton"
-        android:onClick="onCancelClick"
-        android:text="Cancel" />
+                <TextView
+                    android:labelFor="@+id/saturdayEditText"
+                    android:text="Saturday" />
 
-    <Button
-        android:id="@+id/saveButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:onClick="onOkClick"
-        android:text="OK" />
+                <EditText
+                    android:id="@+id/saturdayEditText"
+                    android:layout_width="50dp"
+                    android:layout_height="48dp"
+                    android:autofillHints=""
+                    android:inputType="number" />
 
-</RelativeLayout>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:labelFor="@+id/sundayEditText"
+                    android:text="Sunday" />
+
+                <EditText
+                    android:id="@+id/sundayEditText"
+                    android:layout_width="50dp"
+                    android:layout_height="48dp"
+                    android:autofillHints=""
+                    android:inputType="number" />
+
+            </TableRow>
+
+        </TableLayout>
+
+        <TextView
+            android:id="@+id/effort_per_week_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/cancelButton"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/cancelButton" />
+
+        <Button
+            android:id="@+id/cancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:text="Cancel"
+            tools:ignore="ButtonOrder" />
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:text="SAVE" />
+
+    </RelativeLayout>
+</ScrollView>

@@ -22,6 +22,7 @@ public class FortnightRoutineEditor extends RoutineEditor<FortnightRoutineEditor
         super(routineManager, fortnightRoutine, timeService);
 
         this.fortnightRoutine = fortnightRoutine;
+        this.fortnightRoutine.edit();
 
         startDateProperty = getStartDateProperty(fortnightRoutine);
     }

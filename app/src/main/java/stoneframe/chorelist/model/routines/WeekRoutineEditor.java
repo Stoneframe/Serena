@@ -16,6 +16,7 @@ public class WeekRoutineEditor extends RoutineEditor<WeekRoutineEditorListener>
         super(routineManager, weekRoutine, timeService);
 
         this.weekRoutine = weekRoutine;
+        this.weekRoutine.edit();
     }
 
     public Week getWeek()

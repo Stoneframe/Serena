@@ -227,7 +227,14 @@ public class EditTaskActivity extends EditActivity implements TaskEditor.TaskEdi
         speakButton = findViewById(R.id.speakButton);
         speakButton.setOnClickListener(v ->
         {
-            if (hasMicrophonePermission())
+            if (!SpeechRecognizer.isRecognitionAvailable(this))
+            {
+                Toast.makeText(
+                    this,
+                    "Speech recognition is not available on this device",
+                    Toast.LENGTH_LONG).show();
+            }
+            else if (!hasMicrophonePermission())
             {
                 requestMicrophonePermission();
             }
@@ -235,7 +242,6 @@ public class EditTaskActivity extends EditActivity implements TaskEditor.TaskEdi
             {
                 speechRecognizer.startListening(speechRecognizerIntent);
             }
-
         });
 
         speechRecognizer.setRecognitionListener(new RecognitionListener()
@@ -332,7 +338,7 @@ public class EditTaskActivity extends EditActivity implements TaskEditor.TaskEdi
     private boolean hasMicrophonePermission()
     {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
-            != PackageManager.PERMISSION_GRANTED;
+            == PackageManager.PERMISSION_GRANTED;
     }
 
     private void requestMicrophonePermission()

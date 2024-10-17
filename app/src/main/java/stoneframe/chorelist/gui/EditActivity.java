@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.util.DialogUtils;
 import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
-import stoneframe.chorelist.gui.util.EditTextCriteria;
+import stoneframe.chorelist.gui.util.EnableCriteria;
 import stoneframe.chorelist.model.ChoreList;
 
 public abstract class EditActivity extends AppCompatActivity
@@ -110,7 +110,7 @@ public abstract class EditActivity extends AppCompatActivity
 
     protected abstract void createActivity();
 
-    protected abstract EditTextCriteria[] getSaveEnabledCriteria();
+    protected abstract EnableCriteria[] getSaveEnabledCriteria();
 
     protected abstract void onCancel();
 

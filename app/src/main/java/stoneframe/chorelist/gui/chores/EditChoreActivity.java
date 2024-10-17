@@ -20,7 +20,9 @@ import java.util.stream.Stream;
 
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.EditActivity;
+import stoneframe.chorelist.gui.util.CheckboxCriteria;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
+import stoneframe.chorelist.gui.util.EnableCriteria;
 import stoneframe.chorelist.model.chores.Chore;
 import stoneframe.chorelist.model.chores.ChoreEditor;
 import stoneframe.chorelist.model.chores.DaysInWeekRepetition;
@@ -155,9 +157,9 @@ public class EditChoreActivity extends EditActivity implements ChoreEditor.Chore
     }
 
     @Override
-    protected EditTextCriteria[] getSaveEnabledCriteria()
+    protected EnableCriteria[] getSaveEnabledCriteria()
     {
-        EditTextCriteria[] baseViewCriteria =
+        EnableCriteria[] baseViewCriteria =
             {
                 new EditTextCriteria(descriptionEditText, EditTextCriteria.IS_NOT_EMPTY),
                 new EditTextCriteria(priorityEditText, EditTextCriteria.IS_NOT_EMPTY),
@@ -169,13 +171,13 @@ public class EditChoreActivity extends EditActivity implements ChoreEditor.Chore
                 Stream.concat(
                     Arrays.stream(intervalRepetitionView.getSaveEnabledCriteria()),
                     Arrays.stream(daysOfWeekRepetitionView.getSaveEnabledCriteria())))
-            .toArray(EditTextCriteria[]::new);
+            .toArray(EnableCriteria[]::new);
     }
 
     @Override
     protected void onCancel()
     {
-
+        choreEditor.revert();
     }
 
     @Override
@@ -245,7 +247,7 @@ public class EditChoreActivity extends EditActivity implements ChoreEditor.Chore
 
         void save(Repetition repetition);
 
-        EditTextCriteria[] getSaveEnabledCriteria();
+        EnableCriteria[] getSaveEnabledCriteria();
     }
 
     private class IntervalRepetitionView implements RepetitionView
@@ -309,16 +311,17 @@ public class EditChoreActivity extends EditActivity implements ChoreEditor.Chore
             intervalRepetition.setNext(next);
             intervalRepetition.setIntervalLength(intervalLength);
             intervalRepetition.setIntervalUnit(intervalUnit);
+
+            choreEditor.updateNext();
         }
 
         public EditTextCriteria[] getSaveEnabledCriteria()
         {
-            return new EditTextCriteria[]
-                {
-                    new EditTextCriteria(
-                        intervalLengthEditText,
-                        e -> !isVisible() || EditTextCriteria.isValidInteger(e)),
-                };
+            return new EditTextCriteria[]{
+                new EditTextCriteria(
+                    intervalLengthEditText,
+                    e -> !isVisible() || EditTextCriteria.isValidInteger(e)),
+            };
         }
 
         private boolean isVisible()
@@ -408,16 +411,21 @@ public class EditChoreActivity extends EditActivity implements ChoreEditor.Chore
             daysInWeekRepetition.setSaturday(satCheckBox.isChecked());
             daysInWeekRepetition.setSunday(sunCheckBox.isChecked());
 
-            choreEditor.reschedule();
+            choreEditor.updateNext();
         }
 
         @Override
-        public EditTextCriteria[] getSaveEnabledCriteria()
+        public EnableCriteria[] getSaveEnabledCriteria()
         {
-            return new EditTextCriteria[]{
-                new EditTextCriteria(
-                    new EditText(EditChoreActivity.this),
-                    c -> !isVisible() || anyCheckboxChecked())};
+            return new EnableCriteria[]{
+                new CheckboxCriteria(monCheckBox, c -> !isVisible() || anyCheckboxChecked()),
+                new CheckboxCriteria(tueCheckBox, c -> !isVisible() || anyCheckboxChecked()),
+                new CheckboxCriteria(wedCheckBox, c -> !isVisible() || anyCheckboxChecked()),
+                new CheckboxCriteria(thuCheckBox, c -> !isVisible() || anyCheckboxChecked()),
+                new CheckboxCriteria(friCheckBox, c -> !isVisible() || anyCheckboxChecked()),
+                new CheckboxCriteria(satCheckBox, c -> !isVisible() || anyCheckboxChecked()),
+                new CheckboxCriteria(sunCheckBox, c -> !isVisible() || anyCheckboxChecked()),
+            };
         }
 
         private boolean isVisible()

@@ -1,19 +1,18 @@
 package stoneframe.chorelist.gui.util;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.widget.Button;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class EditTextButtonEnabledLink implements TextWatcher
+public class EditTextButtonEnabledLink
 {
-    private final List<EditTextCriteria> editTextCriteria = new LinkedList<>();
+    private final List<EnableCriteria> editTextCriteria = new LinkedList<>();
+
     private final Button button;
 
-    public EditTextButtonEnabledLink(Button button, EditTextCriteria... editTextsCriteria)
+    public EditTextButtonEnabledLink(Button button, EnableCriteria... editTextsCriteria)
     {
         this.button = button;
 
@@ -27,25 +26,14 @@ public class EditTextButtonEnabledLink implements TextWatcher
         updateButtonEnabled();
     }
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after)
-    {
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count)
-    {
-    }
-
-    @Override
-    public void afterTextChanged(Editable s)
+    void componentChanged()
     {
         updateButtonEnabled();
     }
 
     private void updateButtonEnabled()
     {
-        boolean isEnabled = editTextCriteria.stream().allMatch(EditTextCriteria::isValid);
+        boolean isEnabled = editTextCriteria.stream().allMatch(EnableCriteria::isValid);
 
         button.setEnabled(isEnabled);
     }

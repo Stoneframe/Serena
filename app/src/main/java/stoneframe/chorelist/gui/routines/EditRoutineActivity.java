@@ -7,6 +7,7 @@ import android.widget.EditText;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.EditActivity;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
+import stoneframe.chorelist.gui.util.EnableCriteria;
 import stoneframe.chorelist.model.routines.Routine;
 import stoneframe.chorelist.model.routines.RoutineEditor;
 
@@ -53,7 +54,7 @@ public abstract class EditRoutineActivity<TRoutine extends Routine<?>, TRoutineE
     }
 
     @Override
-    protected EditTextCriteria[] getSaveEnabledCriteria()
+    protected EnableCriteria[] getSaveEnabledCriteria()
     {
         return new EditTextCriteria[]
             {

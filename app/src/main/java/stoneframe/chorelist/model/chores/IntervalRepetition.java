@@ -63,6 +63,12 @@ public class IntervalRepetition extends Repetition
     }
 
     @Override
+    void updateNext(LocalDate today)
+    {
+
+    }
+
+    @Override
     void reschedule(LocalDate today)
     {
         if (data.next == null)

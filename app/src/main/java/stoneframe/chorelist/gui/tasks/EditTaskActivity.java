@@ -26,6 +26,7 @@ import java.util.List;
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.EditActivity;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
+import stoneframe.chorelist.gui.util.EnableCriteria;
 import stoneframe.chorelist.model.tasks.Task;
 import stoneframe.chorelist.model.tasks.TaskEditor;
 
@@ -132,7 +133,7 @@ public class EditTaskActivity extends EditActivity implements TaskEditor.TaskEdi
     }
 
     @Override
-    protected EditTextCriteria[] getSaveEnabledCriteria()
+    protected EnableCriteria[] getSaveEnabledCriteria()
     {
         return new EditTextCriteria[]
             {

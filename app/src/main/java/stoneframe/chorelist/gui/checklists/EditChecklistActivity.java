@@ -22,6 +22,7 @@ import stoneframe.chorelist.gui.EditActivity;
 import stoneframe.chorelist.gui.util.DialogUtils;
 import stoneframe.chorelist.gui.util.EditTextButtonEnabledLink;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
+import stoneframe.chorelist.gui.util.EnableCriteria;
 import stoneframe.chorelist.gui.util.RecyclerAdapter;
 import stoneframe.chorelist.gui.util.TextChangedListener;
 import stoneframe.chorelist.model.checklists.Checklist;
@@ -142,7 +143,7 @@ public class EditChecklistActivity extends EditActivity implements ChecklistEdit
     }
 
     @Override
-    protected EditTextCriteria[] getSaveEnabledCriteria()
+    protected EnableCriteria[] getSaveEnabledCriteria()
     {
         return new EditTextCriteria[]
             {

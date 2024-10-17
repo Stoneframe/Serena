@@ -1,5 +1,7 @@
 package stoneframe.chorelist.model.chores;
 
+import androidx.annotation.NonNull;
+
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 
@@ -92,6 +94,17 @@ public class DaysInWeekRepetition extends Repetition
     }
 
     @Override
+    void updateNext(LocalDate today)
+    {
+        if (getNbrOfSelectedDays() == 0)
+        {
+            data.next = LocalDate.now();
+        }
+
+        data.next = getNextSelectedDay(today.plusDays(0));
+    }
+
+    @Override
     void reschedule(LocalDate today)
     {
         if (getNbrOfSelectedDays() == 0)
@@ -99,15 +112,16 @@ public class DaysInWeekRepetition extends Repetition
             data.next = LocalDate.now();
         }
 
-        LocalDate date = new LocalDate(today);
+        data.next = getNextSelectedDay(today.plusDays(1));
+    }
 
-        do
+    private @NonNull LocalDate getNextSelectedDay(LocalDate date)
+    {
+        while (!isDayChecked(date.getDayOfWeek()))
         {
             date = date.plusDays(1);
         }
-        while (!isDayChecked(date.getDayOfWeek()));
-
-        data.next = date;
+        return date;
     }
 
     private long getNbrOfSelectedDays()

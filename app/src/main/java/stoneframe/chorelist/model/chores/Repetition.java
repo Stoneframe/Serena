@@ -27,5 +27,7 @@ public abstract class Repetition
 
     public abstract double getEffortPerWeek();
 
+    abstract void updateNext(LocalDate today);
+
     abstract void reschedule(LocalDate today);
 }

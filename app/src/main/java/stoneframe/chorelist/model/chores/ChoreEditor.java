@@ -22,6 +22,7 @@ public class ChoreEditor extends Editor<ChoreEditor.ChoreEditorListener>
 
         this.choreManager = choreManager;
         this.chore = chore;
+        this.chore.edit();
 
         isEnabledProperty = getIsEnabledProperty();
         descriptionProperty = getDescriptionProperty();
@@ -77,6 +78,11 @@ public class ChoreEditor extends Editor<ChoreEditor.ChoreEditorListener>
         }
     }
 
+    public void revert()
+    {
+        chore.revert();
+    }
+
     public void remove()
     {
         if (choreManager.containsChore(chore))
@@ -127,9 +133,9 @@ public class ChoreEditor extends Editor<ChoreEditor.ChoreEditorListener>
         chore.setRepetitionType(repetitionType);
     }
 
-    public void reschedule()
+    public void updateNext()
     {
-        chore.reschedule(getToday());
+        chore.getRepetition().updateNext(getToday());
     }
 
     public interface ChoreEditorListener

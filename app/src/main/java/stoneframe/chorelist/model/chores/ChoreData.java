@@ -19,6 +19,14 @@ class ChoreData
     int intervalUnit;
     int intervalLength;
 
+    boolean monday;
+    boolean tuesday;
+    boolean wednesday;
+    boolean thursday;
+    boolean friday;
+    boolean saturday;
+    boolean sunday;
+
     ChoreData(
         boolean isEnabled,
         LocalDate next,

@@ -24,6 +24,26 @@ public class IntervalRepetition extends Repetition
         data.next = next;
     }
 
+    public int getIntervalUnit()
+    {
+        return data.intervalUnit;
+    }
+
+    public void setIntervalUnit(int intervalUnit)
+    {
+        data.intervalUnit = intervalUnit;
+    }
+
+    public int getIntervalLength()
+    {
+        return data.intervalLength;
+    }
+
+    public void setIntervalLength(int intervalLength)
+    {
+        data.intervalLength = intervalLength;
+    }
+
     @Override
     public double getEffortPerWeek()
     {

@@ -55,16 +55,6 @@ public class Chore extends Revertible<ChoreData>
         return data().effort;
     }
 
-    public int getIntervalUnit()
-    {
-        return data().intervalUnit;
-    }
-
-    public int getIntervalLength()
-    {
-        return data().intervalLength;
-    }
-
     @Override
     public boolean equals(Object obj)
     {
@@ -126,16 +116,6 @@ public class Chore extends Revertible<ChoreData>
     void setEffort(int effort)
     {
         data().effort = effort;
-    }
-
-    void setIntervalUnit(int intervalUnit)
-    {
-        data().intervalUnit = intervalUnit;
-    }
-
-    void setIntervalLength(int intervalLength)
-    {
-        data().intervalLength = intervalLength;
     }
 
     boolean isTimeToDo(LocalDate today)

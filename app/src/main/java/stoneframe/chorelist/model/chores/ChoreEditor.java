@@ -15,8 +15,6 @@ public class ChoreEditor extends Editor<ChoreEditor.ChoreEditorListener>
     private final PropertyUtil<String> descriptionProperty;
     private final PropertyUtil<Integer> priorityProperty;
     private final PropertyUtil<Integer> effortProperty;
-    private final PropertyUtil<Integer> intervalUnitProperty;
-    private final PropertyUtil<Integer> intervalLengthProperty;
 
     public ChoreEditor(ChoreManager choreManager, Chore chore, TimeService timeService)
     {
@@ -29,8 +27,6 @@ public class ChoreEditor extends Editor<ChoreEditor.ChoreEditorListener>
         descriptionProperty = getDescriptionProperty();
         priorityProperty = getPriorityProperty();
         effortProperty = getEffortProperty();
-        intervalUnitProperty = getIntervalUnitProperty();
-        intervalLengthProperty = getIntervalLengthProperty();
     }
 
     public boolean isEnabled()
@@ -71,26 +67,6 @@ public class ChoreEditor extends Editor<ChoreEditor.ChoreEditorListener>
     public void setEffort(int effort)
     {
         effortProperty.setValue(effort);
-    }
-
-    public int getIntervalUnit()
-    {
-        return intervalUnitProperty.getValue();
-    }
-
-    public void setIntervalUnit(int intervalUnit)
-    {
-        intervalUnitProperty.setValue(intervalUnit);
-    }
-
-    public int getIntervalLength()
-    {
-        return intervalLengthProperty.getValue();
-    }
-
-    public void setIntervalLength(int intervalLength)
-    {
-        intervalLengthProperty.setValue(intervalLength);
     }
 
     public void save()
@@ -141,25 +117,19 @@ public class ChoreEditor extends Editor<ChoreEditor.ChoreEditorListener>
             v -> notifyListeners(ChoreEditorListener::effortChanged));
     }
 
-    private @NonNull PropertyUtil<Integer> getIntervalUnitProperty()
-    {
-        return new PropertyUtil<>(
-            chore::getIntervalUnit,
-            chore::setIntervalUnit,
-            v -> notifyListeners(ChoreEditorListener::intervalUnitChanged));
-    }
-
-    private @NonNull PropertyUtil<Integer> getIntervalLengthProperty()
-    {
-        return new PropertyUtil<>(
-            chore::getIntervalLength,
-            chore::setIntervalLength,
-            v -> notifyListeners(ChoreEditorListener::intervalLengthChanged));
-    }
-
     public Repetition getRepetition()
     {
         return chore.getRepetition();
+    }
+
+    public void setRepetitionType(int repetitionType)
+    {
+        chore.setRepetitionType(repetitionType);
+    }
+
+    public void reschedule()
+    {
+        chore.reschedule(getToday());
     }
 
     public interface ChoreEditorListener
@@ -171,9 +141,5 @@ public class ChoreEditor extends Editor<ChoreEditor.ChoreEditorListener>
         void priorityChanged();
 
         void effortChanged();
-
-        void intervalUnitChanged();
-
-        void intervalLengthChanged();
     }
 }

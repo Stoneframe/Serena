@@ -19,22 +19,12 @@ public class EditTextCriteria
         this.criteria = criteria;
     }
 
-    boolean isValid()
-    {
-        return criteria.test(editText);
-    }
-
-    void addWatcher(TextWatcher textWatcher)
-    {
-        editText.addTextChangedListener(textWatcher);
-    }
-
-    private static boolean isNotEmpty(EditText e)
+    public static boolean isNotEmpty(EditText e)
     {
         return e.getText().length() > 0;
     }
 
-    private static boolean isValidInteger(EditText e)
+    public static boolean isValidInteger(EditText e)
     {
         try
         {
@@ -45,5 +35,15 @@ public class EditTextCriteria
         {
             return false;
         }
+    }
+
+    boolean isValid()
+    {
+        return criteria.test(editText);
+    }
+
+    void addWatcher(TextWatcher textWatcher)
+    {
+        editText.addTextChangedListener(textWatcher);
     }
 }

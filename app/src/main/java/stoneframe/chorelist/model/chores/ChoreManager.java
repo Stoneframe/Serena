@@ -36,7 +36,7 @@ public class ChoreManager
 
     public Chore createChore()
     {
-        return new Chore("", 1, 1, timeService.getToday(), 1, Chore.DAYS);
+        return new Chore("", 1, 1, timeService.getToday(), 1, IntervalRepetition.DAYS);
     }
 
     public List<Chore> getAllChores()

@@ -2,8 +2,6 @@ package stoneframe.chorelist.model.chores;
 
 import androidx.annotation.NonNull;
 
-import org.joda.time.LocalDate;
-
 import stoneframe.chorelist.model.Editor;
 import stoneframe.chorelist.model.timeservices.TimeService;
 
@@ -14,7 +12,6 @@ public class ChoreEditor extends Editor<ChoreEditor.ChoreEditorListener>
     private final Chore chore;
 
     private final PropertyUtil<Boolean> isEnabledProperty;
-    private final PropertyUtil<LocalDate> nextProperty;
     private final PropertyUtil<String> descriptionProperty;
     private final PropertyUtil<Integer> priorityProperty;
     private final PropertyUtil<Integer> effortProperty;
@@ -29,7 +26,6 @@ public class ChoreEditor extends Editor<ChoreEditor.ChoreEditorListener>
         this.chore = chore;
 
         isEnabledProperty = getIsEnabledProperty();
-        nextProperty = getNextProperty();
         descriptionProperty = getDescriptionProperty();
         priorityProperty = getPriorityProperty();
         effortProperty = getEffortProperty();
@@ -45,16 +41,6 @@ public class ChoreEditor extends Editor<ChoreEditor.ChoreEditorListener>
     public void setEnabled(boolean isEnabled)
     {
         isEnabledProperty.setValue(isEnabled);
-    }
-
-    public LocalDate getNext()
-    {
-        return nextProperty.getValue();
-    }
-
-    public void setNext(LocalDate next)
-    {
-        nextProperty.setValue(next);
     }
 
     public String getDescription()
@@ -131,14 +117,6 @@ public class ChoreEditor extends Editor<ChoreEditor.ChoreEditorListener>
             v -> notifyListeners(ChoreEditorListener::isEnabledChanged));
     }
 
-    private @NonNull PropertyUtil<LocalDate> getNextProperty()
-    {
-        return new PropertyUtil<>(
-            chore::getNext,
-            chore::setNext,
-            v -> notifyListeners(ChoreEditorListener::nextChanged));
-    }
-
     private @NonNull PropertyUtil<String> getDescriptionProperty()
     {
         return new PropertyUtil<>(
@@ -179,11 +157,14 @@ public class ChoreEditor extends Editor<ChoreEditor.ChoreEditorListener>
             v -> notifyListeners(ChoreEditorListener::intervalLengthChanged));
     }
 
+    public Repetition getRepetition()
+    {
+        return chore.getRepetition();
+    }
+
     public interface ChoreEditorListener
     {
         void isEnabledChanged();
-
-        void nextChanged();
 
         void descriptionChanged();
 

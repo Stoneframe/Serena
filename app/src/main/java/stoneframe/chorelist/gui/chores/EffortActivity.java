@@ -19,6 +19,7 @@ import stoneframe.chorelist.gui.util.EditTextCriteria;
 import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.chores.Chore;
 import stoneframe.chorelist.model.chores.ChoreManager;
+import stoneframe.chorelist.model.chores.Repetition;
 import stoneframe.chorelist.model.chores.efforttrackers.WeeklyEffortTracker;
 
 public class EffortActivity extends AppCompatActivity implements TextWatcher
@@ -145,22 +146,8 @@ public class EffortActivity extends AppCompatActivity implements TextWatcher
 
         double totalEffortFromChoresPerWeek = choreManager.getAllChores()
             .stream()
-            .mapToDouble(c ->
-            {
-                switch (c.getIntervalUnit())
-                {
-                    case Chore.DAYS:
-                        return (double)c.getEffort() / c.getIntervalLength() * 7;
-                    case Chore.WEEKS:
-                        return (double)c.getEffort() / c.getIntervalLength();
-                    case Chore.MONTHS:
-                        return (double)c.getEffort() / c.getIntervalLength() / 30 * 7;
-                    case Chore.YEARS:
-                        return (double)c.getEffort() / c.getIntervalLength() / 365 * 7;
-                    default:
-                        throw new IllegalStateException("Unknown interval unit " + c.getIntervalUnit());
-                }
-            })
+            .map(Chore::getRepetition)
+            .mapToDouble(Repetition::getEffortPerWeek)
             .sum();
 
         int totalEffortEntered = IntStream.of(

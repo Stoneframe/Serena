@@ -10,11 +10,6 @@ import stoneframe.chorelist.model.util.Revertible;
 
 public class Chore extends Revertible<ChoreData>
 {
-    public static final int DAYS = 0;
-    public static final int WEEKS = 1;
-    public static final int MONTHS = 2;
-    public static final int YEARS = 3;
-
     Chore(
         String description,
         int priority,
@@ -30,6 +25,7 @@ public class Chore extends Revertible<ChoreData>
             description,
             priority,
             effort,
+            Repetition.Interval,
             intervalUnit,
             intervalLength));
     }
@@ -83,6 +79,24 @@ public class Chore extends Revertible<ChoreData>
     }
 
     @NonNull
+    public Repetition getRepetition()
+    {
+        switch (data().repetitionType)
+        {
+            case Repetition.DaysInWeek:
+                return new DaysInWeekRepetition(data());
+            case Repetition.Interval:
+            default:
+                return new IntervalRepetition(data());
+        }
+    }
+
+    public void setRepetitionType(int repetitionType)
+    {
+        data().repetitionType = repetitionType;
+    }
+
+    @NonNull
     @Override
     public String toString()
     {
@@ -97,12 +111,6 @@ public class Chore extends Revertible<ChoreData>
     void setEnabled(boolean enabled)
     {
         data().isEnabled = enabled;
-    }
-
-    void setNext(LocalDate next)
-    {
-        data().next = next;
-        data().postpone = null;
     }
 
     void setDescription(String description)
@@ -137,38 +145,14 @@ public class Chore extends Revertible<ChoreData>
 
     void reschedule(LocalDate today)
     {
-        if (data().next == null)
-        {
-            data().next = today;
-        }
-
-        while (!data().next.isAfter(today))
-        {
-            switch (data().intervalUnit)
-            {
-                case DAYS:
-                    data().next = today.plusDays(data().intervalLength);
-                    break;
-                case WEEKS:
-                    data().next = data().next.plusWeeks(data().intervalLength);
-                    break;
-                case MONTHS:
-                    data().next = data().next.plusMonths(data().intervalLength);
-                    break;
-                case YEARS:
-                    data().next = data().next.plusYears(data().intervalLength);
-                    break;
-                default:
-                    return;
-            }
-        }
+        getRepetition().reschedule(today);
 
         data().postpone = null;
     }
 
     private LocalDate getNextOrPostpone()
     {
-        return data().postpone == null ? data().next : data().postpone;
+        return data().postpone == null ? getRepetition().getNext() : data().postpone;
     }
 
     public static class ChoreComparator implements Comparator<Chore>
@@ -190,6 +174,7 @@ public class Chore extends Revertible<ChoreData>
                 if ((i = Integer.compare(o1.data().priority, o2.data().priority)) != 0) return i;
                 if ((i = Integer.compare(o1.data().effort, o2.data().effort)) != 0) return i;
             }
+
             if ((i = o1.getNextOrPostpone().compareTo(o2.getNextOrPostpone())) != 0) return i;
 
             return o1.data().description.compareTo(o2.data().description);

@@ -14,6 +14,8 @@ class ChoreData
     int priority;
     int effort;
 
+    int repetitionType;
+
     int intervalUnit;
     int intervalLength;
 
@@ -24,6 +26,7 @@ class ChoreData
         String description,
         int priority,
         int effort,
+        int repetitionType,
         int intervalUnit,
         int intervalLength)
     {
@@ -33,6 +36,7 @@ class ChoreData
         this.description = description;
         this.priority = priority;
         this.effort = effort;
+        this.repetitionType = repetitionType;
         this.intervalUnit = intervalUnit;
         this.intervalLength = intervalLength;
     }

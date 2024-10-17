@@ -16,6 +16,7 @@ import stoneframe.chorelist.gui.EditActivity;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
 import stoneframe.chorelist.model.chores.Chore;
 import stoneframe.chorelist.model.chores.ChoreEditor;
+import stoneframe.chorelist.model.chores.IntervalRepetition;
 
 public class EditChoreActivity extends EditActivity implements ChoreEditor.ChoreEditorListener
 {
@@ -34,12 +35,6 @@ public class EditChoreActivity extends EditActivity implements ChoreEditor.Chore
 
     @Override
     public void isEnabledChanged()
-    {
-
-    }
-
-    @Override
-    public void nextChanged()
     {
 
     }
@@ -100,7 +95,7 @@ public class EditChoreActivity extends EditActivity implements ChoreEditor.Chore
 
         choreEditor = choreList.getChoreManager().getChoreEditor(chore);
 
-        next = choreEditor.getNext();
+        next = choreEditor.getRepetition().getNext();
 
         nextPickerDialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) ->
         {
@@ -129,7 +124,9 @@ public class EditChoreActivity extends EditActivity implements ChoreEditor.Chore
         priorityEditText.setText(
             Integer.toString(choreEditor.getPriority()),
             TextView.BufferType.EDITABLE);
-        effortEditText.setText(Integer.toString(choreEditor.getEffort()), TextView.BufferType.EDITABLE);
+        effortEditText.setText(
+            Integer.toString(choreEditor.getEffort()),
+            TextView.BufferType.EDITABLE);
         intervalUnitSpinner.setSelection(choreEditor.getIntervalUnit());
         intervalLengthEditText.setText(
             Integer.toString(choreEditor.getIntervalLength()),
@@ -185,11 +182,12 @@ public class EditChoreActivity extends EditActivity implements ChoreEditor.Chore
 
         choreEditor.setEnabled(isEnabled);
         choreEditor.setDescription(description);
-        choreEditor.setNext(next);
         choreEditor.setPriority(priority);
         choreEditor.setEffort(effort);
         choreEditor.setIntervalUnit(intervalUnit);
         choreEditor.setIntervalLength(intervalLength);
+
+        ((IntervalRepetition)choreEditor.getRepetition()).setNext(next);
 
         choreEditor.save();
 

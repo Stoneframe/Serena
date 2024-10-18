@@ -141,7 +141,7 @@ public class RoutineNotifier
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentText(contentText)
             .setSubText("Routine")
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setPriority(NotificationCompat.PRIORITY_MAX)
             .setOnlyAlertOnce(!splash)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)

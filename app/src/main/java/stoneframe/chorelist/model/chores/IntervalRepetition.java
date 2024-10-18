@@ -65,17 +65,15 @@ public class IntervalRepetition extends Repetition
     @Override
     void updateNext(LocalDate today)
     {
-
+        if (data.next == null)
+        {
+            data.next = today;
+        }
     }
 
     @Override
     void reschedule(LocalDate today)
     {
-        if (data.next == null)
-        {
-            data.next = today;
-        }
-
         while (!data.next.isAfter(today))
         {
             switch (data.intervalUnit)

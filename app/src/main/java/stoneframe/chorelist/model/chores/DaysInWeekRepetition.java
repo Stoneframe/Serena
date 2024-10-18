@@ -9,7 +9,10 @@ import java.util.Arrays;
 
 public class DaysInWeekRepetition extends Repetition
 {
-    DaysInWeekRepetition(ChoreData data) {super(Repetition.DaysInWeek, data);}
+    DaysInWeekRepetition(ChoreData data)
+    {
+        super(Repetition.DaysInWeek, data);
+    }
 
     @Override
     public LocalDate getNext()
@@ -101,7 +104,7 @@ public class DaysInWeekRepetition extends Repetition
             data.next = LocalDate.now();
         }
 
-        data.next = getNextSelectedDay(today.plusDays(0));
+        data.next = getNextSelectedDayAndIncludeToday(today);
     }
 
     @Override
@@ -112,16 +115,7 @@ public class DaysInWeekRepetition extends Repetition
             data.next = LocalDate.now();
         }
 
-        data.next = getNextSelectedDay(today.plusDays(1));
-    }
-
-    private @NonNull LocalDate getNextSelectedDay(LocalDate date)
-    {
-        while (!isDayChecked(date.getDayOfWeek()))
-        {
-            date = date.plusDays(1);
-        }
-        return date;
+        data.next = getNextSelectedDayAndExcludeToday(today);
     }
 
     private long getNbrOfSelectedDays()
@@ -138,6 +132,26 @@ public class DaysInWeekRepetition extends Repetition
                 })
             .filter(d -> d)
             .count();
+    }
+
+    private @NonNull LocalDate getNextSelectedDayAndIncludeToday(LocalDate today)
+    {
+        return getNextSelectedDay(today.plusDays(0));
+    }
+
+    private @NonNull LocalDate getNextSelectedDayAndExcludeToday(LocalDate today)
+    {
+        return getNextSelectedDay(today.plusDays(1));
+    }
+
+    private @NonNull LocalDate getNextSelectedDay(LocalDate date)
+    {
+        while (!isDayChecked(date.getDayOfWeek()))
+        {
+            date = date.plusDays(1);
+        }
+
+        return date;
     }
 
     private boolean isDayChecked(int dayOfWeek)

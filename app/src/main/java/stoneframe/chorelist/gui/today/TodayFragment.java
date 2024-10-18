@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
 import org.joda.time.LocalDate;
+
+import java.util.HashMap;
 
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.GlobalState;
@@ -42,7 +45,11 @@ import stoneframe.chorelist.model.tasks.TaskManager;
 
 public class TodayFragment extends Fragment
 {
-    private ChoreList choreList;
+    private final HashMap<PendingProcedure, Runnable> procedureRemovals = new HashMap<>();
+    private final HashMap<Chore, Runnable> choreRemovals = new HashMap<>();
+    private final HashMap<Task, Runnable> taskRemovals = new HashMap<>();
+
+    private final Handler handler = new Handler();
 
     private ActivityResultLauncher<Intent> editTaskLauncher;
 
@@ -55,6 +62,8 @@ public class TodayFragment extends Fragment
     private RoutineManager routineManager;
     private ChoreManager choreManager;
     private TaskManager taskManager;
+
+    private ChoreList choreList;
 
     @Override
     public View onCreateView(
@@ -83,19 +92,29 @@ public class TodayFragment extends Fragment
         {
             PendingProcedure procedure = (PendingProcedure)procedureAdapter.getItem(position);
 
-            procedureAdapter.setChecked(procedure);
-
-            new Thread(() ->
+            if (procedureRemovals.containsKey(procedure))
             {
-                waitTwoSeconds();
-                requireActivity().runOnUiThread(() ->
+                procedureAdapter.setUnchecked(procedure);
+
+                Runnable removeRunnable = procedureRemovals.remove(procedure);
+                assert removeRunnable != null;
+                handler.removeCallbacks(removeRunnable);
+            }
+            else
+            {
+                procedureAdapter.setChecked(procedure);
+
+                Runnable removeRunnable = () ->
                 {
                     routineManager.procedureDone(procedure);
                     procedureAdapter.notifyDataSetChanged();
                     RoutineNotifier.updateNotification(getContext(), choreList);
                     choreList.save();
-                });
-            }).start();
+                };
+
+                procedureRemovals.put(procedure, removeRunnable);
+                handler.postDelayed(removeRunnable, 2000);
+            }
         });
 
         choreAdapter = new SimpleCheckboxListAdapter<>(
@@ -109,18 +128,28 @@ public class TodayFragment extends Fragment
         {
             Chore chore = (Chore)choreAdapter.getItem(position);
 
-            choreAdapter.setChecked(chore);
-
-            new Thread(() ->
+            if (choreRemovals.containsKey(chore))
             {
-                waitTwoSeconds();
-                requireActivity().runOnUiThread(() ->
+                choreAdapter.setUnchecked(chore);
+
+                Runnable removeRunnable = choreRemovals.remove(chore);
+                assert removeRunnable != null;
+                handler.removeCallbacks(removeRunnable);
+            }
+            else
+            {
+                choreAdapter.setChecked(chore);
+
+                Runnable removeRunnable = () ->
                 {
                     choreManager.complete(chore);
                     choreAdapter.notifyDataSetChanged();
                     choreList.save();
-                });
-            }).start();
+                };
+
+                choreRemovals.put(chore, removeRunnable);
+                handler.postDelayed(removeRunnable, 2000);
+            }
         });
         choreListView.setOnItemLongClickListener((parent, view, position, id) ->
         {
@@ -160,18 +189,28 @@ public class TodayFragment extends Fragment
         {
             Task task = (Task)taskAdapter.getItem(position);
 
-            taskAdapter.setChecked(task);
-
-            new Thread(() ->
+            if (taskRemovals.containsKey(task))
             {
-                waitTwoSeconds();
-                requireActivity().runOnUiThread(() ->
+                taskAdapter.setUnchecked(task);
+
+                Runnable removeRunnable = taskRemovals.remove(task);
+                assert removeRunnable != null;
+                handler.removeCallbacks(removeRunnable);
+            }
+            else
+            {
+                taskAdapter.setChecked(task);
+
+                Runnable removeRunnable = () ->
                 {
                     taskManager.complete(task);
                     taskAdapter.notifyDataSetChanged();
                     choreList.save();
-                });
-            }).start();
+                };
+
+                taskRemovals.put(task, removeRunnable);
+                handler.postDelayed(removeRunnable, 2000);
+            }
         });
         taskListView.setOnItemLongClickListener((parent, view, position, id) ->
         {
@@ -345,18 +384,6 @@ public class TodayFragment extends Fragment
         }
 
         taskAdapter.notifyDataSetChanged();
-    }
-
-    private static void waitTwoSeconds()
-    {
-        try
-        {
-            Thread.sleep(2_000);
-        }
-        catch (InterruptedException ie)
-        {
-            Thread.currentThread().interrupt();
-        }
     }
 
     private class TodayDataSetObserver extends DataSetObserver

@@ -23,6 +23,7 @@ import stoneframe.chorelist.gui.EditActivity;
 import stoneframe.chorelist.gui.util.CheckboxCriteria;
 import stoneframe.chorelist.gui.util.EditTextCriteria;
 import stoneframe.chorelist.gui.util.EnableCriteria;
+import stoneframe.chorelist.gui.util.ViewGroupCriteria;
 import stoneframe.chorelist.model.chores.Chore;
 import stoneframe.chorelist.model.chores.ChoreEditor;
 import stoneframe.chorelist.model.chores.DaysInWeekRepetition;
@@ -315,9 +316,10 @@ public class EditChoreActivity extends EditActivity implements ChoreEditor.Chore
             choreEditor.updateNext();
         }
 
-        public EditTextCriteria[] getSaveEnabledCriteria()
+        public EnableCriteria[] getSaveEnabledCriteria()
         {
-            return new EditTextCriteria[]{
+            return new EnableCriteria[]{
+                new ViewGroupCriteria(intervalRepetitionView, c -> true),
                 new EditTextCriteria(
                     intervalLengthEditText,
                     e -> !isVisible() || EditTextCriteria.isValidInteger(e)),
@@ -418,6 +420,7 @@ public class EditChoreActivity extends EditActivity implements ChoreEditor.Chore
         public EnableCriteria[] getSaveEnabledCriteria()
         {
             return new EnableCriteria[]{
+                new ViewGroupCriteria(daysOfWeekRepetitionView, c -> true),
                 new CheckboxCriteria(monCheckBox, c -> !isVisible() || anyCheckboxChecked()),
                 new CheckboxCriteria(tueCheckBox, c -> !isVisible() || anyCheckboxChecked()),
                 new CheckboxCriteria(wedCheckBox, c -> !isVisible() || anyCheckboxChecked()),

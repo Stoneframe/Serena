@@ -353,6 +353,30 @@ public class TodayFragment extends Fragment
         updateColors();
     }
 
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+
+        procedureRemovals.forEach((x, r) ->
+        {
+            handler.removeCallbacks(r);
+            r.run();
+        });
+
+        choreRemovals.forEach((x, r) ->
+        {
+            handler.removeCallbacks(r);
+            r.run();
+        });
+
+        taskRemovals.forEach((x, r) ->
+        {
+            handler.removeCallbacks(r);
+            r.run();
+        });
+    }
+
     private void updateColors()
     {
         updateColorsOf(procedureAdapter, rootView.findViewById(R.id.routines_text));

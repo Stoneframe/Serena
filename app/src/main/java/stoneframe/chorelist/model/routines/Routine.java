@@ -1,5 +1,6 @@
 package stoneframe.chorelist.model.routines;
 
+import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
 import java.util.List;
@@ -56,6 +57,8 @@ public abstract class Routine<T extends RoutineData> extends Revertible<T>
     public abstract LocalDateTime getNextProcedureTime(LocalDateTime now);
 
     public abstract List<PendingProcedure> getPendingProcedures(LocalDateTime now);
+
+    public abstract List<Procedure> getProceduresForDate(LocalDate date);
 
     abstract void procedureDone(PendingProcedure procedure);
 

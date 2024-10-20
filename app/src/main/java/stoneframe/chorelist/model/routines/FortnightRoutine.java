@@ -5,7 +5,9 @@ import androidx.annotation.Nullable;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
+import org.joda.time.Weeks;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -17,7 +19,8 @@ public class FortnightRoutine extends Routine<FortnightRoutineData>
     {
         super(
             FORTNIGHT_ROUTINE,
-            new FortnightRoutineData(name,
+            new FortnightRoutineData(
+                name,
                 now,
                 new Week(1, getMondayOfWeek(startDate).plusWeeks(0)),
                 new Week(1, getMondayOfWeek(startDate).plusWeeks(1))));
@@ -86,6 +89,13 @@ public class FortnightRoutine extends Routine<FortnightRoutineData>
             .collect(Collectors.toList());
     }
 
+    @Override
+    public List<Procedure> getProceduresForDate(LocalDate date)
+    {
+        return Collections.unmodifiableList(
+            getWeekOfDate(date).getWeekDay(date.getDayOfWeek()).getProcedures());
+    }
+
     void setStartDate(LocalDate startDate)
     {
         data().week1.setStartDate(getMondayOfWeek(startDate).plusWeeks(0));
@@ -101,6 +111,13 @@ public class FortnightRoutine extends Routine<FortnightRoutineData>
     private LocalDateTime getNextProcedureTime(Week week, LocalDateTime now)
     {
         return week.getNextProcedureTime(now);
+    }
+
+    private Week getWeekOfDate(LocalDate date)
+    {
+        int weeksBetween = Weeks.weeksBetween(getStartDate(), date).getWeeks();
+
+        return getWeek(weeksBetween % 2 + 1);
     }
 
     @Nullable

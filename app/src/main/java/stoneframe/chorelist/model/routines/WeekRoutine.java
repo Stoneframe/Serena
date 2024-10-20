@@ -2,12 +2,11 @@ package stoneframe.chorelist.model.routines;
 
 import androidx.annotation.Nullable;
 
+import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
 import java.util.Collections;
 import java.util.List;
-
-import stoneframe.chorelist.model.util.DeepCopy;
 
 public class WeekRoutine extends Routine<WeekRoutineData>
 {
@@ -38,6 +37,13 @@ public class WeekRoutine extends Routine<WeekRoutineData>
     public List<PendingProcedure> getPendingProcedures(LocalDateTime now)
     {
         return data().week.getPendingProceduresBetween(data().lastCompleted, now);
+    }
+
+    @Override
+    public List<Procedure> getProceduresForDate(LocalDate date)
+    {
+        return Collections.unmodifiableList(
+            data().week.getWeekDay(date.getDayOfWeek()).getProcedures());
     }
 
     @Override

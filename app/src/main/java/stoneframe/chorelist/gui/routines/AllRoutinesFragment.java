@@ -2,6 +2,7 @@ package stoneframe.chorelist.gui.routines;
 
 import android.Manifest;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -41,6 +42,7 @@ import stoneframe.chorelist.model.routines.WeekRoutine;
 public class AllRoutinesFragment extends Fragment
 {
     private ActivityResultLauncher<Intent> editRoutineLauncher;
+    private ActivityResultLauncher<Intent> routineOverviewLauncher;
 
     private SimpleListAdapter<Routine<?>> routineListAdapter;
 
@@ -76,30 +78,23 @@ public class AllRoutinesFragment extends Fragment
             startRoutineEditor(routine, EditRoutineActivity.ACTION_EDIT);
         });
 
-        Button addDayButton = rootView.findViewById(R.id.add_day_button);
-        addDayButton.setOnClickListener(v ->
+        Button overviewButton = rootView.findViewById(R.id.overviewButton);
+        overviewButton.setOnClickListener(v ->
         {
-            Routine<?> routine = routineManager.createDayRoutine();
-            startRoutineEditor(routine, DayRoutineActivity.ACTION_ADD);
+            Intent intent = new Intent(getActivity(), RoutineOverviewActivity.class);
+            routineOverviewLauncher.launch(intent);
         });
 
-        Button addWeekButton = rootView.findViewById(R.id.add_week_button);
-        addWeekButton.setOnClickListener(v ->
-        {
-            Routine<?> routine = routineManager.createWeekRoutine();
-            startRoutineEditor(routine, WeekRoutineActivity.ACTION_ADD);
-        });
-
-        Button addFortnightButton = rootView.findViewById(R.id.add_fortnight_button);
-        addFortnightButton.setOnClickListener(v ->
-        {
-            Routine<?> routine = routineManager.createFortnightRoutine();
-            startRoutineEditor(routine, FortnightRoutineActivity.ACTION_ADD);
-        });
+        Button addButton = rootView.findViewById(R.id.addButton);
+        addButton.setOnClickListener(v -> showAddRoutineTypeDialog());
 
         editRoutineLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             this::editRoutineCallback);
+
+        routineOverviewLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            this::routineOverviewCallback);
 
         checkNotificationAndExactAlarmsPermissions();
 
@@ -127,6 +122,44 @@ public class AllRoutinesFragment extends Fragment
             default:
                 return "Unknown";
         }
+    }
+
+    private void showAddRoutineTypeDialog()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        LayoutInflater dialogInflater = LayoutInflater.from(requireContext());
+        View dialogView = dialogInflater.inflate(R.layout.dialog_add_routine, null);
+        builder.setView(dialogView);
+
+        builder.setNegativeButton("Close", (dialog, which) -> dialog.cancel());
+
+        AlertDialog alertDialog = builder.create();
+
+        Button addDayButton = dialogView.findViewById(R.id.addDayButton);
+        addDayButton.setOnClickListener(v ->
+        {
+            Routine<?> routine = routineManager.createDayRoutine();
+            alertDialog.cancel();
+            startRoutineEditor(routine, DayRoutineActivity.ACTION_ADD);
+        });
+
+        Button addWeekButton = dialogView.findViewById(R.id.addWeekButton);
+        addWeekButton.setOnClickListener(v ->
+        {
+            Routine<?> routine = routineManager.createWeekRoutine();
+            alertDialog.cancel();
+            startRoutineEditor(routine, WeekRoutineActivity.ACTION_ADD);
+        });
+
+        Button addFortnightButton = dialogView.findViewById(R.id.addFortnightButton);
+        addFortnightButton.setOnClickListener(v ->
+        {
+            Routine<?> routine = routineManager.createFortnightRoutine();
+            alertDialog.cancel();
+            startRoutineEditor(routine, FortnightRoutineActivity.ACTION_ADD);
+        });
+
+        alertDialog.show();
     }
 
     private void startRoutineEditor(Routine<?> routine, int mode)
@@ -203,6 +236,10 @@ public class AllRoutinesFragment extends Fragment
         routineListAdapter.notifyDataSetChanged();
 
         scheduleNextRoutineAlarm();
+    }
+
+    private void routineOverviewCallback(ActivityResult activityResult)
+    {
     }
 
     private void scheduleNextRoutineAlarm()

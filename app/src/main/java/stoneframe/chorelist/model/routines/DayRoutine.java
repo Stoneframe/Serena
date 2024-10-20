@@ -1,5 +1,6 @@
 package stoneframe.chorelist.model.routines;
 
+import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 
@@ -67,6 +68,12 @@ public class DayRoutine extends Routine<DayRoutineData>
             .filter(p -> p.getDateTime().isBefore(now) || p.getDateTime().isEqual(now))
             .sorted()
             .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Procedure> getProceduresForDate(LocalDate date)
+    {
+        return Collections.unmodifiableList(data().procedures);
     }
 
     @Override

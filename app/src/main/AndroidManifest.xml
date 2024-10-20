@@ -36,6 +36,7 @@
         </activity>
         <activity android:name=".gui.chores.EditChoreActivity" />
         <activity android:name=".gui.tasks.EditTaskActivity" />
+        <activity android:name=".gui.routines.RoutineOverviewActivity" />
         <activity android:name=".gui.routines.days.DayRoutineActivity" />
         <activity android:name=".gui.routines.weeks.WeekRoutineActivity" />
         <activity android:name=".gui.routines.fortnights.FortnightRoutineActivity" />

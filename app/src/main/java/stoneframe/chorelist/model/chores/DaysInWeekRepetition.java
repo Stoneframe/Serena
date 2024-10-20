@@ -105,6 +105,7 @@ public class DaysInWeekRepetition extends Repetition
         }
 
         data.next = getNextSelectedDayAndIncludeToday(today);
+        data.postpone = null;
     }
 
     @Override

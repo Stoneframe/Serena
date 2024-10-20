@@ -84,6 +84,7 @@ public class Chore extends Revertible<ChoreData>
     public void setRepetitionType(int repetitionType)
     {
         data().repetitionType = repetitionType;
+        data().postpone = null;
     }
 
     @NonNull

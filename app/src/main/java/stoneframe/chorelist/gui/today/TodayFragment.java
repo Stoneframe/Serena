@@ -106,6 +106,7 @@ public class TodayFragment extends Fragment
 
                 Runnable removeRunnable = () ->
                 {
+                    procedureRemovals.remove(procedure);
                     routineManager.procedureDone(procedure);
                     procedureAdapter.notifyDataSetChanged();
                     RoutineNotifier.updateNotification(getContext(), choreList);
@@ -142,6 +143,7 @@ public class TodayFragment extends Fragment
 
                 Runnable removeRunnable = () ->
                 {
+                    choreRemovals.remove(chore);
                     choreManager.complete(chore);
                     choreAdapter.notifyDataSetChanged();
                     choreList.save();
@@ -203,6 +205,7 @@ public class TodayFragment extends Fragment
 
                 Runnable removeRunnable = () ->
                 {
+                    taskRemovals.remove(task);
                     taskManager.complete(task);
                     taskAdapter.notifyDataSetChanged();
                     choreList.save();

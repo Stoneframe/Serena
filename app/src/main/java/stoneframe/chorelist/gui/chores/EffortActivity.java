@@ -146,6 +146,7 @@ public class EffortActivity extends AppCompatActivity implements TextWatcher
 
         double totalEffortFromChoresPerWeek = choreManager.getAllChores()
             .stream()
+            .filter(Chore::isEnabled)
             .map(Chore::getRepetition)
             .mapToDouble(Repetition::getEffortPerWeek)
             .sum();

@@ -26,6 +26,7 @@ import androidx.fragment.app.Fragment;
 
 import org.joda.time.LocalDate;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 import stoneframe.chorelist.R;
@@ -88,35 +89,7 @@ public class TodayFragment extends Fragment
         procedureAdapter.registerDataSetObserver(new TodayDataSetObserver());
         ListView procedureListView = rootView.findViewById(R.id.todays_routines);
         procedureListView.setAdapter(procedureAdapter);
-        procedureListView.setOnItemClickListener((parent, view, position, id) ->
-        {
-            PendingProcedure procedure = (PendingProcedure)procedureAdapter.getItem(position);
-
-            if (procedureRemovals.containsKey(procedure))
-            {
-                procedureAdapter.setUnchecked(procedure);
-
-                Runnable removeRunnable = procedureRemovals.remove(procedure);
-                assert removeRunnable != null;
-                handler.removeCallbacks(removeRunnable);
-            }
-            else
-            {
-                procedureAdapter.setChecked(procedure);
-
-                Runnable removeRunnable = () ->
-                {
-                    procedureRemovals.remove(procedure);
-                    routineManager.procedureDone(procedure);
-                    procedureAdapter.notifyDataSetChanged();
-                    RoutineNotifier.updateNotification(getContext(), choreList);
-                    choreList.save();
-                };
-
-                procedureRemovals.put(procedure, removeRunnable);
-                handler.postDelayed(removeRunnable, 2000);
-            }
-        });
+        procedureListView.setOnItemClickListener((p, v, position, i) -> onProcedureClicked(position));
 
         choreAdapter = new SimpleCheckboxListAdapter<>(
             requireContext(),
@@ -125,34 +98,7 @@ public class TodayFragment extends Fragment
         choreAdapter.registerDataSetObserver(new TodayDataSetObserver());
         ListView choreListView = rootView.findViewById(R.id.todays_chores);
         choreListView.setAdapter(choreAdapter);
-        choreListView.setOnItemClickListener((parent, view, position, id) ->
-        {
-            Chore chore = (Chore)choreAdapter.getItem(position);
-
-            if (choreRemovals.containsKey(chore))
-            {
-                choreAdapter.setUnchecked(chore);
-
-                Runnable removeRunnable = choreRemovals.remove(chore);
-                assert removeRunnable != null;
-                handler.removeCallbacks(removeRunnable);
-            }
-            else
-            {
-                choreAdapter.setChecked(chore);
-
-                Runnable removeRunnable = () ->
-                {
-                    choreRemovals.remove(chore);
-                    choreManager.complete(chore);
-                    choreAdapter.notifyDataSetChanged();
-                    choreList.save();
-                };
-
-                choreRemovals.put(chore, removeRunnable);
-                handler.postDelayed(removeRunnable, 2000);
-            }
-        });
+        choreListView.setOnItemClickListener((p, v, position, i) -> onChoreClicked(position));
         choreListView.setOnItemLongClickListener((parent, view, position, id) ->
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -187,34 +133,7 @@ public class TodayFragment extends Fragment
         taskAdapter.registerDataSetObserver(new TodayDataSetObserver());
         ListView taskListView = rootView.findViewById(R.id.todays_tasks);
         taskListView.setAdapter(taskAdapter);
-        taskListView.setOnItemClickListener((parent, view, position, id) ->
-        {
-            Task task = (Task)taskAdapter.getItem(position);
-
-            if (taskRemovals.containsKey(task))
-            {
-                taskAdapter.setUnchecked(task);
-
-                Runnable removeRunnable = taskRemovals.remove(task);
-                assert removeRunnable != null;
-                handler.removeCallbacks(removeRunnable);
-            }
-            else
-            {
-                taskAdapter.setChecked(task);
-
-                Runnable removeRunnable = () ->
-                {
-                    taskRemovals.remove(task);
-                    taskManager.complete(task);
-                    taskAdapter.notifyDataSetChanged();
-                    choreList.save();
-                };
-
-                taskRemovals.put(task, removeRunnable);
-                handler.postDelayed(removeRunnable, 2000);
-            }
-        });
+        taskListView.setOnItemClickListener((p, v, position, i) -> onTaskClicked(position));
         taskListView.setOnItemLongClickListener((parent, view, position, id) ->
         {
             LocalDate today = LocalDate.now();
@@ -357,27 +276,119 @@ public class TodayFragment extends Fragment
     }
 
     @Override
-    public void onStop()
+    public synchronized void onStop()
     {
         super.onStop();
 
-        procedureRemovals.forEach((x, r) ->
-        {
-            handler.removeCallbacks(r);
-            r.run();
-        });
+        completePendingRemovals(procedureRemovals);
+        completePendingRemovals(choreRemovals);
+        completePendingRemovals(taskRemovals);
+    }
 
-        choreRemovals.forEach((x, r) ->
-        {
-            handler.removeCallbacks(r);
-            r.run();
-        });
+    private void completePendingRemovals(HashMap<?, Runnable> pendingRemovalsMap)
+    {
+        Collection<Runnable> pendingRemovals = pendingRemovalsMap.values();
 
-        taskRemovals.forEach((x, r) ->
+        while (!pendingRemovals.isEmpty())
         {
+            Runnable r = pendingRemovals.stream().findFirst().get();
+            pendingRemovals.remove(r);
             handler.removeCallbacks(r);
             r.run();
-        });
+        }
+    }
+
+    private synchronized void onProcedureClicked(int position)
+    {
+        PendingProcedure procedure = (PendingProcedure)procedureAdapter.getItem(position);
+        if (procedureRemovals.containsKey(procedure))
+        {
+            procedureAdapter.setUnchecked(procedure);
+
+            Runnable removeRunnable = procedureRemovals.remove(procedure);
+            assert removeRunnable != null;
+            handler.removeCallbacks(removeRunnable);
+        }
+        else
+        {
+            procedureAdapter.setChecked(procedure);
+
+            Runnable removeRunnable = () -> removeProcedure(procedure);
+
+            procedureRemovals.put(procedure, removeRunnable);
+            handler.postDelayed(removeRunnable, 2000);
+        }
+    }
+
+    private synchronized void onChoreClicked(int position)
+    {
+        Chore chore = (Chore)choreAdapter.getItem(position);
+
+        if (choreRemovals.containsKey(chore))
+        {
+            choreAdapter.setUnchecked(chore);
+
+            Runnable removeRunnable = choreRemovals.remove(chore);
+            assert removeRunnable != null;
+            handler.removeCallbacks(removeRunnable);
+        }
+        else
+        {
+            choreAdapter.setChecked(chore);
+
+            Runnable removeRunnable = () -> removeChore(chore);
+
+            choreRemovals.put(chore, removeRunnable);
+            handler.postDelayed(removeRunnable, 2000);
+        }
+    }
+
+    private synchronized void onTaskClicked(int position)
+    {
+        Task task = (Task)taskAdapter.getItem(position);
+
+        if (taskRemovals.containsKey(task))
+        {
+            taskAdapter.setUnchecked(task);
+
+            Runnable removeRunnable = taskRemovals.remove(task);
+            assert removeRunnable != null;
+            handler.removeCallbacks(removeRunnable);
+        }
+        else
+        {
+            taskAdapter.setChecked(task);
+
+            Runnable removeRunnable = () -> removeTask(task);
+
+            taskRemovals.put(task, removeRunnable);
+            handler.postDelayed(removeRunnable, 2000);
+        }
+    }
+
+    private synchronized void removeProcedure(PendingProcedure procedure)
+    {
+        procedureRemovals.remove(procedure);
+        routineManager.procedureDone(procedure);
+        procedureAdapter.notifyDataSetChanged();
+        RoutineNotifier.updateNotification(getContext(), choreList);
+        choreList.save();
+    }
+
+    private synchronized void removeChore(Chore chore)
+    {
+        choreRemovals.remove(chore);
+        choreManager.complete(chore);
+        choreAdapter.notifyDataSetChanged();
+        choreList.save();
+    }
+
+    private synchronized void removeTask(Task task)
+    {
+        taskRemovals.remove(task);
+        taskManager.complete(task);
+        taskAdapter.notifyDataSetChanged();
+        choreList.save();
     }
 
     private void updateColors()

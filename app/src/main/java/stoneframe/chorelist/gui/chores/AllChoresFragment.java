@@ -32,6 +32,7 @@ public class AllChoresFragment extends Fragment
     private static final int SORT_BY_PRIORITY = 1;
     private static final int SORT_BY_EFFORT = 2;
     private static final int SORT_BY_NEXT = 3;
+    private static final int SORT_BY_FREQUENCY = 4;
 
     private int sortBy = SORT_BY_DESCRIPTION;
 
@@ -66,7 +67,11 @@ public class AllChoresFragment extends Fragment
                 .collect(Collectors.toList()),
             Chore::getDescription,
             c -> c.getNext().toString(),
-            c -> String.format("Priority: %d, Effort: %d", c.getPriority(), c.getEffort()));
+            c -> String.format(
+                "Priority: %d, Effort: %d, Frequency: %.2f /w",
+                c.getPriority(),
+                c.getEffort(),
+                c.getFrequency()));
         ListView choreListView = rootView.findViewById(R.id.all_tasks);
         choreListView.setAdapter(choreListAdapter);
         choreListView.setOnItemClickListener((parent, view, position, id) ->
@@ -136,6 +141,11 @@ public class AllChoresFragment extends Fragment
             return Comparator.comparing(Chore::getNext);
         }
 
+        if (sortBy == SORT_BY_FREQUENCY)
+        {
+            return Comparator.comparing(Chore::getFrequency).reversed();
+        }
+
         return Comparator.comparing(Chore::getDescription);
     }
 
@@ -168,12 +178,14 @@ public class AllChoresFragment extends Fragment
         RadioButton priorityRadioButton = dialog.findViewById(R.id.priorityRadioButton);
         RadioButton effortRadioButton = dialog.findViewById(R.id.effortRadioButton);
         RadioButton nextRadioButton = dialog.findViewById(R.id.nextRadioButton);
+        RadioButton frequencyRadioButton = dialog.findViewById(R.id.frequencyRadioButton);
         Button buttonOK = dialog.findViewById(R.id.buttonOK);
 
         descriptionRadioButton.setChecked(sortBy == SORT_BY_DESCRIPTION);
         priorityRadioButton.setChecked(sortBy == SORT_BY_PRIORITY);
         effortRadioButton.setChecked(sortBy == SORT_BY_EFFORT);
         nextRadioButton.setChecked(sortBy == SORT_BY_NEXT);
+        frequencyRadioButton.setChecked(sortBy == SORT_BY_FREQUENCY);
 
         buttonOK.setOnClickListener(v ->
         {
@@ -195,6 +207,11 @@ public class AllChoresFragment extends Fragment
             if (nextRadioButton.isChecked())
             {
                 sortBy = SORT_BY_NEXT;
+            }
+
+            if (frequencyRadioButton.isChecked())
+            {
+                sortBy = SORT_BY_FREQUENCY;
             }
 
             choreListAdapter.notifyDataSetChanged();

@@ -55,6 +55,11 @@ public class Chore extends Revertible<ChoreData>
         return data().effort;
     }
 
+    public double getFrequency()
+    {
+        return getRepetition().getFrequency();
+    }
+
     @Override
     public boolean equals(Object obj)
     {

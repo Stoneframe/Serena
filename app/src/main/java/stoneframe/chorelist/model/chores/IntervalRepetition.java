@@ -95,4 +95,22 @@ public class IntervalRepetition extends Repetition
             }
         }
     }
+
+    @Override
+    double getFrequency()
+    {
+        switch (data.intervalUnit)
+        {
+            case IntervalRepetition.DAYS:
+                return 7d / data.intervalLength;
+            case IntervalRepetition.WEEKS:
+                return 1d / data.intervalLength;
+            case IntervalRepetition.MONTHS:
+                return 7d / 30d / data.intervalLength;
+            case IntervalRepetition.YEARS:
+                return 7d / 365d / data.intervalLength;
+            default:
+                throw new IllegalStateException("Unknown interval unit " + data.intervalUnit);
+        }
+    }
 }

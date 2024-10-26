@@ -119,6 +119,12 @@ public class DaysInWeekRepetition extends Repetition
         data.next = getNextSelectedDayAndExcludeToday(today);
     }
 
+    @Override
+    double getFrequency()
+    {
+        return (double)getNbrOfSelectedDays() / 7;
+    }
+
     private long getNbrOfSelectedDays()
     {
         return Arrays.stream(

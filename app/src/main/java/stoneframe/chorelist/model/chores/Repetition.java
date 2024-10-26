@@ -30,4 +30,6 @@ public abstract class Repetition
     abstract void updateNext(LocalDate today);
 
     abstract void reschedule(LocalDate today);
+
+    abstract double getFrequency();
 }

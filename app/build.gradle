@@ -10,7 +10,7 @@ android {
         versionName "0.20"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        archivesBaseName = "ChoreList-v${versionName}"
+        archivesBaseName = "Serena-v${versionName}"
     }
     buildTypes {
         release {
@@ -19,7 +19,7 @@ android {
         }
     }
 
-    namespace 'stoneframe.chorelist'
+    namespace 'stoneframe.serena'
 }
 
 repositories {

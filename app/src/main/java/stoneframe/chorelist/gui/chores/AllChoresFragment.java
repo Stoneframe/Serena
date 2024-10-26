@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 
@@ -17,11 +18,13 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
 import java.util.Comparator;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import stoneframe.chorelist.R;
 import stoneframe.chorelist.gui.GlobalState;
 import stoneframe.chorelist.gui.util.SimpleListAdapter;
+import stoneframe.chorelist.gui.util.TextChangedListener;
 import stoneframe.chorelist.model.ChoreList;
 import stoneframe.chorelist.model.chores.Chore;
 import stoneframe.chorelist.model.chores.ChoreManager;
@@ -59,10 +62,15 @@ public class AllChoresFragment extends Fragment
 
         View rootView = inflater.inflate(R.layout.fragment_all_chores, container, false);
 
+        EditText filterEditText = rootView.findViewById(R.id.filterEditText);
+        filterEditText.addTextChangedListener(new TextChangedListener(s ->
+            choreListAdapter.notifyDataSetChanged()));
+
         choreListAdapter = new SimpleListAdapter<>(
             requireContext(),
             () -> choreManager.getAllChores()
                 .stream()
+                .filter(c -> isChoreIncluded(c, filterEditText))
                 .sorted(getComparator())
                 .collect(Collectors.toList()),
             Chore::getDescription,
@@ -117,6 +125,12 @@ public class AllChoresFragment extends Fragment
         super.onStart();
 
         choreListAdapter.notifyDataSetChanged();
+    }
+
+    private static boolean isChoreIncluded(Chore c, EditText filterEditText)
+    {
+        String filter = filterEditText.getText().toString().toLowerCase(Locale.ROOT);
+        return filter.isEmpty() || c.getDescription().toLowerCase().contains(filter);
     }
 
     private Comparator<Chore> getComparator()

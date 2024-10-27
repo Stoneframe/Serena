@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -115,6 +116,26 @@ public class AllChoresFragment extends Fragment
         editEffortLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             this::editEffortCallback);
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(
+            getViewLifecycleOwner(),
+            new OnBackPressedCallback(true)
+            {
+                @Override
+                public void handleOnBackPressed()
+                {
+                    if (!filterEditText.getText().toString().isEmpty())
+                    {
+                        filterEditText.setText("");
+                    }
+                    else
+                    {
+                        setEnabled(false);
+                        requireActivity().getOnBackPressedDispatcher().onBackPressed();
+                        setEnabled(true);
+                    }
+                }
+            });
 
         return rootView;
     }

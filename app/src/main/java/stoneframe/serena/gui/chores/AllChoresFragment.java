@@ -118,7 +118,7 @@ public class AllChoresFragment extends Fragment
             this::editEffortCallback);
 
         requireActivity().getOnBackPressedDispatcher().addCallback(
-            getViewLifecycleOwner(),
+            requireActivity(),
             new OnBackPressedCallback(true)
             {
                 @Override

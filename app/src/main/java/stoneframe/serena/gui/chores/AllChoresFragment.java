@@ -45,6 +45,13 @@ public class AllChoresFragment extends Fragment
 
     private SimpleListAdapter<Chore> choreListAdapter;
 
+    private EditText filterEditText;
+    private ListView choreListView;
+
+    private Button sortByButton;
+    private Button effortButton;
+    private Button addButton;
+
     private GlobalState globalState;
     private Serena serena;
     private ChoreManager choreManager;
@@ -63,7 +70,7 @@ public class AllChoresFragment extends Fragment
 
         View rootView = inflater.inflate(R.layout.fragment_all_chores, container, false);
 
-        EditText filterEditText = rootView.findViewById(R.id.filterEditText);
+        filterEditText = rootView.findViewById(R.id.filterEditText);
         filterEditText.addTextChangedListener(new TextChangedListener(s ->
             choreListAdapter.notifyDataSetChanged()));
 
@@ -81,7 +88,7 @@ public class AllChoresFragment extends Fragment
                 c.getPriority(),
                 c.getEffort(),
                 c.getFrequency()));
-        ListView choreListView = rootView.findViewById(R.id.all_tasks);
+        choreListView = rootView.findViewById(R.id.all_tasks);
         choreListView.setAdapter(choreListAdapter);
         choreListView.setOnItemClickListener((parent, view, position, id) ->
         {
@@ -90,10 +97,10 @@ public class AllChoresFragment extends Fragment
             startChoreEditor(chore, EditChoreActivity.ACTION_EDIT);
         });
 
-        Button sortByButton = rootView.findViewById(R.id.sort_by_button);
+        sortByButton = rootView.findViewById(R.id.sort_by_button);
         sortByButton.setOnClickListener(v -> showSortByDialog());
 
-        Button effortButton = rootView.findViewById(R.id.effort_button);
+        effortButton = rootView.findViewById(R.id.effort_button);
         effortButton.setOnClickListener(v ->
         {
             Intent intent = new Intent(getActivity(), EffortActivity.class);
@@ -101,7 +108,7 @@ public class AllChoresFragment extends Fragment
             editEffortLauncher.launch(intent);
         });
 
-        Button addButton = rootView.findViewById(R.id.add_button);
+        addButton = rootView.findViewById(R.id.add_button);
         addButton.setOnClickListener(v ->
         {
             Chore chore = choreManager.createChore();
@@ -117,8 +124,24 @@ public class AllChoresFragment extends Fragment
             new ActivityResultContracts.StartActivityForResult(),
             this::editEffortCallback);
 
+        return rootView;
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+
+        choreListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
         requireActivity().getOnBackPressedDispatcher().addCallback(
-            requireActivity(),
+            getViewLifecycleOwner(),
             new OnBackPressedCallback(true)
             {
                 @Override
@@ -136,16 +159,6 @@ public class AllChoresFragment extends Fragment
                     }
                 }
             });
-
-        return rootView;
-    }
-
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-
-        choreListAdapter.notifyDataSetChanged();
     }
 
     private static boolean isChoreIncluded(Chore c, EditText filterEditText)

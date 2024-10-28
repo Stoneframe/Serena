@@ -186,7 +186,10 @@ public class AllChoresFragment extends Fragment
 
         if (sortBy == SORT_BY_NEXT)
         {
-            return Comparator.comparing(Chore::isEnabled).reversed().thenComparing(Chore::getNext);
+            return Comparator
+                .comparing(Chore::isEnabled).reversed()
+                .thenComparing(Chore::getNext)
+                .thenComparing(Chore::getPriority);
         }
 
         if (sortBy == SORT_BY_FREQUENCY)

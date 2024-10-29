@@ -40,20 +40,4 @@ public class TestUtils
     {
         return new LocalDate(year, month, day);
     }
-
-    public static ChoreManager getChoreManager()
-    {
-        MockEffortTracker effortTracker = new MockEffortTracker();
-        SimpleChoreSelector choreSelector = new SimpleChoreSelector();
-
-        Serena serena = new Serena(
-            new MockStorage(effortTracker, choreSelector),
-            new MockTimeService(LocalDateTime.now()),
-            effortTracker,
-            choreSelector);
-
-        serena.load();
-
-        return serena.getChoreManager();
-    }
 }

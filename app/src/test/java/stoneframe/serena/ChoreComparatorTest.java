@@ -6,6 +6,7 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
+import stoneframe.serena.mocks.TestContext;
 import stoneframe.serena.model.chores.Chore;
 import stoneframe.serena.model.chores.ChoreEditor;
 import stoneframe.serena.model.chores.ChoreManager;
@@ -13,16 +14,20 @@ import stoneframe.serena.model.chores.IntervalRepetition;
 
 public class ChoreComparatorTest
 {
-    private Chore.ChoreComparator comparator;
+    private TestContext context;
 
     private ChoreManager choreManager;
+
+    private Chore.ChoreComparator comparator;
 
     @Before
     public void setUp()
     {
-        comparator = new Chore.ChoreComparator(TestUtils.MOCK_TODAY);
+        context = new TestContext();
 
-        choreManager = TestUtils.getChoreManager();
+        choreManager = context.getChoreManager();
+
+        comparator = new Chore.ChoreComparator(TestUtils.MOCK_TODAY);
     }
 
     @Test

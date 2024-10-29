@@ -86,12 +86,6 @@ public class Chore extends Revertible<ChoreData>
         }
     }
 
-    public void setRepetitionType(int repetitionType)
-    {
-        data().repetitionType = repetitionType;
-        data().postpone = null;
-    }
-
     @NonNull
     @Override
     public String toString()
@@ -122,6 +116,12 @@ public class Chore extends Revertible<ChoreData>
     void setEffort(int effort)
     {
         data().effort = effort;
+    }
+
+    void setRepetitionType(int repetitionType)
+    {
+        data().repetitionType = repetitionType;
+        data().postpone = null;
     }
 
     boolean isTimeToDo(LocalDate today)

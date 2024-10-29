@@ -1,4 +1,4 @@
-package stoneframe.serena;
+package stoneframe.serena.mocks;
 
 import androidx.annotation.NonNull;
 

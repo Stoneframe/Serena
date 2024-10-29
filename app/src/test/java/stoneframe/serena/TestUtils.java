@@ -4,6 +4,13 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
+import stoneframe.serena.mocks.MockEffortTracker;
+import stoneframe.serena.mocks.MockStorage;
+import stoneframe.serena.mocks.MockTimeService;
+import stoneframe.serena.model.Serena;
+import stoneframe.serena.model.chores.ChoreManager;
+import stoneframe.serena.model.chores.choreselectors.SimpleChoreSelector;
+
 public class TestUtils
 {
     public static final LocalDateTime MOCK_NOW = new LocalDateTime(2017, 2, 5, 0, 0);
@@ -32,5 +39,21 @@ public class TestUtils
     public static LocalDate createDate(int year, int month, int day)
     {
         return new LocalDate(year, month, day);
+    }
+
+    public static ChoreManager getChoreManager()
+    {
+        MockEffortTracker effortTracker = new MockEffortTracker();
+        SimpleChoreSelector choreSelector = new SimpleChoreSelector();
+
+        Serena serena = new Serena(
+            new MockStorage(effortTracker, choreSelector),
+            new MockTimeService(LocalDateTime.now()),
+            effortTracker,
+            choreSelector);
+
+        serena.load();
+
+        return serena.getChoreManager();
     }
 }

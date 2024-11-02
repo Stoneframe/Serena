@@ -63,16 +63,6 @@ public class FortnightRoutine extends Routine<FortnightRoutineData>
             .collect(Collectors.toList());
     }
 
-    @Nullable
-    @Override
-    public LocalDateTime getNextProcedureTime(LocalDateTime now)
-    {
-        LocalDateTime week1Next = getNextProcedureTime(data().week1, now);
-        LocalDateTime week2Next = getNextProcedureTime(data().week2, now);
-
-        return getEarliestDateTime(week1Next, week2Next);
-    }
-
     @Override
     public List<PendingProcedure> getPendingProcedures(LocalDateTime now)
     {
@@ -100,6 +90,16 @@ public class FortnightRoutine extends Routine<FortnightRoutineData>
     {
         data().week1.setStartDate(getMondayOfWeek(startDate).plusWeeks(0));
         data().week2.setStartDate(getMondayOfWeek(startDate).plusWeeks(1));
+    }
+
+    @Nullable
+    @Override
+    LocalDateTime getNextProcedureTime(LocalDateTime now)
+    {
+        LocalDateTime week1Next = getNextProcedureTime(data().week1, now);
+        LocalDateTime week2Next = getNextProcedureTime(data().week2, now);
+
+        return getEarliestDateTime(week1Next, week2Next);
     }
 
     @Override

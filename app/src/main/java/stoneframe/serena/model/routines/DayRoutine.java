@@ -25,24 +25,6 @@ public class DayRoutine extends Routine<DayRoutineData>
     }
 
     @Override
-    public LocalDateTime getNextProcedureTime(LocalDateTime now)
-    {
-        if (data().procedures.isEmpty()) return null;
-
-        return data().procedures.stream()
-            .sorted()
-            .filter(p -> p.getTime().isAfter(now.toLocalTime()))
-            .map(p -> now.withTime(0, 0, 0, 0)
-                .plusHours(p.getTime().getHourOfDay())
-                .plusMinutes(p.getTime().getMinuteOfHour()))
-            .findFirst()
-            .orElse(now.withTime(0, 0, 0, 0)
-                .plusDays(1)
-                .plusHours(data().procedures.get(0).getTime().getHourOfDay())
-                .plusMinutes(data().procedures.get(0).getTime().getMinuteOfHour()));
-    }
-
-    @Override
     public List<PendingProcedure> getPendingProcedures(LocalDateTime now)
     {
         return data().procedures.stream()
@@ -74,6 +56,24 @@ public class DayRoutine extends Routine<DayRoutineData>
     public List<Procedure> getProceduresForDate(LocalDate date)
     {
         return Collections.unmodifiableList(data().procedures);
+    }
+
+    @Override
+    LocalDateTime getNextProcedureTime(LocalDateTime now)
+    {
+        if (data().procedures.isEmpty()) return null;
+
+        return data().procedures.stream()
+            .sorted()
+            .filter(p -> p.getTime().isAfter(now.toLocalTime()))
+            .map(p -> now.withTime(0, 0, 0, 0)
+                .plusHours(p.getTime().getHourOfDay())
+                .plusMinutes(p.getTime().getMinuteOfHour()))
+            .findFirst()
+            .orElse(now.withTime(0, 0, 0, 0)
+                .plusDays(1)
+                .plusHours(data().procedures.get(0).getTime().getHourOfDay())
+                .plusMinutes(data().procedures.get(0).getTime().getMinuteOfHour()));
     }
 
     @Override

@@ -25,7 +25,13 @@ public class DayRoutine extends Routine<DayRoutineData>
     }
 
     @Override
-    public List<PendingProcedure> getPendingProcedures(LocalDateTime now)
+    public List<Procedure> getProceduresForDate(LocalDate date)
+    {
+        return Collections.unmodifiableList(data().procedures);
+    }
+
+    @Override
+    List<PendingProcedure> getPendingProcedures(LocalDateTime now)
     {
         return data().procedures.stream()
             .flatMap(p ->
@@ -50,12 +56,6 @@ public class DayRoutine extends Routine<DayRoutineData>
             .filter(p -> p.getDateTime().isBefore(now) || p.getDateTime().isEqual(now))
             .sorted()
             .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Procedure> getProceduresForDate(LocalDate date)
-    {
-        return Collections.unmodifiableList(data().procedures);
     }
 
     @Override

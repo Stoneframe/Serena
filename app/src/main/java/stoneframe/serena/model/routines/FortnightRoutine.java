@@ -64,7 +64,20 @@ public class FortnightRoutine extends Routine<FortnightRoutineData>
     }
 
     @Override
-    public List<PendingProcedure> getPendingProcedures(LocalDateTime now)
+    public List<Procedure> getProceduresForDate(LocalDate date)
+    {
+        return Collections.unmodifiableList(
+            getWeekOfDate(date).getWeekDay(date.getDayOfWeek()).getProcedures());
+    }
+
+    void setStartDate(LocalDate startDate)
+    {
+        data().week1.setStartDate(getMondayOfWeek(startDate).plusWeeks(0));
+        data().week2.setStartDate(getMondayOfWeek(startDate).plusWeeks(1));
+    }
+
+    @Override
+    List<PendingProcedure> getPendingProcedures(LocalDateTime now)
     {
         List<PendingProcedure> week1PendingProcedures = data().week1.getPendingProceduresBetween(
             data().lastCompleted,
@@ -77,19 +90,6 @@ public class FortnightRoutine extends Routine<FortnightRoutineData>
         return Stream.concat(week1PendingProcedures.stream(), week2PendingProcedures.stream())
             .sorted()
             .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Procedure> getProceduresForDate(LocalDate date)
-    {
-        return Collections.unmodifiableList(
-            getWeekOfDate(date).getWeekDay(date.getDayOfWeek()).getProcedures());
-    }
-
-    void setStartDate(LocalDate startDate)
-    {
-        data().week1.setStartDate(getMondayOfWeek(startDate).plusWeeks(0));
-        data().week2.setStartDate(getMondayOfWeek(startDate).plusWeeks(1));
     }
 
     @Nullable

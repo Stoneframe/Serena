@@ -39,14 +39,18 @@ public class TestContext
         serena.load();
     }
 
-    public void setCurrentTime(LocalDateTime now)
+    public TestContext setCurrentTime(LocalDateTime now)
     {
         timeService.setNow(now);
+
+        return this;
     }
 
-    public void setCurrentTime(LocalDate today)
+    public TestContext setCurrentTime(LocalDate today)
     {
         timeService.setNow(today.toLocalDateTime(LocalTime.MIDNIGHT));
+
+        return this;
     }
 
     public void setEffortTracker(EffortTracker effortTracker)

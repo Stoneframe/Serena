@@ -13,6 +13,7 @@ import stoneframe.serena.model.chores.ChoreManager;
 import stoneframe.serena.model.chores.ChoreSelector;
 import stoneframe.serena.model.chores.EffortTracker;
 import stoneframe.serena.model.chores.choreselectors.SimpleChoreSelector;
+import stoneframe.serena.model.routines.RoutineManager;
 
 public class TestContext
 {
@@ -66,6 +67,11 @@ public class TestContext
     public ChoreManager getChoreManager()
     {
         return serena.getChoreManager();
+    }
+
+    public RoutineManager getRoutineManager()
+    {
+        return serena.getRoutineManager();
     }
 
     private static class EffortTrackerWrapper implements EffortTracker

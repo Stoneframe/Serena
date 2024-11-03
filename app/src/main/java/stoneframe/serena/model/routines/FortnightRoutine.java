@@ -63,13 +63,6 @@ public class FortnightRoutine extends Routine<FortnightRoutineData>
             .collect(Collectors.toList());
     }
 
-    @Override
-    public List<Procedure> getProceduresForDate(LocalDate date)
-    {
-        return Collections.unmodifiableList(
-            getWeekOfDate(date).getWeekDay(date.getDayOfWeek()).getProcedures());
-    }
-
     void setStartDate(LocalDate startDate)
     {
         data().week1.setStartDate(getMondayOfWeek(startDate).plusWeeks(0));
@@ -100,6 +93,13 @@ public class FortnightRoutine extends Routine<FortnightRoutineData>
         LocalDateTime week2Next = getNextProcedureTime(data().week2, now);
 
         return getEarliestDateTime(week1Next, week2Next);
+    }
+
+    @Override
+    List<Procedure> getProceduresForDate(LocalDate date)
+    {
+        return Collections.unmodifiableList(
+            getWeekOfDate(date).getWeekDay(date.getDayOfWeek()).getProcedures());
     }
 
     @Override

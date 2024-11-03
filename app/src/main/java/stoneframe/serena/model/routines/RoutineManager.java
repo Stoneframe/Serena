@@ -1,5 +1,8 @@
 package stoneframe.serena.model.routines;
 
+import android.util.Pair;
+
+import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
 import java.util.Comparator;
@@ -67,6 +70,17 @@ public class RoutineManager
     {
         return getContainer().routines.stream()
             .sorted(Comparator.comparing(Routine::getName))
+            .collect(Collectors.toList());
+    }
+
+    public List<Pair<Procedure, Routine<?>>> getProceduresForDate(LocalDate date)
+    {
+        return getContainer().routines.stream()
+            .filter(Routine::isEnabled)
+            .flatMap(r -> r.getProceduresForDate(date)
+                .stream()
+                .map(p -> new Pair<Procedure, Routine<?>>(p, r)))
+            .sorted(Comparator.comparing(p -> p.first))
             .collect(Collectors.toList());
     }
 

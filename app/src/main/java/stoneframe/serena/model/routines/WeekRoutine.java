@@ -27,13 +27,6 @@ public class WeekRoutine extends Routine<WeekRoutineData>
     }
 
     @Override
-    public List<Procedure> getProceduresForDate(LocalDate date)
-    {
-        return Collections.unmodifiableList(
-            data().week.getWeekDay(date.getDayOfWeek()).getProcedures());
-    }
-
-    @Override
     List<PendingProcedure> getPendingProcedures(LocalDateTime now)
     {
         return data().week.getPendingProceduresBetween(data().lastCompleted, now);
@@ -44,6 +37,13 @@ public class WeekRoutine extends Routine<WeekRoutineData>
     LocalDateTime getNextProcedureTime(LocalDateTime now)
     {
         return data().week.getNextProcedureTime(now);
+    }
+
+    @Override
+    List<Procedure> getProceduresForDate(LocalDate date)
+    {
+        return Collections.unmodifiableList(
+            data().week.getWeekDay(date.getDayOfWeek()).getProcedures());
     }
 
     @Override

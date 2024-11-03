@@ -84,12 +84,9 @@ public class RoutineOverviewActivity extends AppCompatActivity
 
     private List<RoutineProcedureLink> getRoutineProcedures()
     {
-        return routineManager.getAllRoutines().stream()
-            .filter(Routine::isEnabled)
-            .flatMap(r -> r.getProceduresForDate(date)
-                .stream()
-                .map(p -> new RoutineProcedureLink(r, p)))
-            .sorted()
+        return routineManager.getProceduresForDate(date)
+            .stream()
+            .map(p -> new RoutineProcedureLink(p.second, p.first))
             .collect(Collectors.toList());
     }
 

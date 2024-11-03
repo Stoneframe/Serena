@@ -25,12 +25,6 @@ public class DayRoutine extends Routine<DayRoutineData>
     }
 
     @Override
-    public List<Procedure> getProceduresForDate(LocalDate date)
-    {
-        return Collections.unmodifiableList(data().procedures);
-    }
-
-    @Override
     List<PendingProcedure> getPendingProcedures(LocalDateTime now)
     {
         return data().procedures.stream()
@@ -74,6 +68,12 @@ public class DayRoutine extends Routine<DayRoutineData>
                 .plusDays(1)
                 .plusHours(data().procedures.get(0).getTime().getHourOfDay())
                 .plusMinutes(data().procedures.get(0).getTime().getMinuteOfHour()));
+    }
+
+    @Override
+    List<Procedure> getProceduresForDate(LocalDate date)
+    {
+        return Collections.unmodifiableList(data().procedures);
     }
 
     @Override

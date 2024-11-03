@@ -49,8 +49,6 @@ public abstract class Routine<T extends RoutineData> extends Revertible<T>
 
     public abstract List<Procedure> getAllProcedures();
 
-    public abstract List<Procedure> getProceduresForDate(LocalDate date);
-
     PendingProcedure getPendingProcedure(LocalDateTime now)
     {
         return getPendingProcedures(now).stream().findFirst().orElse(null);
@@ -59,6 +57,8 @@ public abstract class Routine<T extends RoutineData> extends Revertible<T>
     abstract List<PendingProcedure> getPendingProcedures(LocalDateTime now);
 
     abstract LocalDateTime getNextProcedureTime(LocalDateTime now);
+
+    abstract List<Procedure> getProceduresForDate(LocalDate date);
 
     abstract void procedureDone(PendingProcedure procedure);
 

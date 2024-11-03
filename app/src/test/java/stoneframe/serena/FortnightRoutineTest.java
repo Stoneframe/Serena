@@ -1,42 +1,48 @@
-//package stoneframe.chorelist;
-//
-//import static junit.framework.TestCase.assertEquals;
-//import static junit.framework.TestCase.assertNull;
-//import static junit.framework.TestCase.assertTrue;
-//
-//import androidx.annotation.NonNull;
-//
-//import org.joda.time.LocalDateTime;
-//import org.joda.time.LocalTime;
-//import org.junit.Before;
-//import org.junit.Test;
-//
-//import java.util.List;
-//
-//import stoneframe.chorelist.model.routines.FortnightRoutine;
-//import stoneframe.chorelist.model.routines.PendingProcedure;
-//import stoneframe.chorelist.model.routines.Procedure;
-//
-//public class FortnightRoutineTest
-//{
-//    private final LocalDateTime now = new LocalDateTime(2024, 1, 1, 0, 0);
-//
-//    private FortnightRoutine routine;
-//
-//    @Before
-//    public void before()
-//    {
-//        routine = new FortnightRoutine("Fortnight Routing", now.toLocalDate(), now);
-//    }
-//
-//    @Test
-//    public void getNextProcedureTime_NoProcedures_returnNull()
-//    {
-//        LocalDateTime next = routine.getNextProcedureTime(now);
-//
-//        assertNull(next);
-//    }
-//
+package stoneframe.serena;
+
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNull;
+import static junit.framework.TestCase.assertTrue;
+
+import androidx.annotation.NonNull;
+
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.joda.time.LocalTime;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.List;
+
+import stoneframe.serena.mocks.TestContext;
+import stoneframe.serena.model.routines.RoutineManager;
+
+public class FortnightRoutineTest
+{
+    private final LocalDateTime now = new LocalDateTime(2024, 1, 1, 0, 0);
+
+    private final LocalDate today = new LocalDate(2024, 1, 1);
+
+    private TestContext context;
+
+    private RoutineManager routineManager;
+
+    @Before
+    public void before()
+    {
+        context = new TestContext().setCurrentTime(today);
+
+        routineManager = context.getRoutineManager();
+    }
+
+    @Test
+    public void getNextProcedureTime_notProceduresAdded_returnNull()
+    {
+        LocalDateTime next = routineManager.getNextProcedureTime();
+
+        assertNull(next);
+    }
+
 //    @Test
 //    public void getNextProcedureTime_Monday10Week1AndNowIsDay1_returnCorrectTime()
 //    {
@@ -401,10 +407,10 @@
 //
 //        assertEquals(getDateTime(15, 10), nextProcedureTime);
 //    }
-//
-//    @NonNull
-//    private LocalDateTime getDateTime(int day, int hours)
-//    {
-//        return now.plusDays(day - 1).plusHours(hours);
-//    }
-//}
+
+    @NonNull
+    private LocalDateTime getDateTime(int day, int hours)
+    {
+        return now.plusDays(day - 1).plusHours(hours);
+    }
+}

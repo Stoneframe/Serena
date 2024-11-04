@@ -1,5 +1,6 @@
 package stoneframe.serena.gui.routines;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ListView;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -75,7 +77,8 @@ public class RoutineOverviewActivity extends AppCompatActivity
             this::getRoutineProcedures,
             p -> p.getProcedure().getDescription(),
             p -> p.getProcedure().getTime().toString("HH:mm"),
-            p -> p.getRoutine().getName());
+            p -> p.getRoutine().getName(),
+            p -> getBackgroundColor(p.getProcedure()));
 
         daysProceduresList.setAdapter(daysProceduresListAdapter);
 
@@ -88,6 +91,36 @@ public class RoutineOverviewActivity extends AppCompatActivity
             .stream()
             .map(p -> new RoutineProcedureLink(p.second, p.first))
             .collect(Collectors.toList());
+    }
+
+    private static int getBackgroundColor(Procedure procedure)
+    {
+        if (procedure.getTime().isBefore(new LocalTime(6, 0)))
+        {
+            return Color.parseColor("#d2d3d4");
+        }
+
+        if (procedure.getTime().isBefore(new LocalTime(8, 0)))
+        {
+            return Color.parseColor("#a1f7a4");
+        }
+
+        if (procedure.getTime().isBefore(new LocalTime(12, 0)))
+        {
+            return Color.parseColor("#fafa9d");
+        }
+
+        if (procedure.getTime().isBefore(new LocalTime(17, 0)))
+        {
+            return Color.parseColor("#fad898");
+        }
+
+        if (procedure.getTime().isBefore(new LocalTime(21, 0)))
+        {
+            return Color.parseColor("#9dd2fa");
+        }
+
+        return Color.parseColor("#d2d3d4");
     }
 
     public static class RoutineProcedureLink implements Comparable<RoutineProcedureLink>

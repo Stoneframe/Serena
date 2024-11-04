@@ -60,8 +60,9 @@ public class DayRoutineActivity extends EditRoutineActivity<DayRoutine, DayRouti
             this,
             () -> routineEditor.getAllProcedures().stream().sorted().collect(Collectors.toList()),
             Procedure::toString,
-            v -> "",
-            v -> "");
+            null,
+            null,
+            null);
 
         procedureListView = findViewById(R.id.procedures);
         procedureListView.setAdapter(procedureListAdapter);

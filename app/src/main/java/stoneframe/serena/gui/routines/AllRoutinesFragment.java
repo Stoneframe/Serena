@@ -68,7 +68,8 @@ public class AllRoutinesFragment extends Fragment
             routineManager::getAllRoutines,
             Routine::getName,
             this::getRoutineTypeName,
-            r -> "");
+            null,
+            null);
         ListView routineListView = rootView.findViewById(R.id.all_routines);
         routineListView.setAdapter(routineListAdapter);
         routineListView.setOnItemClickListener((parent, view, position, id) ->

@@ -62,7 +62,8 @@ public class AllLimitersFragment extends Fragment
                     : "Now";
 
                 return String.format("Replenished: %s", when);
-            });
+            },
+            null);
         ListView limiterListView = rootView.findViewById(R.id.all_limiters);
         limiterListView.setAdapter(limiterListAdapter);
         limiterListView.setOnItemClickListener((parent, view, position, id) ->

@@ -1,11 +1,15 @@
 package stoneframe.serena.gui.util;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.List;
 import java.util.function.Function;
@@ -21,19 +25,22 @@ public class SimpleListAdapter<T> extends BaseAdapter
     private final Function<T, String> mainTextFunction;
     private final Function<T, String> secondaryTextFunction;
     private final Function<T, String> bottomTextFunction;
+    private final Function<T, Integer> backgroundColorFunction;
 
     public SimpleListAdapter(
-        Context context,
-        Supplier<List<T>> listFunction,
-        Function<T, String> mainTextFunction,
-        Function<T, String> secondaryTextFunction,
-        Function<T, String> bottomTextFunction)
+        @NonNull Context context,
+        @NonNull Supplier<List<T>> listFunction,
+        @NonNull Function<T, String> mainTextFunction,
+        @Nullable Function<T, String> secondaryTextFunction,
+        @Nullable Function<T, String> bottomTextFunction,
+        @Nullable Function<T, Integer> backgroundColorFunction)
     {
         this.context = context;
         this.listFunction = listFunction;
         this.mainTextFunction = mainTextFunction;
-        this.secondaryTextFunction = secondaryTextFunction;
-        this.bottomTextFunction = bottomTextFunction;
+        this.secondaryTextFunction = getOrDefault(secondaryTextFunction, x -> "");
+        this.bottomTextFunction = getOrDefault(bottomTextFunction, x -> "");
+        this.backgroundColorFunction = getOrDefault(backgroundColorFunction, x -> Color.WHITE);
     }
 
     @Override
@@ -74,6 +81,8 @@ public class SimpleListAdapter<T> extends BaseAdapter
         TextView bottomTextView = convertView.findViewById(R.id.bottomText);
         String bottomText = bottomTextFunction.apply(item);
 
+        convertView.setBackgroundColor(backgroundColorFunction.apply(item));
+
         if (bottomText.isEmpty())
         {
             bottomTextView.setVisibility(View.GONE);
@@ -85,5 +94,10 @@ public class SimpleListAdapter<T> extends BaseAdapter
         }
 
         return convertView;
+    }
+
+    private static <T> T getOrDefault(T ori, T def)
+    {
+        return ori != null ? ori : def;
     }
 }

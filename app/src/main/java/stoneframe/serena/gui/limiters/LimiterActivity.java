@@ -108,8 +108,9 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
             this,
             limiterEditor::getExpenditureTypes,
             ExpenditureType::getName,
-            l -> "",
-            l -> "");
+            null,
+            null,
+            null);
 
         spinnerExpenditureType.setAdapter(expenditureTypeAdapter);
         spinnerExpenditureType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()

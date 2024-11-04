@@ -87,7 +87,8 @@ public class AllChoresFragment extends Fragment
                 "Priority: %d, Effort: %d, Frequency: %.2f /w",
                 c.getPriority(),
                 c.getEffort(),
-                c.getFrequency()));
+                c.getFrequency()),
+            null);
         choreListView = rootView.findViewById(R.id.all_tasks);
         choreListView.setAdapter(choreListAdapter);
         choreListView.setOnItemClickListener((parent, view, position, id) ->

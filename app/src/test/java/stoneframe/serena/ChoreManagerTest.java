@@ -18,12 +18,14 @@ import stoneframe.serena.model.chores.IntervalRepetition;
 
 public class ChoreManagerTest
 {
+    private static final LocalDate TODAY = new LocalDate(2024, 1, 1);
+
     private TestContext context;
 
     private ChoreManager choreManager;
 
     @Before
-    public void setUp()
+    public void before()
     {
         context = new TestContext();
 
@@ -31,17 +33,19 @@ public class ChoreManagerTest
     }
 
     @Test
-    public void two_chores_scheduled_for_before_now()
+    public void getTodaysChores_twoChoresWithNextBeforeToday_listContainsBothChores()
     {
-        context.setCurrentTime(TestUtils.MOCK_TODAY);
+        // ARRANGE
+        Chore chore1 = createChore("Chore1", 5, 2, TODAY.minusDays(2));
+        Chore chore2 = createChore("Chore2", 3, 5, TODAY.minusDays(1));
 
-        Chore chore1 = createChore("Chore1", 5, 2, TestUtils.MOCK_TODAY.minusDays(2));
-        Chore chore2 = createChore("Chore2", 3, 5, TestUtils.MOCK_TODAY.minusDays(1));
+        // ACT
+        context.setCurrentTime(TODAY);
 
-        List<Chore> expected = Arrays.asList(chore2, chore1);
-        List<Chore> actual = choreManager.getTodaysChores();
+        List<Chore> todaysChores = choreManager.getTodaysChores();
 
-        assertEquals(expected, actual);
+        // ASSERT
+        assertEquals(Arrays.asList(chore2, chore1), todaysChores);
     }
 
     private Chore createChore(String description, int priority, int effort, LocalDate next)

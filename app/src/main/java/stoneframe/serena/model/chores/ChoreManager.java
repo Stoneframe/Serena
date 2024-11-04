@@ -29,6 +29,11 @@ public class ChoreManager
         return getContainer().effortTracker;
     }
 
+    public int getRemainingEffort()
+    {
+        return getContainer().effortTracker.getTodaysEffort(timeService.getToday());
+    }
+
     public ChoreEditor getChoreEditor(Chore chore)
     {
         return new ChoreEditor(this, chore, timeService);

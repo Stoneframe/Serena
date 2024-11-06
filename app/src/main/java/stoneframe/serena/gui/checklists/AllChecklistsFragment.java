@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import stoneframe.serena.R;
 import stoneframe.serena.gui.GlobalState;
 import stoneframe.serena.gui.util.SimpleListAdapter;
+import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
 import stoneframe.serena.model.Serena;
 import stoneframe.serena.model.checklists.Checklist;
 import stoneframe.serena.model.checklists.ChecklistManager;
@@ -49,16 +50,16 @@ public class AllChecklistsFragment extends Fragment
         View rootView = inflater.inflate(R.layout.fragment_all_checklists, container, false);
 
         ListView checklistListView = rootView.findViewById(R.id.listView);
-        checklistAdapter = new SimpleListAdapter<>(
+
+        checklistAdapter = new SimpleListAdapterBuilder<>(
             requireContext(),
             () -> checklistManager.getChecklists()
                 .stream()
                 .sorted(Comparator.comparing(Checklist::getName))
                 .collect(Collectors.toList()),
-            Checklist::getName,
-            null,
-            null,
-            null);
+            Checklist::getName)
+            .create();
+
         checklistListView.setAdapter(checklistAdapter);
         checklistListView.setOnItemClickListener((parent, view, position, id) ->
         {
@@ -76,6 +77,14 @@ public class AllChecklistsFragment extends Fragment
     public void onStart()
     {
         super.onStart();
+
+        checklistAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
 
         checklistAdapter.notifyDataSetChanged();
     }
@@ -108,13 +117,5 @@ public class AllChecklistsFragment extends Fragment
     {
         Intent intent = new Intent(requireContext(), ChecklistActivity.class);
         startActivity(intent);
-    }
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-
-        checklistAdapter.notifyDataSetChanged();
     }
 }

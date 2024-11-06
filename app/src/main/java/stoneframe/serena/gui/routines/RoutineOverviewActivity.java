@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import stoneframe.serena.R;
 import stoneframe.serena.gui.GlobalState;
 import stoneframe.serena.gui.util.SimpleListAdapter;
+import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
 import stoneframe.serena.model.routines.Procedure;
 import stoneframe.serena.model.routines.Routine;
 import stoneframe.serena.model.routines.RoutineManager;
@@ -72,13 +73,14 @@ public class RoutineOverviewActivity extends AppCompatActivity
 
         dateTextView.setText(date.toString("yyyy-MM-dd"));
 
-        daysProceduresListAdapter = new SimpleListAdapter<>(
+        daysProceduresListAdapter = new SimpleListAdapterBuilder<>(
             this,
             this::getRoutineProcedures,
-            p -> p.getProcedure().getDescription(),
-            p -> p.getProcedure().getTime().toString("HH:mm"),
-            p -> p.getRoutine().getName(),
-            p -> getBackgroundColor(p.getProcedure()));
+            p -> p.getProcedure().getDescription())
+            .withSecondaryTextFunction(p -> p.getProcedure().getTime().toString("HH:mm"))
+            .withBottomTextFunction(p -> p.getRoutine().getName())
+            .withBackgroundColorFunction(p -> getBackgroundColor(p.getProcedure()))
+            .create();
 
         daysProceduresList.setAdapter(daysProceduresListAdapter);
 

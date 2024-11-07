@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants"
-    android:padding="2dp"
-    android:minHeight="45dp">
+    android:minHeight="45dp"
+    android:padding="2dp">
 
     <TextView
         android:id="@+id/mainText"
@@ -31,8 +31,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/mainText"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="4dp"
-        android:textSize="14sp"
-        android:textColor="@android:color/darker_gray" />
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="-1dp"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="12sp" />
 
 </RelativeLayout>

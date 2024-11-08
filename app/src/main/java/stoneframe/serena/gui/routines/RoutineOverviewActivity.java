@@ -101,7 +101,7 @@ public class RoutineOverviewActivity extends AppCompatActivity
         if (isBetweenHours(procedure.getTime(), 0, 8)) return Color.parseColor("#edece6");
         if (isBetweenHours(procedure.getTime(), 8, 12)) return Color.parseColor("#fafa9d");
         if (isBetweenHours(procedure.getTime(), 12, 17)) return Color.parseColor("#fae1aa");
-        if (isBetweenHours(procedure.getTime(), 17, 21)) return Color.parseColor("#c2caff");
+        if (isBetweenHours(procedure.getTime(), 17, 21)) return Color.parseColor("#bdfaa7");
         if (isBetweenHours(procedure.getTime(), 21, 24)) return Color.parseColor("#edece6");
 
         return Color.WHITE;
@@ -112,7 +112,7 @@ public class RoutineOverviewActivity extends AppCompatActivity
         if (isBetweenHours(procedure.getTime(), 0, 8)) return Color.parseColor("#6e6e6e");
         if (isBetweenHours(procedure.getTime(), 8, 12)) return Color.parseColor("#f7df05");
         if (isBetweenHours(procedure.getTime(), 12, 17)) return Color.parseColor("#f7b705");
-        if (isBetweenHours(procedure.getTime(), 17, 21)) return Color.parseColor("#052df7");
+        if (isBetweenHours(procedure.getTime(), 17, 21)) return Color.parseColor("#42f700");
         if (isBetweenHours(procedure.getTime(), 21, 24)) return Color.parseColor("#6e6e6e");
 
         return Color.WHITE;

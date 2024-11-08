@@ -55,6 +55,7 @@ public class AllLimitersFragment extends Fragment
             Limiter::getName)
             .withSecondaryTextFunction(this::getAvailableText)
             .withBottomTextFunction(this::getReplenishedText)
+            .withBackgroundColorFunction(this::getBackgroundColor)
             .withBorderColorFunction(this::getBorderColor)
             .create();
 
@@ -145,10 +146,17 @@ public class AllLimitersFragment extends Fragment
         return String.format("Replenished: %s", when);
     }
 
-    private int getBorderColor(Limiter l)
+    private Integer getBackgroundColor(Limiter limiter)
     {
-        return l.getAvailable(LocalDateTime.now()) >= 0
+        return limiter.getAvailable(LocalDateTime.now()) >= 0
+            ? Color.parseColor("#c3fab6")
+            : Color.parseColor("#e6e3e3");
+    }
+
+    private int getBorderColor(Limiter limiter)
+    {
+        return limiter.getAvailable(LocalDateTime.now()) >= 0
             ? Color.parseColor("#018a26")
-            : Color.TRANSPARENT;
+            : Color.parseColor("#7e807e");
     }
 }

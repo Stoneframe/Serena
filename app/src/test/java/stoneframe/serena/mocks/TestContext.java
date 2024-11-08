@@ -6,7 +6,6 @@ import org.joda.time.LocalTime;
 
 import java.util.List;
 
-import stoneframe.serena.TestUtils;
 import stoneframe.serena.model.Serena;
 import stoneframe.serena.model.chores.Chore;
 import stoneframe.serena.model.chores.ChoreManager;
@@ -17,6 +16,8 @@ import stoneframe.serena.model.routines.RoutineManager;
 
 public class TestContext
 {
+    private static final LocalDateTime NOW = new LocalDateTime(2024, 1, 1, 0 ,0);
+
     private final MockTimeService timeService;
 
     private final EffortTrackerWrapper effortTracker;
@@ -29,7 +30,7 @@ public class TestContext
         effortTracker = new EffortTrackerWrapper();
         choreSelector = new ChoreSelectorWrapper();
 
-        timeService = new MockTimeService(TestUtils.MOCK_NOW);
+        timeService = new MockTimeService(NOW);
 
         serena = new Serena(
             new MockStorage(effortTracker, choreSelector),

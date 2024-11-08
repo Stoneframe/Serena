@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import stoneframe.serena.R;
 import stoneframe.serena.gui.GlobalState;
 import stoneframe.serena.gui.util.SimpleListAdapter;
+import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
 import stoneframe.serena.gui.util.TextChangedListener;
 import stoneframe.serena.model.Serena;
 import stoneframe.serena.model.chores.Chore;
@@ -74,20 +75,22 @@ public class AllChoresFragment extends Fragment
         filterEditText.addTextChangedListener(new TextChangedListener(s ->
             choreListAdapter.notifyDataSetChanged()));
 
-        choreListAdapter = new SimpleListAdapter<>(
+        choreListAdapter = new SimpleListAdapterBuilder<>(
             requireContext(),
             () -> choreManager.getAllChores()
                 .stream()
                 .filter(c -> isChoreIncluded(c, filterEditText))
                 .sorted(getComparator())
                 .collect(Collectors.toList()),
-            Chore::getDescription,
-            c -> c.getNext().toString(),
-            c -> String.format(
+            Chore::getDescription)
+            .withSecondaryTextFunction(c -> c.getNext().toString())
+            .withBottomTextFunction(c -> String.format(
                 "Priority: %d, Effort: %d, Frequency: %.2f /w",
                 c.getPriority(),
                 c.getEffort(),
-                c.getFrequency()));
+                c.getFrequency()))
+            .create();
+
         choreListView = rootView.findViewById(R.id.all_tasks);
         choreListView.setAdapter(choreListAdapter);
         choreListView.setOnItemClickListener((parent, view, position, id) ->

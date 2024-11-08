@@ -56,16 +56,6 @@ public class RoutineManager
         return new FortnightRoutine("", timeService.getToday(), timeService.getNow());
     }
 
-    public void addRoutine(Routine<?> routine)
-    {
-        getContainer().routines.add(routine);
-    }
-
-    public void removeRoutine(Routine<?> routine)
-    {
-        getContainer().routines.remove(routine);
-    }
-
     public List<Routine<?>> getAllRoutines()
     {
         return getContainer().routines.stream()
@@ -131,9 +121,14 @@ public class RoutineManager
         routine.procedureDone(procedure);
     }
 
-    public void resetRoutine(Routine<?> routine)
+    void addRoutine(Routine<?> routine)
     {
-        routine.reset(timeService.getNow());
+        getContainer().routines.add(routine);
+    }
+
+    void removeRoutine(Routine<?> routine)
+    {
+        getContainer().routines.remove(routine);
     }
 
     private RoutineContainer getContainer()

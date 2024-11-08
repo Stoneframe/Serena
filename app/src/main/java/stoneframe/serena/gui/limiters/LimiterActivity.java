@@ -29,6 +29,7 @@ import stoneframe.serena.gui.util.DialogUtils;
 import stoneframe.serena.gui.util.EditTextButtonEnabledLink;
 import stoneframe.serena.gui.util.EditTextCriteria;
 import stoneframe.serena.gui.util.SimpleListAdapter;
+import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
 import stoneframe.serena.model.Serena;
 import stoneframe.serena.model.limiters.CustomExpenditureType;
 import stoneframe.serena.model.limiters.ExpenditureType;
@@ -73,86 +74,6 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_limiter);
-
-        setTitle("Limiter");
-
-        Limiter limiter = GlobalState.getInstance().getActiveLimiter();
-
-        serena = GlobalState.getInstance().getSerena();
-
-        limiterEditor = serena.getLimiterManager().getLimiterEditor(limiter);
-
-        textViewName = findViewById(R.id.textViewName);
-
-        textViewExpenditureAvailable = findViewById(R.id.textViewExpenditureAvailable);
-        spinnerExpenditureType = findViewById(R.id.spinnerExpenditureType);
-        editTextAmount = findViewById(R.id.editTextAmount);
-
-        buttonNewExpenditureType = findViewById(R.id.buttonNewExpenditureType);
-        buttonEditExpenditureType = findViewById(R.id.buttonEditExpenditureType);
-        buttonRemoveExpenditureType = findViewById(R.id.buttonRemoveExpenditureType);
-
-        buttonAddExpenditure = findViewById(R.id.buttonAddCalories);
-        buttonSettings = findViewById(R.id.buttonSettings);
-
-        buttonDone = findViewById(R.id.buttonDone);
-
-        expenditureTypeAdapter = new SimpleListAdapter<>(
-            this,
-            limiterEditor::getExpenditureTypes,
-            ExpenditureType::getName,
-            l -> "",
-            l -> "");
-
-        spinnerExpenditureType.setAdapter(expenditureTypeAdapter);
-        spinnerExpenditureType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-        {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-            {
-                updateSelectedExpenditureType();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent)
-            {
-            }
-        });
-
-        editTextAmount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
-
-        buttonNewExpenditureType.setOnClickListener(v -> addExpenditureType());
-        buttonEditExpenditureType.setOnClickListener(v -> editExpenditureType());
-        buttonRemoveExpenditureType.setOnClickListener(v -> removeExpenditureType());
-        buttonAddExpenditure.setOnClickListener(v -> addExpenditure());
-
-        buttonSettings.setOnClickListener(v -> showSettingsDialog());
-
-        buttonDone.setOnClickListener(v -> finish());
-
-        new EditTextButtonEnabledLink(
-            buttonAddExpenditure,
-            new EditTextCriteria(editTextAmount, EditTextCriteria.IS_VALID_INT));
-    }
-
-    @Override
-    protected void onStart()
-    {
-        super.onStart();
-
-        limiterEditor.addListener(this);
-
-        updateName();
-        updateAvailable();
-        updateHint();
-        updateSelectedExpenditureType();
     }
 
     @Override
@@ -252,6 +173,85 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
     public void availableChanged()
     {
         updateAvailable();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_limiter);
+
+        setTitle("Limiter");
+
+        Limiter limiter = GlobalState.getInstance().getActiveLimiter();
+
+        serena = GlobalState.getInstance().getSerena();
+
+        limiterEditor = serena.getLimiterManager().getLimiterEditor(limiter);
+
+        textViewName = findViewById(R.id.textViewName);
+
+        textViewExpenditureAvailable = findViewById(R.id.textViewExpenditureAvailable);
+        spinnerExpenditureType = findViewById(R.id.spinnerExpenditureType);
+        editTextAmount = findViewById(R.id.editTextAmount);
+
+        buttonNewExpenditureType = findViewById(R.id.buttonNewExpenditureType);
+        buttonEditExpenditureType = findViewById(R.id.buttonEditExpenditureType);
+        buttonRemoveExpenditureType = findViewById(R.id.buttonRemoveExpenditureType);
+
+        buttonAddExpenditure = findViewById(R.id.buttonAddCalories);
+        buttonSettings = findViewById(R.id.buttonSettings);
+
+        buttonDone = findViewById(R.id.buttonDone);
+
+        expenditureTypeAdapter = new SimpleListAdapterBuilder<>(
+            this,
+            limiterEditor::getExpenditureTypes,
+            ExpenditureType::getName)
+            .create();
+
+        spinnerExpenditureType.setAdapter(expenditureTypeAdapter);
+        spinnerExpenditureType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                updateSelectedExpenditureType();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+            }
+        });
+
+        editTextAmount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
+
+        buttonNewExpenditureType.setOnClickListener(v -> addExpenditureType());
+        buttonEditExpenditureType.setOnClickListener(v -> editExpenditureType());
+        buttonRemoveExpenditureType.setOnClickListener(v -> removeExpenditureType());
+        buttonAddExpenditure.setOnClickListener(v -> addExpenditure());
+
+        buttonSettings.setOnClickListener(v -> showSettingsDialog());
+
+        buttonDone.setOnClickListener(v -> finish());
+
+        new EditTextButtonEnabledLink(
+            buttonAddExpenditure,
+            new EditTextCriteria(editTextAmount, EditTextCriteria.IS_VALID_INT));
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        limiterEditor.addListener(this);
+
+        updateName();
+        updateAvailable();
+        updateHint();
+        updateSelectedExpenditureType();
     }
 
     private void addExpenditureType()
@@ -390,7 +390,9 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
         editTextName.setText(limiterEditor.getName());
         editTextUnit.setText(limiterEditor.getUnit());
         editTextIncrementPerDay.setText(String.valueOf(limiterEditor.getIncrementPerDay()));
-        editTextMaxValue.setText(limiterEditor.hasMaxValue() ? Integer.toString(limiterEditor.getMaxValue()) : "");
+        editTextMaxValue.setText(limiterEditor.hasMaxValue()
+            ? Integer.toString(limiterEditor.getMaxValue())
+            : "");
         checkBoxAllowQuick.setChecked(limiterEditor.isQuickAllowed());
         checkBoxAllowQuick.setEnabled(limiterEditor.isQuickDisableable());
 

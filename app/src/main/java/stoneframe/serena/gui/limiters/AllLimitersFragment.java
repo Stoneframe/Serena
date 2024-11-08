@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import stoneframe.serena.gui.GlobalState;
 import stoneframe.serena.gui.util.SimpleListAdapter;
 import stoneframe.serena.gui.util.EditTextButtonEnabledLink;
 import stoneframe.serena.gui.util.EditTextCriteria;
+import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
 import stoneframe.serena.model.Serena;
 import stoneframe.serena.model.limiters.Limiter;
 import stoneframe.serena.model.limiters.LimiterManager;
@@ -35,7 +37,6 @@ public class AllLimitersFragment extends Fragment
     private Serena serena;
     private LimiterManager limiterManager;
 
-    @SuppressLint("DefaultLocale")
     @Override
     public View onCreateView(
         LayoutInflater inflater,
@@ -48,21 +49,15 @@ public class AllLimitersFragment extends Fragment
 
         View rootView = inflater.inflate(R.layout.fragment_all_limiters, container, false);
 
-        limiterListAdapter = new SimpleListAdapter<>(
+        limiterListAdapter = new SimpleListAdapterBuilder<>(
             requireContext(),
             limiterManager::getLimiters,
-            Limiter::getName,
-            l -> String.format("Remaining: %d", l.getAvailable(LocalDateTime.now())),
-            l ->
-            {
-                LocalDateTime now = LocalDateTime.now();
+            Limiter::getName)
+            .withSecondaryTextFunction(this::getAvailableText)
+            .withBottomTextFunction(this::getReplenishedText)
+            .withBorderColorFunction(this::getBorderColor)
+            .create();
 
-                String when = l.getAvailable(now) < 0
-                    ? l.getReplenishTime(now).toString("yyyy-MM-dd HH:mm")
-                    : "Now";
-
-                return String.format("Replenished: %s", when);
-            });
         ListView limiterListView = rootView.findViewById(R.id.all_limiters);
         limiterListView.setAdapter(limiterListAdapter);
         limiterListView.setOnItemClickListener((parent, view, position, id) ->
@@ -92,6 +87,14 @@ public class AllLimitersFragment extends Fragment
         return rootView;
     }
 
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+
+        limiterListAdapter.notifyDataSetChanged();
+    }
+
     @NonNull
     private AlertDialog.Builder getBuilder(EditText limiterNameText)
     {
@@ -113,15 +116,8 @@ public class AllLimitersFragment extends Fragment
         });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
         return builder;
-    }
-
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-
-        limiterListAdapter.notifyDataSetChanged();
     }
 
     private void openLimiterActivity(Limiter limiter)
@@ -130,5 +126,29 @@ public class AllLimitersFragment extends Fragment
 
         Intent intent = new Intent(requireContext(), LimiterActivity.class);
         startActivity(intent);
+    }
+
+    @SuppressLint("DefaultLocale")
+    private @NonNull String getAvailableText(Limiter l)
+    {
+        return String.format("Remaining: %d", l.getAvailable(LocalDateTime.now()));
+    }
+
+    private @NonNull String getReplenishedText(Limiter l)
+    {
+        LocalDateTime now = LocalDateTime.now();
+
+        String when = l.getAvailable(now) < 0
+            ? l.getReplenishTime(now).toString("yyyy-MM-dd HH:mm")
+            : "Now";
+
+        return String.format("Replenished: %s", when);
+    }
+
+    private int getBorderColor(Limiter l)
+    {
+        return l.getAvailable(LocalDateTime.now()) >= 0
+            ? Color.parseColor("#018a26")
+            : Color.TRANSPARENT;
     }
 }

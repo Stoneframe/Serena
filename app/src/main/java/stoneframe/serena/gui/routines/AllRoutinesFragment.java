@@ -32,6 +32,7 @@ import stoneframe.serena.gui.routines.fortnights.FortnightRoutineActivity;
 import stoneframe.serena.gui.routines.weeks.WeekRoutineActivity;
 import stoneframe.serena.gui.util.DialogUtils;
 import stoneframe.serena.gui.util.SimpleListAdapter;
+import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
 import stoneframe.serena.model.Serena;
 import stoneframe.serena.model.routines.DayRoutine;
 import stoneframe.serena.model.routines.FortnightRoutine;
@@ -63,12 +64,13 @@ public class AllRoutinesFragment extends Fragment
 
         View rootView = inflater.inflate(R.layout.fragment_all_routines, container, false);
 
-        routineListAdapter = new SimpleListAdapter<>(
+        routineListAdapter = new SimpleListAdapterBuilder<>(
             requireContext(),
             routineManager::getAllRoutines,
-            Routine::getName,
-            this::getRoutineTypeName,
-            r -> "");
+            Routine::getName)
+            .withSecondaryTextFunction(this::getRoutineTypeName)
+            .create();
+
         ListView routineListView = rootView.findViewById(R.id.all_routines);
         routineListView.setAdapter(routineListAdapter);
         routineListView.setOnItemClickListener((parent, view, position, id) ->

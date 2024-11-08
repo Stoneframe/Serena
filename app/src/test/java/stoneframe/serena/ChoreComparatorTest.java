@@ -3,6 +3,7 @@ package stoneframe.serena;
 import static org.junit.Assert.assertEquals;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,6 +15,8 @@ import stoneframe.serena.model.chores.IntervalRepetition;
 
 public class ChoreComparatorTest
 {
+    private static final LocalDate TODAY = new LocalDate(2024, 1, 1);
+
     private TestContext context;
 
     private ChoreManager choreManager;
@@ -21,20 +24,20 @@ public class ChoreComparatorTest
     private Chore.ChoreComparator comparator;
 
     @Before
-    public void setUp()
+    public void before()
     {
         context = new TestContext();
 
         choreManager = context.getChoreManager();
 
-        comparator = new Chore.ChoreComparator(TestUtils.MOCK_TODAY);
+        comparator = new Chore.ChoreComparator(TODAY);
     }
 
     @Test
-    public void chore_scheduled_before_now_and_chore_scheduled_after_now()
+    public void compare_differentNextDate1_earlierIsSortedFirst()
     {
-        Chore chore1 = createChore(3, 10, TestUtils.MOCK_TODAY.minusDays(1));
-        Chore chore2 = createChore(1, 10, TestUtils.MOCK_TODAY.plusDays(1));
+        Chore chore1 = createChore(3, 10, TODAY.minusDays(1));
+        Chore chore2 = createChore(1, 10, TODAY.plusDays(1));
 
         int expected = -1;
         int actual = comparator.compare(chore1, chore2);
@@ -43,10 +46,10 @@ public class ChoreComparatorTest
     }
 
     @Test
-    public void two_chores_scheduled_after_now()
+    public void compare_differentNextDate2_earlierIsSortedFirst()
     {
-        Chore chore1 = createChore(3, 10, TestUtils.MOCK_TODAY.plusDays(2));
-        Chore chore = createChore(6, 10, TestUtils.MOCK_TODAY.plusDays(1));
+        Chore chore1 = createChore(3, 10, TODAY.plusDays(2));
+        Chore chore = createChore(6, 10, TODAY.plusDays(1));
 
         int expected = 1;
         int actual = comparator.compare(chore1, chore);
@@ -55,10 +58,10 @@ public class ChoreComparatorTest
     }
 
     @Test
-    public void test_compare_date_1()
+    public void compare_differentNextDate3_earlierIsSortedFirst()
     {
-        Chore chore1 = createChore(1, 10, TestUtils.MOCK_TODAY.plusDays(1));
-        Chore chore2 = createChore(1, 10, TestUtils.MOCK_TODAY.plusDays(0));
+        Chore chore1 = createChore(1, 10, TODAY.plusDays(1));
+        Chore chore2 = createChore(1, 10, TODAY.plusDays(0));
 
         int expected = 1;
         int actual = comparator.compare(chore1, chore2);
@@ -67,10 +70,10 @@ public class ChoreComparatorTest
     }
 
     @Test
-    public void test_compare_date_2()
+    public void compare_differentNextDate4_earlierIsSortedFirst()
     {
-        Chore chore1 = createChore(1, 10, TestUtils.MOCK_TODAY.plusWeeks(0));
-        Chore chore2 = createChore(1, 10, TestUtils.MOCK_TODAY.plusWeeks(2));
+        Chore chore1 = createChore(1, 10, TODAY.plusWeeks(0));
+        Chore chore2 = createChore(1, 10, TODAY.plusWeeks(2));
 
         int expected = -1;
         int actual = comparator.compare(chore1, chore2);
@@ -79,10 +82,10 @@ public class ChoreComparatorTest
     }
 
     @Test
-    public void test_compare_priority_1()
+    public void compare_differentPriority1_lowestValueIsSortedFirst()
     {
-        Chore chore1 = createChore(2, 10, TestUtils.MOCK_TODAY);
-        Chore chore2 = createChore(6, 10, TestUtils.MOCK_TODAY);
+        Chore chore1 = createChore(2, 10, TODAY);
+        Chore chore2 = createChore(6, 10, TODAY);
 
         int expected = -1;
         int actual = comparator.compare(chore1, chore2);
@@ -91,10 +94,10 @@ public class ChoreComparatorTest
     }
 
     @Test
-    public void test_compare_priority_2()
+    public void compare_differentPriority2_lowestValueIsSortedFirst()
     {
-        Chore chore1 = createChore(8, 10, TestUtils.MOCK_TODAY);
-        Chore chore2 = createChore(1, 10, TestUtils.MOCK_TODAY);
+        Chore chore1 = createChore(8, 10, TODAY);
+        Chore chore2 = createChore(1, 10, TODAY);
 
         int expected = 1;
         int actual = comparator.compare(chore1, chore2);
@@ -103,10 +106,10 @@ public class ChoreComparatorTest
     }
 
     @Test
-    public void test_compare_effort_1()
+    public void compare_differentEffort1_lowestValueIsSortedFirst()
     {
-        Chore chore1 = createChore(2, 3, TestUtils.MOCK_TODAY);
-        Chore chore2 = createChore(2, 5, TestUtils.MOCK_TODAY);
+        Chore chore1 = createChore(2, 3, TODAY);
+        Chore chore2 = createChore(2, 5, TODAY);
 
         int expected = -1;
         int actual = comparator.compare(chore1, chore2);
@@ -115,10 +118,10 @@ public class ChoreComparatorTest
     }
 
     @Test
-    public void test_compare_effort_2()
+    public void compare_differentEffort2_lowestValueIsSortedFirst()
     {
-        Chore chore1 = createChore(2, 60, TestUtils.MOCK_TODAY);
-        Chore chore2 = createChore(2, 25, TestUtils.MOCK_TODAY);
+        Chore chore1 = createChore(2, 60, TODAY);
+        Chore chore2 = createChore(2, 25, TODAY);
 
         int expected = 1;
         int actual = comparator.compare(chore1, chore2);

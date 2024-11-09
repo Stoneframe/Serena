@@ -3,6 +3,7 @@ package stoneframe.serena.gui.chores;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,8 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
+
+import org.joda.time.LocalDate;
 
 import java.util.Comparator;
 import java.util.Locale;
@@ -89,6 +92,7 @@ public class AllChoresFragment extends Fragment
                 c.getPriority(),
                 c.getEffort(),
                 c.getFrequency()))
+            .withBackgroundColorFunction(this::getBackGroundColor)
             .create();
 
         choreListView = rootView.findViewById(R.id.all_tasks);
@@ -168,6 +172,21 @@ public class AllChoresFragment extends Fragment
     {
         String filter = filterEditText.getText().toString().toLowerCase(Locale.ROOT);
         return filter.isEmpty() || c.getDescription().toLowerCase().contains(filter);
+    }
+
+    private int getBackGroundColor(Chore chore)
+    {
+        if (chore.getNext().isBefore(LocalDate.now().minusDays(2)))
+        {
+            return Color.parseColor("#f7b0b0");
+        }
+
+        if (chore.getNext().isBefore(LocalDate.now().minusDays(1)))
+        {
+            return Color.parseColor("#fae787");
+        }
+
+        return Color.TRANSPARENT;
     }
 
     private Comparator<Chore> getComparator()

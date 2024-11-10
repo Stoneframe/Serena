@@ -176,6 +176,8 @@ public class AllChoresFragment extends Fragment
 
     private int getBackGroundColor(Chore chore)
     {
+        if (!chore.isEnabled()) return Color.TRANSPARENT;
+
         if (chore.getNext().isBefore(LocalDate.now().minusDays(2)))
         {
             return Color.parseColor("#f7b0b0");

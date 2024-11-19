@@ -21,9 +21,9 @@ import org.joda.time.LocalDateTime;
 
 import stoneframe.serena.R;
 import stoneframe.serena.gui.GlobalState;
-import stoneframe.serena.gui.util.SimpleListAdapter;
 import stoneframe.serena.gui.util.EditTextButtonEnabledLink;
 import stoneframe.serena.gui.util.EditTextCriteria;
+import stoneframe.serena.gui.util.SimpleListAdapter;
 import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
 import stoneframe.serena.model.Serena;
 import stoneframe.serena.model.limiters.Limiter;
@@ -31,6 +31,11 @@ import stoneframe.serena.model.limiters.LimiterManager;
 
 public class AllLimitersFragment extends Fragment
 {
+    private static final int LIGHT_GREEN = Color.parseColor("#c3fab6");
+    private static final int LIGHT_GRAY = Color.parseColor("#e6e3e3");
+    private static final int DARK_GREEN = Color.parseColor("#018a26");
+    private static final int DARK_GRAY = Color.parseColor("#7e807e");
+
     private SimpleListAdapter<Limiter> limiterListAdapter;
 
     private GlobalState globalState;
@@ -139,7 +144,7 @@ public class AllLimitersFragment extends Fragment
     {
         LocalDateTime now = LocalDateTime.now();
 
-        String when = l.getAvailable(now) < 0
+        String when = l.getAvailable(now) < 1
             ? l.getReplenishTime(now).toString("yyyy-MM-dd HH:mm")
             : "Now";
 
@@ -148,15 +153,16 @@ public class AllLimitersFragment extends Fragment
 
     private Integer getBackgroundColor(Limiter limiter)
     {
-        return limiter.getAvailable(LocalDateTime.now()) >= 0
-            ? Color.parseColor("#c3fab6")
-            : Color.parseColor("#e6e3e3");
+        return isLimiterReplenished(limiter) ? LIGHT_GREEN : LIGHT_GRAY;
     }
 
     private int getBorderColor(Limiter limiter)
     {
-        return limiter.getAvailable(LocalDateTime.now()) >= 0
-            ? Color.parseColor("#018a26")
-            : Color.parseColor("#7e807e");
+        return isLimiterReplenished(limiter) ? DARK_GREEN : DARK_GRAY;
+    }
+
+    private static boolean isLimiterReplenished(Limiter limiter)
+    {
+        return limiter.getAvailable(LocalDateTime.now()) > 0;
     }
 }

@@ -26,6 +26,7 @@ public class ChecklistActivity extends AppCompatActivity
     private TextView checklistNameTextView;
 
     private Button editButton;
+    private Button resetButton;
     private Button doneButton;
 
     private Checklist checklist;
@@ -53,6 +54,12 @@ public class ChecklistActivity extends AppCompatActivity
             getBaseContext(),
             checklist::getItems,
             ChecklistItem::getDescription);
+
+        checklist.getItems()
+            .stream()
+            .filter(ChecklistItem::isChecked)
+            .forEach(item -> checklistItemAdapter.setChecked(item));
+
         ListView checkListItemView = findViewById(R.id.checklistItemView);
         checkListItemView.setAdapter(checklistItemAdapter);
         checkListItemView.setOnItemClickListener((parent, view, position, id) ->
@@ -62,14 +69,17 @@ public class ChecklistActivity extends AppCompatActivity
             if (checklistItemAdapter.isChecked(item))
             {
                 checklistItemAdapter.setUnchecked(item);
+                item.setChecked(false);
             }
             else
             {
                 checklistItemAdapter.setChecked(item);
+                item.setChecked(true);
             }
         });
 
         editButton = findViewById(R.id.editChecklistButton);
+        resetButton = findViewById(R.id.resetButton);
         doneButton = findViewById(R.id.doneButton);
 
         editButton.setOnClickListener(v ->
@@ -79,6 +89,8 @@ public class ChecklistActivity extends AppCompatActivity
 
             editChecklistLauncher.launch(intent);
         });
+
+        resetButton.setOnClickListener(v -> checklistItemAdapter.resetChecked());
 
         doneButton.setOnClickListener(v -> finish());
     }

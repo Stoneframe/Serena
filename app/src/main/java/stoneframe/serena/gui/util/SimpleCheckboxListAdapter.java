@@ -113,6 +113,12 @@ public class SimpleCheckboxListAdapter<T> extends BaseAdapter
         notifyDataSetChanged();
     }
 
+    public void resetChecked()
+    {
+        checkedItems.clear();
+        notifyDataSetChanged();
+    }
+
     private void removeObsoleteCheckedItems()
     {
         List<T> allItems = listFunction.get();

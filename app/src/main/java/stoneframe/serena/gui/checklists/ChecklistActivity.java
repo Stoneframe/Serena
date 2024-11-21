@@ -90,7 +90,15 @@ public class ChecklistActivity extends AppCompatActivity
             editChecklistLauncher.launch(intent);
         });
 
-        resetButton.setOnClickListener(v -> checklistItemAdapter.resetChecked());
+        resetButton.setOnClickListener(v ->
+        {
+            checklist.getItems()
+                .stream()
+                .filter(ChecklistItem::isChecked)
+                .forEach(item -> item.setChecked(false));
+
+            checklistItemAdapter.resetChecked();
+        });
 
         doneButton.setOnClickListener(v -> finish());
     }

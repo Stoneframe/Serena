@@ -46,7 +46,6 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
     private Button buttonEditExpenditureType;
     private Button buttonRemoveExpenditureType;
     private Button buttonAddExpenditure;
-    private Button buttonSettings;
     private Button buttonDone;
 
     private SimpleListAdapter<ExpenditureType> expenditureTypeAdapter;
@@ -59,17 +58,24 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
     public boolean onCreateOptionsMenu(Menu menu)
     {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.edit_menu, menu);
+        inflater.inflate(R.menu.limiter_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if (item.getItemId() == R.id.action_remove)
+        int itemId = item.getItemId();
+
+        if (itemId == R.id.action_settings)
+        {
+            showSettingsDialog();
+            return true;
+        }
+
+        if (itemId == R.id.action_remove)
         {
             removeLimiter();
-
             return true;
         }
 
@@ -200,7 +206,6 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
         buttonRemoveExpenditureType = findViewById(R.id.buttonRemoveExpenditureType);
 
         buttonAddExpenditure = findViewById(R.id.buttonAddCalories);
-        buttonSettings = findViewById(R.id.buttonSettings);
 
         buttonDone = findViewById(R.id.buttonDone);
 
@@ -231,8 +236,6 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
         buttonEditExpenditureType.setOnClickListener(v -> editExpenditureType());
         buttonRemoveExpenditureType.setOnClickListener(v -> removeExpenditureType());
         buttonAddExpenditure.setOnClickListener(v -> addExpenditure());
-
-        buttonSettings.setOnClickListener(v -> showSettingsDialog());
 
         buttonDone.setOnClickListener(v -> finish());
 

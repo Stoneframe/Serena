@@ -12,4 +12,10 @@ public class QuickExpenditureType extends ExpenditureType
     {
         return true;
     }
+
+    @Override
+    public boolean isFavorite()
+    {
+        return false;
+    }
 }

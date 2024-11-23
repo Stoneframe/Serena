@@ -12,9 +12,9 @@
         android:id="@+id/textViewName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:textSize="35sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="50dp"/>
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,10 +41,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/border_black"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:padding="3dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,7 +56,8 @@
                 android:id="@+id/spinnerExpenditureType"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:paddingStart="4dp"/>
 
             <EditText
                 android:id="@+id/editTextAmount"
@@ -64,6 +65,7 @@
                 android:layout_height="50sp"
                 android:layout_marginEnd="8dp"
                 android:textSize="16sp" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -109,10 +111,29 @@
         </LinearLayout>
     </LinearLayout>
 
-    <View
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_weight="1" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Favorites"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/border_black"
+        android:orientation="vertical"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
+
+        <ListView
+            android:id="@+id/listFavorites"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

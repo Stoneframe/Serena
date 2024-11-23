@@ -30,6 +30,8 @@ public abstract class ExpenditureType
 
     public abstract boolean isQuick();
 
+    public abstract boolean isFavorite();
+
     @NonNull
     @Override
     public String toString()

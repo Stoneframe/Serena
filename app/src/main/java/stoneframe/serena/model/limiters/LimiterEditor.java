@@ -154,6 +154,14 @@ public class LimiterEditor extends Editor<LimiterEditor.LimiterEditorListener>
         notifyListeners(LimiterEditorListener::expenditureTypesChanged);
     }
 
+    public void setFavorite(CustomExpenditureType expenditureType, boolean isFavorite)
+    {
+        expenditureType.setFavorite(isFavorite);
+
+        notifyListeners(l -> l.expenditureTypeEdited(expenditureType));
+        notifyListeners(LimiterEditorListener::expenditureTypesChanged);
+    }
+
     private boolean hasMaxValueChanged(Integer maxValue)
     {
         return maxValue == null && limiter.hasMaxValue()

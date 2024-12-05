@@ -2,12 +2,12 @@ package stoneframe.serena.model.balancers;
 
 import androidx.annotation.NonNull;
 
-public abstract class ExpenditureType
+public abstract class TransactionType
 {
     protected String name;
     protected int amount;
 
-    protected ExpenditureType(String name, int amount)
+    protected TransactionType(String name, int amount)
     {
         this.name = name;
         this.amount = amount;

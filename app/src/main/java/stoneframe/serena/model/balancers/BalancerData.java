@@ -10,13 +10,13 @@ import java.util.List;
 
 class BalancerData
 {
-    final List<CustomExpenditureType> expenditureTypes = new LinkedList<>();
-    final List<Pair<Expenditure, LocalDateTime>> expenditures = new LinkedList<>();
+    final List<CustomTransactionType> transactionTypes = new LinkedList<>();
+    final List<Pair<Transaction, LocalDateTime>> transactions = new LinkedList<>();
 
     String name;
     String unit;
 
-    int previousExpenditure;
+    int previousTransactions;
 
     LocalDate startDate;
     int incrementPerDay;
@@ -28,7 +28,7 @@ class BalancerData
     BalancerData(
         String name,
         String unit,
-        int previousExpenditure,
+        int previousTransactions,
         LocalDate startDate,
         int incrementPerDay,
         Integer maxValue,
@@ -36,7 +36,7 @@ class BalancerData
     {
         this.name = name;
         this.unit = unit;
-        this.previousExpenditure = previousExpenditure;
+        this.previousTransactions = previousTransactions;
         this.startDate = startDate;
         this.incrementPerDay = incrementPerDay;
         this.maxValue = maxValue;

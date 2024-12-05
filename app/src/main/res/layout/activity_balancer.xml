@@ -30,7 +30,7 @@
             android:textSize="30sp" />
 
         <TextView
-            android:id="@+id/textViewExpenditureAvailable"
+            android:id="@+id/textViewTransactionAvailable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -53,7 +53,7 @@
             android:orientation="horizontal">
 
             <Spinner
-                android:id="@+id/spinnerExpenditureType"
+                android:id="@+id/spinnerTransactionType"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -87,21 +87,21 @@
                 android:layout_weight="1" />
 
             <Button
-                android:id="@+id/buttonNewExpenditureType"
+                android:id="@+id/buttonNewTransactionType"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="New..." />
 
             <Button
-                android:id="@+id/buttonEditExpenditureType"
+                android:id="@+id/buttonEditTransactionType"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Edit..." />'
 
             <Button
-                android:id="@+id/buttonRemoveExpenditureType"
+                android:id="@+id/buttonRemoveTransactionType"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -1,8 +1,8 @@
 package stoneframe.serena.model.balancers;
 
-public class QuickExpenditureType extends ExpenditureType
+public class QuickTransactionType extends TransactionType
 {
-    public QuickExpenditureType()
+    public QuickTransactionType()
     {
         super("Quick", 0);
     }

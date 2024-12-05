@@ -96,36 +96,36 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
         isQuickAllowableProperty.setValue(allowQuick);
     }
 
-    public List<ExpenditureType> getExpenditureTypes()
+    public List<TransactionType> getTransactionTypes()
     {
-        return balancer.getExpenditureTypes();
+        return balancer.getTransactionTypes();
     }
 
-    public void addExpenditureType(CustomExpenditureType expenditureType)
+    public void addTransactionType(CustomTransactionType transactionType)
     {
-        balancer.addExpenditureType(expenditureType);
+        balancer.addTransactionType(transactionType);
 
-        notifyListeners(l -> l.expenditureTypeAdded(expenditureType));
-        notifyListeners(BalanceEditorListener::expenditureTypesChanged);
+        notifyListeners(l -> l.transactionTypeAdded(transactionType));
+        notifyListeners(BalanceEditorListener::transactionTypesChanged);
     }
 
-    public void removeExpenditureType(CustomExpenditureType expenditureType)
+    public void removeTransactionType(CustomTransactionType transactionType)
     {
-        balancer.removeExpenditureType(expenditureType);
+        balancer.removeTransactionType(transactionType);
 
-        if (balancer.getExpenditureTypes().isEmpty())
+        if (balancer.getTransactionTypes().isEmpty())
         {
             balancer.setAllowQuick(true);
         }
 
-        notifyListeners(l -> l.expenditureTypeRemoved(expenditureType));
+        notifyListeners(l -> l.transactionTypeRemoved(transactionType));
     }
 
-    public void addExpenditure(String name, int expenditureAmount)
+    public void addTransaction(String name, int transactionAmount)
     {
-        balancer.addExpenditure(new Expenditure(name, expenditureAmount), getNow());
+        balancer.addTransaction(new Transaction(name, transactionAmount), getNow());
 
-        notifyListeners(BalanceEditorListener::expenditureAdded);
+        notifyListeners(BalanceEditorListener::transactionAdded);
     }
 
     public int getAvailable()
@@ -138,28 +138,28 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
         balancerManager.removeBalancer(balancer);
     }
 
-    public void setExpenditureTypeName(CustomExpenditureType expenditureType, String name)
+    public void setTransactionTypeName(CustomTransactionType transactionType, String name)
     {
-        expenditureType.setName(name);
+        transactionType.setName(name);
 
-        notifyListeners(l -> l.expenditureTypeEdited(expenditureType));
-        notifyListeners(BalanceEditorListener::expenditureTypesChanged);
+        notifyListeners(l -> l.transactionTypeEdited(transactionType));
+        notifyListeners(BalanceEditorListener::transactionTypesChanged);
     }
 
-    public void setExpenditureTypeAmount(CustomExpenditureType expenditureType, int amount)
+    public void setTransactionTypeAmount(CustomTransactionType transactionType, int amount)
     {
-        expenditureType.setAmount(amount);
+        transactionType.setAmount(amount);
 
-        notifyListeners(l -> l.expenditureTypeEdited(expenditureType));
-        notifyListeners(BalanceEditorListener::expenditureTypesChanged);
+        notifyListeners(l -> l.transactionTypeEdited(transactionType));
+        notifyListeners(BalanceEditorListener::transactionTypesChanged);
     }
 
-    public void setFavorite(CustomExpenditureType expenditureType, boolean isFavorite)
+    public void setFavorite(CustomTransactionType transactionType, boolean isFavorite)
     {
-        expenditureType.setFavorite(isFavorite);
+        transactionType.setFavorite(isFavorite);
 
-        notifyListeners(l -> l.expenditureTypeEdited(expenditureType));
-        notifyListeners(BalanceEditorListener::expenditureTypesChanged);
+        notifyListeners(l -> l.transactionTypeEdited(transactionType));
+        notifyListeners(BalanceEditorListener::transactionTypesChanged);
     }
 
     private boolean hasMaxValueChanged(Integer maxValue)
@@ -210,15 +210,15 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
 
         void incrementPerDayChanged();
 
-        void expenditureTypesChanged();
+        void transactionTypesChanged();
 
-        void expenditureTypeAdded(CustomExpenditureType expenditureType);
+        void transactionTypeAdded(CustomTransactionType transactionType);
 
-        void expenditureTypeEdited(CustomExpenditureType expenditureType);
+        void transactionTypeEdited(CustomTransactionType transactionType);
 
-        void expenditureTypeRemoved(CustomExpenditureType expenditureType);
+        void transactionTypeRemoved(CustomTransactionType transactionType);
 
-        void expenditureAdded();
+        void transactionAdded();
 
         void availableChanged();
     }

@@ -1,11 +1,11 @@
 package stoneframe.serena.model.balancers;
 
-public class Expenditure
+public class Transaction
 {
     private final String name;
     private final int amount;
 
-    public Expenditure(String name, int amount)
+    public Transaction(String name, int amount)
     {
         this.name = name;
         this.amount = amount;

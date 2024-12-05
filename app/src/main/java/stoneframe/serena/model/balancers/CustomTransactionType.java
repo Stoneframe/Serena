@@ -1,10 +1,10 @@
 package stoneframe.serena.model.balancers;
 
-public class CustomExpenditureType extends ExpenditureType
+public class CustomTransactionType extends TransactionType
 {
     private boolean isFavorite;
 
-    public CustomExpenditureType(String name, int calories, boolean isFavorite)
+    public CustomTransactionType(String name, int calories, boolean isFavorite)
     {
         super(name, calories);
 

@@ -47,7 +47,7 @@ public class Balancer extends Revertible<BalancerData>
 
     public boolean isQuickDisableable()
     {
-        return !data().expenditureTypes.isEmpty();
+        return !data().transactionTypes.isEmpty();
     }
 
     public boolean isQuickAllowed()
@@ -91,24 +91,24 @@ public class Balancer extends Revertible<BalancerData>
         return data().maxValue != null ? Math.min(totalAvailable, data().maxValue) : totalAvailable;
     }
 
-    public List<ExpenditureType> getExpenditureTypes()
+    public List<TransactionType> getTransactionTypes()
     {
         if (!data().allowQuick)
         {
-            return data().expenditureTypes.stream()
-                .sorted(Comparator.comparing(ExpenditureType::getName))
+            return data().transactionTypes.stream()
+                .sorted(Comparator.comparing(TransactionType::getName))
                 .collect(Collectors.toList());
         }
 
         return Stream.concat(
-                Stream.of(new QuickExpenditureType()),
-                data().expenditureTypes.stream().sorted(Comparator.comparing(ExpenditureType::getName)))
+                Stream.of(new QuickTransactionType()),
+                data().transactionTypes.stream().sorted(Comparator.comparing(TransactionType::getName)))
             .collect(Collectors.toList());
     }
 
-    public List<Expenditure> getExpenditures()
+    public List<Transaction> getTransactions()
     {
-        return data().expenditures.stream().map(p -> p.first).collect(Collectors.toList());
+        return data().transactions.stream().map(p -> p.first).collect(Collectors.toList());
     }
 
     void setName(String name)
@@ -128,19 +128,19 @@ public class Balancer extends Revertible<BalancerData>
         data().startDate = now.toLocalDate();
         data().incrementPerDay = incrementPerDay;
 
-        data().expenditures.clear();
-        data().previousExpenditure = 0;
+        data().transactions.clear();
+        data().previousTransactions = 0;
 
         int newCurrentAvailable = getAvailable(now);
 
-        data().previousExpenditure = newCurrentAvailable - oldCurrentAvailable;
+        data().previousTransactions = newCurrentAvailable - oldCurrentAvailable;
     }
 
     void setMaxValue(Integer maxValue, LocalDateTime now)
     {
         data().maxValue = maxValue;
 
-        updatePreviousExpenditures(now);
+        updatePreviousTransactions(now);
     }
 
     void setAllowQuick(boolean allowQuick)
@@ -148,30 +148,30 @@ public class Balancer extends Revertible<BalancerData>
         data().allowQuick = allowQuick;
     }
 
-    void addExpenditureType(CustomExpenditureType expenditureType)
+    void addTransactionType(CustomTransactionType transactionType)
     {
-        data().expenditureTypes.add(expenditureType);
+        data().transactionTypes.add(transactionType);
     }
 
-    void removeExpenditureType(CustomExpenditureType expenditureType)
+    void removeTransactionType(CustomTransactionType transactionType)
     {
-        data().expenditureTypes.remove(expenditureType);
+        data().transactionTypes.remove(transactionType);
     }
 
-    void addExpenditure(Expenditure expenditure, LocalDateTime now)
+    void addTransaction(Transaction transaction, LocalDateTime now)
     {
-        updatePreviousExpenditures(now);
-        clearOldExpenditures(now);
+        updatePreviousTransactions(now);
+        clearOldTransactions(now);
 
-        data().expenditures.add(new Pair<>(expenditure, now));
+        data().transactions.add(new Pair<>(transaction, now));
     }
 
-    void removeExpenditure(Expenditure expenditure)
+    void removeTransaction(Transaction transaction)
     {
-        data().expenditures.removeIf(p -> p.first.equals(expenditure));
+        data().transactions.removeIf(p -> p.first.equals(transaction));
     }
 
-    private void updatePreviousExpenditures(LocalDateTime now)
+    private void updatePreviousTransactions(LocalDateTime now)
     {
         if (data().maxValue == null) return;
 
@@ -179,21 +179,21 @@ public class Balancer extends Revertible<BalancerData>
 
         if (totalAvailable > data().maxValue)
         {
-            data().previousExpenditure += totalAvailable - data().maxValue;
+            data().previousTransactions += totalAvailable - data().maxValue;
         }
     }
 
-    private void clearOldExpenditures(LocalDateTime now)
+    private void clearOldTransactions(LocalDateTime now)
     {
-        List<Pair<Expenditure, LocalDateTime>> expendituresOlderThanOneDay = data().expenditures.stream()
+        List<Pair<Transaction, LocalDateTime>> transactionsOlderThanOneDay = data().transactions.stream()
             .filter(p -> p.second.isBefore(now.minusDays(1)))
             .collect(Collectors.toList());
 
-        data().previousExpenditure += expendituresOlderThanOneDay.stream()
+        data().previousTransactions += transactionsOlderThanOneDay.stream()
             .mapToInt(p -> p.first.getAmount())
             .sum();
 
-        data().expenditures.removeAll(expendituresOlderThanOneDay);
+        data().transactions.removeAll(transactionsOlderThanOneDay);
     }
 
     private int getTotalAvailable(LocalDateTime now)
@@ -202,13 +202,13 @@ public class Balancer extends Revertible<BalancerData>
             data().startDate.toLocalDateTime(LocalTime.MIDNIGHT),
             now);
 
-        int recentExpenditures = data().expenditures.stream()
+        int recentTransactions = data().transactions.stream()
             .map(p -> p.first)
-            .mapToInt(Expenditure::getAmount)
+            .mapToInt(Transaction::getAmount)
             .sum();
 
         return (int)(data().incrementPerDay * minutes.getMinutes() / MINUTES_PER_DAY)
-            - data().previousExpenditure
-            - recentExpenditures;
+            - data().previousTransactions
+            - recentTransactions;
     }
 }

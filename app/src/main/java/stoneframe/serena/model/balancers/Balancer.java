@@ -18,14 +18,14 @@ public class Balancer extends Revertible<BalancerData>
 {
     private static final double MINUTES_PER_DAY = 24 * 60;
 
-    Balancer(String name, LocalDate startDate, int incrementPerDay, boolean allowQuick)
+    Balancer(String name, LocalDate startDate, int changePerDay, boolean allowQuick)
     {
         super(new BalancerData(
             name,
             null,
             0,
             startDate,
-            incrementPerDay,
+            changePerDay,
             null,
             allowQuick));
     }
@@ -40,9 +40,9 @@ public class Balancer extends Revertible<BalancerData>
         return data().unit != null ? data().unit : "";
     }
 
-    public int getIncrementPerDay()
+    public int getChangePerDay()
     {
-        return data().incrementPerDay;
+        return data().changePerDay;
     }
 
     public boolean isQuickDisableable()
@@ -74,7 +74,7 @@ public class Balancer extends Revertible<BalancerData>
             return now;
         }
 
-        double remaining = Math.abs((double)available / getIncrementPerDay());
+        double remaining = Math.abs((double)available / getChangePerDay());
 
         int days = (int)remaining;
 
@@ -121,12 +121,12 @@ public class Balancer extends Revertible<BalancerData>
         data().unit = unit;
     }
 
-    void setIncrementPerDay(LocalDateTime now, int incrementPerDay)
+    void setChangePerDay(LocalDateTime now, int changePerDay)
     {
         int oldCurrentAvailable = getAvailable(now);
 
         data().startDate = now.toLocalDate();
-        data().incrementPerDay = incrementPerDay;
+        data().changePerDay = changePerDay;
 
         data().transactions.clear();
         data().previousTransactions = 0;
@@ -207,8 +207,8 @@ public class Balancer extends Revertible<BalancerData>
             .mapToInt(Transaction::getAmount)
             .sum();
 
-        return (int)(data().incrementPerDay * minutes.getMinutes() / MINUTES_PER_DAY)
-            - data().previousTransactions
-            - recentTransactions;
+        return (int)(data().changePerDay * minutes.getMinutes() / MINUTES_PER_DAY)
+            + data().previousTransactions
+            + recentTransactions;
     }
 }

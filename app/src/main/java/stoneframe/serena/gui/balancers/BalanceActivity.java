@@ -136,7 +136,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
     }
 
     @Override
-    public void incrementPerDayChanged()
+    public void changePerDayChanged()
     {
 
     }
@@ -427,7 +427,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
 
         EditText editTextName = dialogView.findViewById(R.id.editTextName);
         EditText editTextUnit = dialogView.findViewById(R.id.editTextUnit);
-        EditText editTextIncrementPerDay = dialogView.findViewById(R.id.editTextTransactionPerDay);
+        EditText editTextChangePerDay = dialogView.findViewById(R.id.editTextTransactionPerDay);
         EditText editTextMaxValue = dialogView.findViewById(R.id.editTextMaxValue);
         CheckBox checkBoxAllowQuick = dialogView.findViewById(R.id.checkBoxAllowQuick);
         Button buttonCancel = dialogView.findViewById(R.id.buttonCancel);
@@ -435,7 +435,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
 
         editTextName.setText(balancerEditor.getName());
         editTextUnit.setText(balancerEditor.getUnit());
-        editTextIncrementPerDay.setText(String.valueOf(balancerEditor.getIncrementPerDay()));
+        editTextChangePerDay.setText(String.valueOf(balancerEditor.getChangePerDay()));
         editTextMaxValue.setText(balancerEditor.hasMaxValue()
             ? Integer.toString(balancerEditor.getMaxValue())
             : "");
@@ -448,15 +448,15 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
 
         buttonOk.setOnClickListener(v ->
         {
-            String incrementPerDay = editTextIncrementPerDay.getText().toString();
+            String changePerDay = editTextChangePerDay.getText().toString();
 
-            if (!incrementPerDay.isEmpty())
+            if (!changePerDay.isEmpty())
             {
                 balancerEditor.setName(editTextName.getText().toString());
                 balancerEditor.setUnit(editTextUnit.getText().toString());
                 balancerEditor.setMaxValue(getMaxValue(editTextMaxValue));
                 balancerEditor.setAllowQuick(checkBoxAllowQuick.isChecked());
-                balancerEditor.setIncrementPerDay(Integer.parseInt(incrementPerDay));
+                balancerEditor.setChangePerDay(Integer.parseInt(changePerDay));
 
                 serena.save();
 
@@ -469,7 +469,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         new EditTextButtonEnabledLink(
             buttonOk,
             new EditTextCriteria(editTextName, EditTextCriteria.IS_NOT_EMPTY),
-            new EditTextCriteria(editTextIncrementPerDay, EditTextCriteria.IS_VALID_INT));
+            new EditTextCriteria(editTextChangePerDay, EditTextCriteria.IS_VALID_INT));
     }
 
     private static @Nullable Integer getMaxValue(EditText editTextMaxValue)

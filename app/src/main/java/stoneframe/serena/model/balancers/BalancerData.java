@@ -19,7 +19,7 @@ class BalancerData
     int previousTransactions;
 
     LocalDate startDate;
-    int incrementPerDay;
+    int changePerDay;
 
     Integer maxValue;
 
@@ -30,7 +30,7 @@ class BalancerData
         String unit,
         int previousTransactions,
         LocalDate startDate,
-        int incrementPerDay,
+        int changePerDay,
         Integer maxValue,
         boolean allowQuick)
     {
@@ -38,7 +38,7 @@ class BalancerData
         this.unit = unit;
         this.previousTransactions = previousTransactions;
         this.startDate = startDate;
-        this.incrementPerDay = incrementPerDay;
+        this.changePerDay = changePerDay;
         this.maxValue = maxValue;
         this.allowQuick = allowQuick;
     }

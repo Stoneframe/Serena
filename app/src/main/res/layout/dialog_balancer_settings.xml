@@ -44,14 +44,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:text="Enter increment per day:"
+        android:text="Enter change per day:"
         android:textSize="18sp" />
 
     <EditText
         android:id="@+id/editTextTransactionPerDay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Increment per day"
+        android:hint="Change per day"
         android:inputType="number" />
 
     <TextView

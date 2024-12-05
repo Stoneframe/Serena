@@ -16,7 +16,7 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
 
     private final PropertyUtil<String> nameProperty;
     private final PropertyUtil<String> unitProperty;
-    private final PropertyUtil<Integer> incrementPerDayProperty;
+    private final PropertyUtil<Integer> changePerDayProperty;
     private final PropertyUtil<Boolean> isQuickAllowableProperty;
 
     public BalancerEditor(BalancerManager balancerManager, Balancer balancer, TimeService timeService)
@@ -28,7 +28,7 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
 
         nameProperty = getNameProperty();
         unitProperty = getUnitProperty();
-        incrementPerDayProperty = getIncrementPerDayProperty();
+        changePerDayProperty = getChangePerDayProperty();
         isQuickAllowableProperty = getIsQuickAllowableProperty();
     }
 
@@ -52,14 +52,14 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
         unitProperty.setValue(unit);
     }
 
-    public int getIncrementPerDay()
+    public int getChangePerDay()
     {
-        return incrementPerDayProperty.getValue();
+        return changePerDayProperty.getValue();
     }
 
-    public void setIncrementPerDay(int incrementPerDay)
+    public void setChangePerDay(int changePerDay)
     {
-        incrementPerDayProperty.setValue(incrementPerDay);
+        changePerDayProperty.setValue(changePerDay);
     }
 
     public boolean hasMaxValue()
@@ -184,12 +184,12 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
             v -> notifyListeners(BalanceEditorListener::unitChanged));
     }
 
-    private @NonNull PropertyUtil<Integer> getIncrementPerDayProperty()
+    private @NonNull PropertyUtil<Integer> getChangePerDayProperty()
     {
         return new PropertyUtil<>(
-            balancer::getIncrementPerDay,
-            v -> balancer.setIncrementPerDay(getNow(), v),
-            v -> notifyListeners(BalanceEditorListener::incrementPerDayChanged));
+            balancer::getChangePerDay,
+            v -> balancer.setChangePerDay(getNow(), v),
+            v -> notifyListeners(BalanceEditorListener::changePerDayChanged));
     }
 
     private @NonNull PropertyUtil<Boolean> getIsQuickAllowableProperty()
@@ -208,7 +208,7 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
 
         void isQuickChanged(boolean isAllowed);
 
-        void incrementPerDayChanged();
+        void changePerDayChanged();
 
         void transactionTypesChanged();
 

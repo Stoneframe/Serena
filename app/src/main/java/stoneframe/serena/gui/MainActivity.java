@@ -28,7 +28,7 @@ import java.util.Objects;
 import stoneframe.serena.R;
 import stoneframe.serena.gui.checklists.AllChecklistsFragment;
 import stoneframe.serena.gui.chores.AllChoresFragment;
-import stoneframe.serena.gui.limiters.AllLimitersFragment;
+import stoneframe.serena.gui.balancers.AllBalancersFragment;
 import stoneframe.serena.gui.routines.AllRoutinesFragment;
 import stoneframe.serena.gui.routines.RoutineNotifier;
 import stoneframe.serena.gui.tasks.AllTasksFragment;
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_all_checklists:
                 return goToFragment(AllChecklistsFragment.class);
             case R.id.nav_calories:
-                return goToFragment(AllLimitersFragment.class);
+                return goToFragment(AllBalancersFragment.class);
             case R.id.nav_todays:
             default:
                 return goToFragment(TodayFragment.class);
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (fragmentClass == AllChoresFragment.class) return "Chores";
         if (fragmentClass == AllTasksFragment.class) return "Tasks";
         if (fragmentClass == AllChecklistsFragment.class) return "Checklists";
-        if (fragmentClass == AllLimitersFragment.class) return "Limiters";
+        if (fragmentClass == AllBalancersFragment.class) return "Balancers";
 
         return "Serena";
     }

@@ -1,4 +1,4 @@
-package stoneframe.serena.model.limiters;
+package stoneframe.serena.model.balancers;
 
 import android.util.Pair;
 
@@ -14,13 +14,13 @@ import java.util.stream.Stream;
 
 import stoneframe.serena.model.util.Revertible;
 
-public class Limiter extends Revertible<LimiterData>
+public class Balancer extends Revertible<BalancerData>
 {
     private static final double MINUTES_PER_DAY = 24 * 60;
 
-    Limiter(String name, LocalDate startDate, int incrementPerDay, boolean allowQuick)
+    Balancer(String name, LocalDate startDate, int incrementPerDay, boolean allowQuick)
     {
-        super(new LimiterData(
+        super(new BalancerData(
             name,
             null,
             0,

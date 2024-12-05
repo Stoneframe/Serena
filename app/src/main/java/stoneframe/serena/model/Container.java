@@ -2,7 +2,7 @@ package stoneframe.serena.model;
 
 import stoneframe.serena.model.checklists.ChecklistContainer;
 import stoneframe.serena.model.chores.ChoreContainer;
-import stoneframe.serena.model.limiters.LimiterContainer;
+import stoneframe.serena.model.balancers.BalancerContainer;
 import stoneframe.serena.model.routines.RoutineContainer;
 import stoneframe.serena.model.tasks.TaskContainer;
 
@@ -18,5 +18,5 @@ public class Container
 
     public ChecklistContainer ChecklistContainer;
 
-    public LimiterContainer LimiterContainer;
+    public BalancerContainer BalancerContainer;
 }

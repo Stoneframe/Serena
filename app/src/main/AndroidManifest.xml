@@ -45,7 +45,7 @@
         <activity android:name=".gui.checklists.EditChecklistActivity" />
         <activity android:name=".gui.chores.EffortActivity" />
         <activity android:name=".gui.StorageActivity" />
-        <activity android:name=".gui.limiters.LimiterActivity" />
+        <activity android:name=".gui.balancers.BalanceActivity" />
 
         <receiver android:name=".gui.routines.RoutineNotifierReceiver" />
     </application>

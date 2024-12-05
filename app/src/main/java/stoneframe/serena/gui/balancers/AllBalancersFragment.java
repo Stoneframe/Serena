@@ -1,4 +1,4 @@
-package stoneframe.serena.gui.limiters;
+package stoneframe.serena.gui.balancers;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -26,21 +26,21 @@ import stoneframe.serena.gui.util.EditTextCriteria;
 import stoneframe.serena.gui.util.SimpleListAdapter;
 import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
 import stoneframe.serena.model.Serena;
-import stoneframe.serena.model.limiters.Limiter;
-import stoneframe.serena.model.limiters.LimiterManager;
+import stoneframe.serena.model.balancers.Balancer;
+import stoneframe.serena.model.balancers.BalancerManager;
 
-public class AllLimitersFragment extends Fragment
+public class AllBalancersFragment extends Fragment
 {
     private static final int LIGHT_GREEN = Color.parseColor("#c3fab6");
     private static final int LIGHT_GRAY = Color.parseColor("#e6e3e3");
     private static final int DARK_GREEN = Color.parseColor("#018a26");
     private static final int DARK_GRAY = Color.parseColor("#7e807e");
 
-    private SimpleListAdapter<Limiter> limiterListAdapter;
+    private SimpleListAdapter<Balancer> balancerListAdapter;
 
     private GlobalState globalState;
     private Serena serena;
-    private LimiterManager limiterManager;
+    private BalancerManager balancerManager;
 
     @Override
     public View onCreateView(
@@ -50,44 +50,44 @@ public class AllLimitersFragment extends Fragment
     {
         globalState = GlobalState.getInstance();
         serena = globalState.getSerena();
-        limiterManager = serena.getLimiterManager();
+        balancerManager = serena.getBalancerManager();
 
-        View rootView = inflater.inflate(R.layout.fragment_all_limiters, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_all_balancers, container, false);
 
-        limiterListAdapter = new SimpleListAdapterBuilder<>(
+        balancerListAdapter = new SimpleListAdapterBuilder<>(
             requireContext(),
-            limiterManager::getLimiters,
-            Limiter::getName)
+            balancerManager::getBalancers,
+            Balancer::getName)
             .withSecondaryTextFunction(this::getAvailableText)
             .withBottomTextFunction(this::getReplenishedText)
             .withBackgroundColorFunction(this::getBackgroundColor)
             .withBorderColorFunction(this::getBorderColor)
             .create();
 
-        ListView limiterListView = rootView.findViewById(R.id.all_limiters);
-        limiterListView.setAdapter(limiterListAdapter);
-        limiterListView.setOnItemClickListener((parent, view, position, id) ->
+        ListView balancerListView = rootView.findViewById(R.id.all_balancers);
+        balancerListView.setAdapter(balancerListAdapter);
+        balancerListView.setOnItemClickListener((parent, view, position, id) ->
         {
-            Limiter limiter = (Limiter)limiterListAdapter.getItem(position);
+            Balancer balancer = (Balancer)balancerListAdapter.getItem(position);
 
-            openLimiterActivity(limiter);
+            openBalancerActivity(balancer);
         });
 
         Button addButton = rootView.findViewById(R.id.add_button);
         addButton.setOnClickListener(v ->
         {
-            final EditText limiterNameText = new EditText(getContext());
+            final EditText balancerNameText = new EditText(getContext());
 
-            limiterNameText.setInputType(EditorInfo.TYPE_TEXT_FLAG_CAP_SENTENCES);
+            balancerNameText.setInputType(EditorInfo.TYPE_TEXT_FLAG_CAP_SENTENCES);
 
-            AlertDialog.Builder builder = getBuilder(limiterNameText);
+            AlertDialog.Builder builder = getBuilder(balancerNameText);
 
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
 
             new EditTextButtonEnabledLink(
                 alertDialog.getButton(DialogInterface.BUTTON_POSITIVE),
-                new EditTextCriteria(limiterNameText, EditTextCriteria.IS_NOT_EMPTY));
+                new EditTextCriteria(balancerNameText, EditTextCriteria.IS_NOT_EMPTY));
         });
 
         return rootView;
@@ -98,27 +98,27 @@ public class AllLimitersFragment extends Fragment
     {
         super.onStart();
 
-        limiterListAdapter.notifyDataSetChanged();
+        balancerListAdapter.notifyDataSetChanged();
     }
 
     @NonNull
-    private AlertDialog.Builder getBuilder(EditText limiterNameText)
+    private AlertDialog.Builder getBuilder(EditText balancerNameText)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Create limiter");
-        builder.setView(limiterNameText);
+        builder.setTitle("Create balancer");
+        builder.setView(balancerNameText);
 
         builder.setPositiveButton("OK", (dialog, which) ->
         {
-            String limiterName = limiterNameText.getText().toString();
+            String balancerName = balancerNameText.getText().toString();
 
-            Limiter limiter = limiterManager.createLimiter(limiterName);
+            Balancer balancer = balancerManager.createBalancer(balancerName);
 
             serena.save();
 
-            limiterListAdapter.notifyDataSetChanged();
+            balancerListAdapter.notifyDataSetChanged();
 
-            openLimiterActivity(limiter);
+            openBalancerActivity(balancer);
         });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
@@ -126,21 +126,21 @@ public class AllLimitersFragment extends Fragment
         return builder;
     }
 
-    private void openLimiterActivity(Limiter limiter)
+    private void openBalancerActivity(Balancer balancer)
     {
-        globalState.setActiveLimiter(limiter);
+        globalState.setActiveBalancer(balancer);
 
-        Intent intent = new Intent(requireContext(), LimiterActivity.class);
+        Intent intent = new Intent(requireContext(), BalanceActivity.class);
         startActivity(intent);
     }
 
     @SuppressLint("DefaultLocale")
-    private @NonNull String getAvailableText(Limiter l)
+    private @NonNull String getAvailableText(Balancer l)
     {
         return String.format("Remaining: %d", l.getAvailable(LocalDateTime.now()));
     }
 
-    private @NonNull String getReplenishedText(Limiter l)
+    private @NonNull String getReplenishedText(Balancer l)
     {
         LocalDateTime now = LocalDateTime.now();
 
@@ -151,18 +151,18 @@ public class AllLimitersFragment extends Fragment
         return String.format("Replenished: %s", when);
     }
 
-    private Integer getBackgroundColor(Limiter limiter)
+    private Integer getBackgroundColor(Balancer balancer)
     {
-        return isLimiterReplenished(limiter) ? LIGHT_GREEN : LIGHT_GRAY;
+        return isBalancerReplenished(balancer) ? LIGHT_GREEN : LIGHT_GRAY;
     }
 
-    private int getBorderColor(Limiter limiter)
+    private int getBorderColor(Balancer balancer)
     {
-        return isLimiterReplenished(limiter) ? DARK_GREEN : DARK_GRAY;
+        return isBalancerReplenished(balancer) ? DARK_GREEN : DARK_GRAY;
     }
 
-    private static boolean isLimiterReplenished(Limiter limiter)
+    private static boolean isBalancerReplenished(Balancer balancer)
     {
-        return limiter.getAvailable(LocalDateTime.now()) > 0;
+        return balancer.getAvailable(LocalDateTime.now()) > 0;
     }
 }

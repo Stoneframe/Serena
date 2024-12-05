@@ -1,4 +1,4 @@
-package stoneframe.serena.gui.limiters;
+package stoneframe.serena.gui.balancers;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -34,12 +34,12 @@ import stoneframe.serena.gui.util.EditTextCriteria;
 import stoneframe.serena.gui.util.SimpleListAdapter;
 import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
 import stoneframe.serena.model.Serena;
-import stoneframe.serena.model.limiters.CustomExpenditureType;
-import stoneframe.serena.model.limiters.ExpenditureType;
-import stoneframe.serena.model.limiters.Limiter;
-import stoneframe.serena.model.limiters.LimiterEditor;
+import stoneframe.serena.model.balancers.CustomExpenditureType;
+import stoneframe.serena.model.balancers.ExpenditureType;
+import stoneframe.serena.model.balancers.Balancer;
+import stoneframe.serena.model.balancers.BalancerEditor;
 
-public class LimiterActivity extends AppCompatActivity implements LimiterEditor.LimiterEditorListener
+public class BalanceActivity extends AppCompatActivity implements BalancerEditor.BalanceEditorListener
 {
     private TextView textViewName;
     private TextView textViewExpenditureAvailable;
@@ -60,13 +60,13 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
 
     private Serena serena;
 
-    private LimiterEditor limiterEditor;
+    private BalancerEditor balancerEditor;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.limiter_menu, menu);
+        inflater.inflate(R.menu.balancer_menu, menu);
         return true;
     }
 
@@ -83,7 +83,7 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
 
         if (itemId == R.id.action_remove)
         {
-            removeLimiter();
+            removeBalancer();
             return true;
         }
 
@@ -95,7 +95,7 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
     {
         super.onStop();
 
-        limiterEditor.removeListener(this);
+        balancerEditor.removeListener(this);
 
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
@@ -121,7 +121,7 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
 
         if (spinnerExpenditureType.getSelectedItemPosition() != 0)
         {
-            int position = limiterEditor.isQuickAllowed()
+            int position = balancerEditor.isQuickAllowed()
                 ? spinnerExpenditureType.getSelectedItemPosition() + 1
                 : spinnerExpenditureType.getSelectedItemPosition() - 1;
 
@@ -153,7 +153,7 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
     {
         expenditureTypeAdapter.notifyDataSetChanged();
 
-        int position = limiterEditor.getExpenditureTypes().indexOf(expenditureType);
+        int position = balancerEditor.getExpenditureTypes().indexOf(expenditureType);
 
         spinnerExpenditureType.setSelection(position);
 
@@ -194,15 +194,15 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_limiter);
+        setContentView(R.layout.activity_balancer);
 
-        setTitle("Limiter");
+        setTitle("Balancer");
 
-        Limiter limiter = GlobalState.getInstance().getActiveLimiter();
+        Balancer balancer = GlobalState.getInstance().getActiveBalancer();
 
         serena = GlobalState.getInstance().getSerena();
 
-        limiterEditor = serena.getLimiterManager().getLimiterEditor(limiter);
+        balancerEditor = serena.getBalancerManager().getBalancerEditor(balancer);
 
         textViewName = findViewById(R.id.textViewName);
 
@@ -222,7 +222,7 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
 
         expenditureTypeAdapter = new SimpleListAdapterBuilder<>(
             this,
-            limiterEditor::getExpenditureTypes,
+            balancerEditor::getExpenditureTypes,
             ExpenditureType::getName)
             .create();
 
@@ -245,7 +245,7 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
 
         favoritesListAdapter = new SimpleListAdapterBuilder<>(
             this,
-            () -> getFavoriteExpenditureTypes(limiter),
+            () -> getFavoriteExpenditureTypes(balancer),
             ExpenditureType::getName)
             .withSecondaryTextFunction(t -> Integer.toString(t.getAmount()))
             .create();
@@ -256,9 +256,9 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
                 (ExpenditureType)favoritesList.getItemAtPosition(position);
 
             DialogUtils.showConfirmationDialog(
-                LimiterActivity.this,
+                BalanceActivity.this,
                 "Add expenditure",
-                expenditureType.getName() + " (" + expenditureType.getAmount() + " " + limiter.getUnit() + ")",
+                expenditureType.getName() + " (" + expenditureType.getAmount() + " " + balancer.getUnit() + ")",
                 isConfirmed ->
                 {
                     if (!isConfirmed) return;
@@ -284,7 +284,7 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
     {
         super.onStart();
 
-        limiterEditor.addListener(this);
+        balancerEditor.addListener(this);
 
         updateName();
         updateAvailable();
@@ -292,9 +292,9 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
         updateSelectedExpenditureType();
     }
 
-    private @NonNull List<ExpenditureType> getFavoriteExpenditureTypes(Limiter limiter)
+    private @NonNull List<ExpenditureType> getFavoriteExpenditureTypes(Balancer balancer)
     {
-        return limiter.getExpenditureTypes()
+        return balancer.getExpenditureTypes()
             .stream()
             .filter(ExpenditureType::isFavorite)
             .collect(Collectors.toList());
@@ -304,7 +304,7 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
     {
         showExpenditureTypeDialog(null, null, null, (name, calories, isFavorite) ->
         {
-            limiterEditor.addExpenditureType(new CustomExpenditureType(name, calories, isFavorite));
+            balancerEditor.addExpenditureType(new CustomExpenditureType(name, calories, isFavorite));
             serena.save();
         });
     }
@@ -321,9 +321,9 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
             expenditureType.isFavorite(),
             (name, amount, isFavorite) ->
             {
-                limiterEditor.setExpenditureTypeName(expenditureType, name);
-                limiterEditor.setExpenditureTypeAmount(expenditureType, amount);
-                limiterEditor.setFavorite(expenditureType, isFavorite);
+                balancerEditor.setExpenditureTypeName(expenditureType, name);
+                balancerEditor.setExpenditureTypeAmount(expenditureType, amount);
+                balancerEditor.setFavorite(expenditureType, isFavorite);
 
                 serena.save();
             });
@@ -344,7 +344,7 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
 
                 assert expenditureType != null;
 
-                limiterEditor.removeExpenditureType(expenditureType);
+                balancerEditor.removeExpenditureType(expenditureType);
 
                 serena.save();
             });
@@ -356,22 +356,22 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
             ? Integer.parseInt(editTextAmount.getText().toString())
             : expenditureType.getAmount();
 
-        limiterEditor.addExpenditure(expenditureType.getName(), enteredExpenditureAmount);
+        balancerEditor.addExpenditure(expenditureType.getName(), enteredExpenditureAmount);
 
         serena.save();
     }
 
-    private void removeLimiter()
+    private void removeBalancer()
     {
         DialogUtils.showConfirmationDialog(
             this,
-            "Remove Limiter",
-            "Are you sure you want to remove the limiter?",
+            "Remove Balancer",
+            "Are you sure you want to remove the balancer?",
             isConfirmed ->
             {
                 if (!isConfirmed) return;
 
-                limiterEditor.delete();
+                balancerEditor.delete();
                 serena.save();
 
                 finish();
@@ -402,18 +402,18 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
 
     private void updateName()
     {
-        textViewName.setText(limiterEditor.getName());
+        textViewName.setText(balancerEditor.getName());
     }
 
     private void updateAvailable()
     {
         textViewExpenditureAvailable.setText(
-            String.format("%s %s", limiterEditor.getAvailable(), limiterEditor.getUnit()));
+            String.format("%s %s", balancerEditor.getAvailable(), balancerEditor.getUnit()));
     }
 
     private void updateHint()
     {
-        String hint = limiterEditor.getUnit().isEmpty() ? "amount" : limiterEditor.getUnit();
+        String hint = balancerEditor.getUnit().isEmpty() ? "amount" : balancerEditor.getUnit();
 
         editTextAmount.setHint(hint);
     }
@@ -422,7 +422,7 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_limiter_settings, null);
+        View dialogView = inflater.inflate(R.layout.dialog_balancer_settings, null);
         builder.setView(dialogView);
 
         EditText editTextName = dialogView.findViewById(R.id.editTextName);
@@ -433,14 +433,14 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
         Button buttonCancel = dialogView.findViewById(R.id.buttonCancel);
         Button buttonOk = dialogView.findViewById(R.id.buttonOk);
 
-        editTextName.setText(limiterEditor.getName());
-        editTextUnit.setText(limiterEditor.getUnit());
-        editTextIncrementPerDay.setText(String.valueOf(limiterEditor.getIncrementPerDay()));
-        editTextMaxValue.setText(limiterEditor.hasMaxValue()
-            ? Integer.toString(limiterEditor.getMaxValue())
+        editTextName.setText(balancerEditor.getName());
+        editTextUnit.setText(balancerEditor.getUnit());
+        editTextIncrementPerDay.setText(String.valueOf(balancerEditor.getIncrementPerDay()));
+        editTextMaxValue.setText(balancerEditor.hasMaxValue()
+            ? Integer.toString(balancerEditor.getMaxValue())
             : "");
-        checkBoxAllowQuick.setChecked(limiterEditor.isQuickAllowed());
-        checkBoxAllowQuick.setEnabled(limiterEditor.isQuickDisableable());
+        checkBoxAllowQuick.setChecked(balancerEditor.isQuickAllowed());
+        checkBoxAllowQuick.setEnabled(balancerEditor.isQuickDisableable());
 
         AlertDialog dialog = builder.create();
 
@@ -452,11 +452,11 @@ public class LimiterActivity extends AppCompatActivity implements LimiterEditor.
 
             if (!incrementPerDay.isEmpty())
             {
-                limiterEditor.setName(editTextName.getText().toString());
-                limiterEditor.setUnit(editTextUnit.getText().toString());
-                limiterEditor.setMaxValue(getMaxValue(editTextMaxValue));
-                limiterEditor.setAllowQuick(checkBoxAllowQuick.isChecked());
-                limiterEditor.setIncrementPerDay(Integer.parseInt(incrementPerDay));
+                balancerEditor.setName(editTextName.getText().toString());
+                balancerEditor.setUnit(editTextUnit.getText().toString());
+                balancerEditor.setMaxValue(getMaxValue(editTextMaxValue));
+                balancerEditor.setAllowQuick(checkBoxAllowQuick.isChecked());
+                balancerEditor.setIncrementPerDay(Integer.parseInt(incrementPerDay));
 
                 serena.save();
 

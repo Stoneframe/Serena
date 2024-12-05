@@ -1,4 +1,4 @@
-package stoneframe.serena.model.limiters;
+package stoneframe.serena.model.balancers;
 
 import androidx.annotation.NonNull;
 
@@ -9,22 +9,22 @@ import java.util.List;
 import stoneframe.serena.model.Editor;
 import stoneframe.serena.model.timeservices.TimeService;
 
-public class LimiterEditor extends Editor<LimiterEditor.LimiterEditorListener>
+public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
 {
-    private final LimiterManager limiterManager;
-    private final Limiter limiter;
+    private final BalancerManager balancerManager;
+    private final Balancer balancer;
 
     private final PropertyUtil<String> nameProperty;
     private final PropertyUtil<String> unitProperty;
     private final PropertyUtil<Integer> incrementPerDayProperty;
     private final PropertyUtil<Boolean> isQuickAllowableProperty;
 
-    public LimiterEditor(LimiterManager limiterManager, Limiter limiter, TimeService timeService)
+    public BalancerEditor(BalancerManager balancerManager, Balancer balancer, TimeService timeService)
     {
         super(timeService);
 
-        this.limiterManager = limiterManager;
-        this.limiter = limiter;
+        this.balancerManager = balancerManager;
+        this.balancer = balancer;
 
         nameProperty = getNameProperty();
         unitProperty = getUnitProperty();
@@ -64,26 +64,26 @@ public class LimiterEditor extends Editor<LimiterEditor.LimiterEditorListener>
 
     public boolean hasMaxValue()
     {
-        return limiter.hasMaxValue();
+        return balancer.hasMaxValue();
     }
 
     public int getMaxValue()
     {
-        return limiter.getMaxValue();
+        return balancer.getMaxValue();
     }
 
     public void setMaxValue(Integer maxValue)
     {
         if (hasMaxValueChanged(maxValue))
         {
-            limiter.setMaxValue(maxValue, LocalDateTime.now());
-            notifyListeners(LimiterEditorListener::availableChanged);
+            balancer.setMaxValue(maxValue, LocalDateTime.now());
+            notifyListeners(BalanceEditorListener::availableChanged);
         }
     }
 
     public boolean isQuickDisableable()
     {
-        return limiter.isQuickDisableable();
+        return balancer.isQuickDisableable();
     }
 
     public boolean isQuickAllowed()
@@ -98,24 +98,24 @@ public class LimiterEditor extends Editor<LimiterEditor.LimiterEditorListener>
 
     public List<ExpenditureType> getExpenditureTypes()
     {
-        return limiter.getExpenditureTypes();
+        return balancer.getExpenditureTypes();
     }
 
     public void addExpenditureType(CustomExpenditureType expenditureType)
     {
-        limiter.addExpenditureType(expenditureType);
+        balancer.addExpenditureType(expenditureType);
 
         notifyListeners(l -> l.expenditureTypeAdded(expenditureType));
-        notifyListeners(LimiterEditorListener::expenditureTypesChanged);
+        notifyListeners(BalanceEditorListener::expenditureTypesChanged);
     }
 
     public void removeExpenditureType(CustomExpenditureType expenditureType)
     {
-        limiter.removeExpenditureType(expenditureType);
+        balancer.removeExpenditureType(expenditureType);
 
-        if (limiter.getExpenditureTypes().isEmpty())
+        if (balancer.getExpenditureTypes().isEmpty())
         {
-            limiter.setAllowQuick(true);
+            balancer.setAllowQuick(true);
         }
 
         notifyListeners(l -> l.expenditureTypeRemoved(expenditureType));
@@ -123,19 +123,19 @@ public class LimiterEditor extends Editor<LimiterEditor.LimiterEditorListener>
 
     public void addExpenditure(String name, int expenditureAmount)
     {
-        limiter.addExpenditure(new Expenditure(name, expenditureAmount), getNow());
+        balancer.addExpenditure(new Expenditure(name, expenditureAmount), getNow());
 
-        notifyListeners(LimiterEditorListener::expenditureAdded);
+        notifyListeners(BalanceEditorListener::expenditureAdded);
     }
 
     public int getAvailable()
     {
-        return limiter.getAvailable(getNow());
+        return balancer.getAvailable(getNow());
     }
 
     public void delete()
     {
-        limiterManager.removeLimiter(limiter);
+        balancerManager.removeBalancer(balancer);
     }
 
     public void setExpenditureTypeName(CustomExpenditureType expenditureType, String name)
@@ -143,7 +143,7 @@ public class LimiterEditor extends Editor<LimiterEditor.LimiterEditorListener>
         expenditureType.setName(name);
 
         notifyListeners(l -> l.expenditureTypeEdited(expenditureType));
-        notifyListeners(LimiterEditorListener::expenditureTypesChanged);
+        notifyListeners(BalanceEditorListener::expenditureTypesChanged);
     }
 
     public void setExpenditureTypeAmount(CustomExpenditureType expenditureType, int amount)
@@ -151,7 +151,7 @@ public class LimiterEditor extends Editor<LimiterEditor.LimiterEditorListener>
         expenditureType.setAmount(amount);
 
         notifyListeners(l -> l.expenditureTypeEdited(expenditureType));
-        notifyListeners(LimiterEditorListener::expenditureTypesChanged);
+        notifyListeners(BalanceEditorListener::expenditureTypesChanged);
     }
 
     public void setFavorite(CustomExpenditureType expenditureType, boolean isFavorite)
@@ -159,48 +159,48 @@ public class LimiterEditor extends Editor<LimiterEditor.LimiterEditorListener>
         expenditureType.setFavorite(isFavorite);
 
         notifyListeners(l -> l.expenditureTypeEdited(expenditureType));
-        notifyListeners(LimiterEditorListener::expenditureTypesChanged);
+        notifyListeners(BalanceEditorListener::expenditureTypesChanged);
     }
 
     private boolean hasMaxValueChanged(Integer maxValue)
     {
-        return maxValue == null && limiter.hasMaxValue()
-            || maxValue != null && maxValue != limiter.getMaxValue();
+        return maxValue == null && balancer.hasMaxValue()
+            || maxValue != null && maxValue != balancer.getMaxValue();
     }
 
     private @NonNull PropertyUtil<String> getNameProperty()
     {
         return new PropertyUtil<>(
-            limiter::getName,
-            limiter::setName,
-            v -> notifyListeners(LimiterEditorListener::nameChanged));
+            balancer::getName,
+            balancer::setName,
+            v -> notifyListeners(BalanceEditorListener::nameChanged));
     }
 
     private @NonNull PropertyUtil<String> getUnitProperty()
     {
         return new PropertyUtil<>(
-            limiter::getUnit,
-            limiter::setUnit,
-            v -> notifyListeners(LimiterEditorListener::unitChanged));
+            balancer::getUnit,
+            balancer::setUnit,
+            v -> notifyListeners(BalanceEditorListener::unitChanged));
     }
 
     private @NonNull PropertyUtil<Integer> getIncrementPerDayProperty()
     {
         return new PropertyUtil<>(
-            limiter::getIncrementPerDay,
-            v -> limiter.setIncrementPerDay(getNow(), v),
-            v -> notifyListeners(LimiterEditorListener::incrementPerDayChanged));
+            balancer::getIncrementPerDay,
+            v -> balancer.setIncrementPerDay(getNow(), v),
+            v -> notifyListeners(BalanceEditorListener::incrementPerDayChanged));
     }
 
     private @NonNull PropertyUtil<Boolean> getIsQuickAllowableProperty()
     {
         return new PropertyUtil<>(
-            limiter::isQuickAllowed,
-            limiter::setAllowQuick,
+            balancer::isQuickAllowed,
+            balancer::setAllowQuick,
             v -> notifyListeners(l -> l.isQuickChanged(v)));
     }
 
-    public interface LimiterEditorListener
+    public interface BalanceEditorListener
     {
         void nameChanged();
 

@@ -1,4 +1,4 @@
-package stoneframe.serena.model.limiters;
+package stoneframe.serena.model.balancers;
 
 import androidx.annotation.NonNull;
 

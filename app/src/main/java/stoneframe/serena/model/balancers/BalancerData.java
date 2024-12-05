@@ -1,4 +1,4 @@
-package stoneframe.serena.model.limiters;
+package stoneframe.serena.model.balancers;
 
 import android.util.Pair;
 
@@ -8,7 +8,7 @@ import org.joda.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
-class LimiterData
+class BalancerData
 {
     final List<CustomExpenditureType> expenditureTypes = new LinkedList<>();
     final List<Pair<Expenditure, LocalDateTime>> expenditures = new LinkedList<>();
@@ -25,7 +25,7 @@ class LimiterData
 
     boolean allowQuick;
 
-    LimiterData(
+    BalancerData(
         String name,
         String unit,
         int previousExpenditure,

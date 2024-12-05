@@ -1,4 +1,4 @@
-package stoneframe.serena.model.limiters;
+package stoneframe.serena.model.balancers;
 
 public class QuickExpenditureType extends ExpenditureType
 {

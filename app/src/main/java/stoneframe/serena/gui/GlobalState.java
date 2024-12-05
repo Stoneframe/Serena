@@ -5,7 +5,7 @@ import android.app.Application;
 import stoneframe.serena.model.Serena;
 import stoneframe.serena.model.checklists.Checklist;
 import stoneframe.serena.model.chores.Chore;
-import stoneframe.serena.model.limiters.Limiter;
+import stoneframe.serena.model.balancers.Balancer;
 import stoneframe.serena.model.routines.Routine;
 import stoneframe.serena.model.tasks.Task;
 
@@ -17,7 +17,7 @@ public class GlobalState extends Application
     private Chore activeChore;
     private Task activeTask;
     private Checklist activeChecklist;
-    private Limiter activeLimiter;
+    private Balancer activeBalancer;
 
     private Serena serena;
 
@@ -87,13 +87,13 @@ public class GlobalState extends Application
         this.activeChecklist = activeChecklist;
     }
 
-    public Limiter getActiveLimiter()
+    public Balancer getActiveBalancer()
     {
-        return activeLimiter;
+        return activeBalancer;
     }
 
-    public void setActiveLimiter(Limiter activeLimiter)
+    public void setActiveBalancer(Balancer activeBalancer)
     {
-        this.activeLimiter = activeLimiter;
+        this.activeBalancer = activeBalancer;
     }
 }

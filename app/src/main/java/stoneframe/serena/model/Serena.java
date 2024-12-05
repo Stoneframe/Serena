@@ -6,8 +6,8 @@ import stoneframe.serena.model.chores.ChoreContainer;
 import stoneframe.serena.model.chores.ChoreManager;
 import stoneframe.serena.model.chores.ChoreSelector;
 import stoneframe.serena.model.chores.EffortTracker;
-import stoneframe.serena.model.limiters.LimiterContainer;
-import stoneframe.serena.model.limiters.LimiterManager;
+import stoneframe.serena.model.balancers.BalancerContainer;
+import stoneframe.serena.model.balancers.BalancerManager;
 import stoneframe.serena.model.routines.RoutineContainer;
 import stoneframe.serena.model.routines.RoutineManager;
 import stoneframe.serena.model.tasks.TaskContainer;
@@ -49,7 +49,7 @@ public class Serena
             container.ChoreContainer = new ChoreContainer(effortTracker, choreSelector);
             container.TaskContainer = new TaskContainer();
             container.ChecklistContainer = new ChecklistContainer();
-            container.LimiterContainer = new LimiterContainer();
+            container.BalancerContainer = new BalancerContainer();
         }
     }
 
@@ -95,11 +95,11 @@ public class Serena
     }
 
     // ====================================================================
-    // LIMITERS
+    // BALANCERS
     // ====================================================================
 
-    public LimiterManager getLimiterManager()
+    public BalancerManager getBalancerManager()
     {
-        return new LimiterManager(() -> container.LimiterContainer, timeService);
+        return new BalancerManager(() -> container.BalancerContainer, timeService);
     }
 }

@@ -59,7 +59,7 @@ public class AllBalancersFragment extends Fragment
             balancerManager::getBalancers,
             Balancer::getName)
             .withSecondaryTextFunction(this::getAvailableText)
-            .withBottomTextFunction(this::getReplenishedText)
+            .withBottomTextFunction(this::getTimeToZeroText)
             .withBackgroundColorFunction(this::getBackgroundColor)
             .withBorderColorFunction(this::getBorderColor)
             .create();
@@ -140,29 +140,58 @@ public class AllBalancersFragment extends Fragment
         return String.format("Remaining: %d", l.getAvailable(LocalDateTime.now()));
     }
 
-    private @NonNull String getReplenishedText(Balancer l)
+    private @NonNull String getTimeToZeroText(Balancer l)
     {
         LocalDateTime now = LocalDateTime.now();
 
-        String when = l.getAvailable(now) < 1
-            ? l.getReplenishTime(now).toString("yyyy-MM-dd HH:mm")
+        switch (l.getType())
+        {
+            case Balancer.ENHANCER:
+                return getDepletedText(l, now);
+            case Balancer.LIMITER:
+                return getReplenishedText(l, now);
+            case Balancer.COUNTER:
+                return getCounterText(l, now);
+            default:
+                throw new IllegalStateException("Unknown balancer type: " + l.getType());
+        }
+    }
+
+    private String getDepletedText(Balancer balancer, LocalDateTime now)
+    {
+        String when = balancer.getAvailable(now) > -1
+            ? balancer.getTimeToZero(now).toString("yyyy-MM-dd HH:mm")
             : "Now";
 
-        return String.format("Replenished: %s", when);
+        return String.format("Enhancer - Depleted: %s", when);
+    }
+
+    private String getReplenishedText(Balancer balancer, LocalDateTime now)
+    {
+        String when = balancer.getAvailable(now) < 1
+            ? balancer.getTimeToZero(now).toString("yyyy-MM-dd HH:mm")
+            : "Now";
+
+        return String.format("Limiter - Replenished: %s", when);
+    }
+
+    private String getCounterText(Balancer balancer, LocalDateTime now)
+    {
+        return "Counter";
     }
 
     private Integer getBackgroundColor(Balancer balancer)
     {
-        return isBalancerReplenished(balancer) ? LIGHT_GREEN : LIGHT_GRAY;
+        return isBalancerGreaterThanZero(balancer) ? LIGHT_GREEN : LIGHT_GRAY;
     }
 
     private int getBorderColor(Balancer balancer)
     {
-        return isBalancerReplenished(balancer) ? DARK_GREEN : DARK_GRAY;
+        return isBalancerGreaterThanZero(balancer) ? DARK_GREEN : DARK_GRAY;
     }
 
-    private static boolean isBalancerReplenished(Balancer balancer)
+    private static boolean isBalancerGreaterThanZero(Balancer balancer)
     {
-        return balancer.getAvailable(LocalDateTime.now()) > 0;
+        return balancer.getAvailable(LocalDateTime.now()) >= 0;
     }
 }

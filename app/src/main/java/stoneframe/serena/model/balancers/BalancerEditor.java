@@ -2,8 +2,6 @@ package stoneframe.serena.model.balancers;
 
 import androidx.annotation.NonNull;
 
-import org.joda.time.LocalDateTime;
-
 import java.util.List;
 
 import stoneframe.serena.model.Editor;
@@ -76,7 +74,26 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
     {
         if (hasMaxValueChanged(maxValue))
         {
-            balancer.setMaxValue(maxValue, LocalDateTime.now());
+            balancer.setMaxValue(maxValue, getNow());
+            notifyListeners(BalanceEditorListener::availableChanged);
+        }
+    }
+
+    public boolean hasMinValue()
+    {
+        return balancer.hasMinValue();
+    }
+
+    public int getMinValue()
+    {
+        return balancer.getMinValue();
+    }
+
+    public void setMinValue(Integer minValue)
+    {
+        if (hasMinValueChanged(minValue))
+        {
+            balancer.setMinValue(minValue, getNow());
             notifyListeners(BalanceEditorListener::availableChanged);
         }
     }
@@ -166,6 +183,12 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
     {
         return maxValue == null && balancer.hasMaxValue()
             || maxValue != null && maxValue != balancer.getMaxValue();
+    }
+
+    private boolean hasMinValueChanged(Integer minValue)
+    {
+        return minValue == null && balancer.hasMinValue()
+            || minValue != null && minValue != balancer.getMinValue();
     }
 
     private @NonNull PropertyUtil<String> getNameProperty()

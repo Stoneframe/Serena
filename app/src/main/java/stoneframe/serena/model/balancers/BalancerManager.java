@@ -33,7 +33,7 @@ public class BalancerManager
 
     public Balancer createBalancer(String name)
     {
-        Balancer balancer = new Balancer(name, timeService.getToday(), 300, true);
+        Balancer balancer = new Balancer(name, timeService.getToday(), 0, true);
 
         getContainer().balancers.add(balancer);
 

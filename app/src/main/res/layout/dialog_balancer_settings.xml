@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Change per day"
-        android:inputType="number" />
+        android:inputType="numberSigned" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -66,7 +66,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Max value"
-        android:inputType="number" />
+        android:inputType="numberSigned" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Enter min value:"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/editTextMinValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Min value"
+        android:inputType="numberSigned" />
 
     <CheckBox
         android:id="@+id/checkBoxAllowQuick"

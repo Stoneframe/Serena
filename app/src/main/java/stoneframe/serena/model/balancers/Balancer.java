@@ -16,6 +16,10 @@ import stoneframe.serena.model.util.Revertible;
 
 public class Balancer extends Revertible<BalancerData>
 {
+    public static final int LIMITER = -1;
+    public static final int COUNTER = 0;
+    public static final int ENHANCER = 1;
+
     private static final double MINUTES_PER_DAY = 24 * 60;
 
     Balancer(String name, LocalDate startDate, int changePerDay, boolean allowQuick)
@@ -27,7 +31,13 @@ public class Balancer extends Revertible<BalancerData>
             startDate,
             changePerDay,
             null,
+            null,
             allowQuick));
+    }
+
+    public int getType()
+    {
+        return Integer.compare(0, getChangePerDay());
     }
 
     public String getName()
@@ -35,9 +45,19 @@ public class Balancer extends Revertible<BalancerData>
         return data().name;
     }
 
+    void setName(String name)
+    {
+        data().name = name;
+    }
+
     public String getUnit()
     {
         return data().unit != null ? data().unit : "";
+    }
+
+    void setUnit(String unit)
+    {
+        data().unit = unit;
     }
 
     public int getChangePerDay()
@@ -60,16 +80,26 @@ public class Balancer extends Revertible<BalancerData>
         return data().maxValue != null;
     }
 
+    public boolean hasMinValue()
+    {
+        return data().minValue != null;
+    }
+
     public int getMaxValue()
     {
         return data().maxValue != null ? data().maxValue : Integer.MAX_VALUE;
     }
 
-    public LocalDateTime getReplenishTime(LocalDateTime now)
+    public int getMinValue()
+    {
+        return data().minValue != null ? data().minValue : Integer.MIN_VALUE;
+    }
+
+    public LocalDateTime getTimeToZero(LocalDateTime now)
     {
         int available = getAvailable(now);
 
-        if (available >= 0)
+        if (getType() == LIMITER && available >= 0 || getType() == ENHANCER && available <= 0)
         {
             return now;
         }
@@ -88,7 +118,10 @@ public class Balancer extends Revertible<BalancerData>
     {
         int totalAvailable = getTotalAvailable(now);
 
-        return data().maxValue != null ? Math.min(totalAvailable, data().maxValue) : totalAvailable;
+        if (totalAvailable > getMaxValue()) return getMaxValue();
+        if (totalAvailable < getMinValue()) return getMinValue();
+
+        return totalAvailable;
     }
 
     public List<TransactionType> getTransactionTypes()
@@ -111,16 +144,6 @@ public class Balancer extends Revertible<BalancerData>
         return data().transactions.stream().map(p -> p.first).collect(Collectors.toList());
     }
 
-    void setName(String name)
-    {
-        data().name = name;
-    }
-
-    void setUnit(String unit)
-    {
-        data().unit = unit;
-    }
-
     void setChangePerDay(LocalDateTime now, int changePerDay)
     {
         int oldCurrentAvailable = getAvailable(now);
@@ -139,6 +162,13 @@ public class Balancer extends Revertible<BalancerData>
     void setMaxValue(Integer maxValue, LocalDateTime now)
     {
         data().maxValue = maxValue;
+
+        updatePreviousTransactions(now);
+    }
+
+    void setMinValue(Integer minValue, LocalDateTime now)
+    {
+        data().minValue = minValue;
 
         updatePreviousTransactions(now);
     }
@@ -173,13 +203,15 @@ public class Balancer extends Revertible<BalancerData>
 
     private void updatePreviousTransactions(LocalDateTime now)
     {
-        if (data().maxValue == null) return;
-
         int totalAvailable = getTotalAvailable(now);
 
-        if (totalAvailable > data().maxValue)
+        if (totalAvailable > getMaxValue())
         {
-            data().previousTransactions += totalAvailable - data().maxValue;
+            data().previousTransactions -= totalAvailable - data().maxValue;
+        }
+        else if (totalAvailable < getMinValue())
+        {
+            data().previousTransactions -= totalAvailable - data().minValue;
         }
     }
 

@@ -22,6 +22,7 @@ class BalancerData
     int changePerDay;
 
     Integer maxValue;
+    Integer minValue;
 
     boolean allowQuick;
 
@@ -32,6 +33,7 @@ class BalancerData
         LocalDate startDate,
         int changePerDay,
         Integer maxValue,
+        Integer minValue,
         boolean allowQuick)
     {
         this.name = name;
@@ -40,6 +42,7 @@ class BalancerData
         this.startDate = startDate;
         this.changePerDay = changePerDay;
         this.maxValue = maxValue;
+        this.minValue = minValue;
         this.allowQuick = allowQuick;
     }
 }

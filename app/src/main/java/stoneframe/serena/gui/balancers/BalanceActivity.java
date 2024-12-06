@@ -132,7 +132,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
             spinnerTransactionType.setSelection(1);
         }
 
-        updateSelectedTransactinType();
+        updateSelectedTransactionType();
     }
 
     @Override
@@ -157,7 +157,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
 
         spinnerTransactionType.setSelection(position);
 
-        updateSelectedTransactinType();
+        updateSelectedTransactionType();
     }
 
     @Override
@@ -165,7 +165,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
     {
         transactionTypeAdapter.notifyDataSetChanged();
 
-        updateSelectedTransactinType();
+        updateSelectedTransactionType();
     }
 
     @Override
@@ -175,7 +175,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
 
         spinnerTransactionType.setSelection(0);
 
-        updateSelectedTransactinType();
+        updateSelectedTransactionType();
     }
 
     @Override
@@ -232,7 +232,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-                updateSelectedTransactinType();
+                updateSelectedTransactionType();
             }
 
             @Override
@@ -289,7 +289,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         updateName();
         updateAvailable();
         updateHint();
-        updateSelectedTransactinType();
+        updateSelectedTransactionType();
     }
 
     private @NonNull List<TransactionType> getFavoriteTransactionTypes(Balancer balancer)
@@ -379,7 +379,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
     }
 
     @SuppressLint("SetTextI18n")
-    private void updateSelectedTransactinType()
+    private void updateSelectedTransactionType()
     {
         TransactionType selectedTransactionType = (TransactionType)spinnerTransactionType.getSelectedItem();
 
@@ -429,6 +429,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         EditText editTextUnit = dialogView.findViewById(R.id.editTextUnit);
         EditText editTextChangePerDay = dialogView.findViewById(R.id.editTextTransactionPerDay);
         EditText editTextMaxValue = dialogView.findViewById(R.id.editTextMaxValue);
+        EditText editTextMinValue = dialogView.findViewById(R.id.editTextMinValue);
         CheckBox checkBoxAllowQuick = dialogView.findViewById(R.id.checkBoxAllowQuick);
         Button buttonCancel = dialogView.findViewById(R.id.buttonCancel);
         Button buttonOk = dialogView.findViewById(R.id.buttonOk);
@@ -438,6 +439,9 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         editTextChangePerDay.setText(String.valueOf(balancerEditor.getChangePerDay()));
         editTextMaxValue.setText(balancerEditor.hasMaxValue()
             ? Integer.toString(balancerEditor.getMaxValue())
+            : "");
+        editTextMinValue.setText(balancerEditor.hasMinValue()
+            ? Integer.toString(balancerEditor.getMinValue())
             : "");
         checkBoxAllowQuick.setChecked(balancerEditor.isQuickAllowed());
         checkBoxAllowQuick.setEnabled(balancerEditor.isQuickDisableable());
@@ -454,7 +458,8 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
             {
                 balancerEditor.setName(editTextName.getText().toString());
                 balancerEditor.setUnit(editTextUnit.getText().toString());
-                balancerEditor.setMaxValue(getMaxValue(editTextMaxValue));
+                balancerEditor.setMaxValue(getIntegerValue(editTextMaxValue));
+                balancerEditor.setMinValue(getIntegerValue(editTextMinValue));
                 balancerEditor.setAllowQuick(checkBoxAllowQuick.isChecked());
                 balancerEditor.setChangePerDay(Integer.parseInt(changePerDay));
 
@@ -469,13 +474,30 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         new EditTextButtonEnabledLink(
             buttonOk,
             new EditTextCriteria(editTextName, EditTextCriteria.IS_NOT_EMPTY),
-            new EditTextCriteria(editTextChangePerDay, EditTextCriteria.IS_VALID_INT));
+            new EditTextCriteria(editTextChangePerDay, EditTextCriteria.IS_VALID_INT),
+            new EditTextCriteria(editTextMaxValue, et ->
+            {
+                if (et.getText().toString().isEmpty()) return true;
+
+                Integer maxValue = getIntegerValue(et);
+
+                return maxValue != null && maxValue >= 0;
+            }),
+            new EditTextCriteria(editTextMinValue, et ->
+            {
+                if (et.getText().toString().isEmpty()) return true;
+
+                Integer minValue = getIntegerValue(et);
+
+                return minValue != null && minValue <= 0;
+            }));
     }
 
-    private static @Nullable Integer getMaxValue(EditText editTextMaxValue)
+    private static @Nullable Integer getIntegerValue(EditText editText)
     {
-        String maxValueStr = editTextMaxValue.getText().toString();
-        return maxValueStr.isEmpty() ? null : Integer.parseInt(maxValueStr);
+        return EditTextCriteria.isValidInteger(editText)
+            ? Integer.parseInt(editText.getText().toString())
+            : null;
     }
 
     @SuppressLint("SetTextI18n")

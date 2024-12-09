@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,8 +34,17 @@ public class AllBalancersFragment extends Fragment
 {
     private static final int LIGHT_GREEN = Color.parseColor("#c3fab6");
     private static final int LIGHT_GRAY = Color.parseColor("#e6e3e3");
+    private static final int LIGHT_RED = Color.parseColor("#ffc4c4");
+    private static final int LIGHT_YELLOW = Color.parseColor("#fff08c");
     private static final int DARK_GREEN = Color.parseColor("#018a26");
     private static final int DARK_GRAY = Color.parseColor("#7e807e");
+    private static final int DARK_RED = Color.parseColor("#ff0505");
+    private static final int DARK_YELLOW = Color.parseColor("#ff8c00");
+
+    private static final Pair<Integer, Integer> POSITIVE = new Pair<>(LIGHT_GREEN, DARK_GREEN);
+    private static final Pair<Integer, Integer> NEGATIVE = new Pair<>(LIGHT_RED, DARK_RED);
+    private static final Pair<Integer, Integer> COUNTER = new Pair<>(LIGHT_YELLOW, DARK_YELLOW);
+    private static final Pair<Integer, Integer> DISABLED = new Pair<>(LIGHT_GRAY, DARK_GRAY);
 
     private SimpleListAdapter<Balancer> balancerListAdapter;
 
@@ -151,7 +161,7 @@ public class AllBalancersFragment extends Fragment
             case Balancer.LIMITER:
                 return getReplenishedText(l, now);
             case Balancer.COUNTER:
-                return getCounterText(l, now);
+                return getCounterText();
             default:
                 throw new IllegalStateException("Unknown balancer type: " + l.getType());
         }
@@ -175,19 +185,33 @@ public class AllBalancersFragment extends Fragment
         return String.format("Limiter - Replenished: %s", when);
     }
 
-    private String getCounterText(Balancer balancer, LocalDateTime now)
+    private String getCounterText()
     {
         return "Counter";
     }
 
     private Integer getBackgroundColor(Balancer balancer)
     {
-        return isBalancerGreaterThanZero(balancer) ? LIGHT_GREEN : LIGHT_GRAY;
+        return getColor(balancer).first;
     }
 
     private int getBorderColor(Balancer balancer)
     {
-        return isBalancerGreaterThanZero(balancer) ? DARK_GREEN : DARK_GRAY;
+        return getColor(balancer).second;
+    }
+
+    private Pair<Integer, Integer> getColor(Balancer balancer)
+    {
+        switch (balancer.getType())
+        {
+            case Balancer.COUNTER:
+                return COUNTER;
+            case Balancer.LIMITER:
+            case Balancer.ENHANCER:
+                return isBalancerGreaterThanZero(balancer) ? POSITIVE : NEGATIVE;
+            default:
+                return DISABLED;
+        }
     }
 
     private static boolean isBalancerGreaterThanZero(Balancer balancer)

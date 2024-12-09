@@ -7,6 +7,7 @@ import org.joda.time.LocalTime;
 import java.util.List;
 
 import stoneframe.serena.model.Serena;
+import stoneframe.serena.model.balancers.BalancerManager;
 import stoneframe.serena.model.chores.Chore;
 import stoneframe.serena.model.chores.ChoreManager;
 import stoneframe.serena.model.chores.ChoreSelector;
@@ -73,6 +74,11 @@ public class TestContext
     public RoutineManager getRoutineManager()
     {
         return serena.getRoutineManager();
+    }
+
+    public BalancerManager getBalancerManager()
+    {
+        return serena.getBalancerManager();
     }
 
     private static class EffortTrackerWrapper implements EffortTracker

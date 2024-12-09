@@ -156,7 +156,7 @@ public class Balancer extends Revertible<BalancerData>
 
         int newCurrentAvailable = getAvailable(now);
 
-        data().previousTransactions = newCurrentAvailable - oldCurrentAvailable;
+        data().previousTransactions = oldCurrentAvailable - newCurrentAvailable;
     }
 
     void setMaxValue(Integer maxValue, LocalDateTime now)

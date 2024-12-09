@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 
 import stoneframe.serena.model.Container;
 import stoneframe.serena.model.Storage;
+import stoneframe.serena.model.balancers.BalancerContainer;
 import stoneframe.serena.model.chores.ChoreContainer;
 import stoneframe.serena.model.chores.ChoreSelector;
 import stoneframe.serena.model.chores.EffortTracker;
@@ -18,6 +19,7 @@ public class MockStorage implements Storage
         container = new Container();
         container.ChoreContainer = new ChoreContainer(effortTracker, choreSelector);
         container.RoutineContainer = new RoutineContainer();
+        container.BalancerContainer = new BalancerContainer();
     }
 
     @Nullable

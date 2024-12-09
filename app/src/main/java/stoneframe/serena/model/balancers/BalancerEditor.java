@@ -17,7 +17,7 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
     private final PropertyUtil<Integer> changePerDayProperty;
     private final PropertyUtil<Boolean> isQuickAllowableProperty;
 
-    public BalancerEditor(BalancerManager balancerManager, Balancer balancer, TimeService timeService)
+    BalancerEditor(BalancerManager balancerManager, Balancer balancer, TimeService timeService)
     {
         super(timeService);
 

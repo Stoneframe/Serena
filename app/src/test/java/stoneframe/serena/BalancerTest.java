@@ -2,7 +2,6 @@ package stoneframe.serena;
 
 import static org.junit.Assert.assertEquals;
 
-import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +51,6 @@ public class BalancerTest
         context.setCurrentTime(now);
 
         Balancer balancer = balancerManager.createBalancer("Test");
-
         BalancerEditor balancerEditor = balancerManager.getBalancerEditor(balancer);
 
         // ACT
@@ -71,7 +69,6 @@ public class BalancerTest
         context.setCurrentTime(now);
 
         Balancer balancer = balancerManager.createBalancer("Test");
-
         BalancerEditor balancerEditor = balancerManager.getBalancerEditor(balancer);
 
         // ACT
@@ -79,5 +76,55 @@ public class BalancerTest
 
         // ASSERT
         assertEquals(0, balancer.getAvailable(now));
+    }
+
+    @Test
+    public void setChangePerDay_changeBalancerFromEnhancerToLimiterOneDayLater_availableIsUnchanged()
+    {
+        // ARRANGE
+        LocalDateTime starTime = LocalDateTime.now();
+
+        context.setCurrentTime(starTime);
+
+        Balancer balancer = balancerManager.createBalancer("Test");
+        BalancerEditor balancerEditor = balancerManager.getBalancerEditor(balancer);
+        balancerEditor.setChangePerDay(-50);
+
+        context.setCurrentTime(starTime.plusDays(1));
+
+        // ACT
+        int oldAvailable = balancer.getAvailable(starTime.plusDays(1));
+
+        balancerEditor.setChangePerDay(50);
+
+        int newAvailable = balancer.getAvailable(starTime.plusDays(1));
+
+        // ASSERT
+        assertEquals(oldAvailable, newAvailable);
+    }
+
+    @Test
+    public void setChangePerDay_changeBalancerFromLimiterToEnhancerOneDayLater_availableIsUnchanged()
+    {
+        // ARRANGE
+        LocalDateTime starTime = LocalDateTime.now();
+
+        context.setCurrentTime(starTime);
+
+        Balancer balancer = balancerManager.createBalancer("Test");
+        BalancerEditor balancerEditor = balancerManager.getBalancerEditor(balancer);
+        balancerEditor.setChangePerDay(50);
+
+        context.setCurrentTime(starTime.plusDays(1));
+
+        // ACT
+        int oldAvailable = balancer.getAvailable(starTime.plusDays(1));
+
+        balancerEditor.setChangePerDay(-50);
+
+        int newAvailable = balancer.getAvailable(starTime.plusDays(1));
+
+        // ASSERT
+        assertEquals(oldAvailable, newAvailable);
     }
 }

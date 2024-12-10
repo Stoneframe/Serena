@@ -26,6 +26,8 @@ class BalancerData
 
     boolean allowQuick;
 
+    boolean isEnabled;
+
     BalancerData(
         String name,
         String unit,
@@ -34,7 +36,8 @@ class BalancerData
         int changePerDay,
         Integer maxValue,
         Integer minValue,
-        boolean allowQuick)
+        boolean allowQuick,
+        boolean isEnabled)
     {
         this.name = name;
         this.unit = unit;
@@ -44,5 +47,6 @@ class BalancerData
         this.maxValue = maxValue;
         this.minValue = minValue;
         this.allowQuick = allowQuick;
+        this.isEnabled = isEnabled;
     }
 }

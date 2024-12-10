@@ -16,6 +16,7 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
     private final PropertyUtil<String> unitProperty;
     private final PropertyUtil<Integer> changePerDayProperty;
     private final PropertyUtil<Boolean> isQuickAllowableProperty;
+    private final PropertyUtil<Boolean> isEnabledProperty;
 
     BalancerEditor(BalancerManager balancerManager, Balancer balancer, TimeService timeService)
     {
@@ -28,6 +29,17 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
         unitProperty = getUnitProperty();
         changePerDayProperty = getChangePerDayProperty();
         isQuickAllowableProperty = getIsQuickAllowableProperty();
+        isEnabledProperty = getIsEnabledProperty();
+    }
+
+    public boolean isEnabled()
+    {
+        return isEnabledProperty.getValue();
+    }
+
+    public void setEnabled(boolean isEnabled)
+    {
+        isEnabledProperty.setValue(isEnabled);
     }
 
     public String getName()
@@ -223,6 +235,14 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
             v -> notifyListeners(l -> l.isQuickChanged(v)));
     }
 
+    private @NonNull PropertyUtil<Boolean> getIsEnabledProperty()
+    {
+        return new PropertyUtil<>(
+            balancer::isEnabled,
+            balancer::setEnabled,
+            v -> notifyListeners(l -> l.isEnabledChanged(v)));
+    }
+
     public interface BalanceEditorListener
     {
         void nameChanged();
@@ -230,6 +250,8 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
         void unitChanged();
 
         void isQuickChanged(boolean isAllowed);
+
+        void isEnabledChanged(boolean isEnabled);
 
         void changePerDayChanged();
 

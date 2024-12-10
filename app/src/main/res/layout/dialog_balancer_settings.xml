@@ -1,112 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="Settings"
-        android:textSize="25sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="Enter name:"
-        android:textSize="18sp" />
-
-    <EditText
-        android:id="@+id/editTextName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Name"
-        android:inputType="textCapSentences" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="Enter unit:"
-        android:textSize="18sp" />
-
-    <EditText
-        android:id="@+id/editTextUnit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Unit"
-        android:inputType="text" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="Enter change per day:"
-        android:textSize="18sp" />
-
-    <EditText
-        android:id="@+id/editTextTransactionPerDay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Change per day"
-        android:inputType="numberSigned" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="Enter max value:"
-        android:textSize="18sp" />
-
-    <EditText
-        android:id="@+id/editTextMaxValue"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Max value"
-        android:inputType="numberSigned" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="Enter min value:"
-        android:textSize="18sp" />
-
-    <EditText
-        android:id="@+id/editTextMinValue"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Min value"
-        android:inputType="numberSigned" />
-
     <CheckBox
-        android:id="@+id/checkBoxAllowQuick"
-        android:layout_width="match_parent"
+        android:id="@+id/checkBoxIsEnabled"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Allow quick" />
+        android:layout_alignParentEnd="true"
+        android:text="Enabled" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="end"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/buttonCancel"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel" />
+            android:layout_marginBottom="8dp"
+            android:text="Settings"
+            android:textSize="25sp" />
 
-        <Button
-            android:id="@+id/buttonOk"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="OK" />
+            android:text="Enter name:"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/editTextName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="Name"
+            android:inputType="textCapSentences" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter unit:"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/editTextUnit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="Unit"
+            android:inputType="text" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter change per day:"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/editTextTransactionPerDay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="Change per day"
+            android:inputType="numberSigned" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter max value:"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/editTextMaxValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="Max value"
+            android:inputType="numberSigned" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter min value:"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/editTextMinValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="Min value"
+            android:inputType="numberSigned" />
+
+        <CheckBox
+            android:id="@+id/checkBoxAllowQuick"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Allow quick" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel" />
+
+            <Button
+                android:id="@+id/buttonOk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="OK" />
+
+        </LinearLayout>
+
     </LinearLayout>
-</LinearLayout>
+
+</RelativeLayout>

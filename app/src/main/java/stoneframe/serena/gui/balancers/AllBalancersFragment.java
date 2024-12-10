@@ -20,6 +20,9 @@ import androidx.fragment.app.Fragment;
 
 import org.joda.time.LocalDateTime;
 
+import java.util.Comparator;
+import java.util.stream.Collectors;
+
 import stoneframe.serena.R;
 import stoneframe.serena.gui.GlobalState;
 import stoneframe.serena.gui.util.EditTextButtonEnabledLink;
@@ -66,7 +69,10 @@ public class AllBalancersFragment extends Fragment
 
         balancerListAdapter = new SimpleListAdapterBuilder<>(
             requireContext(),
-            balancerManager::getBalancers,
+            () -> balancerManager.getBalancers()
+                .stream()
+                .sorted(new BalancerComparator())
+                .collect(Collectors.toList()),
             Balancer::getName)
             .withSecondaryTextFunction(this::getAvailableText)
             .withBottomTextFunction(this::getTimeToZeroText)
@@ -145,25 +151,29 @@ public class AllBalancersFragment extends Fragment
     }
 
     @SuppressLint("DefaultLocale")
-    private @NonNull String getAvailableText(Balancer l)
+    private @NonNull String getAvailableText(Balancer balancer)
     {
-        return String.format("Remaining: %d", l.getAvailable(LocalDateTime.now()));
+        return balancer.isEnabled()
+            ? String.format("Remaining: %d", balancer.getAvailable(LocalDateTime.now()))
+            : "";
     }
 
-    private @NonNull String getTimeToZeroText(Balancer l)
+    private @NonNull String getTimeToZeroText(Balancer balancer)
     {
+        if (!balancer.isEnabled()) return "Disabled";
+
         LocalDateTime now = LocalDateTime.now();
 
-        switch (l.getType())
+        switch (balancer.getType())
         {
             case Balancer.ENHANCER:
-                return getDepletedText(l, now);
+                return getDepletedText(balancer, now);
             case Balancer.LIMITER:
-                return getReplenishedText(l, now);
+                return getReplenishedText(balancer, now);
             case Balancer.COUNTER:
                 return getCounterText();
             default:
-                throw new IllegalStateException("Unknown balancer type: " + l.getType());
+                throw new IllegalStateException("Unknown balancer type: " + balancer.getType());
         }
     }
 
@@ -202,6 +212,8 @@ public class AllBalancersFragment extends Fragment
 
     private Pair<Integer, Integer> getColor(Balancer balancer)
     {
+        if (!balancer.isEnabled()) return DISABLED;
+
         switch (balancer.getType())
         {
             case Balancer.COUNTER:
@@ -217,5 +229,43 @@ public class AllBalancersFragment extends Fragment
     private static boolean isBalancerGreaterThanZero(Balancer balancer)
     {
         return balancer.getAvailable(LocalDateTime.now()) >= 0;
+    }
+
+    private static class BalancerComparator implements Comparator<Balancer>
+    {
+        @Override
+        public int compare(Balancer balancer1, Balancer balancer2)
+        {
+            int compare;
+
+            if ((compare = -Boolean.compare(balancer1.isEnabled(), balancer2.isEnabled())) != 0)
+            {
+                return compare;
+            }
+
+            if ((compare = Integer.compare(
+                getOrder(balancer1.getType()),
+                getOrder(balancer2.getType()))) != 0)
+            {
+                return compare;
+            }
+
+            return balancer1.getName().compareTo(balancer2.getName());
+        }
+
+        private static int getOrder(int balancerType)
+        {
+            switch (balancerType)
+            {
+                case Balancer.LIMITER:
+                    return 0;
+                case Balancer.ENHANCER:
+                    return 1;
+                case Balancer.COUNTER:
+                    return 2;
+                default:
+                    return 3;
+            }
+        }
     }
 }

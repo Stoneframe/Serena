@@ -136,6 +136,12 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
     }
 
     @Override
+    public void isEnabledChanged(boolean isEnabled)
+    {
+
+    }
+
+    @Override
     public void changePerDayChanged()
     {
 
@@ -425,6 +431,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         View dialogView = inflater.inflate(R.layout.dialog_balancer_settings, null);
         builder.setView(dialogView);
 
+        CheckBox checkBoxIsEnabled = dialogView.findViewById(R.id.checkBoxIsEnabled);
         EditText editTextName = dialogView.findViewById(R.id.editTextName);
         EditText editTextUnit = dialogView.findViewById(R.id.editTextUnit);
         EditText editTextChangePerDay = dialogView.findViewById(R.id.editTextTransactionPerDay);
@@ -434,6 +441,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         Button buttonCancel = dialogView.findViewById(R.id.buttonCancel);
         Button buttonOk = dialogView.findViewById(R.id.buttonOk);
 
+        checkBoxIsEnabled.setChecked(balancerEditor.isEnabled());
         editTextName.setText(balancerEditor.getName());
         editTextUnit.setText(balancerEditor.getUnit());
         editTextChangePerDay.setText(String.valueOf(balancerEditor.getChangePerDay()));
@@ -456,6 +464,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
 
             if (!changePerDay.isEmpty())
             {
+                balancerEditor.setEnabled(checkBoxIsEnabled.isChecked());
                 balancerEditor.setName(editTextName.getText().toString());
                 balancerEditor.setUnit(editTextUnit.getText().toString());
                 balancerEditor.setMaxValue(getIntegerValue(editTextMaxValue));

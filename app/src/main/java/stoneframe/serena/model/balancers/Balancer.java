@@ -32,7 +32,8 @@ public class Balancer extends Revertible<BalancerData>
             changePerDay,
             null,
             null,
-            allowQuick));
+            allowQuick,
+            true));
     }
 
     public int getType()
@@ -93,6 +94,16 @@ public class Balancer extends Revertible<BalancerData>
     public int getMinValue()
     {
         return data().minValue != null ? data().minValue : Integer.MIN_VALUE;
+    }
+
+    public boolean isEnabled()
+    {
+        return data().isEnabled;
+    }
+
+    void setEnabled(boolean isEnabled)
+    {
+        this.data().isEnabled = isEnabled;
     }
 
     public LocalDateTime getTimeToZero(LocalDateTime now)
@@ -159,6 +170,11 @@ public class Balancer extends Revertible<BalancerData>
         data().previousTransactions = oldCurrentAvailable - newCurrentAvailable;
     }
 
+    void setAllowQuick(boolean allowQuick)
+    {
+        data().allowQuick = allowQuick;
+    }
+
     void setMaxValue(Integer maxValue, LocalDateTime now)
     {
         data().maxValue = maxValue;
@@ -171,11 +187,6 @@ public class Balancer extends Revertible<BalancerData>
         data().minValue = minValue;
 
         updatePreviousTransactions(now);
-    }
-
-    void setAllowQuick(boolean allowQuick)
-    {
-        data().allowQuick = allowQuick;
     }
 
     void addTransactionType(CustomTransactionType transactionType)

@@ -1,6 +1,6 @@
 package stoneframe.serena.model.balancers;
 
-import android.util.Pair;
+import androidx.core.util.Pair;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;

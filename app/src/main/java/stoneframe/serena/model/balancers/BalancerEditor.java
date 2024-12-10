@@ -152,7 +152,7 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
 
     public void addTransaction(String name, int transactionAmount)
     {
-        balancer.addTransaction(new Transaction(name, transactionAmount), getNow());
+        balancer.addTransaction(name, transactionAmount, getNow());
 
         notifyListeners(BalanceEditorListener::transactionAdded);
     }

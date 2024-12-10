@@ -127,4 +127,106 @@ public class BalancerTest
         // ASSERT
         assertEquals(oldAvailable, newAvailable);
     }
+
+    @Test
+    public void setChangePerDay_changeBalancerFromLimiterToEnhancerWithTransaction_availableIsUnchanged()
+    {
+        // ARRANGE
+        LocalDateTime now = LocalDateTime.now();
+
+        context.setCurrentTime(now);
+
+        Balancer balancer = balancerManager.createBalancer("Test");
+        BalancerEditor balancerEditor = balancerManager.getBalancerEditor(balancer);
+        balancerEditor.setChangePerDay(50);
+
+        balancerEditor.addTransaction("Test", 50);
+
+        // ACT
+        int oldAvailable = balancer.getAvailable(now);
+
+        balancerEditor.setChangePerDay(-50);
+
+        int newAvailable = balancer.getAvailable(now);
+
+        // ASSERT
+        assertEquals(oldAvailable, newAvailable);
+    }
+
+    @Test
+    public void addTransaction_balancerIsCounter_positiveTransactionReducesAvailable()
+    {
+        // ARRANGE
+        LocalDateTime now = LocalDateTime.now();
+
+        context.setCurrentTime(now);
+
+        Balancer balancer = balancerManager.createBalancer("Test");
+        BalancerEditor balancerEditor = balancerManager.getBalancerEditor(balancer);
+
+        // ACT
+        balancerEditor.addTransaction("Test", 10);
+
+        // ASSERT
+        assertEquals(-10, balancer.getAvailable(now));
+    }
+
+    @Test
+    public void addTransaction_balancerIsLimiter_positiveTransactionReducesAvailable()
+    {
+        // ARRANGE
+        LocalDateTime now = LocalDateTime.now();
+
+        context.setCurrentTime(now);
+
+        Balancer balancer = balancerManager.createBalancer("Test");
+        BalancerEditor balancerEditor = balancerManager.getBalancerEditor(balancer);
+        balancerEditor.setChangePerDay(1);
+
+        // ACT
+        balancerEditor.addTransaction("Test", 10);
+
+        // ASSERT
+        assertEquals(-10, balancer.getAvailable(now));
+    }
+
+    @Test
+    public void addTransaction_balancerIsEnhancer_positiveTransactionIncreaseAvailable()
+    {
+        // ARRANGE
+        LocalDateTime now = LocalDateTime.now();
+
+        context.setCurrentTime(now);
+
+        Balancer balancer = balancerManager.createBalancer("Test");
+        BalancerEditor balancerEditor = balancerManager.getBalancerEditor(balancer);
+        balancerEditor.setChangePerDay(-1);
+
+        // ACT
+        balancerEditor.addTransaction("Test", 10);
+
+        // ASSERT
+        assertEquals(10, balancer.getAvailable(now));
+    }
+
+    @Test
+    public void addTransaction_balancerIsLimiterAtMaxValue_newValueSubtractsFromMaxValue()
+    {
+        // ARRANGE
+        LocalDateTime now = LocalDateTime.now();
+
+        context.setCurrentTime(now);
+
+        Balancer balancer = balancerManager.createBalancer("Test");
+        BalancerEditor balancerEditor = balancerManager.getBalancerEditor(balancer);
+        balancerEditor.setChangePerDay(1);
+        balancerEditor.setMaxValue(10);
+        balancerEditor.addTransaction("Initial", -20);
+
+        // ACT
+        balancerEditor.addTransaction("Test", 5);
+
+        // ASSERT
+        assertEquals(5, balancer.getAvailable(now));
+    }
 }

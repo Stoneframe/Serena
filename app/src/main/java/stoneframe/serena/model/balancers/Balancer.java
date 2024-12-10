@@ -1,6 +1,6 @@
 package stoneframe.serena.model.balancers;
 
-import android.util.Pair;
+import androidx.core.util.Pair;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -199,12 +199,13 @@ public class Balancer extends Revertible<BalancerData>
         data().transactionTypes.remove(transactionType);
     }
 
-    void addTransaction(Transaction transaction, LocalDateTime now)
+    void addTransaction(String name, int transactionAmount, LocalDateTime now)
     {
         updatePreviousTransactions(now);
         clearOldTransactions(now);
 
-        data().transactions.add(new Pair<>(transaction, now));
+        data().transactions.add(
+            new Pair<>(new Transaction(name, getTypeModifier() * transactionAmount), now));
     }
 
     void removeTransaction(Transaction transaction)
@@ -253,5 +254,19 @@ public class Balancer extends Revertible<BalancerData>
         return (int)(data().changePerDay * minutes.getMinutes() / MINUTES_PER_DAY)
             + data().previousTransactions
             + recentTransactions;
+    }
+
+    private int getTypeModifier()
+    {
+        switch (getType())
+        {
+            case COUNTER:
+            case LIMITER:
+                return -1;
+            case ENHANCER:
+                return 1;
+            default:
+                throw new IllegalStateException("Unknown type: " + getType());
+        }
     }
 }

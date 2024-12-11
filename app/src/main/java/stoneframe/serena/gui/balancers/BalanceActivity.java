@@ -34,10 +34,10 @@ import stoneframe.serena.gui.util.EditTextCriteria;
 import stoneframe.serena.gui.util.SimpleListAdapter;
 import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
 import stoneframe.serena.model.Serena;
-import stoneframe.serena.model.balancers.CustomTransactionType;
-import stoneframe.serena.model.balancers.TransactionType;
 import stoneframe.serena.model.balancers.Balancer;
 import stoneframe.serena.model.balancers.BalancerEditor;
+import stoneframe.serena.model.balancers.CustomTransactionType;
+import stoneframe.serena.model.balancers.TransactionType;
 
 public class BalanceActivity extends AppCompatActivity implements BalancerEditor.BalanceEditorListener
 {
@@ -138,7 +138,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
     @Override
     public void isEnabledChanged(boolean isEnabled)
     {
-
+        setActivityEnabled(isEnabled);
     }
 
     @Override
@@ -283,6 +283,8 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         new EditTextButtonEnabledLink(
             buttonAddTransaction,
             new EditTextCriteria(editTextAmount, EditTextCriteria.IS_VALID_INT));
+
+        setActivityEnabled(balancer.isEnabled());
     }
 
     @Override
@@ -310,7 +312,10 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
     {
         showTransactionTypeDialog(null, null, null, (name, calories, isFavorite) ->
         {
-            balancerEditor.addTransactionType(new CustomTransactionType(name, calories, isFavorite));
+            balancerEditor.addTransactionType(new CustomTransactionType(
+                name,
+                calories,
+                isFavorite));
             serena.save();
         });
     }
@@ -413,8 +418,16 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
 
     private void updateAvailable()
     {
-        textViewTransactionAvailable.setText(
-            String.format("%s %s", balancerEditor.getAvailable(), balancerEditor.getUnit()));
+        if (!balancerEditor.isEnabled())
+        {
+            textViewTransactionAvailable.setText("-");
+        }
+        else
+        {
+            textViewTransactionAvailable.setText(
+                String.format("%s %s", balancerEditor.getAvailable(), balancerEditor.getUnit()));
+        }
+
     }
 
     private void updateHint()
@@ -422,6 +435,24 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         String hint = balancerEditor.getUnit().isEmpty() ? "amount" : balancerEditor.getUnit();
 
         editTextAmount.setHint(hint);
+    }
+
+    private void setActivityEnabled(boolean isEnabled)
+    {
+        buttonNewTransactionType.setEnabled(isEnabled);
+        buttonAddTransaction.setEnabled(isEnabled);
+        spinnerTransactionType.setEnabled(isEnabled);
+        favoritesList.setEnabled(isEnabled);
+
+        if (isEnabled)
+        {
+            updateSelectedTransactionType();
+        }
+        else
+        {
+            buttonEditTransactionType.setEnabled(false);
+            buttonRemoveTransactionType.setEnabled(false);
+        }
     }
 
     private void showSettingsDialog()

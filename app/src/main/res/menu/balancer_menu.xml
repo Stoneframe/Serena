@@ -4,6 +4,9 @@
         android:id="@+id/action_settings"
         android:title="Settings" />
     <item
+        android:id="@+id/action_reset"
+        android:title="Reset" />
+    <item
         android:id="@+id/action_remove"
         android:title="Remove" />
 </menu>

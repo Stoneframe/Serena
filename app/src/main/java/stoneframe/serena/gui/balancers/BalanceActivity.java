@@ -81,6 +81,12 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
             return true;
         }
 
+        if (itemId == R.id.action_reset)
+        {
+            resetBalancer();
+            return true;
+        }
+
         if (itemId == R.id.action_remove)
         {
             removeBalancer();
@@ -370,6 +376,21 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         balancerEditor.addTransaction(transactionType.getName(), enteredTransactionAmount);
 
         serena.save();
+    }
+
+    private void resetBalancer()
+    {
+        DialogUtils.showConfirmationDialog(
+            this,
+            "Reset Balancer",
+            "Are you sure you want to reset the balancer?",
+            isConfirmed ->
+            {
+                if (!isConfirmed) return;
+
+                balancerEditor.reset();
+                serena.save();
+            });
     }
 
     private void removeBalancer()

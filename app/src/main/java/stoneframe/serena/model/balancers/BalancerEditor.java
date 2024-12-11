@@ -191,6 +191,13 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
         notifyListeners(BalanceEditorListener::transactionTypesChanged);
     }
 
+    public void reset()
+    {
+        balancer.reset(getNow());
+
+        notifyListeners(BalanceEditorListener::availableChanged);
+    }
+
     private boolean hasMaxValueChanged(Integer maxValue)
     {
         return maxValue == null && balancer.hasMaxValue()

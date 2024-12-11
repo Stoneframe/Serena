@@ -213,6 +213,17 @@ public class Balancer extends Revertible<BalancerData>
         data().transactions.removeIf(p -> p.first.equals(transaction));
     }
 
+    void reset(LocalDateTime now)
+    {
+        data().transactions.clear();
+        data().startDate = now.toLocalDate();
+        data().previousTransactions = 0;
+
+        int currentAvailable = getTotalAvailable(now);
+
+        data().previousTransactions -= currentAvailable;
+    }
+
     private void updatePreviousTransactions(LocalDateTime now)
     {
         int totalAvailable = getTotalAvailable(now);

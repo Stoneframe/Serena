@@ -28,7 +28,6 @@ public class UpgradeScriptVersion18 implements UpgradeScript
             JSONObject data = balancersJSONObject.getJSONObject("data");
 
             invertAmountInTransactionTypes(data);
-            invertAmoutInTransactions(data);
         }
 
         return jsonObject;
@@ -45,22 +44,6 @@ public class UpgradeScriptVersion18 implements UpgradeScript
             int amount = transactionType.getInt("amount");
 
             transactionType.put("amount", -amount);
-        }
-    }
-
-    private static void invertAmoutInTransactions(JSONObject data) throws JSONException
-    {
-        JSONArray transactions = data.getJSONArray("transactions");
-
-        for (int i = 0; i < transactions.length(); i++)
-        {
-            JSONObject transaction = transactions.getJSONObject(i);
-
-            JSONObject first = transaction.getJSONObject("first");
-
-            int amount = first.getInt("amount");
-
-            first.put("amount", -amount);
         }
     }
 }

@@ -23,14 +23,24 @@ public class UpgradeScriptVersion18 implements UpgradeScript
 
         for (int i = 0; i < balancers.length(); i++)
         {
-            JSONObject balancersJSONObject = balancers.getJSONObject(i);
+            JSONObject balancer = balancers.getJSONObject(i);
 
-            JSONObject data = balancersJSONObject.getJSONObject("data");
+            JSONObject data = balancer.getJSONObject("data");
+
+            if (isEnhancer(data))
+            {
+                continue;
+            }
 
             invertAmountInTransactionTypes(data);
         }
 
         return jsonObject;
+    }
+
+    private boolean isEnhancer(JSONObject data) throws JSONException
+    {
+        return data.getInt("changePerDay") < 0;
     }
 
     private static void invertAmountInTransactionTypes(JSONObject data) throws JSONException

@@ -8,7 +8,7 @@ public class Checklist extends Revertible<ChecklistData>
 {
     Checklist(String name)
     {
-        super(new ChecklistData(name.trim()));
+        super(new ChecklistData(name));
     }
 
     public String getName()
@@ -23,7 +23,7 @@ public class Checklist extends Revertible<ChecklistData>
 
     void setName(String name)
     {
-        data().name = name.trim();
+        data().name = name;
     }
 
     void addItem(ChecklistItem item)

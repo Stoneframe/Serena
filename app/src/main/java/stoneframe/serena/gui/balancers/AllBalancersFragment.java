@@ -126,7 +126,7 @@ public class AllBalancersFragment extends Fragment
 
         builder.setPositiveButton("OK", (dialog, which) ->
         {
-            String balancerName = balancerNameText.getText().toString();
+            String balancerName = balancerNameText.getText().toString().trim();
 
             Balancer balancer = balancerManager.createBalancer(balancerName);
 

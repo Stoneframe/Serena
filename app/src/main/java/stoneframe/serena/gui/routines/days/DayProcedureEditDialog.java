@@ -102,7 +102,7 @@ public class DayProcedureEditDialog
             int hour = timePicker.getHour();
             int minute = timePicker.getMinute();
 
-            String customText = descriptionText.getText().toString();
+            String customText = descriptionText.getText().toString().trim();
 
             listener.onProcedureComplete(new Procedure(customText, new LocalTime(hour, minute)));
 

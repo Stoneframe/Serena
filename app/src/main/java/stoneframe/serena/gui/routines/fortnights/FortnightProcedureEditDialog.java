@@ -141,7 +141,7 @@ public class FortnightProcedureEditDialog
         {
             int hour = timePicker.getHour();
             int minute = timePicker.getMinute();
-            String description = editText.getText().toString();
+            String description = editText.getText().toString().trim();
             int week = getSelectedWeekNumber(radioGroup);
             int weekDay = weekdaySpinner.getSelectedItemPosition() + 1;
 

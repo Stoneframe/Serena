@@ -20,7 +20,7 @@ public class FortnightRoutine extends Routine<FortnightRoutineData>
         super(
             FORTNIGHT_ROUTINE,
             new FortnightRoutineData(
-                name.trim(),
+                name,
                 now,
                 new Week(1, getMondayOfWeek(startDate).plusWeeks(0)),
                 new Week(1, getMondayOfWeek(startDate).plusWeeks(1))));

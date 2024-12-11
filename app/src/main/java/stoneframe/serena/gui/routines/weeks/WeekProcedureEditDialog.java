@@ -122,7 +122,7 @@ public class WeekProcedureEditDialog
         {
             int hourOfDay = timePicker.getHour();
             int minute = timePicker.getMinute();
-            String description = editText.getText().toString();
+            String description = editText.getText().toString().trim();
             int weekDayIndex = weekdaySpinner.getSelectedItemPosition() + 1;
 
             listener.onProcedureComplete(

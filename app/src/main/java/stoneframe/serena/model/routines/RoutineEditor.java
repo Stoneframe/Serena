@@ -37,7 +37,7 @@ public abstract class RoutineEditor<TListener extends RoutineEditor.RoutineEdito
 
     public void setName(String name)
     {
-        nameProperty.setValue(name.trim());
+        nameProperty.setValue(name);
     }
 
     public boolean isEnabled()

@@ -11,7 +11,7 @@ public class Task extends Revertible<TaskData>
     Task(String description, LocalDate deadline, LocalDate ignoreBefore)
     {
         super(new TaskData(
-            description.trim(),
+            description,
             deadline,
             ignoreBefore,
             null,
@@ -45,7 +45,7 @@ public class Task extends Revertible<TaskData>
 
     void setDescription(String description)
     {
-        data().description = description.trim();
+        data().description = description;
     }
 
     void setDeadline(LocalDate deadline)

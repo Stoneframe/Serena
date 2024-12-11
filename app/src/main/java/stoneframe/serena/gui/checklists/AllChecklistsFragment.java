@@ -101,7 +101,7 @@ public class AllChecklistsFragment extends Fragment
 
         builder.setPositiveButton("OK", (dialog, which) ->
         {
-            String checklistName = checklistNameText.getText().toString();
+            String checklistName = checklistNameText.getText().toString().trim();
 
             checklistManager.createChecklist(checklistName);
             checklistAdapter.notifyDataSetChanged();

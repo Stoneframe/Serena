@@ -491,13 +491,13 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
 
         buttonOk.setOnClickListener(v ->
         {
-            String changePerDay = editTextChangePerDay.getText().toString();
+            String changePerDay = editTextChangePerDay.getText().toString().trim();
 
             if (!changePerDay.isEmpty())
             {
                 balancerEditor.setEnabled(checkBoxIsEnabled.isChecked());
-                balancerEditor.setName(editTextName.getText().toString());
-                balancerEditor.setUnit(editTextUnit.getText().toString());
+                balancerEditor.setName(editTextName.getText().toString().trim());
+                balancerEditor.setUnit(editTextUnit.getText().toString().trim());
                 balancerEditor.setMaxValue(getIntegerValue(editTextMaxValue));
                 balancerEditor.setMinValue(getIntegerValue(editTextMinValue));
                 balancerEditor.setAllowQuick(checkBoxAllowQuick.isChecked());
@@ -567,7 +567,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         buttonCancel.setOnClickListener(v -> dialog.dismiss());
         buttonOk.setOnClickListener(v ->
         {
-            String name = editTextName.getText().toString();
+            String name = editTextName.getText().toString().trim();
             int amount = Integer.parseInt(editTextAmount.getText().toString());
             boolean isFavorite = checkBoxFavorite.isChecked();
 

@@ -70,21 +70,6 @@ public class ChoreEditor extends Editor<ChoreEditor.ChoreEditorListener>
         effortProperty.setValue(effort);
     }
 
-    public Repetition getRepetition()
-    {
-        return chore.getRepetition();
-    }
-
-    public void setRepetitionType(int repetitionType)
-    {
-        chore.setRepetitionType(repetitionType);
-    }
-
-    public void updateNext()
-    {
-        chore.getRepetition().updateNext(getToday());
-    }
-
     public void save()
     {
         if (!choreManager.containsChore(chore))
@@ -136,6 +121,21 @@ public class ChoreEditor extends Editor<ChoreEditor.ChoreEditorListener>
             chore::getEffort,
             chore::setEffort,
             v -> notifyListeners(ChoreEditorListener::effortChanged));
+    }
+
+    public Repetition getRepetition()
+    {
+        return chore.getRepetition();
+    }
+
+    public void setRepetitionType(int repetitionType)
+    {
+        chore.setRepetitionType(repetitionType);
+    }
+
+    public void updateNext()
+    {
+        chore.getRepetition().updateNext(getToday());
     }
 
     public interface ChoreEditorListener

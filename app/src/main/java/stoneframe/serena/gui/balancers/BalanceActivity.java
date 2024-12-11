@@ -464,6 +464,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         buttonAddTransaction.setEnabled(isEnabled);
         spinnerTransactionType.setEnabled(isEnabled);
         favoritesList.setEnabled(isEnabled);
+        editTextAmount.setEnabled(isEnabled);
 
         if (isEnabled)
         {

@@ -144,7 +144,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
     @Override
     public void isEnabledChanged(boolean isEnabled)
     {
-        setActivityEnabled(isEnabled);
+        updateActivityEnabled();
     }
 
     @Override
@@ -289,8 +289,6 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         new EditTextButtonEnabledLink(
             buttonAddTransaction,
             new EditTextCriteria(editTextAmount, EditTextCriteria.IS_VALID_INT));
-
-        setActivityEnabled(balancer.isEnabled());
     }
 
     @Override
@@ -303,7 +301,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         updateName();
         updateAvailable();
         updateHint();
-        updateSelectedTransactionType();
+        updateActivityEnabled();
     }
 
     private @NonNull List<TransactionType> getFavoriteTransactionTypes(Balancer balancer)
@@ -428,8 +426,11 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
             editTextAmount.setInputType(InputType.TYPE_NULL);
         }
 
-        buttonEditTransactionType.setEnabled(!selectedTransactionType.isQuick());
-        buttonRemoveTransactionType.setEnabled(!selectedTransactionType.isQuick());
+        if (balancerEditor.isEnabled())
+        {
+            buttonEditTransactionType.setEnabled(!selectedTransactionType.isQuick());
+            buttonRemoveTransactionType.setEnabled(!selectedTransactionType.isQuick());
+        }
     }
 
     private void updateName()
@@ -458,8 +459,10 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         editTextAmount.setHint(hint);
     }
 
-    private void setActivityEnabled(boolean isEnabled)
+    private void updateActivityEnabled()
     {
+        boolean isEnabled = balancerEditor.isEnabled();
+
         buttonNewTransactionType.setEnabled(isEnabled);
         buttonAddTransaction.setEnabled(isEnabled);
         spinnerTransactionType.setEnabled(isEnabled);

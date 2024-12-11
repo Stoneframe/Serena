@@ -25,7 +25,7 @@ public class Balancer extends Revertible<BalancerData>
     Balancer(String name, LocalDate startDate, int changePerDay, boolean allowQuick)
     {
         super(new BalancerData(
-            name,
+            name.trim(),
             null,
             0,
             startDate,
@@ -48,7 +48,7 @@ public class Balancer extends Revertible<BalancerData>
 
     void setName(String name)
     {
-        data().name = name;
+        data().name = name.trim();
     }
 
     public String getUnit()

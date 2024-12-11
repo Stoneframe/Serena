@@ -11,7 +11,7 @@ public class Procedure implements Comparable<Procedure>
 
     public Procedure(String description, @NonNull LocalTime time)
     {
-        this.description = description;
+        this.description = description.trim();
         this.time = time;
     }
 

@@ -12,7 +12,7 @@ public class WeekRoutine extends Routine<WeekRoutineData>
 {
     WeekRoutine(String name, LocalDateTime now)
     {
-        super(WEEK_ROUTINE, new WeekRoutineData(name, now));
+        super(WEEK_ROUTINE, new WeekRoutineData(name.trim(), now));
     }
 
     public Week getWeek()

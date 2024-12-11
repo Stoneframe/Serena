@@ -22,7 +22,7 @@ public class Chore extends Revertible<ChoreData>
             true,
             next,
             null,
-            description,
+            description.trim(),
             priority,
             effort,
             Repetition.Interval,
@@ -105,7 +105,7 @@ public class Chore extends Revertible<ChoreData>
 
     void setDescription(String description)
     {
-        data().description = description;
+        data().description = description.trim();
     }
 
     void setPriority(int priority)

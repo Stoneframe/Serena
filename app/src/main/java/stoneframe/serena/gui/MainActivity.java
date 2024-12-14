@@ -84,11 +84,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(MenuItem item)
     {
-        switch (item.getItemId())
+        int itemId = item.getItemId();
+
+        return goToFragment(itemId);
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    private boolean goToFragment(int fragmentId)
+    {
+        switch (fragmentId)
         {
             case R.id.nav_all_chores:
                 return goToFragment(AllChoresFragment.class);
@@ -231,6 +238,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         });
+
+        goToFragment(R.id.nav_todays);
     }
 
     @Override

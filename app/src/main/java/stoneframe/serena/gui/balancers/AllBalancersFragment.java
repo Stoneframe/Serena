@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 import stoneframe.serena.R;
 import stoneframe.serena.gui.GlobalState;
-import stoneframe.serena.gui.util.EditTextButtonEnabledLink;
+import stoneframe.serena.gui.util.ButtonEnabledLink;
 import stoneframe.serena.gui.util.EditTextCriteria;
 import stoneframe.serena.gui.util.SimpleListAdapter;
 import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
@@ -101,7 +101,7 @@ public class AllBalancersFragment extends Fragment
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
 
-            new EditTextButtonEnabledLink(
+            new ButtonEnabledLink(
                 alertDialog.getButton(DialogInterface.BUTTON_POSITIVE),
                 new EditTextCriteria(balancerNameText, EditTextCriteria.IS_NOT_EMPTY));
         });

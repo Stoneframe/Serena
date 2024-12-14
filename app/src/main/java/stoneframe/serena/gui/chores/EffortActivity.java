@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 
 import stoneframe.serena.R;
 import stoneframe.serena.gui.GlobalState;
-import stoneframe.serena.gui.util.EditTextButtonEnabledLink;
+import stoneframe.serena.gui.util.ButtonEnabledLink;
 import stoneframe.serena.gui.util.EditTextCriteria;
 import stoneframe.serena.model.Serena;
 import stoneframe.serena.model.chores.Chore;
@@ -84,7 +84,7 @@ public class EffortActivity extends AppCompatActivity implements TextWatcher
         cancelButton.setOnClickListener(v -> onCancelClick());
         saveButton.setOnClickListener(v -> onSaveClick());
 
-        new EditTextButtonEnabledLink(
+        new ButtonEnabledLink(
             saveButton,
             new EditTextCriteria(mondayEditText, EditTextCriteria.IS_VALID_INT),
             new EditTextCriteria(tuesdayEditText, EditTextCriteria.IS_VALID_INT),

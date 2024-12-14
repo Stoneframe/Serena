@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 import stoneframe.serena.R;
 import stoneframe.serena.gui.GlobalState;
 import stoneframe.serena.gui.util.DialogUtils;
-import stoneframe.serena.gui.util.EditTextButtonEnabledLink;
+import stoneframe.serena.gui.util.ButtonEnabledLink;
 import stoneframe.serena.gui.util.EditTextCriteria;
 import stoneframe.serena.gui.util.SimpleListAdapter;
 import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
@@ -286,9 +286,10 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
 
         buttonDone.setOnClickListener(v -> finish());
 
-        new EditTextButtonEnabledLink(
+        new ButtonEnabledLink(
             buttonAddTransaction,
-            new EditTextCriteria(editTextAmount, EditTextCriteria.IS_VALID_INT));
+            new EditTextCriteria(editTextAmount, EditTextCriteria.IS_VALID_INT),
+            new BalancerEnabledCriteria(balancerEditor));
     }
 
     @Override
@@ -464,7 +465,6 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         boolean isEnabled = balancerEditor.isEnabled();
 
         buttonNewTransactionType.setEnabled(isEnabled);
-        buttonAddTransaction.setEnabled(isEnabled);
         spinnerTransactionType.setEnabled(isEnabled);
         favoritesList.setEnabled(isEnabled);
         editTextAmount.setEnabled(isEnabled);
@@ -536,7 +536,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
 
         dialog.show();
 
-        new EditTextButtonEnabledLink(
+        new ButtonEnabledLink(
             buttonOk,
             new EditTextCriteria(editTextName, EditTextCriteria.IS_NOT_EMPTY),
             new EditTextCriteria(editTextChangePerDay, EditTextCriteria.IS_VALID_INT),
@@ -603,7 +603,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
 
         dialog.show();
 
-        new EditTextButtonEnabledLink(
+        new ButtonEnabledLink(
             buttonOk,
             new EditTextCriteria(editTextName, EditTextCriteria.IS_NOT_EMPTY),
             new EditTextCriteria(editTextAmount, EditTextCriteria.IS_VALID_INT));

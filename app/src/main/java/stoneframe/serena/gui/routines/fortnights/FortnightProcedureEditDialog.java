@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import stoneframe.serena.R;
-import stoneframe.serena.gui.util.EditTextButtonEnabledLink;
+import stoneframe.serena.gui.util.ButtonEnabledLink;
 import stoneframe.serena.gui.util.EditTextCriteria;
 import stoneframe.serena.model.routines.Procedure;
 
@@ -155,7 +155,7 @@ public class FortnightProcedureEditDialog
 
         buttonCancel.setOnClickListener(v -> alertDialog.dismiss());
 
-        new EditTextButtonEnabledLink(
+        new ButtonEnabledLink(
             buttonSave,
             new EditTextCriteria(editText, EditTextCriteria.IS_NOT_EMPTY));
 

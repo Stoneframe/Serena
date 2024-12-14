@@ -23,26 +23,26 @@ public class SpinnerCriteria extends EnableCriteria
     }
 
     @Override
-    void addWatcher(EditTextButtonEnabledLink link)
+    protected void addWatcher()
     {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-                link.componentChanged();
+                criteriaValueChanged();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent)
             {
-                link.componentChanged();
+                criteriaValueChanged();
             }
         });
     }
 
     @Override
-    boolean isValid()
+    protected boolean isValid()
     {
         return criteria.test(spinner);
     }

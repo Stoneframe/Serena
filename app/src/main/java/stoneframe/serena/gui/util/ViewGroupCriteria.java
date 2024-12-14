@@ -22,13 +22,13 @@ public class ViewGroupCriteria extends EnableCriteria
     }
 
     @Override
-    void addWatcher(EditTextButtonEnabledLink link)
+    protected void addWatcher()
     {
-        viewGroup.getViewTreeObserver().addOnDrawListener(link::componentChanged);
+        viewGroup.getViewTreeObserver().addOnDrawListener(this::criteriaValueChanged);
     }
 
     @Override
-    boolean isValid()
+    protected boolean isValid()
     {
         return criteria.test(viewGroup);
     }

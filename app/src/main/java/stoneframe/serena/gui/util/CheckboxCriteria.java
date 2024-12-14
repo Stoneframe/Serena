@@ -29,14 +29,14 @@ public class CheckboxCriteria extends EnableCriteria
     }
 
     @Override
-    boolean isValid()
+    protected boolean isValid()
     {
         return criteria.test(checkBox);
     }
 
     @Override
-    void addWatcher(EditTextButtonEnabledLink link)
+    protected void addWatcher()
     {
-        checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> link.componentChanged());
+        checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> criteriaValueChanged());
     }
 }

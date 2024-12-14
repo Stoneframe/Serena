@@ -11,7 +11,7 @@ import android.widget.TimePicker;
 import org.joda.time.LocalTime;
 
 import stoneframe.serena.R;
-import stoneframe.serena.gui.util.EditTextButtonEnabledLink;
+import stoneframe.serena.gui.util.ButtonEnabledLink;
 import stoneframe.serena.gui.util.EditTextCriteria;
 import stoneframe.serena.model.routines.Procedure;
 
@@ -111,7 +111,7 @@ public class DayProcedureEditDialog
 
         buttonCancel.setOnClickListener(v -> alertDialog.dismiss());
 
-        new EditTextButtonEnabledLink(
+        new ButtonEnabledLink(
             buttonSave,
             new EditTextCriteria(descriptionText, EditTextCriteria.IS_NOT_EMPTY));
 

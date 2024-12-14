@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import stoneframe.serena.R;
 import stoneframe.serena.gui.util.DialogUtils;
-import stoneframe.serena.gui.util.EditTextButtonEnabledLink;
+import stoneframe.serena.gui.util.ButtonEnabledLink;
 import stoneframe.serena.gui.util.EnableCriteria;
 import stoneframe.serena.model.Serena;
 
@@ -99,7 +99,7 @@ public abstract class EditActivity extends AppCompatActivity
 
         createActivity();
 
-        new EditTextButtonEnabledLink(saveButton, getSaveEnabledCriteria());
+        new ButtonEnabledLink(saveButton, getSaveEnabledCriteria());
     }
 
     protected abstract int getActivityLayoutId();

@@ -39,13 +39,13 @@ public class EditTextCriteria extends EnableCriteria
     }
 
     @Override
-    boolean isValid()
+    protected boolean isValid()
     {
         return criteria.test(editText);
     }
 
     @Override
-    void addWatcher(EditTextButtonEnabledLink link)
+    protected void addWatcher()
     {
         editText.addTextChangedListener(new TextWatcher()
         {
@@ -64,7 +64,7 @@ public class EditTextCriteria extends EnableCriteria
             @Override
             public void afterTextChanged(Editable s)
             {
-                link.componentChanged();
+                criteriaValueChanged();
             }
         });
     }

@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import stoneframe.serena.R;
 import stoneframe.serena.gui.EditActivity;
 import stoneframe.serena.gui.util.DialogUtils;
-import stoneframe.serena.gui.util.EditTextButtonEnabledLink;
+import stoneframe.serena.gui.util.ButtonEnabledLink;
 import stoneframe.serena.gui.util.EditTextCriteria;
 import stoneframe.serena.gui.util.EnableCriteria;
 import stoneframe.serena.gui.util.RecyclerAdapter;
@@ -188,7 +188,7 @@ public class EditChecklistActivity extends EditActivity implements ChecklistEdit
 
         Button okButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
 
-        new EditTextButtonEnabledLink(
+        new ButtonEnabledLink(
             okButton,
             new EditTextCriteria(checklistItemDescriptionText, EditTextCriteria.IS_NOT_EMPTY));
     }

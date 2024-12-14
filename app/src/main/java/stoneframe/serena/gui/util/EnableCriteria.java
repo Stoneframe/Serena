@@ -2,7 +2,21 @@ package stoneframe.serena.gui.util;
 
 public abstract class EnableCriteria
 {
-    abstract void addWatcher(EditTextButtonEnabledLink link);
+    private ButtonEnabledLink link;
 
-    abstract boolean isValid();
+    void subscribe(ButtonEnabledLink link)
+    {
+        this.link = link;
+
+        addWatcher();
+    }
+
+    protected void criteriaValueChanged()
+    {
+        link.criteriaValueChanged();
+    }
+
+    protected abstract boolean isValid();
+
+    protected abstract void addWatcher();
 }

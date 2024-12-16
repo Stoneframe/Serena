@@ -9,6 +9,7 @@ import stoneframe.serena.model.chores.ChoreContainer;
 import stoneframe.serena.model.chores.ChoreSelector;
 import stoneframe.serena.model.chores.EffortTracker;
 import stoneframe.serena.model.routines.RoutineContainer;
+import stoneframe.serena.model.settings.SettingsContainer;
 
 public class MockStorage implements Storage
 {
@@ -17,6 +18,7 @@ public class MockStorage implements Storage
     public MockStorage(EffortTracker effortTracker, ChoreSelector choreSelector)
     {
         container = new Container();
+        container.SettingsContainer = new SettingsContainer();
         container.ChoreContainer = new ChoreContainer(effortTracker, choreSelector);
         container.RoutineContainer = new RoutineContainer();
         container.BalancerContainer = new BalancerContainer();

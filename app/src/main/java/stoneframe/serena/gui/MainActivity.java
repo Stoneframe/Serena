@@ -46,6 +46,7 @@ import stoneframe.serena.model.timeservices.RealTimeService;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
+    private ActivityResultLauncher<Intent> editSettingsLauncher;
     private ActivityResultLauncher<Intent> editStorageLauncher;
 
     private Class<?> fragmentClass;
@@ -64,24 +65,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        int id = item.getItemId();
-
-        if (id == R.id.activity_storage)
+        switch (item.getItemId())
         {
-            serena.save();
+            case R.id.activity_settings:
+                onSettingsMenuItemSelected();
+                return true;
 
-            String json = ContainerJsonConverter.toJson(storage.load());
+            case R.id.activity_storage:
+                onStorageMenuItemSelected();
+                return true;
 
-            Intent intent = new Intent(this, StorageActivity.class);
-
-            intent.putExtra("Storage", json);
-
-            editStorageLauncher.launch(intent);
-
-            return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -210,6 +206,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             RoutineNotifier.scheduleRoutineAlarm(this, nextRoutineProcedureTime);
         }
 
+        editSettingsLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            r -> {});
+
         editStorageLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             this::editStorageCallback);
@@ -248,6 +248,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onStop();
 
         serena.save();
+    }
+
+    private void onSettingsMenuItemSelected()
+    {
+
+    }
+
+    private void onStorageMenuItemSelected()
+    {
+        serena.save();
+
+        String json = ContainerJsonConverter.toJson(storage.load());
+
+        Intent intent = new Intent(this, StorageActivity.class)
+            .putExtra("Storage", json);
+
+        editStorageLauncher.launch(intent);
     }
 
     private void editStorageCallback(ActivityResult activityResult)

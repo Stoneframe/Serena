@@ -10,6 +10,8 @@ import stoneframe.serena.model.balancers.BalancerContainer;
 import stoneframe.serena.model.balancers.BalancerManager;
 import stoneframe.serena.model.routines.RoutineContainer;
 import stoneframe.serena.model.routines.RoutineManager;
+import stoneframe.serena.model.settings.Settings;
+import stoneframe.serena.model.settings.SettingsContainer;
 import stoneframe.serena.model.tasks.TaskContainer;
 import stoneframe.serena.model.tasks.TaskManager;
 import stoneframe.serena.model.timeservices.TimeService;
@@ -45,6 +47,7 @@ public class Serena
             container = new Container();
 
             container.Version = storage.getCurrentVersion();
+            container.SettingsContainer = new SettingsContainer();
             container.RoutineContainer = new RoutineContainer();
             container.ChoreContainer = new ChoreContainer(effortTracker, choreSelector);
             container.TaskContainer = new TaskContainer();
@@ -56,6 +59,15 @@ public class Serena
     public void save()
     {
         storage.save(container);
+    }
+
+    // ====================================================================
+    // SETTINGS
+    // ====================================================================
+
+    public Settings getSettings()
+    {
+        return new Settings(() -> container.SettingsContainer, timeService);
     }
 
     // ====================================================================

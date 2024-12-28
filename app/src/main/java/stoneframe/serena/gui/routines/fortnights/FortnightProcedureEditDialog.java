@@ -26,17 +26,21 @@ import stoneframe.serena.model.routines.Procedure;
 
 public class FortnightProcedureEditDialog
 {
-    public interface FortnightProcedureListener
-    {
-        void onProcedureComplete(Procedure procedure, int week, int weekDay);
-    }
-
-    public static void create(Context context, final FortnightProcedureListener listener)
+    public static void createProcedure(Context context, final FortnightProcedureListener listener)
     {
         showDialog(context, "Add Procedure", new LocalTime(0, 0), "", 1, 0, listener);
     }
 
-    public static void copy(
+    public static void copyWeekDay(
+        Context context,
+        int week,
+        int dayOfWeek,
+        final FortnightWeekDayListener listener)
+    {
+        showWeekDaySelectionDialog(context, week, dayOfWeek, listener);
+    }
+
+    public static void copyProcedure(
         Context context,
         Procedure procedure,
         int week,
@@ -53,7 +57,7 @@ public class FortnightProcedureEditDialog
             listener);
     }
 
-    public static void edit(
+    public static void editProcedure(
         Context context,
         Procedure procedure,
         int week,
@@ -68,6 +72,69 @@ public class FortnightProcedureEditDialog
             week,
             dayOfWeek,
             listener);
+    }
+
+    private static void showWeekDaySelectionDialog(
+        Context context,
+        int initialWeek,
+        int initialDayOfWeek,
+        FortnightWeekDayListener listener)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View dialogView = inflater.inflate(R.layout.dialog_fortnight_day_edit, null);
+        builder.setView(dialogView);
+
+        final Spinner weekdaySpinner = dialogView.findViewById(R.id.weekdaySpinner);
+        final RadioGroup radioGroup = dialogView.findViewById(R.id.radioGroup);
+        final RadioButton radioButtonWeek1 = dialogView.findViewById(R.id.radioButtonWeek1);
+        final RadioButton radioButtonWeek2 = dialogView.findViewById(R.id.radioButtonWeek2);
+
+        Button buttonSave = dialogView.findViewById(R.id.buttonSave);
+        Button buttonCancel = dialogView.findViewById(R.id.buttonCancel);
+
+        if (initialWeek == 1)
+        {
+            radioButtonWeek1.toggle();
+        }
+        else
+        {
+            radioButtonWeek2.toggle();
+        }
+
+        List<String> weekdays = new ArrayList<>(Arrays.asList(
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+            context,
+            android.R.layout.simple_spinner_item,
+            weekdays);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        weekdaySpinner.setAdapter(adapter);
+        weekdaySpinner.setSelection(initialDayOfWeek - 1);
+
+        builder.setTitle("Copy week day");
+
+        final AlertDialog alertDialog = builder.create();
+
+        buttonSave.setOnClickListener(v ->
+        {
+            int week = getSelectedWeekNumber(radioGroup);
+            int weekDay = weekdaySpinner.getSelectedItemPosition() + 1;
+
+            listener.onWeekDayComplete(week, weekDay);
+
+            alertDialog.dismiss();
+        });
+
+        buttonCancel.setOnClickListener(v -> alertDialog.dismiss());
+
+        alertDialog.show();
     }
 
     private static void showDialog(
@@ -174,5 +241,15 @@ public class FortnightProcedureEditDialog
             default:
                 return -1;
         }
+    }
+
+    public interface FortnightProcedureListener
+    {
+        void onProcedureComplete(Procedure procedure, int week, int weekDay);
+    }
+
+    public interface FortnightWeekDayListener
+    {
+        void onWeekDayComplete(int targetWeek, int targetWeekDay);
     }
 }

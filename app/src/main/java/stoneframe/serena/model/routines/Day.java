@@ -34,6 +34,11 @@ public class Day
         return startDate;
     }
 
+    void setStartDate(LocalDate startDate)
+    {
+        this.startDate = startDate;
+    }
+
     public List<Procedure> getProcedures()
     {
         return procedures.stream().sorted().collect(Collectors.toList());
@@ -109,13 +114,13 @@ public class Day
         return nextTime.equals(today);
     }
 
-    void setStartDate(LocalDate startDate)
-    {
-        this.startDate = startDate;
-    }
-
     void addProcedure(Procedure procedure)
     {
+        if (procedures.contains(procedure))
+        {
+            return;
+        }
+
         procedures.add(procedure);
     }
 

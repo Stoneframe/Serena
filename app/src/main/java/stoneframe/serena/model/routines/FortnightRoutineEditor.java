@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 
 import org.joda.time.LocalDate;
 
+import java.util.List;
+
 import stoneframe.serena.model.timeservices.TimeService;
 
 public class FortnightRoutineEditor extends RoutineEditor<FortnightRoutineEditorListener>
@@ -25,6 +27,11 @@ public class FortnightRoutineEditor extends RoutineEditor<FortnightRoutineEditor
         this.fortnightRoutine.edit();
 
         startDateProperty = getStartDateProperty(fortnightRoutine);
+    }
+
+    public List<Procedure> getProcedures(int week, int weekDay)
+    {
+        return fortnightRoutine.getWeek(week).getWeekDay(weekDay).getProcedures();
     }
 
     public LocalDate getStartDate()

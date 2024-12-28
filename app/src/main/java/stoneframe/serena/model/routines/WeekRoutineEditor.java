@@ -2,6 +2,8 @@ package stoneframe.serena.model.routines;
 
 import static stoneframe.serena.model.routines.WeekRoutineEditor.WeekRoutineEditorListener;
 
+import java.util.List;
+
 import stoneframe.serena.model.timeservices.TimeService;
 
 public class WeekRoutineEditor extends RoutineEditor<WeekRoutineEditorListener>
@@ -17,6 +19,11 @@ public class WeekRoutineEditor extends RoutineEditor<WeekRoutineEditorListener>
 
         this.weekRoutine = weekRoutine;
         this.weekRoutine.edit();
+    }
+
+    public List<Procedure> getProcedures(int weekDay)
+    {
+        return weekRoutine.getWeek().getWeekDay(weekDay).getProcedures();
     }
 
     public Week getWeek()

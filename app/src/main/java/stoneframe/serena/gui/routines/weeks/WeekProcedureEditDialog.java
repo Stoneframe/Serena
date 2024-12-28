@@ -23,17 +23,20 @@ import stoneframe.serena.model.routines.Procedure;
 
 public class WeekProcedureEditDialog
 {
-    public interface WeekProcedureListener
-    {
-        void onProcedureComplete(Procedure procedure, int weekDay);
-    }
-
-    public static void create(Context context, final WeekProcedureListener listener)
+    public static void createProcedure(Context context, final WeekProcedureListener listener)
     {
         showDialog(context, "Add procedure", new LocalTime(0, 0), "", 0, listener);
     }
 
-    public static void copy(
+    public static void copyWeekDay(
+        Context context,
+        int dayOfWeek,
+        final WeekDayListener listener)
+    {
+        showWeekDaySelectionDialog(context, dayOfWeek, listener);
+    }
+
+    public static void copyProcedure(
         Context context,
         Procedure procedure,
         int dayOfWeek,
@@ -48,7 +51,7 @@ public class WeekProcedureEditDialog
             listener);
     }
 
-    public static void edit(
+    public static void editProcedure(
         Context context,
         Procedure procedure,
         int dayOfWeek,
@@ -139,5 +142,64 @@ public class WeekProcedureEditDialog
             new EditTextCriteria(editText, EditTextCriteria.IS_NOT_EMPTY));
 
         alertDialog.show();
+    }
+
+    private static void showWeekDaySelectionDialog(
+        Context context,
+        int initialDayOfWeek,
+        WeekDayListener listener)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View dialogView = inflater.inflate(R.layout.dialog_week_day_edit, null);
+        builder.setView(dialogView);
+
+        final Spinner weekdaySpinner = dialogView.findViewById(R.id.weekdaySpinner);
+
+        Button buttonSave = dialogView.findViewById(R.id.buttonSave);
+        Button buttonCancel = dialogView.findViewById(R.id.buttonCancel);
+
+        List<String> weekdays = new ArrayList<>(Arrays.asList(
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+            context,
+            android.R.layout.simple_spinner_item,
+            weekdays);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        weekdaySpinner.setAdapter(adapter);
+        weekdaySpinner.setSelection(initialDayOfWeek - 1);
+
+        builder.setTitle("Copy week day");
+
+        final AlertDialog alertDialog = builder.create();
+
+        buttonSave.setOnClickListener(v ->
+        {
+            int weekDayIndex = weekdaySpinner.getSelectedItemPosition() + 1;
+
+            listener.onWeekDayComplete(weekDayIndex);
+
+            alertDialog.dismiss();
+        });
+
+        buttonCancel.setOnClickListener(v -> alertDialog.dismiss());
+
+        alertDialog.show();
+    }
+
+    public interface WeekProcedureListener
+    {
+        void onProcedureComplete(Procedure procedure, int weekDay);
+    }
+
+    public interface WeekDayListener
+    {
+        void onWeekDayComplete(int targetWeekDay);
     }
 }

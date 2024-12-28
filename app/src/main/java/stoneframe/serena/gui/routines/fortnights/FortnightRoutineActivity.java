@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
+import java.util.List;
+
 import stoneframe.serena.R;
 import stoneframe.serena.gui.routines.EditRoutineActivity;
 import stoneframe.serena.gui.routines.util.WeekExpandableListAdaptor;
@@ -134,7 +136,7 @@ public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRouti
     @Override
     protected void addProcedure()
     {
-        FortnightProcedureEditDialog.create(this, (procedure, week, weekDay) ->
+        FortnightProcedureEditDialog.createProcedure(this, (procedure, week, weekDay) ->
             routineEditor.addProcedure(week, weekDay, procedure));
     }
 
@@ -194,7 +196,7 @@ public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRouti
             groupPosition,
             childPosition);
 
-        FortnightProcedureEditDialog.edit(
+        FortnightProcedureEditDialog.editProcedure(
             this,
             procedure,
             weekNumber,
@@ -216,27 +218,69 @@ public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRouti
 
         int itemType = ExpandableListView.getPackedPositionType(packedPosition);
 
-        if (itemType == ExpandableListView.PACKED_POSITION_TYPE_CHILD)
+        if (itemType == ExpandableListView.PACKED_POSITION_TYPE_GROUP)
         {
-            int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
-            int childPosition = ExpandableListView.getPackedPositionChild(packedPosition);
-
-            Procedure procedure = (Procedure)weekExpandableListAdaptor.getChild(
-                groupPosition,
-                childPosition);
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Select option")
-                .setCancelable(false)
-                .setPositiveButton("Remove", (dialog, removeButtonId) ->
-                    removeProcedure(weekNumber, groupPosition + 1, procedure))
-                .setNegativeButton("Copy", (dialog, copyButtonId) ->
-                    copyProcedure(procedure, weekNumber, groupPosition))
-                .setNeutralButton("Cancel", (dialog, cancelButtonId) -> dialog.cancel());
-
-            AlertDialog alert = builder.create();
-            alert.show();
+            copyWeekDay(weekNumber, packedPosition);
         }
+        else if (itemType == ExpandableListView.PACKED_POSITION_TYPE_CHILD)
+        {
+            copyOrRemoveProcedure(weekNumber, weekExpandableListAdaptor, packedPosition);
+        }
+    }
+
+    private void copyWeekDay(int weekNumber, long packedPosition)
+    {
+        int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Select option")
+            .setCancelable(false)
+            .setNegativeButton("Copy", (dialog, copyButtonId) ->
+                copyWeekDay(weekNumber, groupPosition + 1))
+            .setNeutralButton("Cancel", (dialog, cancelButtonId) -> dialog.cancel());
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void copyWeekDay(int week, int dayOfWeek)
+    {
+        FortnightProcedureEditDialog.copyWeekDay(
+            this,
+            week,
+            dayOfWeek,
+            (targetWeek, targetWeekDay) ->
+            {
+                List<Procedure> proceduresToCopy = routineEditor.getProcedures(week, dayOfWeek);
+
+                proceduresToCopy.forEach(
+                    p -> routineEditor.addProcedure(targetWeek, targetWeekDay, p.copy()));
+            });
+    }
+
+    private void copyOrRemoveProcedure(
+        int weekNumber,
+        WeekExpandableListAdaptor weekExpandableListAdaptor,
+        long packedPosition)
+    {
+        int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
+        int childPosition = ExpandableListView.getPackedPositionChild(packedPosition);
+
+        Procedure procedure = (Procedure)weekExpandableListAdaptor.getChild(
+            groupPosition,
+            childPosition);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Select option")
+            .setCancelable(false)
+            .setPositiveButton("Remove", (dialog, removeButtonId) ->
+                removeProcedure(weekNumber, groupPosition + 1, procedure))
+            .setNegativeButton("Copy", (dialog, copyButtonId) ->
+                copyProcedure(procedure, weekNumber, groupPosition))
+            .setNeutralButton("Cancel", (dialog, cancelButtonId) -> dialog.cancel());
+
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void removeProcedure(int week, int weekDay, Procedure procedure)
@@ -246,11 +290,14 @@ public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRouti
 
     private void copyProcedure(Procedure procedure, int weekNumber, int dayOfWeek)
     {
-        FortnightProcedureEditDialog.copy(
+        FortnightProcedureEditDialog.copyProcedure(
             this,
             procedure,
             weekNumber,
             dayOfWeek,
-            (copiedProcedure, week, weekDay) -> routineEditor.addProcedure(week, weekDay, copiedProcedure));
+            (copiedProcedure, week, weekDay) -> routineEditor.addProcedure(
+                week,
+                weekDay,
+                copiedProcedure));
     }
 }

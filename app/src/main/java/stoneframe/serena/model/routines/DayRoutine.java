@@ -84,6 +84,11 @@ public class DayRoutine extends Routine<DayRoutineData>
 
     void addProcedure(Procedure procedure)
     {
+        if (data().procedures.contains(procedure))
+        {
+            return;
+        }
+
         data().procedures.add(procedure);
     }
 

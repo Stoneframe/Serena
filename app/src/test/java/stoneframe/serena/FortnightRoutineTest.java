@@ -527,7 +527,7 @@ public class FortnightRoutineTest
     {
         FortnightRoutineEditor routineEditor = routineManager.getFortnightRoutineEditor(routine);
 
-        routineEditor.addProcedure(week, day, new Procedure("", time));
+        routineEditor.addProcedure(week, day, new Procedure("", time, false));
 
         routineEditor.save();
     }

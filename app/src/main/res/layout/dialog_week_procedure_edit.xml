@@ -30,6 +30,14 @@
                 android:inputType="textCapSentences"
                 android:padding="8dp" />
 
+            <CheckBox
+                android:layout_marginTop="5dp"
+                android:id="@+id/alarmCheckBox"
+                android:textSize="18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alarm"/>
+
             <!-- Add space between EditText and TimePicker -->
             <View
                 android:layout_width="match_parent"

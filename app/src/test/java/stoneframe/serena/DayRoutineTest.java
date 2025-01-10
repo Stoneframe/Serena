@@ -39,7 +39,7 @@ public class DayRoutineTest
 
         DayRoutineEditor routineEditor = routineManager.getDayRoutineEditor(routine);
 
-        routineEditor.addProcedure(new Procedure("Time09", new LocalTime(9, 0)));
+        routineEditor.addProcedure(new Procedure("Time09", new LocalTime(9, 0), false));
 
         routineEditor.save();
 
@@ -64,9 +64,9 @@ public class DayRoutineTest
 
         DayRoutineEditor routineEditor = routineManager.getDayRoutineEditor(routine);
 
-        routineEditor.addProcedure(new Procedure("Time09", new LocalTime(9, 0)));
-        routineEditor.addProcedure(new Procedure("Time14", new LocalTime(14, 0)));
-        routineEditor.addProcedure(new Procedure("Time23", new LocalTime(23, 0)));
+        routineEditor.addProcedure(new Procedure("Time09", new LocalTime(9, 0), false));
+        routineEditor.addProcedure(new Procedure("Time14", new LocalTime(14, 0), false));
+        routineEditor.addProcedure(new Procedure("Time23", new LocalTime(23, 0), false));
 
         routineEditor.save();
 

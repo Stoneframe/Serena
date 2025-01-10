@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -28,7 +29,7 @@ public class FortnightProcedureEditDialog
 {
     public static void createProcedure(Context context, final FortnightProcedureListener listener)
     {
-        showDialog(context, "Add Procedure", new LocalTime(0, 0), "", 1, 0, listener);
+        showDialog(context, "Add Procedure", new LocalTime(0, 0), "", false, 1, 0, listener);
     }
 
     public static void copyWeekDay(
@@ -52,6 +53,7 @@ public class FortnightProcedureEditDialog
             "Copy Procedure",
             procedure.getTime(),
             procedure.getDescription(),
+            procedure.hasAlarm(),
             week,
             dayOfWeek,
             listener);
@@ -69,6 +71,7 @@ public class FortnightProcedureEditDialog
             "Edit Procedure",
             procedure.getTime(),
             procedure.getDescription(),
+            procedure.hasAlarm(),
             week,
             dayOfWeek,
             listener);
@@ -142,6 +145,7 @@ public class FortnightProcedureEditDialog
         String dialogName,
         LocalTime initialTime,
         String initialDescription,
+        boolean initialHasAlarm,
         int initialWeek,
         int initialDayOfWeek,
         FortnightProcedureListener listener)
@@ -153,6 +157,7 @@ public class FortnightProcedureEditDialog
 
         final TimePicker timePicker = dialogView.findViewById(R.id.timePicker);
         final EditText editText = dialogView.findViewById(R.id.editText);
+        final CheckBox alarmCheckBox = dialogView.findViewById(R.id.alarmCheckBox);
         final Spinner weekdaySpinner = dialogView.findViewById(R.id.weekdaySpinner);
         final RadioGroup radioGroup = dialogView.findViewById(R.id.radioGroup);
         final RadioButton radioButtonWeek1 = dialogView.findViewById(R.id.radioButtonWeek1);
@@ -160,7 +165,10 @@ public class FortnightProcedureEditDialog
 
         Button buttonSave = dialogView.findViewById(R.id.buttonSave);
         Button buttonCancel = dialogView.findViewById(R.id.buttonCancel);
+
         editText.setText(initialDescription);
+
+        alarmCheckBox.setChecked(initialHasAlarm);
 
         if (initialWeek == 1)
         {
@@ -209,11 +217,12 @@ public class FortnightProcedureEditDialog
             int hour = timePicker.getHour();
             int minute = timePicker.getMinute();
             String description = editText.getText().toString().trim();
+            boolean hasAlarm = alarmCheckBox.isChecked();
             int week = getSelectedWeekNumber(radioGroup);
             int weekDay = weekdaySpinner.getSelectedItemPosition() + 1;
 
             listener.onProcedureComplete(
-                new Procedure(description, new LocalTime(hour, minute)),
+                new Procedure(description, new LocalTime(hour, minute), hasAlarm),
                 week,
                 weekDay);
 

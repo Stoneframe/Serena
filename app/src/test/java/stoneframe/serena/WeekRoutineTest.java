@@ -45,7 +45,7 @@ public class WeekRoutineTest
 
         routineEditor.addProcedure(
             DateTimeConstants.MONDAY,
-            new Procedure("Procedure", new LocalTime(10, 0)));
+            new Procedure("Procedure", new LocalTime(10, 0), false));
 
         routineEditor.save();
 
@@ -68,7 +68,7 @@ public class WeekRoutineTest
 
         routineEditor.addProcedure(
             DateTimeConstants.MONDAY,
-            new Procedure("Procedure", new LocalTime(10, 0)));
+            new Procedure("Procedure", new LocalTime(10, 0), false));
 
         routineEditor.save();
 
@@ -99,7 +99,7 @@ public class WeekRoutineTest
 
         routineEditor.addProcedure(
             DateTimeConstants.MONDAY,
-            new Procedure("Procedure", new LocalTime(10, 0)));
+            new Procedure("Procedure", new LocalTime(10, 0), false));
 
         routineEditor.save();
 
@@ -122,7 +122,7 @@ public class WeekRoutineTest
 
         routineEditor.addProcedure(
             DateTimeConstants.MONDAY,
-            new Procedure("Procedure", new LocalTime(10, 0)));
+            new Procedure("Procedure", new LocalTime(10, 0), false));
 
         routineEditor.save();
 
@@ -146,7 +146,7 @@ public class WeekRoutineTest
 
         routineEditor.addProcedure(
             DateTimeConstants.MONDAY,
-            new Procedure("Procedure", new LocalTime(10, 0)));
+            new Procedure("Procedure", new LocalTime(10, 0), false));
 
         routineEditor.save();
 
@@ -170,11 +170,11 @@ public class WeekRoutineTest
 
         routineEditor.addProcedure(
             DateTimeConstants.MONDAY,
-            new Procedure("Procedure 1", new LocalTime(15, 0)));
+            new Procedure("Procedure 1", new LocalTime(15, 0), false));
 
         routineEditor.addProcedure(
             DateTimeConstants.FRIDAY,
-            new Procedure("Procedure 2", new LocalTime(23, 0)));
+            new Procedure("Procedure 2", new LocalTime(23, 0), false));
 
         routineEditor.save();
 
@@ -198,11 +198,11 @@ public class WeekRoutineTest
 
         routineEditor.addProcedure(
             DateTimeConstants.MONDAY,
-            new Procedure("Procedure 1", new LocalTime(15, 0)));
+            new Procedure("Procedure 1", new LocalTime(15, 0), false));
 
         routineEditor.addProcedure(
             DateTimeConstants.FRIDAY,
-            new Procedure("Procedure 2", new LocalTime(23, 0)));
+            new Procedure("Procedure 2", new LocalTime(23, 0), false));
 
         routineEditor.save();
 
@@ -227,11 +227,11 @@ public class WeekRoutineTest
 
         routineEditor.addProcedure(
             DateTimeConstants.MONDAY,
-            new Procedure("Procedure 1", new LocalTime(15, 0)));
+            new Procedure("Procedure 1", new LocalTime(15, 0), false));
 
         routineEditor.addProcedure(
             DateTimeConstants.FRIDAY,
-            new Procedure("Procedure 2", new LocalTime(23, 0)));
+            new Procedure("Procedure 2", new LocalTime(23, 0), false));
 
         routineEditor.save();
 
@@ -257,7 +257,7 @@ public class WeekRoutineTest
 
         routineEditor.addProcedure(
             DateTimeConstants.MONDAY,
-            new Procedure("Procedure", new LocalTime(10, 0)));
+            new Procedure("Procedure", new LocalTime(10, 0), false));
 
         routineEditor.save();
 
@@ -284,11 +284,11 @@ public class WeekRoutineTest
 
         routineEditor.addProcedure(
             DateTimeConstants.MONDAY,
-            new Procedure("Procedure 1", new LocalTime(10, 0)));
+            new Procedure("Procedure 1", new LocalTime(10, 0), false));
 
         routineEditor.addProcedure(
             DateTimeConstants.TUESDAY,
-            new Procedure("Procedure 2", new LocalTime(15, 0)));
+            new Procedure("Procedure 2", new LocalTime(15, 0), false));
 
         routineEditor.save();
 

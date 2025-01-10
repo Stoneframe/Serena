@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
@@ -25,7 +26,7 @@ public class WeekProcedureEditDialog
 {
     public static void createProcedure(Context context, final WeekProcedureListener listener)
     {
-        showDialog(context, "Add procedure", new LocalTime(0, 0), "", 0, listener);
+        showDialog(context, "Add procedure", new LocalTime(0, 0), "", false, 0, listener);
     }
 
     public static void copyWeekDay(
@@ -47,6 +48,7 @@ public class WeekProcedureEditDialog
             "Copy procedure",
             procedure.getTime(),
             procedure.getDescription(),
+            procedure.hasAlarm(),
             dayOfWeek,
             listener);
     }
@@ -62,6 +64,7 @@ public class WeekProcedureEditDialog
             "Edit procedure",
             procedure.getTime(),
             procedure.getDescription(),
+            procedure.hasAlarm(),
             dayOfWeek,
             listener);
     }
@@ -71,6 +74,7 @@ public class WeekProcedureEditDialog
         String dialogName,
         LocalTime initialTime,
         String initialDescription,
+        boolean initialHasAlarm,
         int initialDayOfWeek,
         WeekProcedureListener listener)
     {
@@ -81,12 +85,15 @@ public class WeekProcedureEditDialog
 
         final TimePicker timePicker = dialogView.findViewById(R.id.timePicker);
         final EditText editText = dialogView.findViewById(R.id.editText);
+        final CheckBox alarmCheckBox = dialogView.findViewById(R.id.alarmCheckBox);
         final Spinner weekdaySpinner = dialogView.findViewById(R.id.weekdaySpinner);
 
         Button buttonSave = dialogView.findViewById(R.id.buttonSave);
         Button buttonCancel = dialogView.findViewById(R.id.buttonCancel);
 
         editText.setText(initialDescription);
+
+        alarmCheckBox.setChecked(initialHasAlarm);
 
         List<String> weekdays = new ArrayList<>(Arrays.asList(
             "Monday",
@@ -126,10 +133,11 @@ public class WeekProcedureEditDialog
             int hourOfDay = timePicker.getHour();
             int minute = timePicker.getMinute();
             String description = editText.getText().toString().trim();
+            boolean hasAlarm = alarmCheckBox.isChecked();
             int weekDayIndex = weekdaySpinner.getSelectedItemPosition() + 1;
 
             listener.onProcedureComplete(
-                new Procedure(description, new LocalTime(hourOfDay, minute)),
+                new Procedure(description, new LocalTime(hourOfDay, minute), hasAlarm),
                 weekDayIndex);
 
             alertDialog.dismiss();

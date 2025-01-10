@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
@@ -17,14 +18,9 @@ import stoneframe.serena.model.routines.Procedure;
 
 public class DayProcedureEditDialog
 {
-    public interface DayProcedureListener
-    {
-        void onProcedureComplete(Procedure procedure);
-    }
-
     public static void create(Context context, final DayProcedureListener listener)
     {
-        showDialog(context, "Create Procedure", new LocalTime(0, 0), "", listener);
+        showDialog(context, "Create Procedure", new LocalTime(0, 0), "", false, listener);
     }
 
     public static void copy(
@@ -37,6 +33,7 @@ public class DayProcedureEditDialog
             "Copy Procedure",
             procedure.getTime(),
             procedure.getDescription(),
+            procedure.hasAlarm(),
             listener
         );
     }
@@ -51,6 +48,7 @@ public class DayProcedureEditDialog
             "Edit Procedure",
             procedure.getTime(),
             procedure.getDescription(),
+            procedure.hasAlarm(),
             listener
         );
     }
@@ -60,6 +58,7 @@ public class DayProcedureEditDialog
         String dialogName,
         LocalTime initialTime,
         String initialDescription,
+        boolean initialHasAlarm,
         DayProcedureListener listener)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -71,6 +70,7 @@ public class DayProcedureEditDialog
 
         final TimePicker timePicker = dialogView.findViewById(R.id.timePicker);
         final EditText descriptionText = dialogView.findViewById(R.id.editText);
+        final CheckBox alarmCheckBox = dialogView.findViewById(R.id.alarmCheckBox);
 
         Button buttonSave = dialogView.findViewById(R.id.buttonSave);
         Button buttonCancel = dialogView.findViewById(R.id.buttonCancel);
@@ -95,6 +95,8 @@ public class DayProcedureEditDialog
             descriptionText.setText(initialDescription);
         }
 
+        alarmCheckBox.setChecked(initialHasAlarm);
+
         final AlertDialog alertDialog = builder.create();
 
         buttonSave.setOnClickListener(v ->
@@ -104,7 +106,12 @@ public class DayProcedureEditDialog
 
             String customText = descriptionText.getText().toString().trim();
 
-            listener.onProcedureComplete(new Procedure(customText, new LocalTime(hour, minute)));
+            boolean hasAlarm = alarmCheckBox.isChecked();
+
+            listener.onProcedureComplete(new Procedure(
+                customText,
+                new LocalTime(hour, minute),
+                hasAlarm));
 
             alertDialog.dismiss();
         });
@@ -116,5 +123,10 @@ public class DayProcedureEditDialog
             new EditTextCriteria(descriptionText, EditTextCriteria.IS_NOT_EMPTY));
 
         alertDialog.show();
+    }
+
+    public interface DayProcedureListener
+    {
+        void onProcedureComplete(Procedure procedure);
     }
 }

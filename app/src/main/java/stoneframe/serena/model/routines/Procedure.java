@@ -10,11 +10,13 @@ public class Procedure implements Comparable<Procedure>
 {
     private final String description;
     private final LocalTime time;
+    private final boolean hasAlarm;
 
-    public Procedure(String description, @NonNull LocalTime time)
+    public Procedure(String description, @NonNull LocalTime time, boolean hasAlarm)
     {
         this.description = description;
         this.time = time;
+        this.hasAlarm = hasAlarm;
     }
 
     public String getDescription()
@@ -28,9 +30,14 @@ public class Procedure implements Comparable<Procedure>
         return time;
     }
 
+    public boolean hasAlarm()
+    {
+        return hasAlarm;
+    }
+
     public Procedure copy()
     {
-        return new Procedure(description, time);
+        return new Procedure(description, time, hasAlarm);
     }
 
     @Override

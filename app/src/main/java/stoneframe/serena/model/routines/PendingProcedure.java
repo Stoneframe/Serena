@@ -10,11 +10,13 @@ public class PendingProcedure implements Comparable<PendingProcedure>
 {
     private final Procedure procedure;
     private final LocalDateTime dateTime;
+    private final boolean hasAlarm;
 
-    PendingProcedure(Procedure procedure, LocalDateTime dateTime)
+    PendingProcedure(Procedure procedure, LocalDateTime dateTime, boolean hasAlarm)
     {
         this.procedure = procedure;
         this.dateTime = dateTime;
+        this.hasAlarm = hasAlarm;
     }
 
     public String getDescription()
@@ -25,6 +27,11 @@ public class PendingProcedure implements Comparable<PendingProcedure>
     public LocalDateTime getDateTime()
     {
         return dateTime;
+    }
+
+    public boolean hasAlarm()
+    {
+        return hasAlarm;
     }
 
     @Override

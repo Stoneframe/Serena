@@ -89,7 +89,8 @@ public class Day
 
                     PendingProcedure pendingProcedure = new PendingProcedure(
                         p,
-                        i.toLocalDate().toLocalDateTime(p.getTime()));
+                        i.toLocalDate().toLocalDateTime(p.getTime()),
+                        p.hasAlarm());
 
                     pendingProcedures.add(pendingProcedure);
                 }

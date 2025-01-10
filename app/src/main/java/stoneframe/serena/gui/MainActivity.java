@@ -30,6 +30,7 @@ import stoneframe.serena.gui.checklists.AllChecklistsFragment;
 import stoneframe.serena.gui.chores.AllChoresFragment;
 import stoneframe.serena.gui.balancers.AllBalancersFragment;
 import stoneframe.serena.gui.routines.AllRoutinesFragment;
+import stoneframe.serena.gui.routines.NotificationManager;
 import stoneframe.serena.gui.routines.RoutineNotifier;
 import stoneframe.serena.gui.tasks.AllTasksFragment;
 import stoneframe.serena.gui.today.TodayFragment;
@@ -201,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.getMenu().getItem(0).setChecked(true);
         onNavigationItemSelected(navigationView.getMenu().getItem(0));
 
-        RoutineNotifier.setupNotificationChannel(this);
+        NotificationManager.setupNotificationChannel(this);
 
         LocalDateTime nextRoutineProcedureTime = serena.getRoutineManager().getNextProcedureTime();
 

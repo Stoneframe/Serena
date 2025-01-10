@@ -25,6 +25,7 @@ public class RoutineNotifierReceiver extends BroadcastReceiver
         Serena serena = getSerena(context);
 
         NotificationManager.showRoutineNotification(context, serena);
+//        AlarmManager.startAlarm(context, serena);
 
         RoutineNotifier.scheduleRoutineAlarm(
             context,

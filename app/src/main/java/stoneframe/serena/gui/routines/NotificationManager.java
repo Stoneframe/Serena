@@ -103,6 +103,13 @@ public class NotificationManager
             openMainActivityIntent,
             PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
 
+        Intent activityIntent = new Intent(context, AlarmClockActivity.class);
+        PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(
+            context,
+            0,
+            activityIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentText(contentText)
@@ -111,7 +118,8 @@ public class NotificationManager
             .setOnlyAlertOnce(!splash)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
-            .setStyle(new NotificationCompat.BigTextStyle().bigText(contentText));
+            .setStyle(new NotificationCompat.BigTextStyle().bigText(contentText))
+            .setFullScreenIntent(fullScreenPendingIntent, true);
 
         Notification notification = builder.build();
 

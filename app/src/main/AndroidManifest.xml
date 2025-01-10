@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
 
     <queries>
         <intent>
@@ -23,10 +24,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:launchMode="singleTask"
             android:name=".gui.MainActivity"
             android:exported="true"
             android:label="@string/title_activity_main"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity">
@@ -46,8 +47,13 @@
         <activity android:name=".gui.chores.EffortActivity" />
         <activity android:name=".gui.StorageActivity" />
         <activity android:name=".gui.balancers.BalanceActivity" />
+        <activity
+            android:name=".gui.routines.AlarmClockActivity"
+            android:exported="true" />
 
-        <receiver android:name=".gui.routines.RoutineNotifierReceiver" />
+        <receiver
+            android:name=".gui.routines.RoutineNotifierReceiver"
+            android:exported="true" />
     </application>
 
 </manifest>

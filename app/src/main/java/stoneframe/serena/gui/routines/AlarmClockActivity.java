@@ -4,6 +4,8 @@ package stoneframe.serena.gui.routines;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -47,10 +49,12 @@ public class AlarmClockActivity extends AppCompatActivity
         stopButton.setOnClickListener(v ->
         {
             stopAlarm();
+            stopVibration();
             finish();
         });
 
         startAlarmSound();
+        startVibration();
     }
 
     private void startAlarmSound()
@@ -69,6 +73,27 @@ public class AlarmClockActivity extends AppCompatActivity
             mediaPlayer.stop();
             mediaPlayer.release();
             mediaPlayer = null;
+        }
+    }
+
+    private void startVibration()
+    {
+        Vibrator vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
+
+        if (vibrator != null && vibrator.hasVibrator())
+        {
+            long[] pattern = {0, 1000, 500, 1000, 500};
+            vibrator.vibrate(VibrationEffect.createWaveform(pattern, 0));
+        }
+    }
+
+    private void stopVibration()
+    {
+        Vibrator vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
+
+        if (vibrator != null)
+        {
+            vibrator.cancel();
         }
     }
 }

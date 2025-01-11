@@ -6,6 +6,8 @@ import android.app.NotificationChannel;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -103,26 +105,64 @@ public class NotificationManager
             openMainActivityIntent,
             PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
 
-        Intent activityIntent = new Intent(context, AlarmClockActivity.class);
-        PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(
-            context,
-            0,
-            activityIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+//        Intent activityIntent = new Intent(context, AlarmClockActivity.class);
+//        PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(
+//            context,
+//            0,
+//            activityIntent,
+//            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentText(contentText)
             .setSubText("Routine")
             .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setOnlyAlertOnce(!splash)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
-            .setStyle(new NotificationCompat.BigTextStyle().bigText(contentText))
-            .setFullScreenIntent(fullScreenPendingIntent, true);
+            .setStyle(new NotificationCompat.BigTextStyle().bigText(contentText));
+//            .setFullScreenIntent(fullScreenPendingIntent, true);
 
         Notification notification = builder.build();
 
+        if (splash)
+        {
+            notificationManager.cancelAll();
+        }
+
         notificationManager.notify(NOTIFICATION_ID, notification);
+
+        try
+        {
+            Thread.sleep(20_000);
+        }
+        catch (InterruptedException e)
+        {
+            throw new RuntimeException(e);
+        }
+
+        startVibration(context);
+    }
+
+    private static void startVibration(Context context)
+    {
+        Vibrator vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
+
+        if (vibrator != null && vibrator.hasVibrator())
+        {
+            long[] pattern = {0, 1000, 500, 1000, 500};
+            vibrator.vibrate(VibrationEffect.createWaveform(pattern, 0));
+        }
+    }
+
+    private static void stopVibration(Context context)
+    {
+        Vibrator vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
+
+        if (vibrator != null)
+        {
+            vibrator.cancel();
+        }
     }
 }

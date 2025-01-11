@@ -34,6 +34,7 @@ import stoneframe.serena.gui.routines.NotificationManager;
 import stoneframe.serena.gui.routines.RoutineNotifier;
 import stoneframe.serena.gui.tasks.AllTasksFragment;
 import stoneframe.serena.gui.today.TodayFragment;
+import stoneframe.serena.gui.util.VibratorManager;
 import stoneframe.serena.json.ContainerJsonConverter;
 import stoneframe.serena.json.SimpleChoreSelectorConverter;
 import stoneframe.serena.json.WeeklyEffortTrackerConverter;

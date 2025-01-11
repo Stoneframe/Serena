@@ -37,6 +37,12 @@ public class AlarmClockActivity extends AppCompatActivity
             .filter(PendingProcedure::hasAlarm)
             .collect(Collectors.toList());
 
+        if (procedures.isEmpty())
+        {
+            finish();
+            return;
+        }
+
         TextView messageTextView = findViewById(R.id.alarm_message);
         Button stopButton = findViewById(R.id.stop_button);
 
@@ -53,8 +59,16 @@ public class AlarmClockActivity extends AppCompatActivity
             finish();
         });
 
-        startAlarmSound();
+        try
+        {
+            Thread.sleep(10_000);
+        }
+        catch (InterruptedException e)
+        {
+        }
+
         startVibration();
+        startAlarmSound();
     }
 
     private void startAlarmSound()

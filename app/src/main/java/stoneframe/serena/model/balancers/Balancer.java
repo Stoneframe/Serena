@@ -20,16 +20,22 @@ public class Balancer extends Revertible<BalancerData>
     public static final int COUNTER = 0;
     public static final int ENHANCER = 1;
 
+    public static final int DAILY = 0;
+    public static final int WEEKLY = 1;
+    public static final int MONTHLY = 2;
+    public static final int YEARLY = 3;
+
     private static final double MINUTES_PER_DAY = 24 * 60;
 
-    Balancer(String name, LocalDate startDate, int changePerDay, boolean allowQuick)
+    Balancer(String name, LocalDate startDate, int changePerInterval, boolean allowQuick)
     {
         super(new BalancerData(
             name,
             null,
             0,
             startDate,
-            changePerDay,
+            changePerInterval,
+            Balancer.DAILY,
             null,
             null,
             allowQuick,
@@ -38,7 +44,7 @@ public class Balancer extends Revertible<BalancerData>
 
     public int getType()
     {
-        return Integer.compare(0, getChangePerDay());
+        return Integer.compare(0, getChangePerInterval());
     }
 
     public String getName()
@@ -61,9 +67,24 @@ public class Balancer extends Revertible<BalancerData>
         data().unit = unit;
     }
 
-    public int getChangePerDay()
+    public int getChangePerInterval()
     {
-        return data().changePerDay;
+        return data().changePerInterval;
+    }
+
+    void setChangePerInterval(LocalDateTime now, int changePerInterval)
+    {
+        setPropertyAffectionAvailable(now, () -> data().changePerInterval = changePerInterval);
+    }
+
+    public int getIntervalType()
+    {
+        return data().intervalType;
+    }
+
+    void setIntervalType(LocalDateTime now, int intervalType)
+    {
+        setPropertyAffectionAvailable(now, () -> data().intervalType = intervalType);
     }
 
     public boolean isQuickDisableable()
@@ -91,9 +112,23 @@ public class Balancer extends Revertible<BalancerData>
         return data().maxValue != null ? data().maxValue : Integer.MAX_VALUE;
     }
 
+    void setMaxValue(LocalDateTime now, Integer maxValue)
+    {
+        setPropertyAffectionAvailable(now, () -> data().maxValue = maxValue);
+
+        updatePreviousTransactions(now);
+    }
+
     public int getMinValue()
     {
         return data().minValue != null ? data().minValue : Integer.MIN_VALUE;
+    }
+
+    void setMinValue(LocalDateTime now, Integer minValue)
+    {
+        setPropertyAffectionAvailable(now, () -> data().minValue = minValue);
+
+        updatePreviousTransactions(now);
     }
 
     public boolean isEnabled()
@@ -115,7 +150,7 @@ public class Balancer extends Revertible<BalancerData>
             return now;
         }
 
-        double remaining = Math.abs((double)available / getChangePerDay());
+        double remaining = Math.abs((double)available / getChangePerInterval());
 
         int days = (int)remaining;
 
@@ -155,38 +190,9 @@ public class Balancer extends Revertible<BalancerData>
         return data().transactions.stream().map(p -> p.first).collect(Collectors.toList());
     }
 
-    void setChangePerDay(LocalDateTime now, int changePerDay)
-    {
-        int oldCurrentAvailable = getAvailable(now);
-
-        data().startDate = now.toLocalDate();
-        data().changePerDay = changePerDay;
-
-        data().transactions.clear();
-        data().previousTransactions = 0;
-
-        int newCurrentAvailable = getAvailable(now);
-
-        data().previousTransactions = oldCurrentAvailable - newCurrentAvailable;
-    }
-
     void setAllowQuick(boolean allowQuick)
     {
         data().allowQuick = allowQuick;
-    }
-
-    void setMaxValue(Integer maxValue, LocalDateTime now)
-    {
-        data().maxValue = maxValue;
-
-        updatePreviousTransactions(now);
-    }
-
-    void setMinValue(Integer minValue, LocalDateTime now)
-    {
-        data().minValue = minValue;
-
-        updatePreviousTransactions(now);
     }
 
     void addTransactionType(CustomTransactionType transactionType)
@@ -222,6 +228,22 @@ public class Balancer extends Revertible<BalancerData>
         int currentAvailable = getTotalAvailable(now);
 
         data().previousTransactions -= currentAvailable;
+    }
+
+    private void setPropertyAffectionAvailable(LocalDateTime now, Runnable propertyUpdate)
+    {
+        int oldCurrentAvailable = getAvailable(now);
+
+        data().startDate = now.toLocalDate();
+
+        propertyUpdate.run();
+
+        data().transactions.clear();
+        data().previousTransactions = 0;
+
+        int newCurrentAvailable = getAvailable(now);
+
+        data().previousTransactions = oldCurrentAvailable - newCurrentAvailable;
     }
 
     private void updatePreviousTransactions(LocalDateTime now)
@@ -262,9 +284,26 @@ public class Balancer extends Revertible<BalancerData>
             .mapToInt(Transaction::getAmount)
             .sum();
 
-        return (int)(data().changePerDay * minutes.getMinutes() / MINUTES_PER_DAY)
+        return (int)(data().changePerInterval * minutes.getMinutes() / getMinutesOfInterval())
             + data().previousTransactions
             + recentTransactions;
+    }
+
+    private double getMinutesOfInterval()
+    {
+        switch (data().intervalType)
+        {
+            case DAILY:
+                return MINUTES_PER_DAY;
+            case WEEKLY:
+                return MINUTES_PER_DAY * 7;
+            case MONTHLY:
+                return MINUTES_PER_DAY * 30;
+            case YEARLY:
+                return MINUTES_PER_DAY * 365;
+            default:
+                throw new IndexOutOfBoundsException("Unknown interval " + data().intervalType);
+        }
     }
 
     private int getTypeModifier()

@@ -14,7 +14,8 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
 
     private final PropertyUtil<String> nameProperty;
     private final PropertyUtil<String> unitProperty;
-    private final PropertyUtil<Integer> changePerDayProperty;
+    private final PropertyUtil<Integer> changePerIntervalProperty;
+    private final PropertyUtil<Integer> intervalTypeProperty;
     private final PropertyUtil<Boolean> isQuickAllowableProperty;
     private final PropertyUtil<Boolean> isEnabledProperty;
 
@@ -27,7 +28,8 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
 
         nameProperty = getNameProperty();
         unitProperty = getUnitProperty();
-        changePerDayProperty = getChangePerDayProperty();
+        changePerIntervalProperty = getChangePerIntervalProperty();
+        intervalTypeProperty = getIntervalTypeProperty();
         isQuickAllowableProperty = getIsQuickAllowableProperty();
         isEnabledProperty = getIsEnabledProperty();
     }
@@ -62,14 +64,24 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
         unitProperty.setValue(unit);
     }
 
-    public int getChangePerDay()
+    public int getChangePerInterval()
     {
-        return changePerDayProperty.getValue();
+        return changePerIntervalProperty.getValue();
     }
 
-    public void setChangePerDay(int changePerDay)
+    public void setChangePerInterval(int changePerInterval)
     {
-        changePerDayProperty.setValue(changePerDay);
+        changePerIntervalProperty.setValue(changePerInterval);
+    }
+
+    public int getIntervalType()
+    {
+        return intervalTypeProperty.getValue();
+    }
+
+    public void setIntervalType(int intervalType)
+    {
+        intervalTypeProperty.setValue(intervalType);
     }
 
     public boolean hasMaxValue()
@@ -86,7 +98,7 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
     {
         if (hasMaxValueChanged(maxValue))
         {
-            balancer.setMaxValue(maxValue, getNow());
+            balancer.setMaxValue(getNow(), maxValue);
             notifyListeners(BalanceEditorListener::availableChanged);
         }
     }
@@ -105,7 +117,7 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
     {
         if (hasMinValueChanged(minValue))
         {
-            balancer.setMinValue(minValue, getNow());
+            balancer.setMinValue(getNow(), minValue);
             notifyListeners(BalanceEditorListener::availableChanged);
         }
     }
@@ -227,12 +239,20 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
             v -> notifyListeners(BalanceEditorListener::unitChanged));
     }
 
-    private @NonNull PropertyUtil<Integer> getChangePerDayProperty()
+    private @NonNull PropertyUtil<Integer> getChangePerIntervalProperty()
     {
         return new PropertyUtil<>(
-            balancer::getChangePerDay,
-            v -> balancer.setChangePerDay(getNow(), v),
-            v -> notifyListeners(BalanceEditorListener::changePerDayChanged));
+            balancer::getChangePerInterval,
+            v -> balancer.setChangePerInterval(getNow(), v),
+            v -> notifyListeners(BalanceEditorListener::changePerIntervalChanged));
+    }
+
+    private PropertyUtil<Integer> getIntervalTypeProperty()
+    {
+        return new PropertyUtil<>(
+            balancer::getIntervalType,
+            v -> balancer.setIntervalType(getNow(), v),
+            v -> notifyListeners(BalanceEditorListener::intervalTypeChanged));
     }
 
     private @NonNull PropertyUtil<Boolean> getIsQuickAllowableProperty()
@@ -261,7 +281,9 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
 
         void isEnabledChanged(boolean isEnabled);
 
-        void changePerDayChanged();
+        void changePerIntervalChanged();
+
+        void intervalTypeChanged();
 
         void transactionTypesChanged();
 

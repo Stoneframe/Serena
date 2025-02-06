@@ -23,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -148,7 +149,13 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
     }
 
     @Override
-    public void changePerDayChanged()
+    public void changePerIntervalChanged()
+    {
+
+    }
+
+    @Override
+    public void intervalTypeChanged()
     {
 
     }
@@ -490,17 +497,39 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         CheckBox checkBoxIsEnabled = dialogView.findViewById(R.id.checkBoxIsEnabled);
         EditText editTextName = dialogView.findViewById(R.id.editTextName);
         EditText editTextUnit = dialogView.findViewById(R.id.editTextUnit);
-        EditText editTextChangePerDay = dialogView.findViewById(R.id.editTextTransactionPerDay);
+        EditText editTextChangePerInterval = dialogView.findViewById(R.id.editTextTransactionPerInterval);
+        Spinner spinnerIntervalType = dialogView.findViewById(R.id.spinnerIntervalType);
         EditText editTextMaxValue = dialogView.findViewById(R.id.editTextMaxValue);
         EditText editTextMinValue = dialogView.findViewById(R.id.editTextMinValue);
         CheckBox checkBoxAllowQuick = dialogView.findViewById(R.id.checkBoxAllowQuick);
         Button buttonCancel = dialogView.findViewById(R.id.buttonCancel);
         Button buttonOk = dialogView.findViewById(R.id.buttonOk);
 
+        SimpleListAdapter<Integer> intervalTypeAdapter = new SimpleListAdapterBuilder<>(
+            this,
+            () -> Arrays.asList(Balancer.DAILY, Balancer.WEEKLY, Balancer.MONTHLY, Balancer.YEARLY),
+            v -> {
+               switch (v){
+                   case Balancer.DAILY:
+                       return "Daily";
+                   case Balancer.WEEKLY:
+                       return "Weekly";
+                   case Balancer.MONTHLY:
+                       return "Monthly";
+                   case Balancer.YEARLY:
+                       return "Yearly";
+                   default:
+                       throw new IllegalStateException("Unknown interval type: " + v);
+               }
+            })
+            .create();
+
         checkBoxIsEnabled.setChecked(balancerEditor.isEnabled());
         editTextName.setText(balancerEditor.getName());
         editTextUnit.setText(balancerEditor.getUnit());
-        editTextChangePerDay.setText(String.valueOf(balancerEditor.getChangePerDay()));
+        editTextChangePerInterval.setText(String.valueOf(balancerEditor.getChangePerInterval()));
+        spinnerIntervalType.setAdapter(intervalTypeAdapter);
+        spinnerIntervalType.setSelection(intervalTypeAdapter.getPosition(balancerEditor.getIntervalType()));
         editTextMaxValue.setText(balancerEditor.hasMaxValue()
             ? Integer.toString(balancerEditor.getMaxValue())
             : "");
@@ -516,9 +545,9 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
 
         buttonOk.setOnClickListener(v ->
         {
-            String changePerDay = editTextChangePerDay.getText().toString().trim();
+            String changePerInterval = editTextChangePerInterval.getText().toString().trim();
 
-            if (!changePerDay.isEmpty())
+            if (!changePerInterval.isEmpty())
             {
                 balancerEditor.setEnabled(checkBoxIsEnabled.isChecked());
                 balancerEditor.setName(editTextName.getText().toString().trim());
@@ -526,7 +555,8 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
                 balancerEditor.setMaxValue(getIntegerValue(editTextMaxValue));
                 balancerEditor.setMinValue(getIntegerValue(editTextMinValue));
                 balancerEditor.setAllowQuick(checkBoxAllowQuick.isChecked());
-                balancerEditor.setChangePerDay(Integer.parseInt(changePerDay));
+                balancerEditor.setChangePerInterval(Integer.parseInt(changePerInterval));
+                balancerEditor.setIntervalType((int)spinnerIntervalType.getSelectedItem());
 
                 serena.save();
 
@@ -539,7 +569,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         new ButtonEnabledLink(
             buttonOk,
             new EditTextCriteria(editTextName, EditTextCriteria.IS_NOT_EMPTY),
-            new EditTextCriteria(editTextChangePerDay, EditTextCriteria.IS_VALID_INT),
+            new EditTextCriteria(editTextChangePerInterval, EditTextCriteria.IS_VALID_INT),
             new EditTextCriteria(editTextMaxValue, et ->
             {
                 if (et.getText().toString().isEmpty()) return true;

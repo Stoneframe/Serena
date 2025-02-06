@@ -43,7 +43,7 @@ public class BalancerTest
     }
 
     @Test
-    public void setChangePerDay_changeNewBalancerToLimiter_availableIsZero()
+    public void setChangePerInterval_changeNewBalancerToLimiter_availableIsZero()
     {
         // ARRANGE
         LocalDateTime now = LocalDateTime.now();
@@ -54,14 +54,14 @@ public class BalancerTest
         BalancerEditor balancerEditor = balancerManager.getBalancerEditor(balancer);
 
         // ACT
-        balancerEditor.setChangePerDay(50);
+        balancerEditor.setChangePerInterval(50);
 
         // ASSERT
         assertEquals(0, balancer.getAvailable(now));
     }
 
     @Test
-    public void setChangePerDay_changeNewBalancerToEnhancer_availableIsZero()
+    public void setChangePerInterval_changeNewBalancerToEnhancer_availableIsZero()
     {
         // ARRANGE
         LocalDateTime now = LocalDateTime.now();
@@ -72,14 +72,14 @@ public class BalancerTest
         BalancerEditor balancerEditor = balancerManager.getBalancerEditor(balancer);
 
         // ACT
-        balancerEditor.setChangePerDay(-50);
+        balancerEditor.setChangePerInterval(-50);
 
         // ASSERT
         assertEquals(0, balancer.getAvailable(now));
     }
 
     @Test
-    public void setChangePerDay_changeBalancerFromEnhancerToLimiterOneDayLater_availableIsUnchanged()
+    public void setChangePerInterval_changeBalancerFromEnhancerToLimiterOneIntervalLater_availableIsUnchanged()
     {
         // ARRANGE
         LocalDateTime starTime = LocalDateTime.now();
@@ -88,14 +88,14 @@ public class BalancerTest
 
         Balancer balancer = balancerManager.createBalancer("Test");
         BalancerEditor balancerEditor = balancerManager.getBalancerEditor(balancer);
-        balancerEditor.setChangePerDay(-50);
+        balancerEditor.setChangePerInterval(-50);
 
         context.setCurrentTime(starTime.plusDays(1));
 
         // ACT
         int oldAvailable = balancer.getAvailable(starTime.plusDays(1));
 
-        balancerEditor.setChangePerDay(50);
+        balancerEditor.setChangePerInterval(50);
 
         int newAvailable = balancer.getAvailable(starTime.plusDays(1));
 
@@ -104,7 +104,7 @@ public class BalancerTest
     }
 
     @Test
-    public void setChangePerDay_changeBalancerFromLimiterToEnhancerOneDayLater_availableIsUnchanged()
+    public void setChangePerInterval_changeBalancerFromLimiterToEnhancerOneIntervalLater_availableIsUnchanged()
     {
         // ARRANGE
         LocalDateTime starTime = LocalDateTime.now();
@@ -113,14 +113,14 @@ public class BalancerTest
 
         Balancer balancer = balancerManager.createBalancer("Test");
         BalancerEditor balancerEditor = balancerManager.getBalancerEditor(balancer);
-        balancerEditor.setChangePerDay(50);
+        balancerEditor.setChangePerInterval(50);
 
         context.setCurrentTime(starTime.plusDays(1));
 
         // ACT
         int oldAvailable = balancer.getAvailable(starTime.plusDays(1));
 
-        balancerEditor.setChangePerDay(-50);
+        balancerEditor.setChangePerInterval(-50);
 
         int newAvailable = balancer.getAvailable(starTime.plusDays(1));
 
@@ -129,7 +129,7 @@ public class BalancerTest
     }
 
     @Test
-    public void setChangePerDay_changeBalancerFromLimiterToEnhancerWithTransaction_availableIsUnchanged()
+    public void setChangePerInterval_changeBalancerFromLimiterToEnhancerWithTransaction_availableIsUnchanged()
     {
         // ARRANGE
         LocalDateTime now = LocalDateTime.now();
@@ -138,14 +138,14 @@ public class BalancerTest
 
         Balancer balancer = balancerManager.createBalancer("Test");
         BalancerEditor balancerEditor = balancerManager.getBalancerEditor(balancer);
-        balancerEditor.setChangePerDay(50);
+        balancerEditor.setChangePerInterval(50);
 
         balancerEditor.addTransaction("Test", 50);
 
         // ACT
         int oldAvailable = balancer.getAvailable(now);
 
-        balancerEditor.setChangePerDay(-50);
+        balancerEditor.setChangePerInterval(-50);
 
         int newAvailable = balancer.getAvailable(now);
 
@@ -181,7 +181,7 @@ public class BalancerTest
 
         Balancer balancer = balancerManager.createBalancer("Test");
         BalancerEditor balancerEditor = balancerManager.getBalancerEditor(balancer);
-        balancerEditor.setChangePerDay(1);
+        balancerEditor.setChangePerInterval(1);
 
         // ACT
         balancerEditor.addTransaction("Test", 10);
@@ -200,7 +200,7 @@ public class BalancerTest
 
         Balancer balancer = balancerManager.createBalancer("Test");
         BalancerEditor balancerEditor = balancerManager.getBalancerEditor(balancer);
-        balancerEditor.setChangePerDay(-1);
+        balancerEditor.setChangePerInterval(-1);
 
         // ACT
         balancerEditor.addTransaction("Test", 10);
@@ -219,7 +219,7 @@ public class BalancerTest
 
         Balancer balancer = balancerManager.createBalancer("Test");
         BalancerEditor balancerEditor = balancerManager.getBalancerEditor(balancer);
-        balancerEditor.setChangePerDay(1);
+        balancerEditor.setChangePerInterval(1);
         balancerEditor.setMaxValue(10);
         balancerEditor.addTransaction("Initial", -20);
 
@@ -228,5 +228,85 @@ public class BalancerTest
 
         // ASSERT
         assertEquals(5, balancer.getAvailable(now));
+    }
+
+    @Test
+    public void setIntervalType_intervalIsDaily_changePerIntervalIncrementsDaily()
+    {
+        // ARRANGE
+        LocalDateTime startTime = LocalDateTime.now();
+
+        context.setCurrentTime(startTime);
+
+        Balancer balancer = balancerManager.createBalancer("Test");
+        BalancerEditor balancerEditor = balancerManager.getBalancerEditor(balancer);
+        balancerEditor.setChangePerInterval(1);
+        balancerEditor.setIntervalType(Balancer.DAILY);
+
+        // ACT
+        int value = balancer.getAvailable(startTime.plusDays(1));
+
+        // ASSERT
+        assertEquals(1, value);
+    }
+
+    @Test
+    public void setIntervalType_intervalIsWeekly_changePerIntervalIncrementsWeekly()
+    {
+        // ARRANGE
+        LocalDateTime startTime = LocalDateTime.now();
+
+        context.setCurrentTime(startTime);
+
+        Balancer balancer = balancerManager.createBalancer("Test");
+        BalancerEditor balancerEditor = balancerManager.getBalancerEditor(balancer);
+        balancerEditor.setChangePerInterval(1);
+        balancerEditor.setIntervalType(Balancer.WEEKLY);
+
+        // ACT
+        int value = balancer.getAvailable(startTime.plusDays(7));
+
+        // ASSERT
+        assertEquals(1, value);
+    }
+
+    @Test
+    public void setIntervalType_intervalIsMonthly_changePerIntervalIncrementsMonthly()
+    {
+        // ARRANGE
+        LocalDateTime startTime = LocalDateTime.now();
+
+        context.setCurrentTime(startTime);
+
+        Balancer balancer = balancerManager.createBalancer("Test");
+        BalancerEditor balancerEditor = balancerManager.getBalancerEditor(balancer);
+        balancerEditor.setChangePerInterval(1);
+        balancerEditor.setIntervalType(Balancer.MONTHLY);
+
+        // ACT
+        int value = balancer.getAvailable(startTime.plusDays(30));
+
+        // ASSERT
+        assertEquals(1, value);
+    }
+
+    @Test
+    public void setIntervalType_intervalIsYearly_changePerIntervalIncrementsYearly()
+    {
+        // ARRANGE
+        LocalDateTime startTime = LocalDateTime.now();
+
+        context.setCurrentTime(startTime);
+
+        Balancer balancer = balancerManager.createBalancer("Test");
+        BalancerEditor balancerEditor = balancerManager.getBalancerEditor(balancer);
+        balancerEditor.setChangePerInterval(1);
+        balancerEditor.setIntervalType(Balancer.YEARLY);
+
+        // ACT
+        int value = balancer.getAvailable(startTime.plusDays(365));
+
+        // ASSERT
+        assertEquals(1, value);
     }
 }

@@ -26,9 +26,9 @@ import org.joda.time.LocalDateTime;
 import java.util.Objects;
 
 import stoneframe.serena.R;
+import stoneframe.serena.gui.balancers.AllBalancersFragment;
 import stoneframe.serena.gui.checklists.AllChecklistsFragment;
 import stoneframe.serena.gui.chores.AllChoresFragment;
-import stoneframe.serena.gui.balancers.AllBalancersFragment;
 import stoneframe.serena.gui.routines.AllRoutinesFragment;
 import stoneframe.serena.gui.routines.RoutineNotifier;
 import stoneframe.serena.gui.tasks.AllTasksFragment;
@@ -240,6 +240,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         goToFragment(R.id.nav_todays);
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        goToFragment(fragmentClass);
     }
 
     @Override

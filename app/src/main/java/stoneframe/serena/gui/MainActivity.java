@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return goToFragment(AllRoutinesFragment.class);
             case R.id.nav_all_checklists:
                 return goToFragment(AllChecklistsFragment.class);
-            case R.id.nav_calories:
+            case R.id.nav_balancers:
                 return goToFragment(AllBalancersFragment.class);
             case R.id.nav_todays:
             default:

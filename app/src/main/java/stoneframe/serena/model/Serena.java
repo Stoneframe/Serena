@@ -8,6 +8,8 @@ import stoneframe.serena.model.chores.ChoreSelector;
 import stoneframe.serena.model.chores.EffortTracker;
 import stoneframe.serena.model.balancers.BalancerContainer;
 import stoneframe.serena.model.balancers.BalancerManager;
+import stoneframe.serena.model.notes.NoteContainer;
+import stoneframe.serena.model.notes.NoteManager;
 import stoneframe.serena.model.routines.RoutineContainer;
 import stoneframe.serena.model.routines.RoutineManager;
 import stoneframe.serena.model.tasks.TaskContainer;
@@ -50,6 +52,7 @@ public class Serena
             container.TaskContainer = new TaskContainer();
             container.ChecklistContainer = new ChecklistContainer();
             container.BalancerContainer = new BalancerContainer();
+            container.NoteContainer = new NoteContainer();
         }
     }
 
@@ -101,5 +104,14 @@ public class Serena
     public BalancerManager getBalancerManager()
     {
         return new BalancerManager(() -> container.BalancerContainer, timeService);
+    }
+
+    // ====================================================================
+    // NOTES
+    // ====================================================================
+
+    public NoteManager getNoteManager()
+    {
+        return new NoteManager(() -> container.NoteContainer, timeService);
     }
 }

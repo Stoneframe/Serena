@@ -55,7 +55,7 @@ public class AllNotesFragment extends Fragment
         notesListAdapter = new SimpleListAdapterBuilder<>(
             requireContext(),
             noteManager::getAllNotes,
-            Note::getText).create();
+            Note::getTitle).create();
 
         notesListView = rootView.findViewById(R.id.all_notes);
         notesListView.setAdapter(notesListAdapter);

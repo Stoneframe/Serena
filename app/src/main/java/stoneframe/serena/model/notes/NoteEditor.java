@@ -20,6 +20,7 @@ public class NoteEditor extends Editor<NoteEditor.NoteEditorListener>
 
         this.noteManager = noteManager;
         this.note = note;
+        this.note.edit();
 
         titleProperty = getTitleProperty(note);
         textProperty = getTextProperty(note);

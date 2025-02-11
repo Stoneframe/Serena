@@ -24,10 +24,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:launchMode="singleTask"
             android:name=".gui.MainActivity"
             android:exported="true"
             android:label="@string/title_activity_main"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity">
@@ -47,6 +47,7 @@
         <activity android:name=".gui.chores.EffortActivity" />
         <activity android:name=".gui.StorageActivity" />
         <activity android:name=".gui.balancers.BalanceActivity" />
+        <activity android:name=".gui.notes.EditNoteActivity" />
 
         <receiver android:name=".gui.routines.RoutineNotifierReceiver" />
     </application>

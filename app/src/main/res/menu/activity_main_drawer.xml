@@ -23,6 +23,10 @@
         <item
             android:id="@+id/nav_calories"
             android:title="Balancers" />
+
+        <item
+            android:id="@+id/nav_notes"
+            android:title="Notes" />
     </group>
 
 </menu>

@@ -76,7 +76,7 @@ public class EditNoteActivity extends EditActivity implements NoteEditor.NoteEdi
     @Override
     protected void onSave(int action)
     {
-        noteEditor.setTitle(titleEditText.getText().toString());
+        noteEditor.setTitle(titleEditText.getText().toString().trim());
         noteEditor.setText(textEditText.getText().toString());
         noteEditor.save();
 

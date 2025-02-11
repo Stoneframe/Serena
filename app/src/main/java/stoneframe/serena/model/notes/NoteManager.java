@@ -1,8 +1,9 @@
 package stoneframe.serena.model.notes;
 
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import stoneframe.serena.model.timeservices.TimeService;
 
@@ -30,7 +31,9 @@ public class NoteManager
 
     public List<Note> getAllNotes()
     {
-        return Collections.unmodifiableList(container.get().notes);
+        return container.get().notes.stream()
+            .sorted(Comparator.comparing(Note::getTitle))
+            .collect(Collectors.toList());
     }
 
     void addNote(Note note)

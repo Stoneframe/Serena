@@ -6,7 +6,6 @@ import com.google.gson.GsonBuilder;
 
 public class DeepCopy
 {
-    /** @noinspection unchecked*/
     public static <T> T copy(T original)
     {
         Gson gson = Converters.registerAll(new GsonBuilder()).create();

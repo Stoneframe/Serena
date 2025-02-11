@@ -49,7 +49,13 @@ public class BalancerEnabledCriteria extends EnableCriteria
             }
 
             @Override
-            public void changePerDayChanged()
+            public void changePerIntervalChanged()
+            {
+
+            }
+
+            @Override
+            public void intervalTypeChanged()
             {
 
             }

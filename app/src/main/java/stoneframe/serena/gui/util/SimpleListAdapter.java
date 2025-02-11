@@ -43,7 +43,9 @@ public class SimpleListAdapter<T> extends BaseAdapter
         this.mainTextFunction = mainTextFunction;
         this.secondaryTextFunction = getOrDefault(secondaryTextFunction, x -> "");
         this.bottomTextFunction = getOrDefault(bottomTextFunction, x -> "");
-        this.backgroundColorFunction = getOrDefault(backgroundColorFunction, x -> Color.TRANSPARENT);
+        this.backgroundColorFunction = getOrDefault(
+            backgroundColorFunction,
+            x -> Color.TRANSPARENT);
         this.borderColorFunction = getOrDefault(borderColorFunction, x -> Color.TRANSPARENT);
     }
 
@@ -104,6 +106,11 @@ public class SimpleListAdapter<T> extends BaseAdapter
         }
 
         return convertView;
+    }
+
+    public int getPosition(T item)
+    {
+        return listFunction.get().indexOf(item);
     }
 
     private static <T> T getOrDefault(T ori, T def)

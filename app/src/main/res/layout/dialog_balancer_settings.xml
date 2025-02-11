@@ -55,16 +55,30 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Enter change per day:"
+            android:text="Enter change per interval:"
             android:textSize="18sp" />
 
         <EditText
-            android:id="@+id/editTextTransactionPerDay"
+            android:id="@+id/editTextTransactionPerInterval"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:hint="Change per day"
+            android:hint="Change per interval"
             android:inputType="numberSigned" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select interval type:"
+            android:textSize="18sp" />
+
+        <Spinner
+            android:id="@+id/spinnerIntervalType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:textSize="15sp" />
 
         <TextView
             android:layout_width="wrap_content"

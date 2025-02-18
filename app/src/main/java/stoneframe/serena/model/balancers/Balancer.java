@@ -150,7 +150,9 @@ public class Balancer extends Revertible<BalancerData>
             return now;
         }
 
-        double remaining = Math.abs((double)available / getChangePerInterval());
+        double changePerDay = getChangePerInterval() / getMinutesOfInterval() * 60 * 24;
+
+        double remaining = Math.abs((double)available / changePerDay);
 
         int days = (int)remaining;
 

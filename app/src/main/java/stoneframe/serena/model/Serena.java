@@ -1,13 +1,16 @@
 package stoneframe.serena.model;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import stoneframe.serena.model.balancers.BalancerContainer;
+import stoneframe.serena.model.balancers.BalancerManager;
 import stoneframe.serena.model.checklists.ChecklistContainer;
 import stoneframe.serena.model.checklists.ChecklistManager;
 import stoneframe.serena.model.chores.ChoreContainer;
 import stoneframe.serena.model.chores.ChoreManager;
 import stoneframe.serena.model.chores.ChoreSelector;
 import stoneframe.serena.model.chores.EffortTracker;
-import stoneframe.serena.model.balancers.BalancerContainer;
-import stoneframe.serena.model.balancers.BalancerManager;
 import stoneframe.serena.model.notes.NoteContainer;
 import stoneframe.serena.model.notes.NoteManager;
 import stoneframe.serena.model.routines.RoutineContainer;
@@ -18,6 +21,8 @@ import stoneframe.serena.model.timeservices.TimeService;
 
 public class Serena
 {
+    private final List<SerenaChangedListener> listeners = new LinkedList<>();
+
     private final Storage storage;
     private final TimeService timeService;
 
@@ -59,6 +64,21 @@ public class Serena
     public void save()
     {
         storage.save(container);
+    }
+
+    public void addChangedListener(SerenaChangedListener listener)
+    {
+        listeners.add(listener);
+    }
+
+    public void removeChangedListener(SerenaChangedListener listener)
+    {
+        listeners.remove(listener);
+    }
+
+    public void notifyChange()
+    {
+        listeners.forEach(SerenaChangedListener::onSerenaChanged);
     }
 
     // ====================================================================

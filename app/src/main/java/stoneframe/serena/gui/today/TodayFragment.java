@@ -36,6 +36,7 @@ import stoneframe.serena.gui.tasks.EditTaskActivity;
 import stoneframe.serena.gui.util.DialogUtils;
 import stoneframe.serena.gui.util.SimpleCheckboxListAdapter;
 import stoneframe.serena.model.Serena;
+import stoneframe.serena.model.SerenaChangedListener;
 import stoneframe.serena.model.chores.Chore;
 import stoneframe.serena.model.chores.ChoreManager;
 import stoneframe.serena.model.routines.PendingProcedure;
@@ -44,7 +45,7 @@ import stoneframe.serena.model.tasks.Task;
 import stoneframe.serena.model.tasks.TaskEditor;
 import stoneframe.serena.model.tasks.TaskManager;
 
-public class TodayFragment extends Fragment
+public class TodayFragment extends Fragment implements SerenaChangedListener
 {
     private final HashMap<PendingProcedure, Runnable> procedureRemovals = new HashMap<>();
     private final HashMap<Chore, Runnable> choreRemovals = new HashMap<>();
@@ -256,6 +257,8 @@ public class TodayFragment extends Fragment
     {
         super.onStart();
 
+        serena.addChangedListener(this);
+
         procedureAdapter.notifyDataSetChanged();
         choreAdapter.notifyDataSetChanged();
         taskAdapter.notifyDataSetChanged();
@@ -268,6 +271,8 @@ public class TodayFragment extends Fragment
     {
         super.onResume();
 
+        serena.addChangedListener(this);
+
         procedureAdapter.notifyDataSetChanged();
         choreAdapter.notifyDataSetChanged();
         taskAdapter.notifyDataSetChanged();
@@ -276,13 +281,35 @@ public class TodayFragment extends Fragment
     }
 
     @Override
-    public synchronized void onStop()
+    public void onPause()
     {
-        super.onStop();
+        super.onPause();
+
+        serena.removeChangedListener(this);
 
         completePendingRemovals(procedureRemovals);
         completePendingRemovals(choreRemovals);
         completePendingRemovals(taskRemovals);
+    }
+
+    @Override
+    public synchronized void onStop()
+    {
+        super.onStop();
+
+        serena.removeChangedListener(this);
+
+        completePendingRemovals(procedureRemovals);
+        completePendingRemovals(choreRemovals);
+        completePendingRemovals(taskRemovals);
+    }
+
+    @Override
+    public void onSerenaChanged()
+    {
+        procedureAdapter.notifyDataSetChanged();
+        choreAdapter.notifyDataSetChanged();
+        taskAdapter.notifyDataSetChanged();
     }
 
     private void completePendingRemovals(HashMap<?, Runnable> pendingRemovalsMap)

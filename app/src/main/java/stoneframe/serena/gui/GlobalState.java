@@ -6,6 +6,7 @@ import stoneframe.serena.model.Serena;
 import stoneframe.serena.model.checklists.Checklist;
 import stoneframe.serena.model.chores.Chore;
 import stoneframe.serena.model.balancers.Balancer;
+import stoneframe.serena.model.notes.Note;
 import stoneframe.serena.model.routines.Routine;
 import stoneframe.serena.model.tasks.Task;
 
@@ -18,6 +19,7 @@ public class GlobalState extends Application
     private Task activeTask;
     private Checklist activeChecklist;
     private Balancer activeBalancer;
+    private Note activeNote;
 
     private Serena serena;
 
@@ -95,5 +97,15 @@ public class GlobalState extends Application
     public void setActiveBalancer(Balancer activeBalancer)
     {
         this.activeBalancer = activeBalancer;
+    }
+
+    public Note getActiveNote()
+    {
+        return activeNote;
+    }
+
+    public void setActiveNote(Note note)
+    {
+        activeNote = note;
     }
 }

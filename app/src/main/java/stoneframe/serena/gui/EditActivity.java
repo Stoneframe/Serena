@@ -12,8 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import stoneframe.serena.R;
-import stoneframe.serena.gui.util.DialogUtils;
 import stoneframe.serena.gui.util.ButtonEnabledLink;
+import stoneframe.serena.gui.util.DialogUtils;
 import stoneframe.serena.gui.util.EnableCriteria;
 import stoneframe.serena.model.Serena;
 

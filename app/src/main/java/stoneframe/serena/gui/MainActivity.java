@@ -29,6 +29,7 @@ import stoneframe.serena.R;
 import stoneframe.serena.gui.balancers.AllBalancersFragment;
 import stoneframe.serena.gui.checklists.AllChecklistsFragment;
 import stoneframe.serena.gui.chores.AllChoresFragment;
+import stoneframe.serena.gui.notes.AllNotesFragment;
 import stoneframe.serena.gui.routines.AllRoutinesFragment;
 import stoneframe.serena.gui.routines.RoutineNotifier;
 import stoneframe.serena.gui.tasks.AllTasksFragment;
@@ -107,6 +108,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return goToFragment(AllChecklistsFragment.class);
             case R.id.nav_balancers:
                 return goToFragment(AllBalancersFragment.class);
+            case R.id.nav_notes:
+                return goToFragment(AllNotesFragment.class);
             case R.id.nav_todays:
             default:
                 return goToFragment(TodayFragment.class);

@@ -176,13 +176,15 @@ public class EditChoreActivity extends EditActivity implements ChoreEditor.Chore
     }
 
     @Override
-    protected void onCancel()
+    protected boolean onCancel()
     {
         choreEditor.revert();
+
+        return true;
     }
 
     @Override
-    protected void onSave(int action)
+    protected boolean onSave(int action)
     {
         boolean isEnabled = enabledCheckbox.isChecked();
         String description = descriptionEditText.getText().toString().trim();
@@ -199,6 +201,8 @@ public class EditChoreActivity extends EditActivity implements ChoreEditor.Chore
         choreEditor.save();
 
         serena.save();
+
+        return true;
     }
 
     @Override

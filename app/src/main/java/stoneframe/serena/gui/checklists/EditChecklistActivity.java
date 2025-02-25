@@ -152,16 +152,20 @@ public class EditChecklistActivity extends EditActivity implements ChecklistEdit
     }
 
     @Override
-    protected void onCancel()
+    protected boolean onCancel()
     {
         checklistEditor.revert();
+
+        return true;
     }
 
     @Override
-    protected void onSave(int action)
+    protected boolean onSave(int action)
     {
         checklistEditor.save();
         serena.save();
+
+        return true;
     }
 
     @Override

@@ -63,13 +63,15 @@ public abstract class EditRoutineActivity<TRoutine extends Routine<?>, TRoutineE
     }
 
     @Override
-    protected void onCancel()
+    protected boolean onCancel()
     {
         routineEditor.revert();
+
+        return true;
     }
 
     @Override
-    protected void onSave(int action)
+    protected boolean onSave(int action)
     {
         if (enabledCheckBox.isChecked() && !routineEditor.isEnabled())
         {
@@ -81,6 +83,8 @@ public abstract class EditRoutineActivity<TRoutine extends Routine<?>, TRoutineE
         routineEditor.save();
 
         serena.save();
+
+        return true;
     }
 
     @Override

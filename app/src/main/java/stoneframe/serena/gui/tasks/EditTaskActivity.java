@@ -142,13 +142,13 @@ public class EditTaskActivity extends EditActivity implements TaskEditor.TaskEdi
     }
 
     @Override
-    protected void onCancel()
+    protected boolean onCancel()
     {
-
+        return true;
     }
 
     @Override
-    protected void onSave(int action)
+    protected boolean onSave(int action)
     {
         String description = descriptionEditText.getText().toString().trim();
         boolean isDone = isDoneCheckBox.isChecked();
@@ -161,6 +161,8 @@ public class EditTaskActivity extends EditActivity implements TaskEditor.TaskEdi
         taskEditor.save();
 
         serena.save();
+
+        return true;
     }
 
     @Override

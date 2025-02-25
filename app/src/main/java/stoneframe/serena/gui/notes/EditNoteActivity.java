@@ -4,6 +4,7 @@ import android.widget.EditText;
 
 import stoneframe.serena.R;
 import stoneframe.serena.gui.EditActivity;
+import stoneframe.serena.gui.util.DialogUtils;
 import stoneframe.serena.gui.util.EditTextCriteria;
 import stoneframe.serena.gui.util.EnableCriteria;
 import stoneframe.serena.model.notes.Note;
@@ -53,7 +54,8 @@ public class EditNoteActivity extends EditActivity implements NoteEditor.NoteEdi
     {
         return new EnableCriteria[]
             {
-                new EditTextCriteria(titleEditText, EditTextCriteria.IS_NOT_EMPTY)
+                new EditTextCriteria(titleEditText, EditTextCriteria.IS_NOT_EMPTY),
+                new EditTextCriteria(textEditText, e -> hasTextChanges()),
             };
     }
 
@@ -74,19 +76,41 @@ public class EditNoteActivity extends EditActivity implements NoteEditor.NoteEdi
     }
 
     @Override
-    protected void onSave(int action)
+    protected boolean onSave(int action)
     {
         noteEditor.setTitle(titleEditText.getText().toString().trim());
         noteEditor.setText(textEditText.getText().toString());
         noteEditor.save();
 
         serena.save();
+
+        saveButton.setEnabled(false);
+
+        return false;
     }
 
     @Override
-    protected void onCancel()
+    protected boolean onCancel()
     {
-        noteEditor.revert();
+        if (!hasTextChanges())
+        {
+            return true;
+        }
+
+        DialogUtils.showConfirmationDialog(
+            this,
+            "Unsaved changes",
+            "You have unsaved changes to you note. If you close without saving, " +
+                "the changes will be lost. Are you sure you want to close?",
+            isConfirmed ->
+            {
+                if (!isConfirmed) return;
+
+                noteEditor.revert();
+                finish();
+            });
+
+        return false;
     }
 
     @Override
@@ -107,5 +131,10 @@ public class EditNoteActivity extends EditActivity implements NoteEditor.NoteEdi
     public void textChanged()
     {
 
+    }
+
+    private boolean hasTextChanges()
+    {
+        return !noteEditor.getText().equals(textEditText.getText().toString());
     }
 }

@@ -112,26 +112,32 @@ public abstract class EditActivity extends AppCompatActivity
 
     protected abstract EnableCriteria[] getSaveEnabledCriteria();
 
-    protected abstract void onCancel();
+    protected abstract boolean onCancel();
 
-    protected abstract void onSave(int action);
+    protected abstract boolean onSave(int action);
 
     protected abstract void onRemove();
 
     private void cancelClick()
     {
-        onCancel();
+        boolean shouldClose = onCancel();
 
-        setResult(RESULT_CANCEL);
-        finish();
+        if (shouldClose)
+        {
+            setResult(RESULT_CANCEL);
+            finish();
+        }
     }
 
     private void saveClick()
     {
-        onSave(action);
+        boolean shouldClose = onSave(action);
 
-        setResult(RESULT_SAVE);
-        finish();
+        if (shouldClose)
+        {
+            setResult(RESULT_SAVE);
+            finish();
+        }
     }
 
     private void removeClick()

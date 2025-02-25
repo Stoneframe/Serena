@@ -24,7 +24,7 @@ import stoneframe.serena.model.routines.PendingProcedure;
 
 public class RoutineNotifier
 {
-    public static final String CHANNEL_ID = "1234";
+    public static final String CHANNEL_ID = "Serena_Routines_v1";
     public static final int NOTIFICATION_ID = 1;
 
     @SuppressLint("ScheduleExactAlarm")
@@ -71,6 +71,10 @@ public class RoutineNotifier
             "Routines",
             NotificationManager.IMPORTANCE_HIGH);
 
+        channel.enableVibration(true);
+        channel.setVibrationPattern(new long[]{0, 500, 250, 500, 250, 500});
+
+        notificationManager.cancel(NOTIFICATION_ID);
         notificationManager.createNotificationChannel(channel);
     }
 

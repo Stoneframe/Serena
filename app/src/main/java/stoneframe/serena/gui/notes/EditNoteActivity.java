@@ -1,6 +1,10 @@
 package stoneframe.serena.gui.notes;
 
 import android.widget.EditText;
+import android.widget.ImageButton;
+
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 
 import stoneframe.serena.R;
 import stoneframe.serena.gui.EditActivity;
@@ -14,6 +18,13 @@ public class EditNoteActivity extends EditActivity implements NoteEditor.NoteEdi
 {
     private EditText titleEditText;
     private EditText textEditText;
+
+    private ImageButton dateButton;
+    private ImageButton timeButton;
+    private ImageButton crossButton;
+    private ImageButton checkmarkButton;
+    private ImageButton bulletButton;
+    private ImageButton tabButton;
 
     private NoteEditor noteEditor;
 
@@ -44,9 +55,22 @@ public class EditNoteActivity extends EditActivity implements NoteEditor.NoteEdi
 
         titleEditText = findViewById(R.id.titleEditText);
         textEditText = findViewById(R.id.textEditText);
+        dateButton = findViewById(R.id.dateButton);
+        timeButton = findViewById(R.id.timeButton);
+        crossButton = findViewById(R.id.crossButton);
+        checkmarkButton = findViewById(R.id.checkmarkButton);
+        tabButton = findViewById(R.id.tabButton);
+        bulletButton = findViewById(R.id.bulletButton);
 
         titleEditText.setText(noteEditor.getTitle());
         textEditText.setText(noteEditor.getText());
+
+        dateButton.setOnClickListener(l -> addCharacter(LocalDate.now().toString("yyyy-MM-dd")));
+        timeButton.setOnClickListener(l -> addCharacter(LocalTime.now().toString("HH:mm")));
+        crossButton.setOnClickListener(l -> addCharacter("✖"));
+        checkmarkButton.setOnClickListener(l -> addCharacter("✔"));
+        bulletButton.setOnClickListener(l -> addCharacter("• "));
+        tabButton.setOnClickListener(l -> addCharacter("\t"));
     }
 
     @Override
@@ -136,5 +160,12 @@ public class EditNoteActivity extends EditActivity implements NoteEditor.NoteEdi
     private boolean hasTextChanges()
     {
         return !noteEditor.getText().equals(textEditText.getText().toString());
+    }
+
+    private void addCharacter(String character)
+    {
+        int start = textEditText.getSelectionStart();
+        int end = textEditText.getSelectionEnd();
+        textEditText.getText().replace(Math.min(start, end), Math.max(start, end), character);
     }
 }

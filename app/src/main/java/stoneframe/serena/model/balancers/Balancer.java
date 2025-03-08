@@ -1,7 +1,5 @@
 package stoneframe.serena.model.balancers;
 
-import androidx.core.util.Pair;
-
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
@@ -164,7 +162,7 @@ public class Balancer extends Revertible<BalancerData>
 
     public int getAvailable(LocalDateTime now)
     {
-        int totalAvailable = getTotalAvailable(now);
+        int totalAvailable = getTotalAvailableNotAccountingForMinAndMaxValues(now);
 
         if (totalAvailable > getMaxValue()) return getMaxValue();
         if (totalAvailable < getMinValue()) return getMinValue();
@@ -187,11 +185,6 @@ public class Balancer extends Revertible<BalancerData>
             .collect(Collectors.toList());
     }
 
-    public List<Transaction> getTransactions()
-    {
-        return data().transactions.stream().map(p -> p.first).collect(Collectors.toList());
-    }
-
     void setAllowQuick(boolean allowQuick)
     {
         data().allowQuick = allowQuick;
@@ -207,27 +200,19 @@ public class Balancer extends Revertible<BalancerData>
         data().transactionTypes.remove(transactionType);
     }
 
-    void addTransaction(String name, int transactionAmount, LocalDateTime now)
+    void addTransaction(int transactionAmount, LocalDateTime now)
     {
+        data().previousTransactions += getTypeModifier() * transactionAmount;
+
         updatePreviousTransactions(now);
-        clearOldTransactions(now);
-
-        data().transactions.add(
-            new Pair<>(new Transaction(name, getTypeModifier() * transactionAmount), now));
-    }
-
-    void removeTransaction(Transaction transaction)
-    {
-        data().transactions.removeIf(p -> p.first.equals(transaction));
     }
 
     void reset(LocalDateTime now)
     {
-        data().transactions.clear();
         data().startDate = now.toLocalDate();
         data().previousTransactions = 0;
 
-        int currentAvailable = getTotalAvailable(now);
+        int currentAvailable = getTotalAvailableNotAccountingForMinAndMaxValues(now);
 
         data().previousTransactions -= currentAvailable;
     }
@@ -240,7 +225,6 @@ public class Balancer extends Revertible<BalancerData>
 
         propertyUpdate.run();
 
-        data().transactions.clear();
         data().previousTransactions = 0;
 
         int newCurrentAvailable = getAvailable(now);
@@ -250,7 +234,7 @@ public class Balancer extends Revertible<BalancerData>
 
     private void updatePreviousTransactions(LocalDateTime now)
     {
-        int totalAvailable = getTotalAvailable(now);
+        int totalAvailable = getTotalAvailableNotAccountingForMinAndMaxValues(now);
 
         if (totalAvailable > getMaxValue())
         {
@@ -262,33 +246,14 @@ public class Balancer extends Revertible<BalancerData>
         }
     }
 
-    private void clearOldTransactions(LocalDateTime now)
-    {
-        List<Pair<Transaction, LocalDateTime>> transactionsOlderThanOneDay = data().transactions.stream()
-            .filter(p -> p.second.isBefore(now.minusDays(1)))
-            .collect(Collectors.toList());
-
-        data().previousTransactions += transactionsOlderThanOneDay.stream()
-            .mapToInt(p -> p.first.getAmount())
-            .sum();
-
-        data().transactions.removeAll(transactionsOlderThanOneDay);
-    }
-
-    private int getTotalAvailable(LocalDateTime now)
+    private int getTotalAvailableNotAccountingForMinAndMaxValues(LocalDateTime now)
     {
         Minutes minutes = Minutes.minutesBetween(
             data().startDate.toLocalDateTime(LocalTime.MIDNIGHT),
             now);
 
-        int recentTransactions = data().transactions.stream()
-            .map(p -> p.first)
-            .mapToInt(Transaction::getAmount)
-            .sum();
-
         return (int)(data().changePerInterval * minutes.getMinutes() / getMinutesOfInterval())
-            + data().previousTransactions
-            + recentTransactions;
+            + data().previousTransactions;
     }
 
     private double getMinutesOfInterval()

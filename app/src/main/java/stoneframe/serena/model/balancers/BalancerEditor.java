@@ -163,9 +163,9 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
         notifyListeners(BalanceEditorListener::transactionTypesChanged);
     }
 
-    public void addTransaction(String name, int transactionAmount)
+    public void addTransaction(int transactionAmount)
     {
-        balancer.addTransaction(name, transactionAmount, getNow());
+        balancer.addTransaction(transactionAmount, getNow());
 
         notifyListeners(BalanceEditorListener::transactionAdded);
     }

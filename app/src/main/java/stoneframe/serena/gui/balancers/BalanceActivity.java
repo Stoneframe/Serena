@@ -379,7 +379,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
             ? Integer.parseInt(editTextAmount.getText().toString())
             : transactionType.getAmount();
 
-        balancerEditor.addTransaction(transactionType.getName(), enteredTransactionAmount);
+        balancerEditor.addTransaction(enteredTransactionAmount);
 
         serena.save();
     }

@@ -202,7 +202,7 @@ public class Balancer extends Revertible<BalancerData>
 
     void addTransaction(int transactionAmount, LocalDateTime now)
     {
-        data().previousTransactions += getTypeModifier() * transactionAmount;
+        data().previousTransactions += transactionAmount;
 
         updatePreviousTransactions(now);
     }
@@ -270,20 +270,6 @@ public class Balancer extends Revertible<BalancerData>
                 return MINUTES_PER_DAY * 365;
             default:
                 throw new IndexOutOfBoundsException("Unknown interval " + data().intervalType);
-        }
-    }
-
-    private int getTypeModifier()
-    {
-        switch (getType())
-        {
-            case COUNTER:
-            case LIMITER:
-                return -1;
-            case ENHANCER:
-                return 1;
-            default:
-                throw new IllegalStateException("Unknown type: " + getType());
         }
     }
 }

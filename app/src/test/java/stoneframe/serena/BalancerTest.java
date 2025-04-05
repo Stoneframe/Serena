@@ -154,7 +154,7 @@ public class BalancerTest
     }
 
     @Test
-    public void addTransaction_balancerIsCounter_positiveTransactionReducesAvailable()
+    public void addTransaction_balancerIsCounter_negativeTransactionReducesAvailable()
     {
         // ARRANGE
         LocalDateTime now = LocalDateTime.now();
@@ -165,14 +165,14 @@ public class BalancerTest
         BalancerEditor balancerEditor = balancerManager.getBalancerEditor(balancer);
 
         // ACT
-        balancerEditor.addTransaction(10);
+        balancerEditor.addTransaction(-10);
 
         // ASSERT
         assertEquals(-10, balancer.getAvailable(now));
     }
 
     @Test
-    public void addTransaction_balancerIsLimiter_positiveTransactionReducesAvailable()
+    public void addTransaction_balancerIsLimiter_negativeTransactionReducesAvailable()
     {
         // ARRANGE
         LocalDateTime now = LocalDateTime.now();
@@ -184,7 +184,7 @@ public class BalancerTest
         balancerEditor.setChangePerInterval(1);
 
         // ACT
-        balancerEditor.addTransaction(10);
+        balancerEditor.addTransaction(-10);
 
         // ASSERT
         assertEquals(-10, balancer.getAvailable(now));
@@ -221,10 +221,10 @@ public class BalancerTest
         BalancerEditor balancerEditor = balancerManager.getBalancerEditor(balancer);
         balancerEditor.setChangePerInterval(1);
         balancerEditor.setMaxValue(10);
-        balancerEditor.addTransaction(-20);
+        balancerEditor.addTransaction(20);
 
         // ACT
-        balancerEditor.addTransaction(5);
+        balancerEditor.addTransaction(-5);
 
         // ASSERT
         assertEquals(5, balancer.getAvailable(now));
@@ -325,11 +325,36 @@ public class BalancerTest
         balancerEditor.setMinValue(-20);
 
         // ACT
-        balancerEditor.addTransaction(100);
+        balancerEditor.addTransaction(-100);
 
         int available = balancer.getAvailable(startTime.plusDays(1));
 
         // ASSERT
         assertEquals(-15, available);
+    }
+
+    @Test
+    public void getAvailable_waitUntilAboveMaxValueAndDecreaseByOne_valueIsOneBelowMax()
+    {
+        // ARRANGE
+        LocalDateTime startTime = LocalDateTime.now();
+
+        context.setCurrentTime(startTime);
+
+        Balancer balancer = balancerManager.createBalancer("Test");
+        BalancerEditor balancerEditor = balancerManager.getBalancerEditor(balancer);
+        balancerEditor.setChangePerInterval(1);
+        balancerEditor.setIntervalType(Balancer.DAILY);
+        balancerEditor.setMaxValue(2);
+
+        context.setCurrentTime(startTime.plusDays(7));
+
+        // ACT
+        balancerEditor.addTransaction(-1);
+
+        int available = balancer.getAvailable(startTime.plusDays(7));
+
+        // ASSERT
+        assertEquals(1, available);
     }
 }

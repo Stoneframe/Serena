@@ -202,6 +202,8 @@ public class Balancer extends Revertible<BalancerData>
 
     void addTransaction(int transactionAmount, LocalDateTime now)
     {
+        updatePreviousTransactions(now);
+
         data().previousTransactions += transactionAmount;
 
         updatePreviousTransactions(now);

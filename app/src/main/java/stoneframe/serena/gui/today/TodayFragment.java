@@ -25,6 +25,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -141,11 +142,11 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
 
             Task task = (Task)taskAdapter.getItem(position);
 
-            if (task.getDeadline().isEqual(task.getIgnoreBefore()))
+            if (!today.isBefore(task.getDeadline()))
             {
                 DialogUtils.showWarningDialog(
                     requireContext(),
-                    "Deadline is today!",
+                    "Has reached deadline!",
                     "Cannot ignore after deadline.");
 
                 return true;

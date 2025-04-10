@@ -20,10 +20,10 @@ import java.util.stream.Stream;
 
 import stoneframe.serena.R;
 import stoneframe.serena.gui.EditActivity;
-import stoneframe.serena.gui.util.CheckboxCriteria;
-import stoneframe.serena.gui.util.EditTextCriteria;
-import stoneframe.serena.gui.util.EnableCriteria;
-import stoneframe.serena.gui.util.ViewGroupCriteria;
+import stoneframe.serena.gui.util.enable.CheckboxCriteria;
+import stoneframe.serena.gui.util.enable.EditTextCriteria;
+import stoneframe.serena.gui.util.enable.EnableCriteria;
+import stoneframe.serena.gui.util.enable.ViewGroupCriteria;
 import stoneframe.serena.model.chores.Chore;
 import stoneframe.serena.model.chores.ChoreEditor;
 import stoneframe.serena.model.chores.DaysInWeekRepetition;

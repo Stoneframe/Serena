@@ -17,8 +17,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import stoneframe.serena.R;
-import stoneframe.serena.gui.util.ButtonEnabledLink;
-import stoneframe.serena.gui.util.EditTextCriteria;
+import stoneframe.serena.gui.util.enable.ButtonEnabledLink;
+import stoneframe.serena.gui.util.enable.EditTextCriteria;
 import stoneframe.serena.model.routines.Procedure;
 
 public class WeekProcedureEditDialog

@@ -11,8 +11,8 @@ import android.widget.TimePicker;
 import org.joda.time.LocalTime;
 
 import stoneframe.serena.R;
-import stoneframe.serena.gui.util.ButtonEnabledLink;
-import stoneframe.serena.gui.util.EditTextCriteria;
+import stoneframe.serena.gui.util.enable.ButtonEnabledLink;
+import stoneframe.serena.gui.util.enable.EditTextCriteria;
 import stoneframe.serena.model.routines.Procedure;
 
 public class DayProcedureEditDialog

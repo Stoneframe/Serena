@@ -6,8 +6,8 @@ import android.widget.EditText;
 
 import stoneframe.serena.R;
 import stoneframe.serena.gui.EditActivity;
-import stoneframe.serena.gui.util.EditTextCriteria;
-import stoneframe.serena.gui.util.EnableCriteria;
+import stoneframe.serena.gui.util.enable.EditTextCriteria;
+import stoneframe.serena.gui.util.enable.EnableCriteria;
 import stoneframe.serena.model.routines.Routine;
 import stoneframe.serena.model.routines.RoutineEditor;
 

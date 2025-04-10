@@ -1,4 +1,4 @@
-package stoneframe.serena.gui.util;
+package stoneframe.serena.gui.util.enable;
 
 import android.view.View;
 import android.view.ViewGroup;

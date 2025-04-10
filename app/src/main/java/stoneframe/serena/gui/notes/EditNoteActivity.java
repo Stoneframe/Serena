@@ -9,8 +9,9 @@ import org.joda.time.LocalTime;
 import stoneframe.serena.R;
 import stoneframe.serena.gui.EditActivity;
 import stoneframe.serena.gui.util.DialogUtils;
-import stoneframe.serena.gui.util.EditTextCriteria;
-import stoneframe.serena.gui.util.EnableCriteria;
+import stoneframe.serena.gui.util.enable.EditTextCriteria;
+import stoneframe.serena.gui.util.enable.EnableCriteria;
+import stoneframe.serena.gui.util.enable.OrEnableCriteria;
 import stoneframe.serena.model.notes.Note;
 import stoneframe.serena.model.notes.NoteEditor;
 
@@ -79,7 +80,13 @@ public class EditNoteActivity extends EditActivity implements NoteEditor.NoteEdi
         return new EnableCriteria[]
             {
                 new EditTextCriteria(titleEditText, EditTextCriteria.IS_NOT_EMPTY),
-                new EditTextCriteria(textEditText, e -> hasTextChanges()),
+                new OrEnableCriteria(
+                    new EditTextCriteria(titleEditText, e -> hasTextChanges(
+                        titleEditText,
+                        noteEditor.getTitle())),
+                    new EditTextCriteria(textEditText, e -> hasTextChanges(
+                        textEditText,
+                        noteEditor.getText()))),
             };
     }
 
@@ -116,7 +123,7 @@ public class EditNoteActivity extends EditActivity implements NoteEditor.NoteEdi
     @Override
     protected boolean onCancel()
     {
-        if (!hasTextChanges())
+        if (!hasTextChanges(textEditText, noteEditor.getText()))
         {
             return true;
         }
@@ -157,9 +164,9 @@ public class EditNoteActivity extends EditActivity implements NoteEditor.NoteEdi
 
     }
 
-    private boolean hasTextChanges()
+    private boolean hasTextChanges(EditText editText, String originalText)
     {
-        return !noteEditor.getText().equals(textEditText.getText().toString());
+        return !originalText.equals(editText.getText().toString());
     }
 
     private void addCharacter(String character)

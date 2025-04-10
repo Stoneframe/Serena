@@ -1,19 +1,19 @@
-package stoneframe.serena.gui.util;
+package stoneframe.serena.gui.util.enable;
 
 public abstract class EnableCriteria
 {
-    private ButtonEnabledLink link;
+    private CriteriaListener listener;
 
-    void subscribe(ButtonEnabledLink link)
+    void subscribe(CriteriaListener listener)
     {
-        this.link = link;
+        this.listener = listener;
 
         addWatcher();
     }
 
     protected void criteriaValueChanged()
     {
-        link.criteriaValueChanged();
+        listener.criteriaValueChanged();
     }
 
     protected abstract boolean isValid();

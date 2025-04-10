@@ -1,6 +1,6 @@
 package stoneframe.serena.gui.balancers;
 
-import stoneframe.serena.gui.util.EnableCriteria;
+import stoneframe.serena.gui.util.enable.EnableCriteria;
 import stoneframe.serena.model.balancers.BalancerEditor;
 import stoneframe.serena.model.balancers.CustomTransactionType;
 

@@ -48,6 +48,8 @@ public class NoteEditor extends Editor<NoteEditor.NoteEditorListener>
 
     public void save()
     {
+        note.save();
+
         if (!noteManager.containsNote(note))
         {
             noteManager.addNote(note);

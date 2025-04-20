@@ -1,4 +1,4 @@
-package stoneframe.serena.gui.util;
+package stoneframe.serena.gui.util.enable;
 
 import android.text.Editable;
 import android.text.TextWatcher;

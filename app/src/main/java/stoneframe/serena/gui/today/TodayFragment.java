@@ -141,11 +141,11 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
 
             Task task = (Task)taskAdapter.getItem(position);
 
-            if (task.getDeadline().isEqual(task.getIgnoreBefore()))
+            if (!today.isBefore(task.getDeadline()))
             {
                 DialogUtils.showWarningDialog(
                     requireContext(),
-                    "Deadline is today!",
+                    "Has reached deadline!",
                     "Cannot ignore after deadline.");
 
                 return true;

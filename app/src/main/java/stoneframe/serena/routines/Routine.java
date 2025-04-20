@@ -49,6 +49,13 @@ public abstract class Routine<T extends RoutineData> extends Revertible<T>
 
     public abstract List<Procedure> getAllProcedures();
 
+    public boolean isDone(LocalDate date, Procedure procedure)
+    {
+        LocalDateTime procedureDateTime = date.toLocalDateTime(procedure.getTime());
+
+        return !procedureDateTime.isAfter(data().lastCompleted);
+    }
+
     PendingProcedure getPendingProcedure(LocalDateTime now)
     {
         return getPendingProcedures(now).stream().findFirst().orElse(null);

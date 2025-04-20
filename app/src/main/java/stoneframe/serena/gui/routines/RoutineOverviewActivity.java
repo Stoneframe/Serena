@@ -9,7 +9,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -79,8 +78,8 @@ public class RoutineOverviewActivity extends AppCompatActivity
             p -> p.getProcedure().getDescription())
             .withSecondaryTextFunction(p -> p.getProcedure().getTime().toString("HH:mm"))
             .withBottomTextFunction(p -> p.getRoutine().getName())
-            .withBackgroundColorFunction(p -> getBackgroundColor(p.getProcedure()))
-            .withBorderColorFunction(p -> getBorderColor(p.getProcedure()))
+            .withBackgroundColorFunction(RoutineOverviewActivity::getBackgroundColor)
+            .withBorderColorFunction(RoutineOverviewActivity::getBorderColor)
             .create();
 
         daysProceduresList.setAdapter(daysProceduresListAdapter);
@@ -96,40 +95,17 @@ public class RoutineOverviewActivity extends AppCompatActivity
             .collect(Collectors.toList());
     }
 
-    private static int getBackgroundColor(Procedure procedure)
+    private static int getBackgroundColor(RoutineProcedureLink link)
     {
-        if (isBetweenHours(procedure.getTime(), 0, 8)) return Color.parseColor("#edece6");
-        if (isBetweenHours(procedure.getTime(), 8, 12)) return Color.parseColor("#fafa9d");
-        if (isBetweenHours(procedure.getTime(), 12, 17)) return Color.parseColor("#fae1aa");
-        if (isBetweenHours(procedure.getTime(), 17, 21)) return Color.parseColor("#bdfaa7");
-        if (isBetweenHours(procedure.getTime(), 21, 24)) return Color.parseColor("#edece6");
-
-        return Color.WHITE;
+        return link.isDone() ? Color.parseColor("#bdfaa7") : Color.parseColor("#edece6");
     }
 
-    private static int getBorderColor(Procedure procedure)
+    private static int getBorderColor(RoutineProcedureLink link)
     {
-        if (isBetweenHours(procedure.getTime(), 0, 8)) return Color.parseColor("#6e6e6e");
-        if (isBetweenHours(procedure.getTime(), 8, 12)) return Color.parseColor("#f7df05");
-        if (isBetweenHours(procedure.getTime(), 12, 17)) return Color.parseColor("#f7b705");
-        if (isBetweenHours(procedure.getTime(), 17, 21)) return Color.parseColor("#42f700");
-        if (isBetweenHours(procedure.getTime(), 21, 24)) return Color.parseColor("#6e6e6e");
-
-        return Color.WHITE;
+        return link.isDone() ? Color.parseColor("#42f700") : Color.parseColor("#6e6e6e");
     }
 
-    private static boolean isBetweenHours(LocalTime time, int start, int end)
-    {
-        LocalTime startTime = new LocalTime(start, 0);
-        LocalTime endTime = end == 24
-            ? new LocalTime(23, 59)
-            : new LocalTime(end, 0);
-
-        return (startTime.isBefore(time) || startTime.isEqual(time))
-            && endTime.isAfter(time);
-    }
-
-    public static class RoutineProcedureLink implements Comparable<RoutineProcedureLink>
+    public class RoutineProcedureLink implements Comparable<RoutineProcedureLink>
     {
         private final Routine<?> routine;
         private final Procedure procedure;
@@ -148,6 +124,11 @@ public class RoutineOverviewActivity extends AppCompatActivity
         public Procedure getProcedure()
         {
             return procedure;
+        }
+
+        public boolean isDone()
+        {
+            return routine.isDone(date, procedure);
         }
 
         @Override

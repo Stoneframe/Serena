@@ -27,8 +27,8 @@ import stoneframe.serena.R;
 import stoneframe.serena.gui.EditActivity;
 import stoneframe.serena.gui.util.enable.EditTextCriteria;
 import stoneframe.serena.gui.util.enable.EnableCriteria;
-import stoneframe.serena.model.tasks.Task;
-import stoneframe.serena.model.tasks.TaskEditor;
+import stoneframe.serena.tasks.Task;
+import stoneframe.serena.tasks.TaskEditor;
 
 public class EditTaskActivity extends EditActivity implements TaskEditor.TaskEditorListener
 {

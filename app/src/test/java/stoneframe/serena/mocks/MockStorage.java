@@ -2,13 +2,13 @@ package stoneframe.serena.mocks;
 
 import androidx.annotation.Nullable;
 
-import stoneframe.serena.model.Container;
-import stoneframe.serena.model.Storage;
-import stoneframe.serena.model.balancers.BalancerContainer;
-import stoneframe.serena.model.chores.ChoreContainer;
-import stoneframe.serena.model.chores.ChoreSelector;
-import stoneframe.serena.model.chores.EffortTracker;
-import stoneframe.serena.model.routines.RoutineContainer;
+import stoneframe.serena.Container;
+import stoneframe.serena.Storage;
+import stoneframe.serena.balancers.BalancerContainer;
+import stoneframe.serena.chores.ChoreContainer;
+import stoneframe.serena.chores.ChoreSelector;
+import stoneframe.serena.chores.EffortTracker;
+import stoneframe.serena.routines.RoutineContainer;
 
 public class MockStorage implements Storage
 {

@@ -25,9 +25,9 @@ import stoneframe.serena.gui.util.enable.EditTextCriteria;
 import stoneframe.serena.gui.util.enable.EnableCriteria;
 import stoneframe.serena.gui.util.RecyclerAdapter;
 import stoneframe.serena.gui.util.TextChangedListener;
-import stoneframe.serena.model.checklists.Checklist;
-import stoneframe.serena.model.checklists.ChecklistEditor;
-import stoneframe.serena.model.checklists.ChecklistItem;
+import stoneframe.serena.checklists.Checklist;
+import stoneframe.serena.checklists.ChecklistEditor;
+import stoneframe.serena.checklists.ChecklistItem;
 
 public class EditChecklistActivity extends EditActivity implements ChecklistEditor.ChecklistEditorListener
 {

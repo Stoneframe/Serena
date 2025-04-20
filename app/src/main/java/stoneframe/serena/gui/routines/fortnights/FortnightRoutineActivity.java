@@ -16,9 +16,9 @@ import java.util.List;
 import stoneframe.serena.R;
 import stoneframe.serena.gui.routines.EditRoutineActivity;
 import stoneframe.serena.gui.routines.util.WeekExpandableListAdaptor;
-import stoneframe.serena.model.routines.FortnightRoutine;
-import stoneframe.serena.model.routines.FortnightRoutineEditor;
-import stoneframe.serena.model.routines.Procedure;
+import stoneframe.serena.routines.FortnightRoutine;
+import stoneframe.serena.routines.FortnightRoutineEditor;
+import stoneframe.serena.routines.Procedure;
 
 public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRoutine, FortnightRoutineEditor> implements FortnightRoutineEditor.FortnightRoutineEditorListener
 {

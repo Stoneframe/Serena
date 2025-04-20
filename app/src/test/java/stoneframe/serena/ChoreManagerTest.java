@@ -10,10 +10,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import stoneframe.serena.mocks.TestContext;
-import stoneframe.serena.model.chores.Chore;
-import stoneframe.serena.model.chores.ChoreEditor;
-import stoneframe.serena.model.chores.ChoreManager;
-import stoneframe.serena.model.chores.IntervalRepetition;
+import stoneframe.serena.chores.Chore;
+import stoneframe.serena.chores.ChoreEditor;
+import stoneframe.serena.chores.ChoreManager;
+import stoneframe.serena.chores.IntervalRepetition;
 
 
 public class ChoreManagerTest

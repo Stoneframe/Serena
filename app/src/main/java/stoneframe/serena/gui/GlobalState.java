@@ -2,13 +2,13 @@ package stoneframe.serena.gui;
 
 import android.app.Application;
 
-import stoneframe.serena.model.Serena;
-import stoneframe.serena.model.checklists.Checklist;
-import stoneframe.serena.model.chores.Chore;
-import stoneframe.serena.model.balancers.Balancer;
-import stoneframe.serena.model.notes.Note;
-import stoneframe.serena.model.routines.Routine;
-import stoneframe.serena.model.tasks.Task;
+import stoneframe.serena.Serena;
+import stoneframe.serena.checklists.Checklist;
+import stoneframe.serena.chores.Chore;
+import stoneframe.serena.balancers.Balancer;
+import stoneframe.serena.notes.Note;
+import stoneframe.serena.routines.Routine;
+import stoneframe.serena.tasks.Task;
 
 public class GlobalState extends Application
 {

@@ -11,9 +11,9 @@ import android.widget.TextView;
 import org.joda.time.LocalDate;
 
 import stoneframe.serena.R;
-import stoneframe.serena.model.routines.Procedure;
-import stoneframe.serena.model.routines.Day;
-import stoneframe.serena.model.routines.Week;
+import stoneframe.serena.routines.Procedure;
+import stoneframe.serena.routines.Day;
+import stoneframe.serena.routines.Week;
 
 public class WeekExpandableListAdaptor extends BaseExpandableListAdapter
 {

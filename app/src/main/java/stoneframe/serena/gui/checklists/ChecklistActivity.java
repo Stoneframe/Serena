@@ -14,8 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import stoneframe.serena.R;
 import stoneframe.serena.gui.GlobalState;
 import stoneframe.serena.gui.util.SimpleCheckboxListAdapter;
-import stoneframe.serena.model.checklists.Checklist;
-import stoneframe.serena.model.checklists.ChecklistItem;
+import stoneframe.serena.checklists.Checklist;
+import stoneframe.serena.checklists.ChecklistItem;
 
 public class ChecklistActivity extends AppCompatActivity
 {

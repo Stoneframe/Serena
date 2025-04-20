@@ -13,7 +13,7 @@ import org.joda.time.LocalTime;
 import stoneframe.serena.R;
 import stoneframe.serena.gui.util.enable.ButtonEnabledLink;
 import stoneframe.serena.gui.util.enable.EditTextCriteria;
-import stoneframe.serena.model.routines.Procedure;
+import stoneframe.serena.routines.Procedure;
 
 public class DayProcedureEditDialog
 {

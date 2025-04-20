@@ -29,9 +29,9 @@ import stoneframe.serena.gui.util.enable.ButtonEnabledLink;
 import stoneframe.serena.gui.util.enable.EditTextCriteria;
 import stoneframe.serena.gui.util.SimpleListAdapter;
 import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
-import stoneframe.serena.model.Serena;
-import stoneframe.serena.model.balancers.Balancer;
-import stoneframe.serena.model.balancers.BalancerManager;
+import stoneframe.serena.Serena;
+import stoneframe.serena.balancers.Balancer;
+import stoneframe.serena.balancers.BalancerManager;
 
 public class AllBalancersFragment extends Fragment
 {

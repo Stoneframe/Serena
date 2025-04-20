@@ -12,8 +12,8 @@ import stoneframe.serena.gui.util.DialogUtils;
 import stoneframe.serena.gui.util.enable.EditTextCriteria;
 import stoneframe.serena.gui.util.enable.EnableCriteria;
 import stoneframe.serena.gui.util.enable.OrEnableCriteria;
-import stoneframe.serena.model.notes.Note;
-import stoneframe.serena.model.notes.NoteEditor;
+import stoneframe.serena.notes.Note;
+import stoneframe.serena.notes.NoteEditor;
 
 public class EditNoteActivity extends EditActivity implements NoteEditor.NoteEditorListener
 {

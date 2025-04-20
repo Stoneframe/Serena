@@ -16,9 +16,9 @@ import androidx.fragment.app.Fragment;
 import stoneframe.serena.R;
 import stoneframe.serena.gui.GlobalState;
 import stoneframe.serena.gui.util.CheckboxListAdapter;
-import stoneframe.serena.model.Serena;
-import stoneframe.serena.model.tasks.Task;
-import stoneframe.serena.model.tasks.TaskManager;
+import stoneframe.serena.Serena;
+import stoneframe.serena.tasks.Task;
+import stoneframe.serena.tasks.TaskManager;
 
 public class AllTasksFragment extends Fragment
 {

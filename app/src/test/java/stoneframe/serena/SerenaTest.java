@@ -18,20 +18,17 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import stoneframe.serena.mocks.MockTimeService;
-import stoneframe.serena.model.Container;
-import stoneframe.serena.model.Serena;
-import stoneframe.serena.model.Storage;
-import stoneframe.serena.model.chores.Chore;
-import stoneframe.serena.model.chores.ChoreEditor;
-import stoneframe.serena.model.chores.IntervalRepetition;
-import stoneframe.serena.model.chores.choreselectors.SimpleChoreSelector;
-import stoneframe.serena.model.chores.efforttrackers.SimpleEffortTracker;
-import stoneframe.serena.model.routines.DayRoutine;
-import stoneframe.serena.model.routines.DayRoutineEditor;
-import stoneframe.serena.model.routines.Procedure;
-import stoneframe.serena.model.routines.Routine;
-import stoneframe.serena.model.tasks.Task;
-import stoneframe.serena.model.tasks.TaskEditor;
+import stoneframe.serena.chores.Chore;
+import stoneframe.serena.chores.ChoreEditor;
+import stoneframe.serena.chores.IntervalRepetition;
+import stoneframe.serena.chores.choreselectors.SimpleChoreSelector;
+import stoneframe.serena.chores.efforttrackers.SimpleEffortTracker;
+import stoneframe.serena.routines.DayRoutine;
+import stoneframe.serena.routines.DayRoutineEditor;
+import stoneframe.serena.routines.Procedure;
+import stoneframe.serena.routines.Routine;
+import stoneframe.serena.tasks.Task;
+import stoneframe.serena.tasks.TaskEditor;
 
 @SuppressWarnings("SameParameterValue")
 public class SerenaTest

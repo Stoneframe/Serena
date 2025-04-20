@@ -35,15 +35,15 @@ import stoneframe.serena.gui.routines.RoutineNotifier;
 import stoneframe.serena.gui.tasks.EditTaskActivity;
 import stoneframe.serena.gui.util.DialogUtils;
 import stoneframe.serena.gui.util.SimpleCheckboxListAdapter;
-import stoneframe.serena.model.Serena;
-import stoneframe.serena.model.SerenaChangedListener;
-import stoneframe.serena.model.chores.Chore;
-import stoneframe.serena.model.chores.ChoreManager;
-import stoneframe.serena.model.routines.PendingProcedure;
-import stoneframe.serena.model.routines.RoutineManager;
-import stoneframe.serena.model.tasks.Task;
-import stoneframe.serena.model.tasks.TaskEditor;
-import stoneframe.serena.model.tasks.TaskManager;
+import stoneframe.serena.Serena;
+import stoneframe.serena.SerenaChangedListener;
+import stoneframe.serena.chores.Chore;
+import stoneframe.serena.chores.ChoreManager;
+import stoneframe.serena.routines.PendingProcedure;
+import stoneframe.serena.routines.RoutineManager;
+import stoneframe.serena.tasks.Task;
+import stoneframe.serena.tasks.TaskEditor;
+import stoneframe.serena.tasks.TaskManager;
 
 public class TodayFragment extends Fragment implements SerenaChangedListener
 {

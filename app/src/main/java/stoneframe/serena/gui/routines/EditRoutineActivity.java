@@ -8,8 +8,8 @@ import stoneframe.serena.R;
 import stoneframe.serena.gui.EditActivity;
 import stoneframe.serena.gui.util.enable.EditTextCriteria;
 import stoneframe.serena.gui.util.enable.EnableCriteria;
-import stoneframe.serena.model.routines.Routine;
-import stoneframe.serena.model.routines.RoutineEditor;
+import stoneframe.serena.routines.Routine;
+import stoneframe.serena.routines.RoutineEditor;
 
 public abstract class EditRoutineActivity<TRoutine extends Routine<?>, TRoutineEditor extends RoutineEditor<?>> extends EditActivity
 {

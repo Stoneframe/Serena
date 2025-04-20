@@ -22,9 +22,9 @@ import stoneframe.serena.R;
 import stoneframe.serena.gui.GlobalState;
 import stoneframe.serena.gui.util.SimpleListAdapter;
 import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
-import stoneframe.serena.model.Serena;
-import stoneframe.serena.model.checklists.Checklist;
-import stoneframe.serena.model.checklists.ChecklistManager;
+import stoneframe.serena.Serena;
+import stoneframe.serena.checklists.Checklist;
+import stoneframe.serena.checklists.ChecklistManager;
 
 public class AllChecklistsFragment extends Fragment
 {

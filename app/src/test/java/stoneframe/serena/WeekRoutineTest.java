@@ -13,11 +13,11 @@ import org.junit.Test;
 import java.util.List;
 
 import stoneframe.serena.mocks.TestContext;
-import stoneframe.serena.model.routines.PendingProcedure;
-import stoneframe.serena.model.routines.Procedure;
-import stoneframe.serena.model.routines.RoutineManager;
-import stoneframe.serena.model.routines.WeekRoutine;
-import stoneframe.serena.model.routines.WeekRoutineEditor;
+import stoneframe.serena.routines.PendingProcedure;
+import stoneframe.serena.routines.Procedure;
+import stoneframe.serena.routines.RoutineManager;
+import stoneframe.serena.routines.WeekRoutine;
+import stoneframe.serena.routines.WeekRoutineEditor;
 
 public class WeekRoutineTest
 {

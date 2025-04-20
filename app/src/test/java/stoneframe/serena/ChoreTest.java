@@ -7,10 +7,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import stoneframe.serena.mocks.TestContext;
-import stoneframe.serena.model.chores.Chore;
-import stoneframe.serena.model.chores.ChoreEditor;
-import stoneframe.serena.model.chores.ChoreManager;
-import stoneframe.serena.model.chores.IntervalRepetition;
+import stoneframe.serena.chores.Chore;
+import stoneframe.serena.chores.ChoreEditor;
+import stoneframe.serena.chores.ChoreManager;
+import stoneframe.serena.chores.IntervalRepetition;
 
 /** @noinspection UnnecessaryLocalVariable*/
 public class ChoreTest

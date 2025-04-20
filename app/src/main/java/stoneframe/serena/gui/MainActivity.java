@@ -34,16 +34,16 @@ import stoneframe.serena.gui.routines.AllRoutinesFragment;
 import stoneframe.serena.gui.routines.RoutineNotifier;
 import stoneframe.serena.gui.tasks.AllTasksFragment;
 import stoneframe.serena.gui.today.TodayFragment;
-import stoneframe.serena.json.ContainerJsonConverter;
-import stoneframe.serena.json.SimpleChoreSelectorConverter;
-import stoneframe.serena.json.WeeklyEffortTrackerConverter;
-import stoneframe.serena.model.Serena;
-import stoneframe.serena.model.Storage;
-import stoneframe.serena.model.chores.choreselectors.SimpleChoreSelector;
-import stoneframe.serena.model.chores.efforttrackers.WeeklyEffortTracker;
-import stoneframe.serena.model.storages.JsonConverter;
-import stoneframe.serena.model.storages.SharedPreferencesStorage;
-import stoneframe.serena.model.timeservices.RealTimeService;
+import stoneframe.serena.storages.json.ContainerJsonConverter;
+import stoneframe.serena.storages.json.SimpleChoreSelectorConverter;
+import stoneframe.serena.storages.json.WeeklyEffortTrackerConverter;
+import stoneframe.serena.Serena;
+import stoneframe.serena.Storage;
+import stoneframe.serena.chores.choreselectors.SimpleChoreSelector;
+import stoneframe.serena.chores.efforttrackers.WeeklyEffortTracker;
+import stoneframe.serena.storages.JsonConverter;
+import stoneframe.serena.storages.SharedPreferencesStorage;
+import stoneframe.serena.timeservices.RealTimeService;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {

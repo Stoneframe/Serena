@@ -7,9 +7,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import stoneframe.serena.mocks.TestContext;
-import stoneframe.serena.model.balancers.Balancer;
-import stoneframe.serena.model.balancers.BalancerEditor;
-import stoneframe.serena.model.balancers.BalancerManager;
+import stoneframe.serena.balancers.Balancer;
+import stoneframe.serena.balancers.BalancerEditor;
+import stoneframe.serena.balancers.BalancerManager;
 
 public class BalancerTest
 {

@@ -8,9 +8,9 @@ import java.util.List;
 import stoneframe.serena.R;
 import stoneframe.serena.gui.routines.EditRoutineActivity;
 import stoneframe.serena.gui.routines.util.WeekExpandableListAdaptor;
-import stoneframe.serena.model.routines.Procedure;
-import stoneframe.serena.model.routines.WeekRoutine;
-import stoneframe.serena.model.routines.WeekRoutineEditor;
+import stoneframe.serena.routines.Procedure;
+import stoneframe.serena.routines.WeekRoutine;
+import stoneframe.serena.routines.WeekRoutineEditor;
 
 public class WeekRoutineActivity extends EditRoutineActivity<WeekRoutine, WeekRoutineEditor> implements WeekRoutineEditor.WeekRoutineEditorListener
 {

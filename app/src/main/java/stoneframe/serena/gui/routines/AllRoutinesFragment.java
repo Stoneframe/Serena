@@ -33,12 +33,12 @@ import stoneframe.serena.gui.routines.weeks.WeekRoutineActivity;
 import stoneframe.serena.gui.util.DialogUtils;
 import stoneframe.serena.gui.util.SimpleListAdapter;
 import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
-import stoneframe.serena.model.Serena;
-import stoneframe.serena.model.routines.DayRoutine;
-import stoneframe.serena.model.routines.FortnightRoutine;
-import stoneframe.serena.model.routines.Routine;
-import stoneframe.serena.model.routines.RoutineManager;
-import stoneframe.serena.model.routines.WeekRoutine;
+import stoneframe.serena.Serena;
+import stoneframe.serena.routines.DayRoutine;
+import stoneframe.serena.routines.FortnightRoutine;
+import stoneframe.serena.routines.Routine;
+import stoneframe.serena.routines.RoutineManager;
+import stoneframe.serena.routines.WeekRoutine;
 
 public class AllRoutinesFragment extends Fragment
 {

@@ -7,15 +7,15 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 
 import stoneframe.serena.gui.GlobalState;
-import stoneframe.serena.json.SimpleChoreSelectorConverter;
-import stoneframe.serena.json.WeeklyEffortTrackerConverter;
-import stoneframe.serena.model.Serena;
-import stoneframe.serena.model.Storage;
-import stoneframe.serena.model.chores.choreselectors.SimpleChoreSelector;
-import stoneframe.serena.model.chores.efforttrackers.WeeklyEffortTracker;
-import stoneframe.serena.model.storages.JsonConverter;
-import stoneframe.serena.model.storages.SharedPreferencesStorage;
-import stoneframe.serena.model.timeservices.RealTimeService;
+import stoneframe.serena.storages.json.SimpleChoreSelectorConverter;
+import stoneframe.serena.storages.json.WeeklyEffortTrackerConverter;
+import stoneframe.serena.Serena;
+import stoneframe.serena.Storage;
+import stoneframe.serena.chores.choreselectors.SimpleChoreSelector;
+import stoneframe.serena.chores.efforttrackers.WeeklyEffortTracker;
+import stoneframe.serena.storages.JsonConverter;
+import stoneframe.serena.storages.SharedPreferencesStorage;
+import stoneframe.serena.timeservices.RealTimeService;
 
 public class RoutineNotifierReceiver extends BroadcastReceiver
 {

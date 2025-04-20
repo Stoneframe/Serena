@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
-import stoneframe.serena.model.timeservices.TimeService;
+import stoneframe.serena.timeservices.TimeService;
 
 public class MockTimeService implements TimeService
 {

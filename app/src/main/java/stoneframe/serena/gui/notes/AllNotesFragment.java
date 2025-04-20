@@ -18,9 +18,9 @@ import stoneframe.serena.R;
 import stoneframe.serena.gui.GlobalState;
 import stoneframe.serena.gui.util.SimpleListAdapter;
 import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
-import stoneframe.serena.model.Serena;
-import stoneframe.serena.model.notes.Note;
-import stoneframe.serena.model.notes.NoteManager;
+import stoneframe.serena.Serena;
+import stoneframe.serena.notes.Note;
+import stoneframe.serena.notes.NoteManager;
 
 public class AllNotesFragment extends Fragment
 {

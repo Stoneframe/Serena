@@ -16,11 +16,11 @@ import org.junit.Test;
 import java.util.List;
 
 import stoneframe.serena.mocks.TestContext;
-import stoneframe.serena.model.routines.FortnightRoutine;
-import stoneframe.serena.model.routines.FortnightRoutineEditor;
-import stoneframe.serena.model.routines.PendingProcedure;
-import stoneframe.serena.model.routines.Procedure;
-import stoneframe.serena.model.routines.RoutineManager;
+import stoneframe.serena.routines.FortnightRoutine;
+import stoneframe.serena.routines.FortnightRoutineEditor;
+import stoneframe.serena.routines.PendingProcedure;
+import stoneframe.serena.routines.Procedure;
+import stoneframe.serena.routines.RoutineManager;
 
 /** @noinspection UnnecessaryLocalVariable*/
 public class FortnightRoutineTest

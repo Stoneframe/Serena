@@ -6,14 +6,14 @@ import org.joda.time.LocalTime;
 
 import java.util.List;
 
-import stoneframe.serena.model.Serena;
-import stoneframe.serena.model.balancers.BalancerManager;
-import stoneframe.serena.model.chores.Chore;
-import stoneframe.serena.model.chores.ChoreManager;
-import stoneframe.serena.model.chores.ChoreSelector;
-import stoneframe.serena.model.chores.EffortTracker;
-import stoneframe.serena.model.chores.choreselectors.SimpleChoreSelector;
-import stoneframe.serena.model.routines.RoutineManager;
+import stoneframe.serena.Serena;
+import stoneframe.serena.balancers.BalancerManager;
+import stoneframe.serena.chores.Chore;
+import stoneframe.serena.chores.ChoreManager;
+import stoneframe.serena.chores.ChoreSelector;
+import stoneframe.serena.chores.EffortTracker;
+import stoneframe.serena.chores.choreselectors.SimpleChoreSelector;
+import stoneframe.serena.routines.RoutineManager;
 
 public class TestContext
 {

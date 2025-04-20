@@ -34,11 +34,11 @@ import stoneframe.serena.gui.util.enable.ButtonEnabledLink;
 import stoneframe.serena.gui.util.enable.EditTextCriteria;
 import stoneframe.serena.gui.util.SimpleListAdapter;
 import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
-import stoneframe.serena.model.Serena;
-import stoneframe.serena.model.balancers.Balancer;
-import stoneframe.serena.model.balancers.BalancerEditor;
-import stoneframe.serena.model.balancers.CustomTransactionType;
-import stoneframe.serena.model.balancers.TransactionType;
+import stoneframe.serena.Serena;
+import stoneframe.serena.balancers.Balancer;
+import stoneframe.serena.balancers.BalancerEditor;
+import stoneframe.serena.balancers.CustomTransactionType;
+import stoneframe.serena.balancers.TransactionType;
 
 public class BalanceActivity extends AppCompatActivity implements BalancerEditor.BalanceEditorListener
 {

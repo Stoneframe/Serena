@@ -15,7 +15,7 @@ import stoneframe.serena.R;
 import stoneframe.serena.gui.util.enable.ButtonEnabledLink;
 import stoneframe.serena.gui.util.DialogUtils;
 import stoneframe.serena.gui.util.enable.EnableCriteria;
-import stoneframe.serena.model.Serena;
+import stoneframe.serena.Serena;
 
 public abstract class EditActivity extends AppCompatActivity
 {

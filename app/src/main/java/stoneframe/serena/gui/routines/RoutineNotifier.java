@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 
 import stoneframe.serena.R;
 import stoneframe.serena.gui.MainActivity;
-import stoneframe.serena.model.Serena;
-import stoneframe.serena.model.routines.PendingProcedure;
+import stoneframe.serena.Serena;
+import stoneframe.serena.routines.PendingProcedure;
 
 public class RoutineNotifier
 {

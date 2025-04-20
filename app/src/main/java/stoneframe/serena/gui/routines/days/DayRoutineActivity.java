@@ -9,9 +9,9 @@ import stoneframe.serena.R;
 import stoneframe.serena.gui.routines.EditRoutineActivity;
 import stoneframe.serena.gui.util.SimpleListAdapter;
 import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
-import stoneframe.serena.model.routines.DayRoutine;
-import stoneframe.serena.model.routines.DayRoutineEditor;
-import stoneframe.serena.model.routines.Procedure;
+import stoneframe.serena.routines.DayRoutine;
+import stoneframe.serena.routines.DayRoutineEditor;
+import stoneframe.serena.routines.Procedure;
 
 public class DayRoutineActivity extends EditRoutineActivity<DayRoutine, DayRoutineEditor> implements DayRoutineEditor.DayRoutineEditorListener
 {

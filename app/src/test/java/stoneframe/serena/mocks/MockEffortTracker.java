@@ -2,7 +2,7 @@ package stoneframe.serena.mocks;
 
 import org.joda.time.LocalDate;
 
-import stoneframe.serena.model.chores.EffortTracker;
+import stoneframe.serena.chores.EffortTracker;
 
 public class MockEffortTracker implements EffortTracker
 {

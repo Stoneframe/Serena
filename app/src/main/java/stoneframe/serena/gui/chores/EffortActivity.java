@@ -16,11 +16,11 @@ import stoneframe.serena.R;
 import stoneframe.serena.gui.GlobalState;
 import stoneframe.serena.gui.util.enable.ButtonEnabledLink;
 import stoneframe.serena.gui.util.enable.EditTextCriteria;
-import stoneframe.serena.model.Serena;
-import stoneframe.serena.model.chores.Chore;
-import stoneframe.serena.model.chores.ChoreManager;
-import stoneframe.serena.model.chores.Repetition;
-import stoneframe.serena.model.chores.efforttrackers.WeeklyEffortTracker;
+import stoneframe.serena.Serena;
+import stoneframe.serena.chores.Chore;
+import stoneframe.serena.chores.ChoreManager;
+import stoneframe.serena.chores.Repetition;
+import stoneframe.serena.chores.efforttrackers.WeeklyEffortTracker;
 
 public class EffortActivity extends AppCompatActivity implements TextWatcher
 {

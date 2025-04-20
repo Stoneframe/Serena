@@ -30,9 +30,9 @@ import stoneframe.serena.gui.GlobalState;
 import stoneframe.serena.gui.util.SimpleListAdapter;
 import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
 import stoneframe.serena.gui.util.TextChangedListener;
-import stoneframe.serena.model.Serena;
-import stoneframe.serena.model.chores.Chore;
-import stoneframe.serena.model.chores.ChoreManager;
+import stoneframe.serena.Serena;
+import stoneframe.serena.chores.Chore;
+import stoneframe.serena.chores.ChoreManager;
 
 public class AllChoresFragment extends Fragment
 {

@@ -24,11 +24,11 @@ import stoneframe.serena.gui.util.enable.CheckboxCriteria;
 import stoneframe.serena.gui.util.enable.EditTextCriteria;
 import stoneframe.serena.gui.util.enable.EnableCriteria;
 import stoneframe.serena.gui.util.enable.ViewGroupCriteria;
-import stoneframe.serena.model.chores.Chore;
-import stoneframe.serena.model.chores.ChoreEditor;
-import stoneframe.serena.model.chores.DaysInWeekRepetition;
-import stoneframe.serena.model.chores.IntervalRepetition;
-import stoneframe.serena.model.chores.Repetition;
+import stoneframe.serena.chores.Chore;
+import stoneframe.serena.chores.ChoreEditor;
+import stoneframe.serena.chores.DaysInWeekRepetition;
+import stoneframe.serena.chores.IntervalRepetition;
+import stoneframe.serena.chores.Repetition;
 
 public class EditChoreActivity extends EditActivity implements ChoreEditor.ChoreEditorListener
 {

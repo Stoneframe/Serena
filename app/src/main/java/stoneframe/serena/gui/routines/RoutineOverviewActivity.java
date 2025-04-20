@@ -18,9 +18,9 @@ import stoneframe.serena.R;
 import stoneframe.serena.gui.GlobalState;
 import stoneframe.serena.gui.util.SimpleListAdapter;
 import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
-import stoneframe.serena.model.routines.Procedure;
-import stoneframe.serena.model.routines.Routine;
-import stoneframe.serena.model.routines.RoutineManager;
+import stoneframe.serena.routines.Procedure;
+import stoneframe.serena.routines.Routine;
+import stoneframe.serena.routines.RoutineManager;
 
 public class RoutineOverviewActivity extends AppCompatActivity
 {

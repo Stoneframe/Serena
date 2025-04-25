@@ -1,4 +1,4 @@
-package stoneframe.serena;
+package stoneframe.serena.chores;
 
 import static org.junit.Assert.assertEquals;
 
@@ -7,10 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import stoneframe.serena.mocks.TestContext;
-import stoneframe.serena.chores.Chore;
-import stoneframe.serena.chores.ChoreEditor;
-import stoneframe.serena.chores.ChoreManager;
-import stoneframe.serena.chores.IntervalRepetition;
 
 public class ChoreComparatorTest
 {

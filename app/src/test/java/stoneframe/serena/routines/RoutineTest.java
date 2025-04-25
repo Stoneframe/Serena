@@ -1,4 +1,4 @@
-package stoneframe.serena;
+package stoneframe.serena.routines;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;

@@ -1,4 +1,4 @@
-package stoneframe.serena;
+package stoneframe.serena.routines;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -13,11 +13,6 @@ import org.junit.Test;
 import java.util.List;
 
 import stoneframe.serena.mocks.TestContext;
-import stoneframe.serena.routines.PendingProcedure;
-import stoneframe.serena.routines.Procedure;
-import stoneframe.serena.routines.RoutineManager;
-import stoneframe.serena.routines.WeekRoutine;
-import stoneframe.serena.routines.WeekRoutineEditor;
 
 public class WeekRoutineTest
 {

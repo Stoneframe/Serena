@@ -1,4 +1,4 @@
-package stoneframe.serena;
+package stoneframe.serena.routines;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNull;
@@ -16,11 +16,6 @@ import org.junit.Test;
 import java.util.List;
 
 import stoneframe.serena.mocks.TestContext;
-import stoneframe.serena.routines.FortnightRoutine;
-import stoneframe.serena.routines.FortnightRoutineEditor;
-import stoneframe.serena.routines.PendingProcedure;
-import stoneframe.serena.routines.Procedure;
-import stoneframe.serena.routines.RoutineManager;
 
 /** @noinspection UnnecessaryLocalVariable*/
 public class FortnightRoutineTest

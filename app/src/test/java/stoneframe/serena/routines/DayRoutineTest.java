@@ -1,4 +1,4 @@
-package stoneframe.serena;
+package stoneframe.serena.routines;
 
 import static junit.framework.TestCase.assertEquals;
 
@@ -9,11 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import stoneframe.serena.mocks.TestContext;
-import stoneframe.serena.routines.DayRoutine;
-import stoneframe.serena.routines.DayRoutineEditor;
-import stoneframe.serena.routines.PendingProcedure;
-import stoneframe.serena.routines.Procedure;
-import stoneframe.serena.routines.RoutineManager;
 
 public class DayRoutineTest
 {

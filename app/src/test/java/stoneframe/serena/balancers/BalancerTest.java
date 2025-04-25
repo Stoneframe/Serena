@@ -1,4 +1,4 @@
-package stoneframe.serena;
+package stoneframe.serena.balancers;
 
 import static org.junit.Assert.assertEquals;
 
@@ -7,9 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import stoneframe.serena.mocks.TestContext;
-import stoneframe.serena.balancers.Balancer;
-import stoneframe.serena.balancers.BalancerEditor;
-import stoneframe.serena.balancers.BalancerManager;
 
 public class BalancerTest
 {

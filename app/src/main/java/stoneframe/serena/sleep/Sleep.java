@@ -8,19 +8,19 @@ public class Sleep
     public static final int AWAKE = 1;
     public static final int ASLEEP = 2;
 
-    private static final int MINUTES_PER_POINT = 180;
+    private static final double MINUTES_PER_POINT = 24 * 60 / 7;
 
     private final LocalDateTime startDateTime;
 
     private int state;
 
+    private int minutesSlept;
+
     private LocalDateTime startSleep;
 
-    private int acquiredPoints;
-
-    public Sleep()
+    public Sleep(LocalDateTime now)
     {
-        startDateTime = LocalDateTime.now();
+        startDateTime = now;
         state = AWAKE;
     }
 
@@ -31,9 +31,17 @@ public class Sleep
 
     public int getPoints(LocalDateTime now)
     {
-        Minutes minutes = Minutes.minutesBetween(startDateTime, now);
+        int pointsLost = -(int)(getTotalMinutes(now) / MINUTES_PER_POINT);
+        int pointsAcquired = minutesSlept / 60;
 
-        return -minutes.getMinutes() / MINUTES_PER_POINT + acquiredPoints;
+        int currentPoints = pointsLost + pointsAcquired;
+
+        if (currentPoints < -5)
+        {
+            return -5;
+        }
+
+        return currentPoints;
     }
 
     public void toggle(LocalDateTime now)
@@ -48,6 +56,11 @@ public class Sleep
         }
     }
 
+    private int getTotalMinutes(LocalDateTime now)
+    {
+        return Minutes.minutesBetween(startDateTime, now).getMinutes();
+    }
+
     private void startSleep(LocalDateTime now)
     {
         state = ASLEEP;
@@ -59,8 +72,6 @@ public class Sleep
     {
         state = AWAKE;
 
-        Minutes minutes = Minutes.minutesBetween(startSleep, now);
-
-        acquiredPoints += minutes.getMinutes() / 60;
+        minutesSlept += Minutes.minutesBetween(startSleep, now).getMinutes();
     }
 }

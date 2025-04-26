@@ -15,6 +15,8 @@ import stoneframe.serena.notes.NoteContainer;
 import stoneframe.serena.notes.NoteManager;
 import stoneframe.serena.routines.RoutineContainer;
 import stoneframe.serena.routines.RoutineManager;
+import stoneframe.serena.sleep.SleepContainer;
+import stoneframe.serena.sleep.SleepManager;
 import stoneframe.serena.tasks.TaskContainer;
 import stoneframe.serena.tasks.TaskManager;
 import stoneframe.serena.timeservices.TimeService;
@@ -57,6 +59,7 @@ public class Serena
             container.TaskContainer = new TaskContainer();
             container.ChecklistContainer = new ChecklistContainer();
             container.BalancerContainer = new BalancerContainer();
+            container.SleepContainer = new SleepContainer();
             container.NoteContainer = new NoteContainer();
         }
     }
@@ -124,6 +127,15 @@ public class Serena
     public BalancerManager getBalancerManager()
     {
         return new BalancerManager(() -> container.BalancerContainer, timeService);
+    }
+
+    // ====================================================================
+    // SLEEP
+    // ====================================================================
+
+    public SleepManager getSleepManager()
+    {
+        return new SleepManager(() -> container.SleepContainer, timeService);
     }
 
     // ====================================================================

@@ -5,6 +5,7 @@ import stoneframe.serena.chores.ChoreContainer;
 import stoneframe.serena.balancers.BalancerContainer;
 import stoneframe.serena.notes.NoteContainer;
 import stoneframe.serena.routines.RoutineContainer;
+import stoneframe.serena.sleep.SleepContainer;
 import stoneframe.serena.tasks.TaskContainer;
 
 public class Container
@@ -20,6 +21,8 @@ public class Container
     public ChecklistContainer ChecklistContainer;
 
     public BalancerContainer BalancerContainer;
+
+    public SleepContainer SleepContainer;
 
     public NoteContainer NoteContainer;
 }

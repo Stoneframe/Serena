@@ -1,6 +1,7 @@
 package stoneframe.serena.sleep;
 
 import org.joda.time.LocalDateTime;
+import org.joda.time.LocalTime;
 import org.joda.time.Minutes;
 
 public class Sleep
@@ -8,35 +9,60 @@ public class Sleep
     public static final int AWAKE = 1;
     public static final int ASLEEP = 2;
 
-    private static final int MINUTES_PER_POINT = 180;
+    private static final double MINUTES_PER_POINT = 24d * 60d / 7d;
+    private static final double MINUTES_PER_HOUR = 60;
 
-    private final LocalDateTime startDateTime;
+    private static final int MAXIMUM_VALUE = 3;
+    private static final int MINIMUM_VALUE = -10;
+
+    private LocalDateTime startDateTime;
 
     private int state;
 
+    private int minutesSlept;
+
     private LocalDateTime startSleep;
 
-    private int acquiredPoints;
-
-    public Sleep()
+    Sleep(LocalDateTime now)
     {
-        startDateTime = LocalDateTime.now();
+        startDateTime = now;
         state = AWAKE;
     }
 
-    public int getState()
+    int getState()
     {
         return state;
     }
 
-    public int getPoints(LocalDateTime now)
+    boolean isOnTrack(LocalDateTime now)
     {
-        Minutes minutes = Minutes.minutesBetween(startDateTime, now);
-
-        return -minutes.getMinutes() / MINUTES_PER_POINT + acquiredPoints;
+        return calculateCurrentPoints(now.toLocalDate()
+            .plusDays(1)
+            .toLocalDateTime(LocalTime.MIDNIGHT)) > -9;
     }
 
-    public void toggle(LocalDateTime now)
+    int getPoints(LocalDateTime now)
+    {
+        int currentPoints = calculateCurrentPoints(now);
+
+        if (currentPoints < MINIMUM_VALUE)
+        {
+            updateStartTimeToMatchTargetValue(now, MINIMUM_VALUE);
+
+            currentPoints = calculateCurrentPoints(now);
+        }
+
+        if (currentPoints > MAXIMUM_VALUE)
+        {
+            updateStartTimeToMatchTargetValue(now, MAXIMUM_VALUE);
+
+            currentPoints = calculateCurrentPoints(now);
+        }
+
+        return currentPoints;
+    }
+
+    void toggle(LocalDateTime now)
     {
         if (state == AWAKE)
         {
@@ -46,6 +72,19 @@ public class Sleep
         {
             stopSleep(now);
         }
+    }
+
+    private int getTotalMinutes(LocalDateTime now)
+    {
+        return Minutes.minutesBetween(startDateTime, now).getMinutes();
+    }
+
+    private int calculateCurrentPoints(LocalDateTime now)
+    {
+        double pointsLost = -getTotalMinutes(now) / MINUTES_PER_POINT;
+        double pointsAcquired = minutesSlept / MINUTES_PER_HOUR;
+
+        return (int)Math.round(pointsLost + pointsAcquired);
     }
 
     private void startSleep(LocalDateTime now)
@@ -59,8 +98,13 @@ public class Sleep
     {
         state = AWAKE;
 
-        Minutes minutes = Minutes.minutesBetween(startSleep, now);
+        minutesSlept += Minutes.minutesBetween(startSleep, now).getMinutes();
+    }
 
-        acquiredPoints += minutes.getMinutes() / 60;
+    private void updateStartTimeToMatchTargetValue(LocalDateTime now, int targetValue)
+    {
+        double totalMinutes = -(targetValue - minutesSlept / MINUTES_PER_HOUR) * MINUTES_PER_POINT;
+
+        startDateTime = now.minusMinutes((int)totalMinutes);
     }
 }

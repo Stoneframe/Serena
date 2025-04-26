@@ -32,6 +32,7 @@ import stoneframe.serena.gui.chores.AllChoresFragment;
 import stoneframe.serena.gui.notes.AllNotesFragment;
 import stoneframe.serena.gui.routines.AllRoutinesFragment;
 import stoneframe.serena.gui.routines.RoutineNotifier;
+import stoneframe.serena.gui.sleep.SleepFragment;
 import stoneframe.serena.gui.tasks.AllTasksFragment;
 import stoneframe.serena.gui.today.TodayFragment;
 import stoneframe.serena.storages.json.ContainerJsonConverter;
@@ -108,6 +109,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return goToFragment(AllChecklistsFragment.class);
             case R.id.nav_balancers:
                 return goToFragment(AllBalancersFragment.class);
+            case R.id.nav_sleep:
+                return goToFragment(SleepFragment.class);
             case R.id.nav_notes:
                 return goToFragment(AllNotesFragment.class);
             case R.id.nav_todays:
@@ -147,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (fragmentClass == AllChoresFragment.class) return "Chores";
         if (fragmentClass == AllTasksFragment.class) return "Tasks";
         if (fragmentClass == AllChecklistsFragment.class) return "Checklists";
+        if (fragmentClass == SleepFragment.class) return "Sleep";
         if (fragmentClass == AllBalancersFragment.class) return "Balancers";
 
         return "Serena";

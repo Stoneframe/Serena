@@ -41,6 +41,8 @@ import stoneframe.serena.chores.Chore;
 import stoneframe.serena.chores.ChoreManager;
 import stoneframe.serena.routines.PendingProcedure;
 import stoneframe.serena.routines.RoutineManager;
+import stoneframe.serena.sleep.Sleep;
+import stoneframe.serena.sleep.SleepManager;
 import stoneframe.serena.tasks.Task;
 import stoneframe.serena.tasks.TaskEditor;
 import stoneframe.serena.tasks.TaskManager;
@@ -277,6 +279,8 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
         choreAdapter.notifyDataSetChanged();
         taskAdapter.notifyDataSetChanged();
 
+        checkIfAsleepAndQueryToWakeUp();
+
         updateColors();
     }
 
@@ -310,6 +314,26 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
         procedureAdapter.notifyDataSetChanged();
         choreAdapter.notifyDataSetChanged();
         taskAdapter.notifyDataSetChanged();
+    }
+
+    private void checkIfAsleepAndQueryToWakeUp()
+    {
+        SleepManager sleepManager = serena.getSleepManager();
+
+        if (sleepManager.getState() == Sleep.ASLEEP)
+        {
+            DialogUtils.showConfirmationDialog(
+                requireContext(),
+                "You are asleep",
+                "You are asleep. Do you want to wake up?",
+                isConfirmed ->
+                {
+                    if (isConfirmed)
+                    {
+                        sleepManager.toggle();
+                    }
+                });
+        }
     }
 
     private void completePendingRemovals(HashMap<?, Runnable> pendingRemovalsMap)

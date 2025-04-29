@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.joda.time.Minutes;
+
 import stoneframe.serena.R;
 import stoneframe.serena.Serena;
 import stoneframe.serena.gui.GlobalState;
@@ -26,6 +28,10 @@ public class SleepFragment extends Fragment
     private GlobalState globalState;
     private Serena serena;
     private SleepManager sleepManager;
+
+    private TextView sessionStartTimeTextView;
+    private TextView sessionStopTimeTextView;
+    private TextView sessionTotalTimeTextView;
 
     private TextView percentTextView;
     private Button toggleButton;
@@ -42,6 +48,10 @@ public class SleepFragment extends Fragment
         sleepManager = serena.getSleepManager();
 
         View rootView = inflater.inflate(R.layout.fragment_sleep, container, false);
+
+        sessionStartTimeTextView = rootView.findViewById(R.id.sessionStartTimeTextView);
+        sessionStopTimeTextView = rootView.findViewById(R.id.sessionStopTimeTextView);
+        sessionTotalTimeTextView = rootView.findViewById(R.id.sessionTotalTimeTextView);
 
         percentTextView = rootView.findViewById(R.id.percentTextView);
         toggleButton = rootView.findViewById(R.id.toggleButton);
@@ -60,17 +70,42 @@ public class SleepFragment extends Fragment
 
     private void updateComponents()
     {
-        updatePointsText();
-        updatePointsTextColor();
+        updatePreviousSession();
+        updatePercentText();
+        updatePercentTextColor();
         updateToggleButtonText();
     }
 
-    private void updatePointsText()
+    private void updatePreviousSession()
+    {
+        Sleep.SleepSession session = sleepManager.getPreviousSession();
+
+        if (session == null)
+        {
+            return;
+        }
+
+
+        sessionStartTimeTextView.setText(session.getStartTime().toString("yyyy-MM-dd HH:mm"));
+        sessionStopTimeTextView.setText(session.getStopTime().toString("yyyy-MM-dd HH:mm"));
+        sessionTotalTimeTextView.setText(formatMinutes(session.getSleepTime()));
+    }
+
+    private String formatMinutes(Minutes minutes)
+    {
+        int totalMinutes = minutes.getMinutes();
+        int hours = totalMinutes / 60;
+        int remainingMinutes = totalMinutes % 60;
+
+        return String.format("%02d:%02d", hours, remainingMinutes);
+    }
+
+    private void updatePercentText()
     {
         percentTextView.setText(sleepManager.getPercent() + " %");
     }
 
-    private void updatePointsTextColor()
+    private void updatePercentTextColor()
     {
         if (sleepManager.isOnTrack())
         {

@@ -5,10 +5,83 @@
     android:layout_height="match_parent"
     tools:context=".gui.sleep.SleepFragment">
 
+    <GridLayout
+        android:id="@+id/previousSessionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:background="@drawable/border_black_thin"
+        android:columnCount="2"
+        android:padding="10dp"
+        android:rowCount="4">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_row="0"
+            android:layout_column="0"
+            android:layout_columnSpan="2"
+            android:text="Previous session"
+            android:textSize="30sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:layout_marginEnd="20dp"
+            android:text="Start time:"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_row="2"
+            android:layout_column="0"
+            android:layout_marginEnd="20dp"
+            android:text="Stop time:"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_row="3"
+            android:layout_column="0"
+            android:layout_marginEnd="20dp"
+            android:text="Total time:"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/sessionStartTimeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_row="1"
+            android:layout_column="1"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/sessionStopTimeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_row="2"
+            android:layout_column="1"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/sessionTotalTimeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_row="3"
+            android:layout_column="1"
+            android:textSize="20sp" />
+
+    </GridLayout>
+
     <TextView
         android:id="@+id/percentTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/previousSessionLayout"
         android:layout_marginTop="20dp"
         android:text="0"
         android:textAlignment="center"

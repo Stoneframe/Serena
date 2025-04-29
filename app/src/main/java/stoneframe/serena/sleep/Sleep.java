@@ -1,5 +1,8 @@
 package stoneframe.serena.sleep;
 
+import androidx.annotation.Nullable;
+
+import org.joda.time.Hours;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.joda.time.Minutes;
@@ -22,6 +25,8 @@ public class Sleep
     private int minutesSlept;
 
     private LocalDateTime startSleep;
+
+    private SleepSession previousSession;
 
     Sleep(LocalDateTime now)
     {
@@ -83,6 +88,12 @@ public class Sleep
         }
     }
 
+    @Nullable
+    SleepSession getPreviousSession()
+    {
+        return previousSession;
+    }
+
     private int getTotalMinutes(LocalDateTime now)
     {
         return Minutes.minutesBetween(startDateTime, now).getMinutes();
@@ -108,6 +119,8 @@ public class Sleep
         state = AWAKE;
 
         minutesSlept += Minutes.minutesBetween(startSleep, now).getMinutes();
+
+        previousSession = new SleepSession(startSleep, now);
     }
 
     private void updateStartTimeToMatchTargetValue(LocalDateTime now, int targetValue)
@@ -115,5 +128,32 @@ public class Sleep
         double totalMinutes = -(targetValue - minutesSlept / MINUTES_PER_HOUR) * MINUTES_PER_POINT;
 
         startDateTime = now.minusMinutes((int)totalMinutes);
+    }
+
+    public static class SleepSession
+    {
+        private final LocalDateTime startTime;
+        private final LocalDateTime stopTime;
+
+        public SleepSession(LocalDateTime startTime, LocalDateTime stopTime)
+        {
+            this.startTime = startTime;
+            this.stopTime = stopTime;
+        }
+
+        public LocalDateTime getStartTime()
+        {
+            return startTime;
+        }
+
+        public LocalDateTime getStopTime()
+        {
+            return stopTime;
+        }
+
+        public Minutes getSleepTime()
+        {
+            return Minutes.minutesBetween(startTime, stopTime);
+        }
     }
 }

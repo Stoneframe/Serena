@@ -31,13 +31,13 @@ public class SleepManager
         return container.get().sleep.getPercent(timeService.getNow());
     }
 
-    public int getPoints()
-    {
-        return container.get().sleep.getPoints(timeService.getNow());
-    }
-
     public void toggle()
     {
         container.get().sleep.toggle(timeService.getNow());
+    }
+
+    public Sleep.SleepSession getPreviousSession()
+    {
+        return container.get().sleep.getPreviousSession();
     }
 }

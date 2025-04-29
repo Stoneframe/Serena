@@ -26,6 +26,11 @@ public class SleepManager
         return container.get().sleep.isOnTrack(timeService.getNow());
     }
 
+    public int getPercent()
+    {
+        return container.get().sleep.getPercent(timeService.getNow());
+    }
+
     public int getPoints()
     {
         return container.get().sleep.getPoints(timeService.getNow());

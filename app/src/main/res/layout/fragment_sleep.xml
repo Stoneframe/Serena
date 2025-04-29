@@ -6,19 +6,19 @@
     tools:context=".gui.sleep.SleepFragment">
 
     <TextView
-        android:id="@+id/pointsTextView"
+        android:id="@+id/percentTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="0"
         android:textAlignment="center"
-        android:textSize="200sp" />
+        android:textSize="120sp" />
 
     <Button
         android:id="@+id/toggleButton"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/pointsTextView"
+        android:layout_below="@+id/percentTextView"
         android:layout_margin="20dp"
         android:text="Toggle"
         android:textSize="50sp" />

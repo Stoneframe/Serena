@@ -41,6 +41,15 @@ public class Sleep
             .toLocalDateTime(LocalTime.MIDNIGHT)) > -9;
     }
 
+    int getPercent(LocalDateTime now)
+    {
+        int points = getPoints(now);
+
+        int span = MAXIMUM_VALUE - MINIMUM_VALUE;
+
+        return (points - MINIMUM_VALUE) * 100 / span;
+    }
+
     int getPoints(LocalDateTime now)
     {
         int currentPoints = calculateCurrentPoints(now);

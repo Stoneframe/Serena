@@ -27,7 +27,7 @@ public class SleepFragment extends Fragment
     private Serena serena;
     private SleepManager sleepManager;
 
-    private TextView pointsTextView;
+    private TextView percentTextView;
     private Button toggleButton;
 
     @Nullable
@@ -43,34 +43,43 @@ public class SleepFragment extends Fragment
 
         View rootView = inflater.inflate(R.layout.fragment_sleep, container, false);
 
-        pointsTextView = rootView.findViewById(R.id.pointsTextView);
+        percentTextView = rootView.findViewById(R.id.percentTextView);
         toggleButton = rootView.findViewById(R.id.toggleButton);
 
         toggleButton.setOnClickListener(v ->
         {
             sleepManager.toggle();
-            updatePointsText();
-            updateToggleButtonText();
+
+            updateComponents();
         });
 
-        updatePointsText();
-        updateToggleButtonText();
-
-        if (sleepManager.isOnTrack())
-        {
-            pointsTextView.setTextColor(Color.GREEN);
-        }
-        else
-        {
-            pointsTextView.setTextColor(Color.RED);
-        }
+        updateComponents();
 
         return rootView;
     }
 
+    private void updateComponents()
+    {
+        updatePointsText();
+        updatePointsTextColor();
+        updateToggleButtonText();
+    }
+
     private void updatePointsText()
     {
-        pointsTextView.setText(Integer.toString(sleepManager.getPoints()));
+        percentTextView.setText(sleepManager.getPercent() + " %");
+    }
+
+    private void updatePointsTextColor()
+    {
+        if (sleepManager.isOnTrack())
+        {
+            percentTextView.setTextColor(Color.GREEN);
+        }
+        else
+        {
+            percentTextView.setTextColor(Color.RED);
+        }
     }
 
     private void updateToggleButtonText()

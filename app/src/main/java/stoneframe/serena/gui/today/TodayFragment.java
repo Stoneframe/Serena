@@ -69,6 +69,8 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
 
     private Serena serena;
 
+    private boolean isShowingSleepDialog;
+
     @Override
     public View onCreateView(
         LayoutInflater inflater,
@@ -316,9 +318,16 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
         taskAdapter.notifyDataSetChanged();
     }
 
-    private void checkIfAsleepAndQueryToWakeUp()
+    private synchronized void checkIfAsleepAndQueryToWakeUp()
     {
         SleepManager sleepManager = serena.getSleepManager();
+
+        if (isShowingSleepDialog)
+        {
+            return;
+        }
+
+        isShowingSleepDialog = true;
 
         if (sleepManager.getState() == Sleep.ASLEEP)
         {
@@ -332,6 +341,8 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
                     {
                         sleepManager.toggle();
                     }
+
+                    isShowingSleepDialog = false;
                 });
         }
     }

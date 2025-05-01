@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 {
     private ActivityResultLauncher<Intent> editStorageLauncher;
 
-    private Class<?> fragmentClass;
+    private int selectedFragment;
 
     private Serena serena;
     private Storage storage;
@@ -97,6 +97,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @SuppressLint("NonConstantResourceId")
     private boolean goToFragment(int fragmentId)
     {
+        selectedFragment = fragmentId;
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setCheckedItem(fragmentId);
+
         switch (fragmentId)
         {
             case R.id.nav_all_chores:
@@ -121,11 +126,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private boolean goToFragment(Class<?> fragmentClass)
     {
-        this.fragmentClass = fragmentClass;
-
         try
         {
-            Fragment fragment = (Fragment)this.fragmentClass.newInstance();
+            Fragment fragment = (Fragment)fragmentClass.newInstance();
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
@@ -205,9 +208,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        navigationView.getMenu().getItem(0).setChecked(true);
-        onNavigationItemSelected(navigationView.getMenu().getItem(0));
-
         RoutineNotifier.setupNotificationChannel(this);
 
         LocalDateTime nextRoutineProcedureTime = serena.getRoutineManager().getNextProcedureTime();
@@ -231,9 +231,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 {
                     drawer.closeDrawer(GravityCompat.START);
                 }
-                else if (fragmentClass != TodayFragment.class)
+                else if (selectedFragment != R.id.nav_todays)
                 {
-                    goToFragment(TodayFragment.class);
+                    goToFragment(R.id.nav_todays);
 
                     NavigationView navigationView = findViewById(R.id.nav_view);
 
@@ -246,17 +246,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        goToFragment(R.id.nav_todays);
+        if (savedInstanceState == null)
+        {
+            goToFragment(R.id.nav_todays);
+        }
     }
 
     @Override
     protected void onStart()
     {
         super.onStart();
-
-        goToFragment(fragmentClass);
     }
-
     @Override
     protected void onStop()
     {

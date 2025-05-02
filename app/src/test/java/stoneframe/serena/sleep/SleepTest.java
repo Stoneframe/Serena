@@ -54,7 +54,7 @@ public class SleepTest
 
         int points = sleep.getPoints(now.plusDays(1));
 
-        assertEquals(1, points);
+        assertEquals(-2, points);
     }
 
     @Test
@@ -68,7 +68,6 @@ public class SleepTest
         assertEquals(-3, points);
     }
 
-
     @Test
     public void getPoints_sleepFourHoursTwice_pointsIsOneOneDayLater()
     {
@@ -80,7 +79,7 @@ public class SleepTest
 
         int points = sleep.getPoints(now.plusDays(1));
 
-        assertEquals(1, points);
+        assertEquals(-1, points);
     }
 
     @Test
@@ -117,6 +116,24 @@ public class SleepTest
         int points = sleep.getPoints(now.plusDays(1));
 
         assertEquals(3, points);
+    }
+
+    @Test
+    public void getPoints_sleepOneDayThenWaitOneDay_pointsIsMinus4()
+    {
+        sleep.toggle(now.plusHours(0));
+        sleep.toggle(now.plusHours(24));
+
+        assertEquals(-4, sleep.getPoints(now.plusHours(48)));
+    }
+
+    @Test
+    public void getPercent_sleepToHundredThenWaitADay_()
+    {
+        sleep.toggle(now.plusHours(0));
+        sleep.toggle(now.plusHours(24));
+
+        assertEquals(46, sleep.getPercent(now.plusHours(48)));
     }
 
     @Test

@@ -2,7 +2,6 @@ package stoneframe.serena.sleep;
 
 import androidx.annotation.Nullable;
 
-import org.joda.time.Hours;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.joda.time.Minutes;
@@ -57,23 +56,9 @@ public class Sleep
 
     int getPoints(LocalDateTime now)
     {
-        int currentPoints = calculateCurrentPoints(now);
+        alignPoints(now);
 
-        if (currentPoints < MINIMUM_VALUE)
-        {
-            updateStartTimeToMatchTargetValue(now, MINIMUM_VALUE);
-
-            currentPoints = calculateCurrentPoints(now);
-        }
-
-        if (currentPoints > MAXIMUM_VALUE)
-        {
-            updateStartTimeToMatchTargetValue(now, MAXIMUM_VALUE);
-
-            currentPoints = calculateCurrentPoints(now);
-        }
-
-        return currentPoints;
+        return calculateCurrentPoints(now);
     }
 
     void toggle(LocalDateTime now)
@@ -109,6 +94,8 @@ public class Sleep
 
     private void startSleep(LocalDateTime now)
     {
+        alignPoints(now);
+
         state = ASLEEP;
 
         startSleep = now;
@@ -121,6 +108,23 @@ public class Sleep
         minutesSlept += Minutes.minutesBetween(startSleep, now).getMinutes();
 
         previousSession = new SleepSession(startSleep, now);
+
+        alignPoints(now);
+    }
+
+    private void alignPoints(LocalDateTime now)
+    {
+        int currentPoints = calculateCurrentPoints(now);
+
+        if (currentPoints <= MINIMUM_VALUE)
+        {
+            updateStartTimeToMatchTargetValue(now, MINIMUM_VALUE);
+        }
+
+        if (currentPoints >= MAXIMUM_VALUE)
+        {
+            updateStartTimeToMatchTargetValue(now, MAXIMUM_VALUE);
+        }
     }
 
     private void updateStartTimeToMatchTargetValue(LocalDateTime now, int targetValue)

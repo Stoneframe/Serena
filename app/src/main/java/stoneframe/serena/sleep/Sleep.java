@@ -11,7 +11,7 @@ public class Sleep
     public static final int AWAKE = 1;
     public static final int ASLEEP = 2;
 
-    private static final double MINUTES_PER_POINT = 24d * 60d / 7d;
+    private static final double MINUTES_PER_POINT = 24d * 60d / 11d;
     private static final double MINUTES_PER_HOUR = 60;
 
     private static final int MAXIMUM_VALUE = 3;

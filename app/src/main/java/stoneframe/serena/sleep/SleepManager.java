@@ -23,7 +23,7 @@ public class SleepManager
 
     public boolean isOnTrack()
     {
-        return container.get().sleep.isOnTrack(timeService.getNow());
+        return container.get().sleep.getPercent(timeService.getNow()) > 80;
     }
 
     public int getPercent()

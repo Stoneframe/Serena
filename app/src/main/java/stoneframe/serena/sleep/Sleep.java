@@ -3,29 +3,25 @@ package stoneframe.serena.sleep;
 import androidx.annotation.Nullable;
 
 import org.joda.time.LocalDateTime;
-import org.joda.time.LocalTime;
 import org.joda.time.Minutes;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class Sleep
 {
     public static final int AWAKE = 1;
     public static final int ASLEEP = 2;
 
-    private static final double MINUTES_PER_POINT = 24d * 60d / 7d;
-    private static final double MINUTES_PER_HOUR = 60;
+    private static final int MAX_VALUE = 100;
+    private static final int MIN_VALUE = 87;
 
-    private static final int MAXIMUM_VALUE = 3;
-    private static final int MINIMUM_VALUE = -10;
+    private final List<SleepSession> sleepSessions = new LinkedList<>();
 
     private LocalDateTime startDateTime;
-
     private int state;
 
-    private int minutesSlept;
-
     private LocalDateTime startSleep;
-
-    private SleepSession previousSession;
 
     Sleep(LocalDateTime now)
     {
@@ -38,27 +34,23 @@ public class Sleep
         return state;
     }
 
-    boolean isOnTrack(LocalDateTime now)
-    {
-        return calculateCurrentPoints(now.toLocalDate()
-            .plusDays(1)
-            .toLocalDateTime(LocalTime.MIDNIGHT)) > -9;
-    }
-
     int getPercent(LocalDateTime now)
     {
-        int points = getPoints(now);
+        if (startDateTime.isBefore(now.minusDays(3)))
+        {
+            startDateTime = now.minusDays(3);
+        }
 
-        int span = MAXIMUM_VALUE - MINIMUM_VALUE;
+        double expectedMinutesSlept = Minutes.minutesBetween(startDateTime, now)
+            .getMinutes() * (8d / 24d);
+        int minuteSlept = getMinutesSleptLastThreeDays();
 
-        return (points - MINIMUM_VALUE) * 100 / span;
-    }
+        double value = minuteSlept / expectedMinutesSlept * 100;
 
-    int getPoints(LocalDateTime now)
-    {
-        alignPoints(now);
+        if (value > MAX_VALUE) return 100;
+        if (value < MIN_VALUE) return 0;
 
-        return calculateCurrentPoints(now);
+        return (int)((value - MIN_VALUE) / (MAX_VALUE - MIN_VALUE) * 100);
     }
 
     void toggle(LocalDateTime now)
@@ -76,26 +68,16 @@ public class Sleep
     @Nullable
     SleepSession getPreviousSession()
     {
-        return previousSession;
-    }
+        if (sleepSessions.isEmpty())
+        {
+            return null;
+        }
 
-    private int getTotalMinutes(LocalDateTime now)
-    {
-        return Minutes.minutesBetween(startDateTime, now).getMinutes();
-    }
-
-    private int calculateCurrentPoints(LocalDateTime now)
-    {
-        double pointsLost = -getTotalMinutes(now) / MINUTES_PER_POINT;
-        double pointsAcquired = minutesSlept / MINUTES_PER_HOUR;
-
-        return (int)Math.round(pointsLost + pointsAcquired);
+        return sleepSessions.get(sleepSessions.size() - 1);
     }
 
     private void startSleep(LocalDateTime now)
     {
-        alignPoints(now);
-
         state = ASLEEP;
 
         startSleep = now;
@@ -105,33 +87,18 @@ public class Sleep
     {
         state = AWAKE;
 
-        minutesSlept += Minutes.minutesBetween(startSleep, now).getMinutes();
+        SleepSession session = new SleepSession(startSleep, now);
 
-        previousSession = new SleepSession(startSleep, now);
-
-        alignPoints(now);
+        sleepSessions.add(session);
     }
 
-    private void alignPoints(LocalDateTime now)
+    private int getMinutesSleptLastThreeDays()
     {
-        int currentPoints = calculateCurrentPoints(now);
+        sleepSessions.removeIf(s -> s.isPassed(startDateTime));
 
-        if (currentPoints <= MINIMUM_VALUE)
-        {
-            updateStartTimeToMatchTargetValue(now, MINIMUM_VALUE);
-        }
-
-        if (currentPoints >= MAXIMUM_VALUE)
-        {
-            updateStartTimeToMatchTargetValue(now, MAXIMUM_VALUE);
-        }
-    }
-
-    private void updateStartTimeToMatchTargetValue(LocalDateTime now, int targetValue)
-    {
-        double totalMinutes = -(targetValue - minutesSlept / MINUTES_PER_HOUR) * MINUTES_PER_POINT;
-
-        startDateTime = now.minusMinutes((int)totalMinutes);
+        return sleepSessions.stream()
+            .mapToInt(s -> s.getMinutes(startDateTime))
+            .sum();
     }
 
     public static class SleepSession
@@ -158,6 +125,20 @@ public class Sleep
         public Minutes getSleepTime()
         {
             return Minutes.minutesBetween(startTime, stopTime);
+        }
+
+        boolean isPassed(LocalDateTime now)
+        {
+            return now.isAfter(stopTime);
+        }
+
+        int getMinutes(LocalDateTime now)
+        {
+            Minutes minutes = now.isAfter(startTime)
+                ? Minutes.minutesBetween(now, stopTime)
+                : Minutes.minutesBetween(startTime, stopTime);
+
+            return minutes.getMinutes();
         }
     }
 }

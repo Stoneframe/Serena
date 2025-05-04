@@ -1,8 +1,6 @@
 package stoneframe.serena.sleep;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import org.joda.time.LocalDateTime;
 import org.junit.Before;
@@ -23,117 +21,150 @@ public class SleepTest
     }
 
     @Test
-    public void getPoints_sleepInitialized_pointsAreZero()
+    public void getPercent_doNotSleep_percentIsZeroEndOfDay()
     {
-        int points = sleep.getPoints(now);
-
-        assertEquals(0, points);
+        assertEquals(0, sleep.getPercent(now.plusHours(24)));
     }
 
     @Test
-    public void getPoints_oneDayAfterInitialization_pointsIsMinusSeven()
+    public void getPercent_sleepSevenHours_percentIsSeventyWhenWakingUp()
     {
-        int points = sleep.getPoints(now.plusDays(1));
+        sleep.toggle(now.plusHours(0));
+        sleep.toggle(now.plusHours(7));
 
-        assertEquals(-7, points);
+        assertEquals(100, sleep.getPercent(now.plusHours(7)));
     }
 
     @Test
-    public void getPoints_twoDaysAfterInitialization_pointsIsMinusTen()
-    {
-        int points = sleep.getPoints(now.plusDays(2));
-
-        assertEquals(-10, points);
-    }
-
-    @Test
-    public void getPoints_sleepEightHours_pointsIsOneOneDayLater()
+    public void getPercent_sleepEightHours_percentIsEightyWhenWakingUp()
     {
         sleep.toggle(now.plusHours(0));
         sleep.toggle(now.plusHours(8));
 
-        int points = sleep.getPoints(now.plusDays(1));
-
-        assertEquals(-2, points);
+        assertEquals(100, sleep.getPercent(now.plusHours(8)));
     }
 
     @Test
-    public void getPoints_sleepFourHours_pointsIsMinusThreeOneDayLater()
+    public void getPercent_sleepSevenHours_percentIs3AtEndOfDay()
     {
         sleep.toggle(now.plusHours(0));
-        sleep.toggle(now.plusHours(4));
+        sleep.toggle(now.plusHours(7));
 
-        int points = sleep.getPoints(now.plusDays(1));
-
-        assertEquals(-3, points);
+        assertEquals(3, sleep.getPercent(now.plusHours(24)));
     }
 
     @Test
-    public void getPoints_sleepFourHoursTwice_pointsIsOneOneDayLater()
+    public void getPercent_sleepEightHours_percentIsTenAtEndOfDay()
     {
         sleep.toggle(now.plusHours(0));
-        sleep.toggle(now.plusHours(4));
+        sleep.toggle(now.plusHours(8));
 
-        sleep.toggle(now.plusHours(6));
-        sleep.toggle(now.plusHours(10));
-
-        int points = sleep.getPoints(now.plusDays(1));
-
-        assertEquals(-1, points);
+        assertEquals(100, sleep.getPercent(now.plusHours(24)));
     }
 
     @Test
-    public void getPoints_sleepEightHoursInFiveMinuteIntervals_pointsIsOneOneDayLater()
+    public void getPercent_sleepEightHoursForTwoDays_percentIs100WhenWakingUp()
     {
-        for (int i = 0; i < 960; i += 10)
-        {
-            sleep.toggle(now.plusMinutes(i));
-            sleep.toggle(now.plusMinutes(i + 5));
-        }
+        sleep.toggle(now.plusDays(0).plusHours(0));
+        sleep.toggle(now.plusDays(0).plusHours(8));
 
-        int points = sleep.getPoints(now.plusDays(1));
-
-        assertEquals(1, points);
-    }
-
-    @Test
-    public void getPoints_sleepEightHoursOneDayAfterInitialization_pointsIsMinusFourTwoDaysLater()
-    {
         sleep.toggle(now.plusDays(1).plusHours(0));
         sleep.toggle(now.plusDays(1).plusHours(8));
 
-        int points = sleep.getPoints(now.plusDays(2));
-
-        assertEquals(-6, points);
+        assertEquals(100, sleep.getPercent(now.plusDays(1).plusHours(8)));
     }
 
     @Test
-    public void getPoints_sleepTwentyFourHours_pointsIsThree()
+    public void getPercent_sleepSevenHoursForThreeDays_percentIs3AtEndOfDay()
+    {
+        sleep.toggle(now.plusDays(0).plusHours(0));
+        sleep.toggle(now.plusDays(0).plusHours(7));
+
+        sleep.toggle(now.plusDays(1).plusHours(0));
+        sleep.toggle(now.plusDays(1).plusHours(7));
+
+        sleep.toggle(now.plusDays(2).plusHours(0));
+        sleep.toggle(now.plusDays(2).plusHours(7));
+
+        assertEquals(3, sleep.getPercent(now.plusDays(3)));
+    }
+
+    @Test
+    public void getPercent_sleepEightHoursForThreeDays_percentIs100AtEndOfDay()
+    {
+        sleep.toggle(now.plusDays(0).plusHours(0));
+        sleep.toggle(now.plusDays(0).plusHours(8));
+
+        sleep.toggle(now.plusDays(1).plusHours(0));
+        sleep.toggle(now.plusDays(1).plusHours(8));
+
+        sleep.toggle(now.plusDays(2).plusHours(0));
+        sleep.toggle(now.plusDays(2).plusHours(8));
+
+        assertEquals(100, sleep.getPercent(now.plusDays(3)));
+    }
+
+    @Test
+    public void getPercent_sleepEightHoursForTwoDaysThenSevenForOneDay_percentIs67AtEndOfDay()
+    {
+        sleep.toggle(now.plusDays(0).plusHours(0));
+        sleep.toggle(now.plusDays(0).plusHours(8));
+
+        sleep.toggle(now.plusDays(1).plusHours(0));
+        sleep.toggle(now.plusDays(1).plusHours(8));
+
+        sleep.toggle(now.plusDays(2).plusHours(0));
+        sleep.toggle(now.plusDays(2).plusHours(7));
+
+        assertEquals(67, sleep.getPercent(now.plusDays(3)));
+    }
+
+    @Test
+    public void getPercent_sleepEightHoursForTwoDaysThenSevenForTwoDay_percentIs35AtEndOfDay()
+    {
+        sleep.toggle(now.plusDays(0).plusHours(0));
+        sleep.toggle(now.plusDays(0).plusHours(8));
+
+        sleep.toggle(now.plusDays(1).plusHours(0));
+        sleep.toggle(now.plusDays(1).plusHours(8));
+
+        sleep.toggle(now.plusDays(2).plusHours(0));
+        sleep.toggle(now.plusDays(2).plusHours(7));
+
+        sleep.toggle(now.plusDays(3).plusHours(0));
+        sleep.toggle(now.plusDays(3).plusHours(7));
+
+        assertEquals(35, sleep.getPercent(now.plusDays(4)));
+    }
+
+    @Test
+    public void getPercent_sleepEightHoursForTwoDaysThenSevenForThreeDay_percentIs3AtEndOfDay()
+    {
+        sleep.toggle(now.plusDays(0).plusHours(0));
+        sleep.toggle(now.plusDays(0).plusHours(8));
+
+        sleep.toggle(now.plusDays(1).plusHours(0));
+        sleep.toggle(now.plusDays(1).plusHours(8));
+
+        sleep.toggle(now.plusDays(2).plusHours(0));
+        sleep.toggle(now.plusDays(2).plusHours(7));
+
+        sleep.toggle(now.plusDays(3).plusHours(0));
+        sleep.toggle(now.plusDays(3).plusHours(7));
+
+        sleep.toggle(now.plusDays(4).plusHours(0));
+        sleep.toggle(now.plusDays(4).plusHours(7));
+
+        assertEquals(3, sleep.getPercent(now.plusDays(5)));
+    }
+
+    @Test
+    public void getPercent_sleepWholeDay_percentIs100EndOfNextDay()
     {
         sleep.toggle(now.plusHours(0));
         sleep.toggle(now.plusHours(24));
 
-        int points = sleep.getPoints(now.plusDays(1));
-
-        assertEquals(3, points);
-    }
-
-    @Test
-    public void getPoints_sleepOneDayThenWaitOneDay_pointsIsMinus4()
-    {
-        sleep.toggle(now.plusHours(0));
-        sleep.toggle(now.plusHours(24));
-
-        assertEquals(-4, sleep.getPoints(now.plusHours(48)));
-    }
-
-    @Test
-    public void getPercent_sleepToHundredThenWaitADay_()
-    {
-        sleep.toggle(now.plusHours(0));
-        sleep.toggle(now.plusHours(24));
-
-        assertEquals(46, sleep.getPercent(now.plusHours(48)));
+        assertEquals(100, sleep.getPercent(now.plusHours(48)));
     }
 
     @Test
@@ -167,21 +198,5 @@ public class SleepTest
         sleep.toggle(now);
 
         assertEquals(Sleep.ASLEEP, sleep.getState());
-    }
-
-    @Test
-    public void isOnTrack_sleepInitialized_isOnTrackIsTrue()
-    {
-        boolean isOnTrack = sleep.isOnTrack(now);
-
-        assertTrue(isOnTrack);
-    }
-
-    @Test
-    public void isOnTrack_secondDayWithoutSleep_isOnTrackIsFalse()
-    {
-        boolean isOnTrack = sleep.isOnTrack(now.plusDays(2));
-
-        assertFalse(isOnTrack);
     }
 }

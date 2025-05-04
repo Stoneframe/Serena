@@ -1,6 +1,7 @@
 package stoneframe.serena.storages.versions;
 
 import org.joda.time.LocalDateTime;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,6 +22,7 @@ public class UpgradeScriptVersion23 implements UpgradeScript
 
         sleepContainer.put("startDateTime", LocalDateTime.now());
         sleepContainer.put("state", 1);
+        sleepContainer.put("sleepSessions", new JSONArray());
 
         jsonObject.put("SleepContainer", sleepContainer);
 

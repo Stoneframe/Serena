@@ -179,7 +179,7 @@ public class AllBalancersFragment extends Fragment
 
     private String getDepletedText(Balancer balancer, LocalDateTime now)
     {
-        String when = balancer.getAvailable(now) > -1
+        String when = balancer.getAvailable(now) > 0
             ? balancer.getTimeToZero(now).toString("yyyy-MM-dd HH:mm")
             : "Now";
 

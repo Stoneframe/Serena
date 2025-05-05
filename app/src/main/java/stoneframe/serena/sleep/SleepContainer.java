@@ -1,7 +1,6 @@
 package stoneframe.serena.sleep;
 
-import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
+import org.joda.time.LocalDateTime;
 
 public class SleepContainer
 {
@@ -9,6 +8,6 @@ public class SleepContainer
 
     public SleepContainer()
     {
-        sleep = new Sleep(LocalDate.now().toLocalDateTime(LocalTime.MIDNIGHT));
+        sleep = new Sleep(LocalDateTime.now());
     }
 }

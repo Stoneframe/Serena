@@ -41,7 +41,8 @@ public class Sleep
             startDateTime = now.minusDays(3);
         }
 
-        double expectedMinutesSlept = Minutes.minutesBetween(startDateTime, now)
+        double expectedMinutesSlept = Minutes
+            .minutesBetween(startDateTime, now)
             .getMinutes() * (8d / 24d);
         int minuteSlept = getMinutesSleptLastThreeDays();
 
@@ -90,6 +91,8 @@ public class Sleep
         SleepSession session = new SleepSession(startSleep, now);
 
         sleepSessions.add(session);
+
+        startSleep = null;
     }
 
     private int getMinutesSleptLastThreeDays()

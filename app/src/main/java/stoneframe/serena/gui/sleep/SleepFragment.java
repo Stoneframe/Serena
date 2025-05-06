@@ -107,7 +107,7 @@ public class SleepFragment extends Fragment
 
     private void updatePercentTextColor()
     {
-        if (sleepManager.isOnTrack())
+        if (sleepManager.isAhead())
         {
             percentTextView.setTextColor(Color.GREEN);
         }

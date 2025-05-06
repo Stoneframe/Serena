@@ -26,6 +26,13 @@ public class BalancerManager
             .collect(Collectors.toList());
     }
 
+    public boolean isAhead()
+    {
+        return getContainer().balancers.stream()
+            .filter(b -> b.getType() != Balancer.COUNTER)
+            .allMatch(b -> b.getAvailable(timeService.getNow()) >= 0);
+    }
+
     public BalancerEditor getBalancerEditor(Balancer balancer)
     {
         return new BalancerEditor(this, balancer, timeService);

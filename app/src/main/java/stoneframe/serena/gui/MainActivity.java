@@ -3,9 +3,12 @@ package stoneframe.serena.gui;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResult;
@@ -26,6 +29,7 @@ import org.joda.time.LocalDateTime;
 import java.util.Objects;
 
 import stoneframe.serena.R;
+import stoneframe.serena.balancers.BalancerManager;
 import stoneframe.serena.gui.balancers.AllBalancersFragment;
 import stoneframe.serena.gui.checklists.AllChecklistsFragment;
 import stoneframe.serena.gui.chores.AllChoresFragment;
@@ -35,6 +39,7 @@ import stoneframe.serena.gui.routines.RoutineNotifier;
 import stoneframe.serena.gui.sleep.SleepFragment;
 import stoneframe.serena.gui.tasks.AllTasksFragment;
 import stoneframe.serena.gui.today.TodayFragment;
+import stoneframe.serena.sleep.SleepManager;
 import stoneframe.serena.storages.json.ContainerJsonConverter;
 import stoneframe.serena.storages.json.SimpleChoreSelectorConverter;
 import stoneframe.serena.storages.json.WeeklyEffortTrackerConverter;
@@ -246,6 +251,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        getSupportFragmentManager().registerFragmentLifecycleCallbacks(
+            new FragmentManager.FragmentLifecycleCallbacks()
+            {
+                @Override
+                public void onFragmentResumed(FragmentManager fm, Fragment f)
+                {
+                    super.onFragmentResumed(fm, f);
+
+                    updateIconColors();
+                }
+            }, true
+        );
+
         if (savedInstanceState == null)
         {
             goToFragment(R.id.nav_todays);
@@ -256,13 +274,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStart()
     {
         super.onStart();
+
+        updateIconColors();
     }
+
     @Override
     protected void onStop()
     {
         super.onStop();
 
         serena.save();
+    }
+
+    private void updateIconColors()
+    {
+        updateBalancerIconColor();
+        updateSleepIconColor();
+    }
+
+    private void updateBalancerIconColor()
+    {
+        ImageView balancerImageView = findViewById(R.id.balancerImageView);
+
+        BalancerManager balancerManager = serena.getBalancerManager();
+
+        balancerImageView.setColorFilter(
+            balancerManager.isAhead() ? Color.GREEN : Color.RED,
+            PorterDuff.Mode.SRC_IN);
+    }
+
+    private void updateSleepIconColor()
+    {
+        ImageView sleepImageView = findViewById(R.id.sleepImageView);
+
+        SleepManager sleepManager = serena.getSleepManager();
+
+        sleepImageView.setColorFilter(
+            sleepManager.isAhead() ? Color.GREEN : Color.RED,
+            PorterDuff.Mode.SRC_IN);
     }
 
     private void editStorageCallback(ActivityResult activityResult)

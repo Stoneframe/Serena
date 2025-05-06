@@ -139,25 +139,18 @@ public class Balancer extends Revertible<BalancerData>
         this.data().isEnabled = isEnabled;
     }
 
-    public LocalDateTime getTimeToZero(LocalDateTime now)
+    public LocalDateTime getTimeToValue(LocalDateTime now, int value)
     {
         int available = getAvailable(now);
 
-        if (getType() == LIMITER && available >= 0 || getType() == ENHANCER && available <= 0)
+        if (getType() == LIMITER && available > value || getType() == ENHANCER && available < value)
         {
             return now;
         }
 
-        double changePerDay = getChangePerInterval() / getMinutesOfInterval() * 60 * 24;
+        double minutes = (value - data().previousTransactions) * getMinutesOfInterval() / getChangePerInterval();
 
-        double remaining = Math.abs((double)available / changePerDay);
-
-        int days = (int)remaining;
-
-        double hours = 24 * (remaining - days);
-        double minutes = 60 * (hours - (int)hours);
-
-        return now.plusDays(days).plusHours((int)hours).plusMinutes((int)minutes);
+        return data().startDate.toLocalDateTime(LocalTime.MIDNIGHT).plusMinutes((int)minutes);
     }
 
     public int getAvailable(LocalDateTime now)

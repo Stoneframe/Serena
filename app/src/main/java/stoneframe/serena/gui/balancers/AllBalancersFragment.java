@@ -180,7 +180,7 @@ public class AllBalancersFragment extends Fragment
     private String getDepletedText(Balancer balancer, LocalDateTime now)
     {
         String when = balancer.getAvailable(now) > 0
-            ? balancer.getTimeToZero(now).toString("yyyy-MM-dd HH:mm")
+            ? balancer.getTimeToValue(now, 0).toString("yyyy-MM-dd HH:mm")
             : "Now";
 
         return String.format("Enhancer - Depleted: %s", when);
@@ -188,8 +188,8 @@ public class AllBalancersFragment extends Fragment
 
     private String getReplenishedText(Balancer balancer, LocalDateTime now)
     {
-        String when = balancer.getAvailable(now) < 0
-            ? balancer.getTimeToZero(now).toString("yyyy-MM-dd HH:mm")
+        String when = balancer.getAvailable(now) < 1
+            ? balancer.getTimeToValue(now, 1).toString("yyyy-MM-dd HH:mm")
             : "Now";
 
         return String.format("Limiter - Replenished: %s", when);
@@ -228,7 +228,7 @@ public class AllBalancersFragment extends Fragment
 
     private static boolean isBalancerGreaterThanZero(Balancer balancer)
     {
-        return balancer.getAvailable(LocalDateTime.now()) >= 0;
+        return balancer.getAvailable(LocalDateTime.now()) > 0;
     }
 
     private static class BalancerComparator implements Comparator<Balancer>

@@ -1,9 +1,6 @@
 package stoneframe.serena.balancers;
 
-import androidx.core.util.Pair;
-
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -11,7 +8,6 @@ import java.util.List;
 class BalancerData
 {
     final List<CustomTransactionType> transactionTypes = new LinkedList<>();
-    final List<Pair<Transaction, LocalDateTime>> transactions = new LinkedList<>();
 
     String name;
     String unit;

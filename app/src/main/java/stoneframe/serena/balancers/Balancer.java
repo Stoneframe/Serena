@@ -70,19 +70,9 @@ public class Balancer extends Revertible<BalancerData>
         return data().changePerInterval;
     }
 
-    void setChangePerInterval(LocalDateTime now, int changePerInterval)
-    {
-        setPropertyAffectingAvailable(now, () -> data().changePerInterval = changePerInterval);
-    }
-
     public int getIntervalType()
     {
         return data().intervalType;
-    }
-
-    void setIntervalType(LocalDateTime now, int intervalType)
-    {
-        setPropertyAffectingAvailable(now, () -> data().intervalType = intervalType);
     }
 
     public boolean isQuickDisableable()
@@ -110,23 +100,9 @@ public class Balancer extends Revertible<BalancerData>
         return data().maxValue != null ? data().maxValue : Integer.MAX_VALUE;
     }
 
-    void setMaxValue(LocalDateTime now, Integer maxValue)
-    {
-        setPropertyAffectingAvailable(now, () -> data().maxValue = maxValue);
-
-        updatePreviousTransactions(now);
-    }
-
     public int getMinValue()
     {
         return data().minValue != null ? data().minValue : Integer.MIN_VALUE;
-    }
-
-    void setMinValue(LocalDateTime now, Integer minValue)
-    {
-        setPropertyAffectingAvailable(now, () -> data().minValue = minValue);
-
-        updatePreviousTransactions(now);
     }
 
     public boolean isEnabled()
@@ -139,18 +115,14 @@ public class Balancer extends Revertible<BalancerData>
         this.data().isEnabled = isEnabled;
     }
 
-    public LocalDateTime getTimeToValue(LocalDateTime now, int value)
+    public boolean isAhead(LocalDateTime now)
     {
-        int available = getAvailable(now);
+        return getAvailable(now) > 0;
+    }
 
-        if (getType() == LIMITER && available > value || getType() == ENHANCER && available < value)
-        {
-            return now;
-        }
-
-        double minutes = (value - data().previousTransactions) * getMinutesOfInterval() / getChangePerInterval();
-
-        return data().startDate.toLocalDateTime(LocalTime.MIDNIGHT).plusMinutes((int)minutes);
+    public LocalDateTime getTimeToBoundary(LocalDateTime now)
+    {
+        return getTimeToValue(now, getBoundary());
     }
 
     public int getAvailable(LocalDateTime now)
@@ -176,6 +148,30 @@ public class Balancer extends Revertible<BalancerData>
                 Stream.of(new QuickTransactionType()),
                 data().transactionTypes.stream().sorted(Comparator.comparing(TransactionType::getName)))
             .collect(Collectors.toList());
+    }
+
+    void setChangePerInterval(LocalDateTime now, int changePerInterval)
+    {
+        setPropertyAffectingAvailable(now, () -> data().changePerInterval = changePerInterval);
+    }
+
+    void setIntervalType(LocalDateTime now, int intervalType)
+    {
+        setPropertyAffectingAvailable(now, () -> data().intervalType = intervalType);
+    }
+
+    void setMaxValue(LocalDateTime now, Integer maxValue)
+    {
+        setPropertyAffectingAvailable(now, () -> data().maxValue = maxValue);
+
+        updatePreviousTransactions(now);
+    }
+
+    void setMinValue(LocalDateTime now, Integer minValue)
+    {
+        setPropertyAffectingAvailable(now, () -> data().minValue = minValue);
+
+        updatePreviousTransactions(now);
     }
 
     void setAllowQuick(boolean allowQuick)
@@ -266,5 +262,34 @@ public class Balancer extends Revertible<BalancerData>
             default:
                 throw new IndexOutOfBoundsException("Unknown interval " + data().intervalType);
         }
+    }
+
+    private LocalDateTime getTimeToValue(LocalDateTime now, int value)
+    {
+        int available = getAvailable(now);
+
+        if (getType() == LIMITER && available > value || getType() == ENHANCER && available < value)
+        {
+            return now;
+        }
+
+        double minutes = (value - data().previousTransactions) * getMinutesOfInterval() / getChangePerInterval();
+
+        return data().startDate.toLocalDateTime(LocalTime.MIDNIGHT).plusMinutes((int)minutes);
+    }
+
+    private int getBoundary()
+    {
+        if (getType() == LIMITER)
+        {
+            return 1;
+        }
+
+        if (getType() == ENHANCER)
+        {
+            return 0;
+        }
+
+        throw new IllegalStateException();
     }
 }

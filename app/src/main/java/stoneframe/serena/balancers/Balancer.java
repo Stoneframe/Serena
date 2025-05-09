@@ -117,7 +117,17 @@ public class Balancer extends Revertible<BalancerData>
 
     public boolean isAhead(LocalDateTime now)
     {
-        return getAvailable(now) > 0;
+        if (getType() == LIMITER)
+        {
+            return getAvailable(now) >= 0;
+        }
+
+        if (getType() == ENHANCER)
+        {
+            return getAvailable(now) > 0;
+        }
+
+        return true;
     }
 
     public LocalDateTime getTimeToBoundary(LocalDateTime now)

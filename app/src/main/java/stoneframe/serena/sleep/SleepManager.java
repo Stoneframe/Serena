@@ -23,7 +23,7 @@ public class SleepManager
 
     public boolean isAhead()
     {
-        return container.get().sleep.getPercent(timeService.getNow()) > 80;
+        return container.get().sleep.getPercent(timeService.getNow()) >= 60;
     }
 
     public int getPercent()

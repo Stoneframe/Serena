@@ -36,6 +36,7 @@ public class Balancer extends Revertible<BalancerData>
             Balancer.DAILY,
             null,
             null,
+            false,
             allowQuick,
             true));
     }
@@ -103,6 +104,16 @@ public class Balancer extends Revertible<BalancerData>
     public int getMinValue()
     {
         return data().minValue != null ? data().minValue : Integer.MIN_VALUE;
+    }
+
+    public boolean isClearInputEnabled()
+    {
+        return data().clearInputOnAdd;
+    }
+
+    public void setClearInputEnabled(boolean isEnabled)
+    {
+        data().clearInputOnAdd = isEnabled;
     }
 
     public boolean isEnabled()

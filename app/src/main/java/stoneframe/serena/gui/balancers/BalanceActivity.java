@@ -122,6 +122,12 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
     }
 
     @Override
+    public void isClearInputEnabledChanged(boolean isEnabled)
+    {
+
+    }
+
+    @Override
     public void isQuickChanged(boolean isAllowed)
     {
         transactionTypeAdapter.notifyDataSetChanged();
@@ -381,6 +387,11 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
 
         balancerEditor.addTransaction(enteredTransactionAmount);
 
+        if (balancerEditor.isClearInputEnabled())
+        {
+            editTextAmount.getText().clear();
+        }
+
         serena.save();
     }
 
@@ -501,6 +512,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         Spinner spinnerIntervalType = dialogView.findViewById(R.id.spinnerIntervalType);
         EditText editTextMaxValue = dialogView.findViewById(R.id.editTextMaxValue);
         EditText editTextMinValue = dialogView.findViewById(R.id.editTextMinValue);
+        CheckBox checkBoxClearInput = dialogView.findViewById(R.id.checkBoxClearInput);
         CheckBox checkBoxAllowQuick = dialogView.findViewById(R.id.checkBoxAllowQuick);
         Button buttonCancel = dialogView.findViewById(R.id.buttonCancel);
         Button buttonOk = dialogView.findViewById(R.id.buttonOk);
@@ -508,19 +520,21 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         SimpleListAdapter<Integer> intervalTypeAdapter = new SimpleListAdapterBuilder<>(
             this,
             () -> Arrays.asList(Balancer.DAILY, Balancer.WEEKLY, Balancer.MONTHLY, Balancer.YEARLY),
-            v -> {
-               switch (v){
-                   case Balancer.DAILY:
-                       return "Daily";
-                   case Balancer.WEEKLY:
-                       return "Weekly";
-                   case Balancer.MONTHLY:
-                       return "Monthly";
-                   case Balancer.YEARLY:
-                       return "Yearly";
-                   default:
-                       throw new IllegalStateException("Unknown interval type: " + v);
-               }
+            v ->
+            {
+                switch (v)
+                {
+                    case Balancer.DAILY:
+                        return "Daily";
+                    case Balancer.WEEKLY:
+                        return "Weekly";
+                    case Balancer.MONTHLY:
+                        return "Monthly";
+                    case Balancer.YEARLY:
+                        return "Yearly";
+                    default:
+                        throw new IllegalStateException("Unknown interval type: " + v);
+                }
             })
             .create();
 
@@ -536,6 +550,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         editTextMinValue.setText(balancerEditor.hasMinValue()
             ? Integer.toString(balancerEditor.getMinValue())
             : "");
+        checkBoxClearInput.setChecked(balancerEditor.isClearInputEnabled());
         checkBoxAllowQuick.setChecked(balancerEditor.isQuickAllowed());
         checkBoxAllowQuick.setEnabled(balancerEditor.isQuickDisableable());
 
@@ -555,6 +570,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
                 balancerEditor.setMaxValue(getIntegerValue(editTextMaxValue));
                 balancerEditor.setMinValue(getIntegerValue(editTextMinValue));
                 balancerEditor.setAllowQuick(checkBoxAllowQuick.isChecked());
+                balancerEditor.setClearInputEnabled(checkBoxClearInput.isChecked());
                 balancerEditor.setChangePerInterval(Integer.parseInt(changePerInterval));
                 balancerEditor.setIntervalType((int)spinnerIntervalType.getSelectedItem());
 

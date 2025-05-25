@@ -16,6 +16,7 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
     private final PropertyUtil<String> unitProperty;
     private final PropertyUtil<Integer> changePerIntervalProperty;
     private final PropertyUtil<Integer> intervalTypeProperty;
+    private final PropertyUtil<Boolean> isClearInputEnabledProperty;
     private final PropertyUtil<Boolean> isQuickAllowableProperty;
     private final PropertyUtil<Boolean> isEnabledProperty;
 
@@ -30,6 +31,7 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
         unitProperty = getUnitProperty();
         changePerIntervalProperty = getChangePerIntervalProperty();
         intervalTypeProperty = getIntervalTypeProperty();
+        isClearInputEnabledProperty = getIsClearInputEnabledProperty();
         isQuickAllowableProperty = getIsQuickAllowableProperty();
         isEnabledProperty = getIsEnabledProperty();
     }
@@ -135,6 +137,16 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
     public void setAllowQuick(boolean allowQuick)
     {
         isQuickAllowableProperty.setValue(allowQuick);
+    }
+
+    public boolean isClearInputEnabled()
+    {
+        return isClearInputEnabledProperty.getValue();
+    }
+
+    public void setClearInputEnabled(boolean isEnabled)
+    {
+        isClearInputEnabledProperty.setValue(isEnabled);
     }
 
     public List<TransactionType> getTransactionTypes()
@@ -255,6 +267,14 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
             v -> notifyListeners(BalanceEditorListener::intervalTypeChanged));
     }
 
+    private @NonNull PropertyUtil<Boolean> getIsClearInputEnabledProperty()
+    {
+        return new PropertyUtil<>(
+            balancer::isClearInputEnabled,
+            balancer::setClearInputEnabled,
+            v -> notifyListeners(l -> l.isClearInputEnabledChanged(v)));
+    }
+
     private @NonNull PropertyUtil<Boolean> getIsQuickAllowableProperty()
     {
         return new PropertyUtil<>(
@@ -276,6 +296,8 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
         void nameChanged();
 
         void unitChanged();
+
+        void isClearInputEnabledChanged(boolean isEnabled);
 
         void isQuickChanged(boolean isAllowed);
 

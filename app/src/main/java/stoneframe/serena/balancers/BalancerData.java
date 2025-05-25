@@ -21,6 +21,8 @@ class BalancerData
     Integer maxValue;
     Integer minValue;
 
+    boolean clearInputOnAdd;
+
     boolean allowQuick;
 
     boolean isEnabled;
@@ -34,6 +36,7 @@ class BalancerData
         int intervalType,
         Integer maxValue,
         Integer minValue,
+        boolean clearInputOnAdd,
         boolean allowQuick,
         boolean isEnabled)
     {
@@ -45,6 +48,7 @@ class BalancerData
         this.intervalType = intervalType;
         this.maxValue = maxValue;
         this.minValue = minValue;
+        this.clearInputOnAdd = clearInputOnAdd;
         this.allowQuick = allowQuick;
         this.isEnabled = isEnabled;
     }

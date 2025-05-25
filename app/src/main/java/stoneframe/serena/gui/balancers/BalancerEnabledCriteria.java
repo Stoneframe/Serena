@@ -37,6 +37,12 @@ public class BalancerEnabledCriteria extends EnableCriteria
             }
 
             @Override
+            public void isClearInputEnabledChanged(boolean isEnabled)
+            {
+
+            }
+
+            @Override
             public void isQuickChanged(boolean isAllowed)
             {
 

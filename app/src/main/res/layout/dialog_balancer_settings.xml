@@ -109,6 +109,12 @@
             android:inputType="numberSigned" />
 
         <CheckBox
+            android:id="@+id/checkBoxClearInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Clear input after add" />
+
+        <CheckBox
             android:id="@+id/checkBoxAllowQuick"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

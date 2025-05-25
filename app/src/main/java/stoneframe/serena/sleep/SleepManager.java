@@ -1,5 +1,7 @@
 package stoneframe.serena.sleep;
 
+import org.joda.time.LocalDateTime;
+
 import java.util.function.Supplier;
 
 import stoneframe.serena.timeservices.TimeService;
@@ -39,5 +41,10 @@ public class SleepManager
     public Sleep.SleepSession getPreviousSession()
     {
         return container.get().sleep.getPreviousSession();
+    }
+
+    public void addSession(LocalDateTime start, LocalDateTime end)
+    {
+        container.get().sleep.addSession(start, end);
     }
 }

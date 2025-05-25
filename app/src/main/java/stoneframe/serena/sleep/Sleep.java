@@ -66,6 +66,11 @@ public class Sleep
         }
     }
 
+    void addSession(LocalDateTime start, LocalDateTime end)
+    {
+        sleepSessions.add(new SleepSession(start, end));
+    }
+
     @Nullable
     SleepSession getPreviousSession()
     {

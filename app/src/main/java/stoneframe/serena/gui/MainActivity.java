@@ -99,6 +99,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return goToFragment(itemId);
     }
 
+    public void updateSleepIconColor()
+    {
+        ImageView sleepImageView = findViewById(R.id.sleepImageView);
+
+        SleepManager sleepManager = serena.getSleepManager();
+
+        sleepImageView.setColorFilter(
+            sleepManager.isAhead() ? Color.GREEN : Color.RED,
+            PorterDuff.Mode.SRC_IN);
+    }
+
     @SuppressLint("NonConstantResourceId")
     private boolean goToFragment(int fragmentId)
     {
@@ -300,17 +311,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         balancerImageView.setColorFilter(
             balancerManager.isAhead() ? Color.GREEN : Color.RED,
-            PorterDuff.Mode.SRC_IN);
-    }
-
-    private void updateSleepIconColor()
-    {
-        ImageView sleepImageView = findViewById(R.id.sleepImageView);
-
-        SleepManager sleepManager = serena.getSleepManager();
-
-        sleepImageView.setColorFilter(
-            sleepManager.isAhead() ? Color.GREEN : Color.RED,
             PorterDuff.Mode.SRC_IN);
     }
 

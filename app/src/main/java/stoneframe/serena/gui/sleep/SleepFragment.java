@@ -28,6 +28,7 @@ import java.util.Locale;
 import stoneframe.serena.R;
 import stoneframe.serena.Serena;
 import stoneframe.serena.gui.GlobalState;
+import stoneframe.serena.gui.MainActivity;
 import stoneframe.serena.gui.util.enable.ButtonEnabledLink;
 import stoneframe.serena.gui.util.enable.EditTextCriteria;
 import stoneframe.serena.sleep.Sleep;
@@ -167,6 +168,7 @@ public class SleepFragment extends Fragment
         updatePercentText();
         updatePercentTextColor();
         updateToggleButtonText();
+        updateBedIcon();
     }
 
     private void updatePreviousSession()
@@ -219,5 +221,12 @@ public class SleepFragment extends Fragment
         {
             toggleButton.setText("ASLEEP");
         }
+    }
+
+    private void updateBedIcon()
+    {
+        MainActivity mainActivity = (MainActivity)requireActivity();
+
+        mainActivity.updateSleepIconColor();
     }
 }

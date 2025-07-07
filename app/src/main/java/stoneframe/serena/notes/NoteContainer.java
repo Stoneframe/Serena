@@ -6,4 +6,6 @@ import java.util.List;
 public class NoteContainer
 {
     final List<Note> notes = new LinkedList<>();
+
+    final List<NoteGroup> groups = new LinkedList<>();
 }

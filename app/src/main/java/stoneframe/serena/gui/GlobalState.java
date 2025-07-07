@@ -3,10 +3,11 @@ package stoneframe.serena.gui;
 import android.app.Application;
 
 import stoneframe.serena.Serena;
+import stoneframe.serena.balancers.Balancer;
 import stoneframe.serena.checklists.Checklist;
 import stoneframe.serena.chores.Chore;
-import stoneframe.serena.balancers.Balancer;
-import stoneframe.serena.notes.Note;
+import stoneframe.serena.notes.NoteGroupView;
+import stoneframe.serena.notes.NoteView;
 import stoneframe.serena.routines.Routine;
 import stoneframe.serena.tasks.Task;
 
@@ -19,7 +20,8 @@ public class GlobalState extends Application
     private Task activeTask;
     private Checklist activeChecklist;
     private Balancer activeBalancer;
-    private Note activeNote;
+    private NoteView activeNote;
+    private NoteGroupView activeNoteGroup;
 
     private Serena serena;
 
@@ -99,13 +101,23 @@ public class GlobalState extends Application
         this.activeBalancer = activeBalancer;
     }
 
-    public Note getActiveNote()
+    public NoteView getActiveNote()
     {
         return activeNote;
     }
 
-    public void setActiveNote(Note note)
+    public void setActiveNote(NoteView note)
     {
         activeNote = note;
+    }
+
+    public NoteGroupView getActiveNoteGroup()
+    {
+        return activeNoteGroup;
+    }
+
+    public void setActiveNoteGroup(NoteGroupView noteGroup)
+    {
+        activeNoteGroup = noteGroup;
     }
 }

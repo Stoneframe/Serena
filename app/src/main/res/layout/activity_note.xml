@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="10dp"
+    tools:context=".gui.notes.EditNoteActivity">
 
     <EditText
         android:id="@+id/titleEditText"
@@ -12,62 +14,66 @@
         android:hint="Title"
         android:inputType="textCapSentences"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_marginBottom="10dp"/>
 
-    <ImageButton
-        android:id="@+id/dateButton"
+    <Spinner
+        android:id="@+id/groupSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titleEditText" />
+
+    <LinearLayout
+        android:id="@+id/utilButtons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/titleEditText"
-        android:layout_toStartOf="@+id/timeButton"
-        android:src="@drawable/ic_calendar" />
+        android:layout_below="@+id/groupSpinner"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp">
 
-    <ImageButton
-        android:id="@+id/timeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/titleEditText"
-        android:layout_toStartOf="@+id/crossButton"
-        android:src="@drawable/ic_clock" />
+        <ImageButton
+            android:id="@+id/dateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_calendar" />
 
-    <ImageButton
-        android:id="@+id/crossButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/titleEditText"
-        android:layout_toStartOf="@+id/checkmarkButton"
-        android:src="@drawable/ic_cross" />
+        <ImageButton
+            android:id="@+id/timeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_clock" />
 
-    <ImageButton
-        android:id="@+id/checkmarkButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/titleEditText"
-        android:layout_toStartOf="@+id/bulletButton"
-        android:src="@drawable/ic_checkmark" />
+        <ImageButton
+            android:id="@+id/crossButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_cross" />
 
-    <ImageButton
-        android:id="@+id/bulletButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/titleEditText"
-        android:layout_toStartOf="@+id/tabButton"
-        android:src="@drawable/ic_bullet_list" />
+        <ImageButton
+            android:id="@+id/checkmarkButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_checkmark" />
 
-    <ImageButton
-        android:id="@+id/tabButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/titleEditText"
-        android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_tab" />
+        <ImageButton
+            android:id="@+id/bulletButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_bullet_list" />
+
+        <ImageButton
+            android:id="@+id/tabButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_tab" />
+    </LinearLayout>
 
     <EditText
         android:id="@+id/textEditText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/saveButton"
-        android:layout_below="@+id/tabButton"
+        android:layout_below="@+id/utilButtons"
         android:background="@drawable/border_black_thin"
         android:gravity="top|start"
         android:hint="Text"

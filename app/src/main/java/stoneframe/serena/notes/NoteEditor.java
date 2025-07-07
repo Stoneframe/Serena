@@ -46,6 +46,15 @@ public class NoteEditor extends Editor<NoteEditor.NoteEditorListener>
         textProperty.setValue(text);
     }
 
+    public NoteGroupView getGroup(){
+        return noteManager.getGroup(note.getGroupId());
+    }
+
+    public void setGroup(NoteGroupView noteGroup)
+    {
+        note.setGroupId(noteGroup.getNoteGroup().getId());
+    }
+
     public void save()
     {
         note.save();

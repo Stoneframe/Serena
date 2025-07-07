@@ -27,6 +27,7 @@ import stoneframe.serena.storages.versions.UpgradeScriptVersion20;
 import stoneframe.serena.storages.versions.UpgradeScriptVersion21;
 import stoneframe.serena.storages.versions.UpgradeScriptVersion22;
 import stoneframe.serena.storages.versions.UpgradeScriptVersion23;
+import stoneframe.serena.storages.versions.UpgradeScriptVersion24;
 import stoneframe.serena.storages.versions.UpgradeScriptVersion3;
 import stoneframe.serena.storages.versions.UpgradeScriptVersion4;
 import stoneframe.serena.storages.versions.UpgradeScriptVersion5;
@@ -62,7 +63,8 @@ public class JsonConverter
             new UpgradeScriptVersion20(),
             new UpgradeScriptVersion21(),
             new UpgradeScriptVersion22(),
-            new UpgradeScriptVersion23())
+            new UpgradeScriptVersion23(),
+            new UpgradeScriptVersion24())
         .collect(Collectors.toMap(UpgradeScript::getVersion, s -> s));
 
     private final ChoreSelectorConverter choreSelectorConverter;

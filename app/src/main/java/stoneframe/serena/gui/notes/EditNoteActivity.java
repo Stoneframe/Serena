@@ -1,7 +1,10 @@
 package stoneframe.serena.gui.notes;
 
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
@@ -9,16 +12,22 @@ import org.joda.time.LocalTime;
 import stoneframe.serena.R;
 import stoneframe.serena.gui.EditActivity;
 import stoneframe.serena.gui.util.DialogUtils;
+import stoneframe.serena.gui.util.SimpleListAdapter;
+import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
 import stoneframe.serena.gui.util.enable.EditTextCriteria;
 import stoneframe.serena.gui.util.enable.EnableCriteria;
 import stoneframe.serena.gui.util.enable.OrEnableCriteria;
-import stoneframe.serena.notes.Note;
+import stoneframe.serena.gui.util.enable.SpinnerCriteria;
 import stoneframe.serena.notes.NoteEditor;
+import stoneframe.serena.notes.NoteGroupView;
+import stoneframe.serena.notes.NoteView;
 
 public class EditNoteActivity extends EditActivity implements NoteEditor.NoteEditorListener
 {
     private EditText titleEditText;
     private EditText textEditText;
+
+    private Spinner groupSpinner;
 
     private ImageButton dateButton;
     private ImageButton timeButton;
@@ -26,6 +35,8 @@ public class EditNoteActivity extends EditActivity implements NoteEditor.NoteEdi
     private ImageButton checkmarkButton;
     private ImageButton bulletButton;
     private ImageButton tabButton;
+
+    private SimpleListAdapter<NoteGroupView> groupsListAdapter;
 
     private NoteEditor noteEditor;
 
@@ -50,12 +61,13 @@ public class EditNoteActivity extends EditActivity implements NoteEditor.NoteEdi
     @Override
     protected void createActivity()
     {
-        Note note = globalState.getActiveNote();
+        NoteView note = globalState.getActiveNote();
 
         noteEditor = serena.getNoteManager().getNoteEditor(note);
 
         titleEditText = findViewById(R.id.titleEditText);
         textEditText = findViewById(R.id.textEditText);
+        groupSpinner = findViewById(R.id.groupSpinner);
         dateButton = findViewById(R.id.dateButton);
         timeButton = findViewById(R.id.timeButton);
         crossButton = findViewById(R.id.crossButton);
@@ -65,6 +77,17 @@ public class EditNoteActivity extends EditActivity implements NoteEditor.NoteEdi
 
         titleEditText.setText(noteEditor.getTitle());
         textEditText.setText(noteEditor.getText());
+
+        groupsListAdapter = new SimpleListAdapterBuilder<>(
+            this,
+            () -> serena.getNoteManager().getAllGroups(),
+            NoteGroupView::getName)
+            .create();
+
+        int index = serena.getNoteManager().getAllGroups().indexOf(noteEditor.getGroup());
+
+        groupSpinner.setAdapter(groupsListAdapter);
+        groupSpinner.setSelection(index);
 
         dateButton.setOnClickListener(l -> addCharacter(LocalDate.now().toString("yyyy-MM-dd")));
         timeButton.setOnClickListener(l -> addCharacter(LocalTime.now().toString("HH:mm")));
@@ -86,7 +109,10 @@ public class EditNoteActivity extends EditActivity implements NoteEditor.NoteEdi
                         noteEditor.getTitle())),
                     new EditTextCriteria(textEditText, e -> hasTextChanges(
                         textEditText,
-                        noteEditor.getText()))),
+                        noteEditor.getText())),
+                    new SpinnerCriteria(
+                        groupSpinner,
+                        s -> !s.getSelectedItem().equals(noteEditor.getGroup()))),
             };
     }
 
@@ -111,6 +137,7 @@ public class EditNoteActivity extends EditActivity implements NoteEditor.NoteEdi
     {
         noteEditor.setTitle(titleEditText.getText().toString().trim());
         noteEditor.setText(textEditText.getText().toString());
+        noteEditor.setGroup((NoteGroupView)groupSpinner.getSelectedItem());
         noteEditor.save();
 
         serena.save();

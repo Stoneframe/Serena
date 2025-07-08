@@ -29,6 +29,7 @@ public class BalancerManager
     public boolean isAhead()
     {
         return getContainer().balancers.stream()
+            .filter(Balancer::isEnabled)
             .filter(b -> b.getType() != Balancer.COUNTER)
             .allMatch(b -> b.isAhead(timeService.getNow()));
     }

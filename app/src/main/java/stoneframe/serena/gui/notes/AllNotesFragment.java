@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
@@ -32,6 +33,9 @@ public class AllNotesFragment extends Fragment
 
     private Button groupsButton;
     private Button addButton;
+
+    private ImageButton collapseGroupsButton;
+    private ImageButton expandGroupsButton;
 
     private GlobalState globalState;
     private Serena serena;
@@ -80,6 +84,12 @@ public class AllNotesFragment extends Fragment
             startNoteEditor(note, ACTION_ADD);
         });
 
+        expandGroupsButton = rootView.findViewById(R.id.expand_groups_button);
+        expandGroupsButton.setOnClickListener(v -> expandAllGroups());
+
+        collapseGroupsButton = rootView.findViewById(R.id.collapse_groups_button);
+        collapseGroupsButton.setOnClickListener(v -> collapseAllGroups());
+
         allNoteGroupsLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             this::editNoteGroupCallback);
@@ -127,6 +137,14 @@ public class AllNotesFragment extends Fragment
         for (int i = 0; i < notesGroupExpandableListAdapter.getGroupCount(); i++)
         {
             notesGroupExpandableListView.expandGroup(i);
+        }
+    }
+
+    private void collapseAllGroups()
+    {
+        for (int i = 0; i < notesGroupExpandableListAdapter.getGroupCount(); i++)
+        {
+            notesGroupExpandableListView.collapseGroup(i);
         }
     }
 }

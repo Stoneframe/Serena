@@ -5,13 +5,22 @@
     android:layout_height="match_parent"
     tools:context=".gui.sleep.SleepFragment">
 
+    <CheckBox
+        android:id="@+id/enableCheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:text="Enable" />
+
     <GridLayout
         android:id="@+id/previousSessionLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/enableCheckbox"
         android:layout_marginStart="20px"
-        android:layout_marginEnd="20px"
         android:layout_marginTop="20px"
+        android:layout_marginEnd="20px"
         android:background="@drawable/border_black_thin"
         android:columnCount="2"
         android:padding="20px"
@@ -88,12 +97,21 @@
         android:textAlignment="center"
         android:textSize="120sp" />
 
+    <TextView
+        android:layout_centerHorizontal="true"
+        android:id="@+id/youAreTextEdit"
+        android:layout_below="@+id/percentTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You are:"
+        android:textSize="50dp"/>
+
     <Button
         android:id="@+id/toggleButton"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/addSessionGrid"
-        android:layout_below="@+id/percentTextView"
+        android:layout_below="@+id/youAreTextEdit"
         android:layout_marginStart="20px"
         android:layout_marginEnd="20px"
         android:text="Toggle"
@@ -117,7 +135,7 @@
             android:layout_column="0"
             android:layout_columnSpan="0"
             android:text="Add session"
-            android:textSize="30sp"/>
+            android:textSize="30sp" />
 
         <EditText
             android:id="@+id/startSessionEditText"
@@ -149,8 +167,8 @@
             android:layout_row="1"
             android:layout_rowSpan="2"
             android:layout_column="1"
-            android:layout_gravity="fill"
             android:layout_alignParentEnd="true"
+            android:layout_gravity="fill"
             android:text="Add" />
 
     </GridLayout>

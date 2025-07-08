@@ -18,6 +18,16 @@ public class SleepManager
         this.timeService = timeService;
     }
 
+    public boolean isEnabled()
+    {
+        return container.get().sleep.isEnabled();
+    }
+
+    public void setEnabled(boolean isEnabled)
+    {
+        container.get().sleep.setEnabled(isEnabled);
+    }
+
     public int getState()
     {
         return container.get().sleep.getState();

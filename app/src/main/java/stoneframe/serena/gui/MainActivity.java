@@ -8,6 +8,7 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.activity.OnBackPressedCallback;
@@ -104,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ImageView sleepImageView = findViewById(R.id.sleepImageView);
 
         SleepManager sleepManager = serena.getSleepManager();
+
+        sleepImageView.setVisibility(sleepManager.isEnabled() ? View.VISIBLE : View.GONE);
 
         sleepImageView.setColorFilter(
             sleepManager.isAhead() ? Color.GREEN : Color.RED,

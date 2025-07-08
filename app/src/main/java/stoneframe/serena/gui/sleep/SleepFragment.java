@@ -5,17 +5,17 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import org.joda.time.LocalDateTime;
 import org.joda.time.Minutes;
@@ -41,6 +41,8 @@ public class SleepFragment extends Fragment
     private Serena serena;
     private SleepManager sleepManager;
 
+    private CheckBox enableCheckbox;
+
     private TextView sessionStartTimeTextView;
     private TextView sessionStopTimeTextView;
     private TextView sessionTotalTimeTextView;
@@ -65,6 +67,8 @@ public class SleepFragment extends Fragment
 
         View rootView = inflater.inflate(R.layout.fragment_sleep, container, false);
 
+        enableCheckbox = rootView.findViewById(R.id.enableCheckbox);
+
         sessionStartTimeTextView = rootView.findViewById(R.id.sessionStartTimeTextView);
         sessionStopTimeTextView = rootView.findViewById(R.id.sessionStopTimeTextView);
         sessionTotalTimeTextView = rootView.findViewById(R.id.sessionTotalTimeTextView);
@@ -75,6 +79,13 @@ public class SleepFragment extends Fragment
         startSessionEditText = rootView.findViewById(R.id.startSessionEditText);
         endSessionEditText = rootView.findViewById(R.id.endSessionEditText);
         addSessionButton = rootView.findViewById(R.id.addSessionButton);
+
+        enableCheckbox.setOnCheckedChangeListener((buttonView, isChecked) ->
+        {
+            sleepManager.setEnabled(isChecked);
+
+            updateComponents();
+        });
 
         toggleButton.setOnClickListener(v ->
         {
@@ -164,11 +175,28 @@ public class SleepFragment extends Fragment
 
     private void updateComponents()
     {
+        updateIsEnabled();
         updatePreviousSession();
         updatePercentText();
         updatePercentTextColor();
         updateToggleButtonText();
         updateBedIcon();
+        updateComponentEnabled();
+    }
+
+    private void updateIsEnabled()
+    {
+        enableCheckbox.setChecked(sleepManager.isEnabled());
+    }
+
+    private void updateComponentEnabled()
+    {
+        boolean isEnabled = sleepManager.isEnabled();
+
+        toggleButton.setEnabled(isEnabled);
+        startSessionEditText.setEnabled(isEnabled);
+        endSessionEditText.setEnabled(isEnabled);
+        addSessionButton.setEnabled(isEnabled);
     }
 
     private void updatePreviousSession()
@@ -180,9 +208,19 @@ public class SleepFragment extends Fragment
             return;
         }
 
-        sessionStartTimeTextView.setText(session.getStartTime().toString("yyyy-MM-dd HH:mm"));
-        sessionStopTimeTextView.setText(session.getStopTime().toString("yyyy-MM-dd HH:mm"));
-        sessionTotalTimeTextView.setText(formatMinutes(session.getSleepTime()));
+        if (sleepManager.isEnabled())
+        {
+            sessionStartTimeTextView.setText(session.getStartTime().toString("yyyy-MM-dd HH:mm"));
+            sessionStopTimeTextView.setText(session.getStopTime().toString("yyyy-MM-dd HH:mm"));
+            sessionTotalTimeTextView.setText(formatMinutes(session.getSleepTime()));
+        }
+        else
+        {
+            sessionStartTimeTextView.setText("");
+            sessionStopTimeTextView.setText("");
+            sessionTotalTimeTextView.setText("");
+        }
+
     }
 
     private String formatMinutes(Minutes minutes)
@@ -196,11 +234,24 @@ public class SleepFragment extends Fragment
 
     private void updatePercentText()
     {
-        percentTextView.setText(sleepManager.getPercent() + " %");
+        if (sleepManager.isEnabled())
+        {
+            percentTextView.setText(sleepManager.getPercent() + " %");
+        }
+        else
+        {
+            percentTextView.setText("-");
+        }
     }
 
     private void updatePercentTextColor()
     {
+        if (!sleepManager.isEnabled())
+        {
+            percentTextView.setTextColor(Color.GRAY);
+            return;
+        }
+
         if (sleepManager.isAhead())
         {
             percentTextView.setTextColor(Color.GREEN);

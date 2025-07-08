@@ -18,6 +18,7 @@ public class Sleep
 
     private final List<SleepSession> sleepSessions = new LinkedList<>();
 
+    private boolean isEnabled;
     private LocalDateTime startDateTime;
     private int state;
 
@@ -25,8 +26,19 @@ public class Sleep
 
     Sleep(LocalDateTime now)
     {
+        isEnabled = false;
         startDateTime = now;
         state = AWAKE;
+    }
+
+    boolean isEnabled()
+    {
+        return isEnabled;
+    }
+
+    void setEnabled(boolean isEnabled)
+    {
+        this.isEnabled = isEnabled;
     }
 
     int getState()

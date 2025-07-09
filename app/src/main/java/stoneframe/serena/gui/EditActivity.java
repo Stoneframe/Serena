@@ -12,10 +12,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import stoneframe.serena.R;
-import stoneframe.serena.gui.util.enable.ButtonEnabledLink;
-import stoneframe.serena.gui.util.DialogUtils;
-import stoneframe.serena.gui.util.enable.EnableCriteria;
 import stoneframe.serena.Serena;
+import stoneframe.serena.gui.util.DialogUtils;
+import stoneframe.serena.gui.util.enable.ButtonEnabledLink;
+import stoneframe.serena.gui.util.enable.EnableCriteria;
 
 public abstract class EditActivity extends AppCompatActivity
 {
@@ -33,6 +33,8 @@ public abstract class EditActivity extends AppCompatActivity
 
     protected GlobalState globalState;
     protected Serena serena;
+
+    private ButtonEnabledLink saveButtonEnabledLink;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -99,7 +101,23 @@ public abstract class EditActivity extends AppCompatActivity
 
         createActivity();
 
-        new ButtonEnabledLink(saveButton, getSaveEnabledCriteria());
+        saveButtonEnabledLink = new ButtonEnabledLink(saveButton, getSaveEnabledCriteria());
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        startActivity();
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+
+        stopActivity();
     }
 
     protected abstract int getActivityLayoutId();
@@ -109,6 +127,10 @@ public abstract class EditActivity extends AppCompatActivity
     protected abstract String getEditedObjectName();
 
     protected abstract void createActivity();
+
+    protected abstract void startActivity();
+
+    protected abstract void stopActivity();
 
     protected abstract EnableCriteria[] getSaveEnabledCriteria();
 
@@ -122,6 +144,8 @@ public abstract class EditActivity extends AppCompatActivity
     {
         boolean shouldClose = onCancel();
 
+        saveButtonEnabledLink.criteriaValueChanged();
+
         if (shouldClose)
         {
             setResult(RESULT_CANCEL);
@@ -132,6 +156,10 @@ public abstract class EditActivity extends AppCompatActivity
     private void saveClick()
     {
         boolean shouldClose = onSave(action);
+
+        serena.save();
+
+        saveButtonEnabledLink.criteriaValueChanged();
 
         if (shouldClose)
         {
@@ -153,6 +181,8 @@ public abstract class EditActivity extends AppCompatActivity
                 if (!isConfirmed) return;
 
                 onRemove();
+
+                serena.save();
 
                 setResult(RESULT_REMOVE);
                 finish();

@@ -1,7 +1,5 @@
 package stoneframe.serena.gui.notes;
 
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -22,7 +20,7 @@ import stoneframe.serena.notes.NoteEditor;
 import stoneframe.serena.notes.NoteGroupView;
 import stoneframe.serena.notes.NoteView;
 
-public class EditNoteActivity extends EditActivity implements NoteEditor.NoteEditorListener
+public class EditNoteActivity extends EditActivity
 {
     private EditText titleEditText;
     private EditText textEditText;
@@ -98,6 +96,16 @@ public class EditNoteActivity extends EditActivity implements NoteEditor.NoteEdi
     }
 
     @Override
+    protected void startActivity()
+    {
+    }
+
+    @Override
+    protected void stopActivity()
+    {
+    }
+
+    @Override
     protected EnableCriteria[] getSaveEnabledCriteria()
     {
         return new EnableCriteria[]
@@ -117,32 +125,12 @@ public class EditNoteActivity extends EditActivity implements NoteEditor.NoteEdi
     }
 
     @Override
-    protected void onStart()
-    {
-        super.onStart();
-
-        noteEditor.addListener(this);
-    }
-
-    @Override
-    protected void onStop()
-    {
-        super.onStop();
-
-        noteEditor.removeListener(this);
-    }
-
-    @Override
     protected boolean onSave(int action)
     {
         noteEditor.setTitle(titleEditText.getText().toString().trim());
         noteEditor.setText(textEditText.getText().toString());
         noteEditor.setGroup((NoteGroupView)groupSpinner.getSelectedItem());
         noteEditor.save();
-
-        serena.save();
-
-        saveButton.setEnabled(false);
 
         return false;
     }
@@ -175,20 +163,6 @@ public class EditNoteActivity extends EditActivity implements NoteEditor.NoteEdi
     protected void onRemove()
     {
         noteEditor.remove();
-
-        serena.save();
-    }
-
-    @Override
-    public void titleChanged()
-    {
-
-    }
-
-    @Override
-    public void textChanged()
-    {
-
     }
 
     private boolean hasTextChanges(EditText editText, String originalText)

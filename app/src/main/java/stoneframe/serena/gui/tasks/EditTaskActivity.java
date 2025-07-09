@@ -30,7 +30,7 @@ import stoneframe.serena.gui.util.enable.EnableCriteria;
 import stoneframe.serena.tasks.Task;
 import stoneframe.serena.tasks.TaskEditor;
 
-public class EditTaskActivity extends EditActivity implements TaskEditor.TaskEditorListener
+public class EditTaskActivity extends EditActivity
 {
     private LocalDate deadline;
     private LocalDate ignoreBefore;
@@ -45,29 +45,6 @@ public class EditTaskActivity extends EditActivity implements TaskEditor.TaskEdi
     private ImageButton speakButton;
 
     private TaskEditor taskEditor;
-
-    @Override
-    public void descriptionChanged()
-    {
-    }
-
-    @Override
-    public void deadlineChanged()
-    {
-
-    }
-
-    @Override
-    public void ignoreBeforeChanged()
-    {
-
-    }
-
-    @Override
-    public void isDoneChanged()
-    {
-
-    }
 
     @Override
     protected int getActivityLayoutId()
@@ -117,19 +94,13 @@ public class EditTaskActivity extends EditActivity implements TaskEditor.TaskEdi
     }
 
     @Override
-    protected void onStart()
+    protected void startActivity()
     {
-        super.onStart();
-
-        taskEditor.addListener(this);
     }
 
     @Override
-    protected void onStop()
+    protected void stopActivity()
     {
-        super.onStop();
-
-        taskEditor.removeListener(this);
     }
 
     @Override
@@ -160,8 +131,6 @@ public class EditTaskActivity extends EditActivity implements TaskEditor.TaskEdi
 
         taskEditor.save();
 
-        serena.save();
-
         return true;
     }
 
@@ -169,7 +138,6 @@ public class EditTaskActivity extends EditActivity implements TaskEditor.TaskEdi
     protected void onRemove()
     {
         taskEditor.remove();
-        serena.save();
     }
 
     private void showDeadlineDatePickerDialog()

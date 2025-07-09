@@ -46,6 +46,18 @@ public class EditNoteGroupActivity extends EditActivity
     }
 
     @Override
+    protected void startActivity()
+    {
+
+    }
+
+    @Override
+    protected void stopActivity()
+    {
+
+    }
+
+    @Override
     protected EnableCriteria[] getSaveEnabledCriteria()
     {
         return new EnableCriteria[]
@@ -60,14 +72,14 @@ public class EditNoteGroupActivity extends EditActivity
         noteGroupEditor.setName(nameEditText.getText().toString().trim());
         noteGroupEditor.save();
 
-        serena.save();
-
         return true;
     }
 
     @Override
     protected boolean onCancel()
     {
+        noteGroupEditor.revert();
+
         return true;
     }
 
@@ -75,6 +87,5 @@ public class EditNoteGroupActivity extends EditActivity
     protected void onRemove()
     {
         noteGroupEditor.remove();
-        serena.save();
     }
 }

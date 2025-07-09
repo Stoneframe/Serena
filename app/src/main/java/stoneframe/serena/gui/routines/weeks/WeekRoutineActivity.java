@@ -12,39 +12,29 @@ import stoneframe.serena.routines.Procedure;
 import stoneframe.serena.routines.WeekRoutine;
 import stoneframe.serena.routines.WeekRoutineEditor;
 
-public class WeekRoutineActivity extends EditRoutineActivity<WeekRoutine, WeekRoutineEditor> implements WeekRoutineEditor.WeekRoutineEditorListener
+public class WeekRoutineActivity extends EditRoutineActivity<WeekRoutine, WeekRoutineEditor, WeekRoutineEditor.WeekRoutineEditorListener>
 {
+    private final WeekRoutineEditorListener listener = new WeekRoutineEditorListener();
+
     private ExpandableListView weekExpandableList;
     private WeekExpandableListAdaptor weekExpandableListAdaptor;
-
-    @Override
-    public void nameChanged()
-    {
-
-    }
-
-    @Override
-    public void isEnabledChanged()
-    {
-
-    }
-
-    @Override
-    public void procedureAdded()
-    {
-        weekExpandableListAdaptor.notifyDataSetChanged();
-    }
-
-    @Override
-    public void procedureRemoved()
-    {
-        weekExpandableListAdaptor.notifyDataSetChanged();
-    }
 
     @Override
     protected String getActivityTitle()
     {
         return "Week Routine";
+    }
+
+    @Override
+    protected void startActivity()
+    {
+        routineEditor.addListener(listener);
+    }
+
+    @Override
+    protected void stopActivity()
+    {
+        routineEditor.removeListener(listener);
     }
 
     @Override
@@ -69,22 +59,6 @@ public class WeekRoutineActivity extends EditRoutineActivity<WeekRoutine, WeekRo
         {
             weekExpandableList.expandGroup(i);
         }
-    }
-
-    @Override
-    protected void onStart()
-    {
-        super.onStart();
-
-        routineEditor.addListener(this);
-    }
-
-    @Override
-    protected void onStop()
-    {
-        super.onStop();
-
-        routineEditor.removeListener(this);
     }
 
     @Override
@@ -211,5 +185,30 @@ public class WeekRoutineActivity extends EditRoutineActivity<WeekRoutine, WeekRo
                 routineEditor.addProcedure(copiedDayOfWeek, copiedProcedure);
                 weekExpandableList.expandGroup(copiedDayOfWeek - 1);
             });
+    }
+
+    private class WeekRoutineEditorListener implements WeekRoutineEditor.WeekRoutineEditorListener
+    {
+        @Override
+        public void nameChanged()
+        {
+        }
+
+        @Override
+        public void isEnabledChanged()
+        {
+        }
+
+        @Override
+        public void procedureAdded()
+        {
+            weekExpandableListAdaptor.notifyDataSetChanged();
+        }
+
+        @Override
+        public void procedureRemoved()
+        {
+            weekExpandableListAdaptor.notifyDataSetChanged();
+        }
     }
 }

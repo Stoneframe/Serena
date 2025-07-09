@@ -13,39 +13,29 @@ import stoneframe.serena.routines.DayRoutine;
 import stoneframe.serena.routines.DayRoutineEditor;
 import stoneframe.serena.routines.Procedure;
 
-public class DayRoutineActivity extends EditRoutineActivity<DayRoutine, DayRoutineEditor> implements DayRoutineEditor.DayRoutineEditorListener
+public class DayRoutineActivity extends EditRoutineActivity<DayRoutine, DayRoutineEditor, DayRoutineEditor.DayRoutineEditorListener>
 {
+    private final DayRoutineEditorListener listener = new DayRoutineEditorListener();
+
     private SimpleListAdapter<Procedure> procedureListAdapter;
     private ListView procedureListView;
-
-    @Override
-    public void nameChanged()
-    {
-
-    }
-
-    @Override
-    public void isEnabledChanged()
-    {
-
-    }
-
-    @Override
-    public void procedureAdded()
-    {
-        procedureListAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void procedureRemoved()
-    {
-        procedureListAdapter.notifyDataSetChanged();
-    }
 
     @Override
     protected String getActivityTitle()
     {
         return "Day Routine";
+    }
+
+    @Override
+    protected void startActivity()
+    {
+        routineEditor.addListener(listener);
+    }
+
+    @Override
+    protected void stopActivity()
+    {
+        routineEditor.removeListener(listener);
     }
 
     @Override
@@ -69,22 +59,6 @@ public class DayRoutineActivity extends EditRoutineActivity<DayRoutine, DayRouti
             editProcedure(position));
         procedureListView.setOnItemLongClickListener((parent, view, position, id) ->
             removeOrCopyProcedure(position));
-    }
-
-    @Override
-    protected void onStart()
-    {
-        super.onStart();
-
-        routineEditor.addListener(this);
-    }
-
-    @Override
-    protected void onStop()
-    {
-        super.onStop();
-
-        routineEditor.removeListener(this);
     }
 
     @Override
@@ -147,5 +121,30 @@ public class DayRoutineActivity extends EditRoutineActivity<DayRoutine, DayRouti
             this,
             procedure,
             copiedProcedure -> routineEditor.addProcedure(copiedProcedure));
+    }
+
+    private class DayRoutineEditorListener implements DayRoutineEditor.DayRoutineEditorListener
+    {
+        @Override
+        public void procedureAdded()
+        {
+            procedureListAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void procedureRemoved()
+        {
+            procedureListAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void nameChanged()
+        {
+        }
+
+        @Override
+        public void isEnabledChanged()
+        {
+        }
     }
 }

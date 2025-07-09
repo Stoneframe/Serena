@@ -18,19 +18,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import stoneframe.serena.R;
-import stoneframe.serena.gui.EditActivity;
-import stoneframe.serena.gui.util.DialogUtils;
-import stoneframe.serena.gui.util.enable.ButtonEnabledLink;
-import stoneframe.serena.gui.util.enable.EditTextCriteria;
-import stoneframe.serena.gui.util.enable.EnableCriteria;
-import stoneframe.serena.gui.util.RecyclerAdapter;
-import stoneframe.serena.gui.util.TextChangedListener;
 import stoneframe.serena.checklists.Checklist;
 import stoneframe.serena.checklists.ChecklistEditor;
 import stoneframe.serena.checklists.ChecklistItem;
+import stoneframe.serena.gui.EditActivity;
+import stoneframe.serena.gui.util.DialogUtils;
+import stoneframe.serena.gui.util.RecyclerAdapter;
+import stoneframe.serena.gui.util.TextChangedListener;
+import stoneframe.serena.gui.util.enable.ButtonEnabledLink;
+import stoneframe.serena.gui.util.enable.EditTextCriteria;
+import stoneframe.serena.gui.util.enable.EnableCriteria;
 
-public class EditChecklistActivity extends EditActivity implements ChecklistEditor.ChecklistEditorListener
+public class EditChecklistActivity extends EditActivity
 {
+    private final ChecklistEditorListener listener = new ChecklistEditorListener();
+
     private final ColorDrawable editBackground = new ColorDrawable(Color.parseColor("#AECCE4"));
     private final ColorDrawable deleteBackground = new ColorDrawable(Color.parseColor("#FF8164"));
 
@@ -45,30 +47,6 @@ public class EditChecklistActivity extends EditActivity implements ChecklistEdit
     private Drawable deleteIcon;
 
     private ChecklistEditor checklistEditor;
-
-    @Override
-    public void nameChanged()
-    {
-
-    }
-
-    @Override
-    public void checklistItemAdded(int position, ChecklistItem item)
-    {
-        checklistItemsAdapter.notifyItemInserted(checklistEditor.getItems().size() - 1);
-    }
-
-    @Override
-    public void checklistItemRemoved(int position, ChecklistItem item)
-    {
-        checklistItemsAdapter.notifyItemRemoved(position);
-    }
-
-    @Override
-    public void checklistItemMoved(int oldPosition, int newPosition, ChecklistItem item)
-    {
-        checklistItemsAdapter.notifyItemMoved(oldPosition, newPosition);
-    }
 
     @Override
     protected int getActivityLayoutId()
@@ -127,19 +105,15 @@ public class EditChecklistActivity extends EditActivity implements ChecklistEdit
     }
 
     @Override
-    protected void onStart()
+    protected void startActivity()
     {
-        super.onStart();
-
-        checklistEditor.addListener(this);
+        checklistEditor.addListener(listener);
     }
 
     @Override
-    protected void onStop()
+    protected void stopActivity()
     {
-        super.onStop();
-
-        checklistEditor.removeListener(this);
+        checklistEditor.removeListener(listener);
     }
 
     @Override
@@ -163,7 +137,6 @@ public class EditChecklistActivity extends EditActivity implements ChecklistEdit
     protected boolean onSave(int action)
     {
         checklistEditor.save();
-        serena.save();
 
         return true;
     }
@@ -172,7 +145,6 @@ public class EditChecklistActivity extends EditActivity implements ChecklistEdit
     protected void onRemove()
     {
         checklistEditor.remove();
-        serena.save();
     }
 
     private void showChecklistItemDialog(ChecklistItem checklistItem, Runnable onOk)
@@ -400,5 +372,31 @@ public class EditChecklistActivity extends EditActivity implements ChecklistEdit
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(checklistItemsListView);
+    }
+
+    private class ChecklistEditorListener implements ChecklistEditor.ChecklistEditorListener
+    {
+        @Override
+        public void nameChanged()
+        {
+        }
+
+        @Override
+        public void checklistItemAdded(int position, ChecklistItem item)
+        {
+            checklistItemsAdapter.notifyItemInserted(checklistEditor.getItems().size() - 1);
+        }
+
+        @Override
+        public void checklistItemRemoved(int position, ChecklistItem item)
+        {
+            checklistItemsAdapter.notifyItemRemoved(position);
+        }
+
+        @Override
+        public void checklistItemMoved(int oldPosition, int newPosition, ChecklistItem item)
+        {
+            checklistItemsAdapter.notifyItemMoved(oldPosition, newPosition);
+        }
     }
 }

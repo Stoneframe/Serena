@@ -20,8 +20,10 @@ import stoneframe.serena.routines.FortnightRoutine;
 import stoneframe.serena.routines.FortnightRoutineEditor;
 import stoneframe.serena.routines.Procedure;
 
-public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRoutine, FortnightRoutineEditor> implements FortnightRoutineEditor.FortnightRoutineEditorListener
+public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRoutine, FortnightRoutineEditor, FortnightRoutineEditor.FortnightRoutineEditorListener>
 {
+    private final FortnightRoutineEditorListener listener = new FortnightRoutineEditorListener();
+
     private EditText startDateEditText;
 
     private ExpandableListView week1ExpandableList;
@@ -29,38 +31,6 @@ public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRouti
 
     private ExpandableListView week2ExpandableList;
     private WeekExpandableListAdaptor week2ExpandableListAdaptor;
-
-    @Override
-    public void nameChanged()
-    {
-
-    }
-
-    @Override
-    public void isEnabledChanged()
-    {
-
-    }
-
-    @Override
-    public void startDateChanged()
-    {
-
-    }
-
-    @Override
-    public void procedureAdded()
-    {
-        week1ExpandableListAdaptor.notifyDataSetChanged();
-        week2ExpandableListAdaptor.notifyDataSetChanged();
-    }
-
-    @Override
-    public void procedureRemoved()
-    {
-        week1ExpandableListAdaptor.notifyDataSetChanged();
-        week2ExpandableListAdaptor.notifyDataSetChanged();
-    }
 
     @Override
     protected String getActivityTitle()
@@ -72,6 +42,18 @@ public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRouti
     protected FortnightRoutineEditor getRoutineEditor(FortnightRoutine routine)
     {
         return serena.getRoutineManager().getFortnightRoutineEditor(routine);
+    }
+
+    @Override
+    protected void startActivity()
+    {
+        routineEditor.addListener(listener);
+    }
+
+    @Override
+    protected void stopActivity()
+    {
+        routineEditor.removeListener(listener);
     }
 
     @Override
@@ -109,22 +91,6 @@ public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRouti
         {
             week2ExpandableList.expandGroup(i);
         }
-    }
-
-    @Override
-    protected void onStart()
-    {
-        super.onStart();
-
-        routineEditor.addListener(this);
-    }
-
-    @Override
-    protected void onStop()
-    {
-        super.onStop();
-
-        routineEditor.removeListener(this);
     }
 
     @Override
@@ -299,5 +265,37 @@ public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRouti
                 week,
                 weekDay,
                 copiedProcedure));
+    }
+
+    private class FortnightRoutineEditorListener implements FortnightRoutineEditor.FortnightRoutineEditorListener
+    {
+        @Override
+        public void nameChanged()
+        {
+        }
+
+        @Override
+        public void isEnabledChanged()
+        {
+        }
+
+        @Override
+        public void startDateChanged()
+        {
+        }
+
+        @Override
+        public void procedureAdded()
+        {
+            week1ExpandableListAdaptor.notifyDataSetChanged();
+            week2ExpandableListAdaptor.notifyDataSetChanged();
+        }
+
+        @Override
+        public void procedureRemoved()
+        {
+            week1ExpandableListAdaptor.notifyDataSetChanged();
+            week2ExpandableListAdaptor.notifyDataSetChanged();
+        }
     }
 }

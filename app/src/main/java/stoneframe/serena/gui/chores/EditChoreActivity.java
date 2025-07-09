@@ -19,18 +19,18 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 import stoneframe.serena.R;
-import stoneframe.serena.gui.EditActivity;
-import stoneframe.serena.gui.util.enable.CheckboxCriteria;
-import stoneframe.serena.gui.util.enable.EditTextCriteria;
-import stoneframe.serena.gui.util.enable.EnableCriteria;
-import stoneframe.serena.gui.util.enable.ViewGroupCriteria;
 import stoneframe.serena.chores.Chore;
 import stoneframe.serena.chores.ChoreEditor;
 import stoneframe.serena.chores.DaysInWeekRepetition;
 import stoneframe.serena.chores.IntervalRepetition;
 import stoneframe.serena.chores.Repetition;
+import stoneframe.serena.gui.EditActivity;
+import stoneframe.serena.gui.util.enable.CheckboxCriteria;
+import stoneframe.serena.gui.util.enable.EditTextCriteria;
+import stoneframe.serena.gui.util.enable.EnableCriteria;
+import stoneframe.serena.gui.util.enable.ViewGroupCriteria;
 
-public class EditChoreActivity extends EditActivity implements ChoreEditor.ChoreEditorListener
+public class EditChoreActivity extends EditActivity
 {
     private CheckBox enabledCheckbox;
     private EditText descriptionEditText;
@@ -42,30 +42,6 @@ public class EditChoreActivity extends EditActivity implements ChoreEditor.Chore
     private RepetitionView daysOfWeekRepetitionView;
 
     private ChoreEditor choreEditor;
-
-    @Override
-    public void isEnabledChanged()
-    {
-
-    }
-
-    @Override
-    public void descriptionChanged()
-    {
-
-    }
-
-    @Override
-    public void priorityChanged()
-    {
-
-    }
-
-    @Override
-    public void effortChanged()
-    {
-
-    }
 
     @Override
     protected int getActivityLayoutId()
@@ -142,19 +118,13 @@ public class EditChoreActivity extends EditActivity implements ChoreEditor.Chore
     }
 
     @Override
-    protected void onStart()
+    protected void startActivity()
     {
-        super.onStart();
-
-        choreEditor.addListener(this);
     }
 
     @Override
-    protected void onStop()
+    protected void stopActivity()
     {
-        super.onStop();
-
-        choreEditor.removeListener(this);
     }
 
     @Override
@@ -200,8 +170,6 @@ public class EditChoreActivity extends EditActivity implements ChoreEditor.Chore
 
         choreEditor.save();
 
-        serena.save();
-
         return true;
     }
 
@@ -209,7 +177,6 @@ public class EditChoreActivity extends EditActivity implements ChoreEditor.Chore
     protected void onRemove()
     {
         choreEditor.remove();
-        serena.save();
     }
 
     private RepetitionView getActiveRepetition()

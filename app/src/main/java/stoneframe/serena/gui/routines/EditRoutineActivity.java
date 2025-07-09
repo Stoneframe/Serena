@@ -11,7 +11,7 @@ import stoneframe.serena.gui.util.enable.EnableCriteria;
 import stoneframe.serena.routines.Routine;
 import stoneframe.serena.routines.RoutineEditor;
 
-public abstract class EditRoutineActivity<TRoutine extends Routine<?>, TRoutineEditor extends RoutineEditor<?>> extends EditActivity
+public abstract class EditRoutineActivity<TRoutine extends Routine<?>, TRoutineEditor extends RoutineEditor<TListener>, TListener extends RoutineEditor.RoutineEditorListener> extends EditActivity
 {
     protected EditText nameEditText;
     protected CheckBox enabledCheckBox;

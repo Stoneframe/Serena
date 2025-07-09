@@ -28,17 +28,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import stoneframe.serena.R;
-import stoneframe.serena.gui.GlobalState;
-import stoneframe.serena.gui.util.DialogUtils;
-import stoneframe.serena.gui.util.enable.ButtonEnabledLink;
-import stoneframe.serena.gui.util.enable.EditTextCriteria;
-import stoneframe.serena.gui.util.SimpleListAdapter;
-import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
 import stoneframe.serena.Serena;
 import stoneframe.serena.balancers.Balancer;
 import stoneframe.serena.balancers.BalancerEditor;
 import stoneframe.serena.balancers.CustomTransactionType;
 import stoneframe.serena.balancers.TransactionType;
+import stoneframe.serena.gui.GlobalState;
+import stoneframe.serena.gui.util.DialogUtils;
+import stoneframe.serena.gui.util.SimpleListAdapter;
+import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
+import stoneframe.serena.gui.util.enable.ButtonEnabledLink;
+import stoneframe.serena.gui.util.enable.EditTextCriteria;
 
 public class BalanceActivity extends AppCompatActivity implements BalancerEditor.BalanceEditorListener
 {
@@ -280,10 +280,17 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
             TransactionType transactionType =
                 (TransactionType)favoritesList.getItemAtPosition(position);
 
+            String value = Integer.toString(transactionType.getAmount());
+
+            if (balancer.getUnit() != null && !balancer.getUnit().isBlank())
+            {
+                value += " " + balancer.getUnit();
+            }
+
             DialogUtils.showConfirmationDialog(
                 BalanceActivity.this,
                 "Add transaction",
-                transactionType.getName() + " (" + transactionType.getAmount() + " " + balancer.getUnit() + ")",
+                transactionType.getName() + " (" + value + ")",
                 isConfirmed ->
                 {
                     if (!isConfirmed) return;

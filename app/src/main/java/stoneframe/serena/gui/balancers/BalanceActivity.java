@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -267,6 +268,16 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         });
 
         editTextAmount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
+        editTextAmount.setOnEditorActionListener((v, actionId, event) ->
+        {
+            if (actionId != EditorInfo.IME_ACTION_DONE)
+            {
+                return false;
+            }
+
+            addSelectedTransaction();
+            return true;
+        });
 
         favoritesListAdapter = new SimpleListAdapterBuilder<>(
             this,
@@ -302,7 +313,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         buttonNewTransactionType.setOnClickListener(v -> addTransactionType());
         buttonEditTransactionType.setOnClickListener(v -> editTransactionType());
         buttonRemoveTransactionType.setOnClickListener(v -> removeTransactionType());
-        buttonAddTransaction.setOnClickListener(v -> addTransaction((TransactionType)spinnerTransactionType.getSelectedItem()));
+        buttonAddTransaction.setOnClickListener(v -> addSelectedTransaction());
 
         buttonDone.setOnClickListener(v -> finish());
 
@@ -384,6 +395,11 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
 
                 serena.save();
             });
+    }
+
+    private void addSelectedTransaction()
+    {
+        addTransaction((TransactionType)spinnerTransactionType.getSelectedItem());
     }
 
     private void addTransaction(TransactionType transactionType)

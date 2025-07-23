@@ -15,6 +15,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -27,6 +28,8 @@ import com.google.android.material.navigation.NavigationView;
 
 import org.joda.time.LocalDateTime;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import stoneframe.serena.R;
@@ -54,10 +57,20 @@ import stoneframe.serena.timeservices.RealTimeService;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
+    private static final Map<Integer, Frag> fragments = new HashMap<Integer, Frag>()
+    {{
+        put(R.id.nav_todays, new Frag(TodayFragment.class, "Today"));
+        put(R.id.nav_all_routines, new Frag(AllRoutinesFragment.class, "Routines"));
+        put(R.id.nav_all_chores, new Frag(AllChoresFragment.class, "Chores"));
+        put(R.id.nav_all_tasks, new Frag(AllTasksFragment.class, "Tasks"));
+        put(R.id.nav_all_checklists, new Frag(AllChecklistsFragment.class, "Checklists"));
+        put(R.id.nav_balancers, new Frag(AllBalancersFragment.class, "Balancers"));
+        put(R.id.nav_sleep, new Frag(SleepFragment.class, "Sleep"));
+        put(R.id.nav_notes, new Frag(AllNotesFragment.class, "Notes"));
+    }};
+
     private ActivityResultLauncher<Intent> editStorageLauncher;
-
     private int selectedFragment;
-
     private Serena serena;
     private Storage storage;
 
@@ -118,36 +131,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     {
         selectedFragment = fragmentId;
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setCheckedItem(fragmentId);
-
-        switch (fragmentId)
-        {
-            case R.id.nav_all_chores:
-                return goToFragment(AllChoresFragment.class);
-            case R.id.nav_all_tasks:
-                return goToFragment(AllTasksFragment.class);
-            case R.id.nav_all_routines:
-                return goToFragment(AllRoutinesFragment.class);
-            case R.id.nav_all_checklists:
-                return goToFragment(AllChecklistsFragment.class);
-            case R.id.nav_balancers:
-                return goToFragment(AllBalancersFragment.class);
-            case R.id.nav_sleep:
-                return goToFragment(SleepFragment.class);
-            case R.id.nav_notes:
-                return goToFragment(AllNotesFragment.class);
-            case R.id.nav_todays:
-            default:
-                return goToFragment(TodayFragment.class);
-        }
-    }
-
-    private boolean goToFragment(Class<?> fragmentClass)
-    {
         try
         {
-            Fragment fragment = (Fragment)fragmentClass.newInstance();
+            NavigationView navigationView = findViewById(R.id.nav_view);
+            navigationView.setCheckedItem(fragmentId);
+
+            Class<?> clazz = getFragment(fragmentId).getClazz();
+
+            Fragment fragment = (Fragment)clazz.newInstance();
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
@@ -155,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             DrawerLayout drawer = findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
 
-            setTitle(getFragmentTitle(fragmentClass));
+            setTitle(getFragment(fragmentId).getName());
         }
         catch (Exception e)
         {
@@ -163,19 +154,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         return true;
-    }
-
-    private String getFragmentTitle(Class<?> fragmentClass)
-    {
-        if (fragmentClass == TodayFragment.class) return "Today";
-        if (fragmentClass == AllRoutinesFragment.class) return "Routines";
-        if (fragmentClass == AllChoresFragment.class) return "Chores";
-        if (fragmentClass == AllTasksFragment.class) return "Tasks";
-        if (fragmentClass == AllChecklistsFragment.class) return "Checklists";
-        if (fragmentClass == SleepFragment.class) return "Sleep";
-        if (fragmentClass == AllBalancersFragment.class) return "Balancers";
-
-        return "Serena";
     }
 
     @Override
@@ -269,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             new FragmentManager.FragmentLifecycleCallbacks()
             {
                 @Override
-                public void onFragmentResumed(FragmentManager fm, Fragment f)
+                public void onFragmentResumed(@NonNull FragmentManager fm, @NonNull Fragment f)
                 {
                     super.onFragmentResumed(fm, f);
 
@@ -337,5 +315,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         editor.apply();
 
         serena.load();
+    }
+
+    private static Frag getFragment(int fragmentId)
+    {
+        if (!fragments.containsKey(fragmentId))
+        {
+            return fragments.get(R.id.nav_todays);
+        }
+
+        return fragments.get(fragmentId);
+    }
+
+    private static class Frag
+    {
+        private final Class<?> clazz;
+        private final String name;
+
+        public Frag(Class<?> clazz, String name)
+        {
+            this.clazz = clazz;
+            this.name = name;
+        }
+
+        public Class<?> getClazz()
+        {
+            return clazz;
+        }
+
+        public String getName()
+        {
+            return name;
+        }
     }
 }

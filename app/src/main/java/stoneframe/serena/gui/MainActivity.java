@@ -33,7 +33,11 @@ import java.util.Map;
 import java.util.Objects;
 
 import stoneframe.serena.R;
+import stoneframe.serena.Serena;
+import stoneframe.serena.Storage;
 import stoneframe.serena.balancers.BalancerManager;
+import stoneframe.serena.chores.choreselectors.SimpleChoreSelector;
+import stoneframe.serena.chores.efforttrackers.WeeklyEffortTracker;
 import stoneframe.serena.gui.balancers.AllBalancersFragment;
 import stoneframe.serena.gui.checklists.AllChecklistsFragment;
 import stoneframe.serena.gui.chores.AllChoresFragment;
@@ -44,15 +48,11 @@ import stoneframe.serena.gui.sleep.SleepFragment;
 import stoneframe.serena.gui.tasks.AllTasksFragment;
 import stoneframe.serena.gui.today.TodayFragment;
 import stoneframe.serena.sleep.SleepManager;
+import stoneframe.serena.storages.JsonConverter;
+import stoneframe.serena.storages.SharedPreferencesStorage;
 import stoneframe.serena.storages.json.ContainerJsonConverter;
 import stoneframe.serena.storages.json.SimpleChoreSelectorConverter;
 import stoneframe.serena.storages.json.WeeklyEffortTrackerConverter;
-import stoneframe.serena.Serena;
-import stoneframe.serena.Storage;
-import stoneframe.serena.chores.choreselectors.SimpleChoreSelector;
-import stoneframe.serena.chores.efforttrackers.WeeklyEffortTracker;
-import stoneframe.serena.storages.JsonConverter;
-import stoneframe.serena.storages.SharedPreferencesStorage;
 import stoneframe.serena.timeservices.RealTimeService;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
@@ -256,10 +256,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }, true
         );
 
+        if (handleIntent(getIntent()))
+        {
+            return;
+        }
+
         if (savedInstanceState == null)
         {
             goToFragment(R.id.nav_todays);
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent)
+    {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleIntent(intent);
     }
 
     @Override
@@ -276,6 +289,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onStop();
 
         serena.save();
+    }
+
+    private boolean handleIntent(Intent intent)
+    {
+        if (intent == null)
+        {
+            return false;
+        }
+
+        if (!intent.hasExtra("fragment"))
+        {
+            return false;
+        }
+
+        int fragmentId = intent.getIntExtra("fragment", R.id.nav_todays);
+
+        goToFragment(fragmentId);
+
+        return true;
     }
 
     private void updateIconColors()

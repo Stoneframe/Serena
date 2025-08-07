@@ -14,9 +14,13 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import stoneframe.serena.R;
 import stoneframe.serena.Serena;
 import stoneframe.serena.gui.GlobalState;
+import stoneframe.serena.notes.NoteGroupView;
 import stoneframe.serena.notes.NoteManager;
 import stoneframe.serena.notes.NoteView;
 
@@ -24,6 +28,8 @@ public class AllNotesFragment extends Fragment
 {
     public static final int ACTION_ADD = 0;
     public static final int ACTION_EDIT = 1;
+
+    private static List<String> closedNoteGroups = new LinkedList<>();
 
     private ActivityResultLauncher<Intent> allNoteGroupsLauncher;
     private ActivityResultLauncher<Intent> editNoteLauncher;
@@ -122,14 +128,18 @@ public class AllNotesFragment extends Fragment
     {
         notesGroupExpandableListAdapter.notifyDataSetChanged();
 
-        expandAllGroups();
+        NoteGroupView noteGroup = GlobalState.getInstance().getActiveNoteGroup();
+
+        expandGroup(noteGroup);
     }
 
     private void editNoteCallback(ActivityResult activityResult)
     {
         notesGroupExpandableListAdapter.notifyDataSetChanged();
 
-        expandAllGroups();
+        NoteGroupView noteGroup = GlobalState.getInstance().getActiveNote().getGroup();
+
+        expandGroup(noteGroup);
     }
 
     private void expandAllGroups()
@@ -137,6 +147,20 @@ public class AllNotesFragment extends Fragment
         for (int i = 0; i < notesGroupExpandableListAdapter.getGroupCount(); i++)
         {
             notesGroupExpandableListView.expandGroup(i);
+        }
+    }
+
+    private void expandGroup(NoteGroupView noteGroupToExpand)
+    {
+        for (int i = 0; i < notesGroupExpandableListAdapter.getGroupCount(); i++)
+        {
+            NoteGroupView group = (NoteGroupView)notesGroupExpandableListAdapter.getGroup(i);
+
+            if (group.equals(noteGroupToExpand))
+            {
+                notesGroupExpandableListView.expandGroup(i);
+                break;
+            }
         }
     }
 

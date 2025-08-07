@@ -22,7 +22,7 @@ public class NoteManager
 
     public NoteView createNote(String title)
     {
-        return new NoteView(new Note(title), NoteGroup.NONE);
+        return new NoteView(new Note(title), NoteGroup.NONE, container.get());
     }
 
     public NoteGroupView createNoteGroup(String name)
@@ -44,7 +44,7 @@ public class NoteManager
     {
         return container.get().notes.stream()
             .sorted(Comparator.comparing(Note::getTitle))
-            .map(n -> new NoteView(n, NoteGroup.NONE))
+            .map(n -> new NoteView(n, NoteGroup.NONE, container.get()))
             .collect(Collectors.toList());
     }
 

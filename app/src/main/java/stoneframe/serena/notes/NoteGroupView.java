@@ -27,7 +27,7 @@ public final class NoteGroupView
     {
         return container.notes.stream()
             .filter(n -> n.getGroupId().equals(noteGroup.getId()))
-            .map(n -> new NoteView(n, noteGroup))
+            .map(n -> new NoteView(n, noteGroup, container))
             .sorted(Comparator.comparing(NoteView::getTitle))
             .collect(Collectors.toList());
     }

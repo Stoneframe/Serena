@@ -29,6 +29,7 @@ import stoneframe.serena.R;
 import stoneframe.serena.Serena;
 import stoneframe.serena.gui.GlobalState;
 import stoneframe.serena.gui.MainActivity;
+import stoneframe.serena.gui.util.enable.BooleanCriteria;
 import stoneframe.serena.gui.util.enable.ButtonEnabledLink;
 import stoneframe.serena.gui.util.enable.EditTextCriteria;
 import stoneframe.serena.sleep.Sleep;
@@ -53,6 +54,7 @@ public class SleepFragment extends Fragment
     private EditText startSessionEditText;
     private EditText endSessionEditText;
     private Button addSessionButton;
+    private ButtonEnabledLink addSessionButtonEnableLink;
 
     @Nullable
     @Override
@@ -97,6 +99,7 @@ public class SleepFragment extends Fragment
         startSessionEditText.setOnClickListener(v -> showDatePicker(startSessionEditText));
         endSessionEditText.setOnClickListener(v -> showDatePicker(endSessionEditText));
 
+        addSessionButton.setEnabled(false);
         addSessionButton.setOnClickListener(v ->
         {
             DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
@@ -116,10 +119,11 @@ public class SleepFragment extends Fragment
             updateComponents();
         });
 
-        new ButtonEnabledLink(
+        addSessionButtonEnableLink = new ButtonEnabledLink(
             addSessionButton,
             new EditTextCriteria(startSessionEditText, EditTextCriteria.IS_NOT_EMPTY),
-            new EditTextCriteria(endSessionEditText, EditTextCriteria.IS_NOT_EMPTY));
+            new EditTextCriteria(endSessionEditText, EditTextCriteria.IS_NOT_EMPTY),
+            new BooleanCriteria(sleepManager::isEnabled));
 
         updateComponents();
 
@@ -196,7 +200,7 @@ public class SleepFragment extends Fragment
         toggleButton.setEnabled(isEnabled);
         startSessionEditText.setEnabled(isEnabled);
         endSessionEditText.setEnabled(isEnabled);
-        addSessionButton.setEnabled(isEnabled);
+        addSessionButtonEnableLink.criteriaValueChanged();
     }
 
     private void updatePreviousSession()

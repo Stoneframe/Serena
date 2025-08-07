@@ -138,6 +138,7 @@ public class RoutineNotifier
         Intent openMainActivityIntent = new Intent(context, MainActivity.class);
 
         openMainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        openMainActivityIntent.putExtra("fragment", R.id.nav_todays);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(
             context,

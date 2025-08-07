@@ -256,10 +256,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }, true
         );
 
+        if (handleIntent(getIntent()))
+        {
+            return;
+        }
+
         if (savedInstanceState == null)
         {
             goToFragment(R.id.nav_todays);
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent)
+    {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleIntent(intent);
     }
 
     @Override
@@ -276,6 +289,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onStop();
 
         serena.save();
+    }
+
+    private boolean handleIntent(Intent intent)
+    {
+        if (intent == null)
+        {
+            return false;
+        }
+
+        int fragmentId = intent.getIntExtra("fragment", R.id.nav_todays);
+
+        goToFragment(fragmentId);
+
+        return true;
     }
 
     private void updateIconColors()

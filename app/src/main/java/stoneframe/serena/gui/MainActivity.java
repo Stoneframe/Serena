@@ -293,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private boolean handleIntent(Intent intent)
     {
-        if (intent == null)
+        if (intent == null || !intent.hasExtra("fragment"))
         {
             return false;
         }

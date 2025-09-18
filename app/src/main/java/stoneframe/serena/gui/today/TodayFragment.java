@@ -31,6 +31,7 @@ import java.util.HashMap;
 
 import stoneframe.serena.R;
 import stoneframe.serena.gui.GlobalState;
+import stoneframe.serena.gui.MainActivity;
 import stoneframe.serena.gui.routines.RoutineNotifier;
 import stoneframe.serena.gui.tasks.EditTaskActivity;
 import stoneframe.serena.gui.util.DialogUtils;
@@ -340,6 +341,10 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
                     if (isConfirmed)
                     {
                         sleepManager.toggle();
+
+                        MainActivity mainActivity = (MainActivity)requireActivity();
+
+                        mainActivity.updateSleepIconColor();
                     }
 
                     isShowingSleepDialog = false;

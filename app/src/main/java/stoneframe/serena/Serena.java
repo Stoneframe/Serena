@@ -13,6 +13,8 @@ import stoneframe.serena.chores.ChoreSelector;
 import stoneframe.serena.chores.EffortTracker;
 import stoneframe.serena.notes.NoteContainer;
 import stoneframe.serena.notes.NoteManager;
+import stoneframe.serena.reminders.ReminderContainer;
+import stoneframe.serena.reminders.ReminderManager;
 import stoneframe.serena.routines.RoutineContainer;
 import stoneframe.serena.routines.RoutineManager;
 import stoneframe.serena.sleep.SleepContainer;
@@ -57,6 +59,7 @@ public class Serena
             container.RoutineContainer = new RoutineContainer();
             container.ChoreContainer = new ChoreContainer(effortTracker, choreSelector);
             container.TaskContainer = new TaskContainer();
+            container.ReminderContainer = new ReminderContainer();
             container.ChecklistContainer = new ChecklistContainer();
             container.BalancerContainer = new BalancerContainer();
             container.SleepContainer = new SleepContainer();
@@ -85,6 +88,15 @@ public class Serena
     }
 
     // ====================================================================
+    // ROUTINES
+    // ====================================================================
+
+    public RoutineManager getRoutineManager()
+    {
+        return new RoutineManager(() -> container.RoutineContainer, timeService);
+    }
+
+    // ====================================================================
     // CHORES
     // ====================================================================
 
@@ -103,12 +115,12 @@ public class Serena
     }
 
     // ====================================================================
-    // ROUTINES
+    // REMINDERS
     // ====================================================================
 
-    public RoutineManager getRoutineManager()
+    public ReminderManager getReminderManager()
     {
-        return new RoutineManager(() -> container.RoutineContainer, timeService);
+        return new ReminderManager(() -> container.ReminderContainer, timeService);
     }
 
     // ====================================================================

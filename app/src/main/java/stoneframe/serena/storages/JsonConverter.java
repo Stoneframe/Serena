@@ -11,31 +11,7 @@ import stoneframe.serena.storages.json.ChoreSelectorConverter;
 import stoneframe.serena.storages.json.ContainerJsonConverter;
 import stoneframe.serena.storages.json.EffortTrackerConverter;
 import stoneframe.serena.Container;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion1;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion10;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion11;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion12;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion13;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion14;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion15;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion16;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion17;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion18;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion19;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion2;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion20;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion21;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion22;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion23;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion24;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion25;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion3;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion4;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion5;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion6;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion7;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion8;
-import stoneframe.serena.storages.versions.UpgradeScriptVersion9;
+import stoneframe.serena.storages.versions.*;
 
 public class JsonConverter
 {
@@ -66,7 +42,8 @@ public class JsonConverter
             new UpgradeScriptVersion22(),
             new UpgradeScriptVersion23(),
             new UpgradeScriptVersion24(),
-            new UpgradeScriptVersion25())
+            new UpgradeScriptVersion25(),
+            new UpgradeScriptVersion26())
         .collect(Collectors.toMap(UpgradeScript::getVersion, s -> s));
 
     private final ChoreSelectorConverter choreSelectorConverter;

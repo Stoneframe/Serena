@@ -51,6 +51,7 @@
         <activity android:name=".gui.balancers.BalanceActivity" />
         <activity android:name=".gui.notes.EditNoteActivity" />
         <activity android:name=".gui.notes.AllNoteGroupsActivity" />
+        <activity android:name=".gui.reminders.EditReminderActivity" />
         <activity
             android:name=".gui.notes.EditNoteGroupActivity"
             android:windowSoftInputMode="adjustResize" />

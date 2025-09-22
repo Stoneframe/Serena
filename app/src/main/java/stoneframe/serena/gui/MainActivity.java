@@ -38,6 +38,7 @@ import stoneframe.serena.gui.balancers.AllBalancersFragment;
 import stoneframe.serena.gui.checklists.AllChecklistsFragment;
 import stoneframe.serena.gui.chores.AllChoresFragment;
 import stoneframe.serena.gui.notes.AllNotesFragment;
+import stoneframe.serena.gui.reminders.AllRemindersFragment;
 import stoneframe.serena.gui.routines.AllRoutinesFragment;
 import stoneframe.serena.gui.routines.RoutineNotifier;
 import stoneframe.serena.gui.sleep.SleepFragment;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         put(R.id.nav_all_routines, new Frag(AllRoutinesFragment.class, "Routines"));
         put(R.id.nav_all_chores, new Frag(AllChoresFragment.class, "Chores"));
         put(R.id.nav_all_tasks, new Frag(AllTasksFragment.class, "Tasks"));
+        put(R.id.nav_all_reminders, new Frag(AllRemindersFragment.class, "Reminders"));
         put(R.id.nav_all_checklists, new Frag(AllChecklistsFragment.class, "Checklists"));
         put(R.id.nav_balancers, new Frag(AllBalancersFragment.class, "Balancers"));
         put(R.id.nav_sleep, new Frag(SleepFragment.class, "Sleep"));

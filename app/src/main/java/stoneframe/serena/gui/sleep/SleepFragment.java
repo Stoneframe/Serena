@@ -156,7 +156,8 @@ public class SleepFragment extends Fragment
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(requireContext(),
+        TimePickerDialog timePickerDialog = new TimePickerDialog(
+            requireContext(),
             (view, selectedHour, selectedMinute) ->
             {
                 calendar.set(Calendar.HOUR_OF_DAY, selectedHour);

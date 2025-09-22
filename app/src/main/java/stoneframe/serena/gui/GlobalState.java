@@ -8,6 +8,7 @@ import stoneframe.serena.checklists.Checklist;
 import stoneframe.serena.chores.Chore;
 import stoneframe.serena.notes.NoteGroupView;
 import stoneframe.serena.notes.NoteView;
+import stoneframe.serena.reminders.Reminder;
 import stoneframe.serena.routines.Routine;
 import stoneframe.serena.tasks.Task;
 
@@ -18,6 +19,7 @@ public class GlobalState extends Application
     private Routine<?> activeRoutine;
     private Chore activeChore;
     private Task activeTask;
+    private Reminder activeReminder;
     private Checklist activeChecklist;
     private Balancer activeBalancer;
     private NoteView activeNote;
@@ -119,5 +121,15 @@ public class GlobalState extends Application
     public void setActiveNoteGroup(NoteGroupView noteGroup)
     {
         activeNoteGroup = noteGroup;
+    }
+
+    public Reminder getActiveReminder()
+    {
+        return activeReminder;
+    }
+
+    public void setActiveReminder(Reminder reminder)
+    {
+        activeReminder = reminder;
     }
 }

@@ -4,6 +4,7 @@ import stoneframe.serena.checklists.ChecklistContainer;
 import stoneframe.serena.chores.ChoreContainer;
 import stoneframe.serena.balancers.BalancerContainer;
 import stoneframe.serena.notes.NoteContainer;
+import stoneframe.serena.reminders.ReminderContainer;
 import stoneframe.serena.routines.RoutineContainer;
 import stoneframe.serena.sleep.SleepContainer;
 import stoneframe.serena.tasks.TaskContainer;
@@ -12,11 +13,13 @@ public class Container
 {
     public int Version = 0;
 
+    public RoutineContainer RoutineContainer;
+
     public ChoreContainer ChoreContainer;
 
     public TaskContainer TaskContainer;
 
-    public RoutineContainer RoutineContainer;
+    public ReminderContainer ReminderContainer;
 
     public ChecklistContainer ChecklistContainer;
 

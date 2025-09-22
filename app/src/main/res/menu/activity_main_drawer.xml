@@ -17,6 +17,10 @@
             android:title="Manage Tasks" />
 
         <item
+            android:id="@+id/nav_all_reminders"
+            android:title="Reminders" />
+
+        <item
             android:id="@+id/nav_all_checklists"
             android:title="Checklists" />
 

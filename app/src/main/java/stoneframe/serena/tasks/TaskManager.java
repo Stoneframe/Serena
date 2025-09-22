@@ -7,6 +7,7 @@ import org.joda.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -85,10 +86,12 @@ public class TaskManager
 
     private void removeOldCompletedTasks(LocalDate today)
     {
-        getContainer().tasks
-            .removeIf(t -> t.isDone() && t.getCompleted()
-            .plusWeeks(1)
-            .isBefore(today));
+        getContainer().tasks.removeIf(isCompletedOverOneWeekAgo(today));
+    }
+
+    private static @NonNull Predicate<Task> isCompletedOverOneWeekAgo(LocalDate today)
+    {
+        return t -> t.isDone() && t.getCompleted().plusWeeks(1).isBefore(today);
     }
 
     @NonNull

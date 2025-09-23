@@ -8,6 +8,7 @@ import android.widget.EditText;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -21,9 +22,6 @@ import stoneframe.serena.reminders.ReminderEditor;
 
 public class EditReminderActivity extends EditActivity
 {
-    private LocalDateTime dateTime;
-    private String text;
-
     private EditText dateTimeEditText;
     private EditText textEditText;
 
@@ -53,9 +51,6 @@ public class EditReminderActivity extends EditActivity
         Reminder reminder = globalState.getActiveReminder();
 
         reminderEditor = serena.getReminderManager().getEditor(reminder);
-
-        dateTime = reminderEditor.getDateTime();
-        text = reminderEditor.getText();
 
         dateTimeEditText = findViewById(R.id.dateTimeEditText);
         textEditText = findViewById(R.id.textEditText);
@@ -97,6 +92,9 @@ public class EditReminderActivity extends EditActivity
     @Override
     protected boolean onSave(int action)
     {
+        LocalDateTime dateTime = LocalDateTime.parse(
+            dateTimeEditText.getText().toString(),
+            DateTimeFormat.forPattern("yyyy-MM-dd HH:mm"));
         String text = textEditText.getText().toString().trim();
 
         reminderEditor.setDateTime(dateTime);

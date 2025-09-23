@@ -56,7 +56,7 @@
             android:name=".gui.notes.EditNoteGroupActivity"
             android:windowSoftInputMode="adjustResize" />
 
-        <receiver android:name=".gui.routines.RoutineNotifierReceiver" />
+        <receiver android:name=".gui.notifications.NotifierReceiver" />
     </application>
 
 </manifest>

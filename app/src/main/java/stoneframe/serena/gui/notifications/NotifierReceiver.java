@@ -1,4 +1,4 @@
-package stoneframe.serena.gui.routines;
+package stoneframe.serena.gui.notifications;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -17,7 +17,7 @@ import stoneframe.serena.storages.JsonConverter;
 import stoneframe.serena.storages.SharedPreferencesStorage;
 import stoneframe.serena.timeservices.RealTimeService;
 
-public class RoutineNotifierReceiver extends BroadcastReceiver
+public class NotifierReceiver extends BroadcastReceiver
 {
     @Override
     public void onReceive(Context context, Intent intent)
@@ -26,10 +26,8 @@ public class RoutineNotifierReceiver extends BroadcastReceiver
 
         serena.notifyChange();
 
-        RoutineNotifier.showRoutineNotification(context, serena);
-        RoutineNotifier.scheduleRoutineAlarm(
-            context,
-            serena.getRoutineManager().getNextProcedureTime());
+        Notifier.showNotifications(context, serena);
+        Notifier.scheduleAlarm(context, serena);
     }
 
     @NonNull

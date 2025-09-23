@@ -26,34 +26,32 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.navigation.NavigationView;
 
-import org.joda.time.LocalDateTime;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 import stoneframe.serena.R;
+import stoneframe.serena.Serena;
+import stoneframe.serena.Storage;
 import stoneframe.serena.balancers.BalancerManager;
+import stoneframe.serena.chores.choreselectors.SimpleChoreSelector;
+import stoneframe.serena.chores.efforttrackers.WeeklyEffortTracker;
 import stoneframe.serena.gui.balancers.AllBalancersFragment;
 import stoneframe.serena.gui.checklists.AllChecklistsFragment;
 import stoneframe.serena.gui.chores.AllChoresFragment;
 import stoneframe.serena.gui.notes.AllNotesFragment;
+import stoneframe.serena.gui.notifications.Notifier;
 import stoneframe.serena.gui.reminders.AllRemindersFragment;
 import stoneframe.serena.gui.routines.AllRoutinesFragment;
-import stoneframe.serena.gui.routines.RoutineNotifier;
 import stoneframe.serena.gui.sleep.SleepFragment;
 import stoneframe.serena.gui.tasks.AllTasksFragment;
 import stoneframe.serena.gui.today.TodayFragment;
 import stoneframe.serena.sleep.SleepManager;
+import stoneframe.serena.storages.JsonConverter;
+import stoneframe.serena.storages.SharedPreferencesStorage;
 import stoneframe.serena.storages.json.ContainerJsonConverter;
 import stoneframe.serena.storages.json.SimpleChoreSelectorConverter;
 import stoneframe.serena.storages.json.WeeklyEffortTrackerConverter;
-import stoneframe.serena.Serena;
-import stoneframe.serena.Storage;
-import stoneframe.serena.chores.choreselectors.SimpleChoreSelector;
-import stoneframe.serena.chores.efforttrackers.WeeklyEffortTracker;
-import stoneframe.serena.storages.JsonConverter;
-import stoneframe.serena.storages.SharedPreferencesStorage;
 import stoneframe.serena.timeservices.RealTimeService;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
@@ -207,14 +205,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        RoutineNotifier.setupNotificationChannel(this);
+        Notifier.setupNotificationChannels(this);
+        Notifier.scheduleAlarm(this, serena);
 
-        LocalDateTime nextRoutineProcedureTime = serena.getRoutineManager().getNextProcedureTime();
-
-        if (nextRoutineProcedureTime != null)
-        {
-            RoutineNotifier.scheduleRoutineAlarm(this, nextRoutineProcedureTime);
-        }
 
         editStorageLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),

@@ -17,6 +17,7 @@ import android.widget.ListView;
 import stoneframe.serena.R;
 import stoneframe.serena.Serena;
 import stoneframe.serena.gui.GlobalState;
+import stoneframe.serena.gui.notifications.Notifier;
 import stoneframe.serena.gui.util.SimpleListAdapter;
 import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
 import stoneframe.serena.reminders.Reminder;
@@ -95,5 +96,7 @@ public class AllRemindersFragment extends Fragment
     private void editReminderCallback(ActivityResult activityResult)
     {
         reminderListAdapter.notifyDataSetChanged();
+
+        Notifier.scheduleAlarm(requireContext(), serena);
     }
 }

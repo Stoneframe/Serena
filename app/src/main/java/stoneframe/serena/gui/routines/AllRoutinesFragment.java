@@ -23,10 +23,9 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import org.joda.time.LocalDateTime;
-
 import stoneframe.serena.R;
 import stoneframe.serena.gui.GlobalState;
+import stoneframe.serena.gui.notifications.Notifier;
 import stoneframe.serena.gui.routines.days.DayRoutineActivity;
 import stoneframe.serena.gui.routines.fortnights.FortnightRoutineActivity;
 import stoneframe.serena.gui.routines.weeks.WeekRoutineActivity;
@@ -237,25 +236,11 @@ public class AllRoutinesFragment extends Fragment
     {
         routineListAdapter.notifyDataSetChanged();
 
-        scheduleNextRoutineAlarm();
+        Notifier.scheduleAlarm(requireContext(), serena);
     }
 
     private void routineOverviewCallback(ActivityResult activityResult)
     {
-    }
-
-    private void scheduleNextRoutineAlarm()
-    {
-        LocalDateTime nextAlarmTime = routineManager.getNextProcedureTime();
-
-        if (nextAlarmTime == null)
-        {
-            RoutineNotifier.cancelRoutineAlarm(requireContext());
-        }
-        else
-        {
-            RoutineNotifier.scheduleRoutineAlarm(requireContext(), nextAlarmTime);
-        }
     }
 
     private void checkPermissionToScheduleExactAlarms()

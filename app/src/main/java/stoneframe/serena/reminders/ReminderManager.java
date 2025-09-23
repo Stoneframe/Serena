@@ -65,6 +65,24 @@ public class ReminderManager
         container.get().reminders.remove(reminder);
     }
 
+    public LocalDateTime getNextReminderTime()
+    {
+        return container.get().reminders.stream()
+            .map(r -> r.getDateTime())
+            .sorted()
+            .filter(d -> d.isAfter(timeService.getNow()))
+            .findFirst()
+            .orElse(null);
+    }
+
+    public List<Reminder> getPendingReminders()
+    {
+        return container.get().reminders.stream()
+            .filter(r -> !r.getDateTime().isAfter(timeService.getNow()))
+            .sorted(Comparator.comparing(Reminder::getDateTime))
+            .collect(Collectors.toList());
+    }
+
     private void removeDoneReminders()
     {
         container.get().reminders.removeIf(Reminder::isDone);

@@ -32,7 +32,7 @@ import java.util.HashMap;
 import stoneframe.serena.R;
 import stoneframe.serena.gui.GlobalState;
 import stoneframe.serena.gui.MainActivity;
-import stoneframe.serena.gui.routines.RoutineNotifier;
+import stoneframe.serena.gui.notifications.Notifier;
 import stoneframe.serena.gui.tasks.EditTaskActivity;
 import stoneframe.serena.gui.util.DialogUtils;
 import stoneframe.serena.gui.util.SimpleCheckboxListAdapter;
@@ -217,7 +217,7 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
 
                     procedureAdapter.notifyDataSetChanged();
 
-                    RoutineNotifier.updateNotification(getContext(), serena);
+                    Notifier.updateNotification(getContext(), serena);
                 }));
 
         ImageButton refreshChoresButton = rootView.findViewById(R.id.refreshChoresButton);
@@ -438,7 +438,7 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
         procedureRemovals.remove(procedure);
         routineManager.procedureDone(procedure);
         procedureAdapter.notifyDataSetChanged();
-        RoutineNotifier.updateNotification(getContext(), serena);
+        Notifier.updateNotification(getContext(), serena);
         serena.save();
     }
 

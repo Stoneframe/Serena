@@ -28,6 +28,7 @@ import org.joda.time.LocalDate;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import stoneframe.serena.R;
 import stoneframe.serena.gui.GlobalState;
@@ -40,6 +41,9 @@ import stoneframe.serena.Serena;
 import stoneframe.serena.SerenaChangedListener;
 import stoneframe.serena.chores.Chore;
 import stoneframe.serena.chores.ChoreManager;
+import stoneframe.serena.reminders.Reminder;
+import stoneframe.serena.reminders.ReminderEditor;
+import stoneframe.serena.reminders.ReminderManager;
 import stoneframe.serena.routines.PendingProcedure;
 import stoneframe.serena.routines.RoutineManager;
 import stoneframe.serena.sleep.Sleep;
@@ -282,6 +286,7 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
         choreAdapter.notifyDataSetChanged();
         taskAdapter.notifyDataSetChanged();
 
+        showPendingReminders();
         checkIfAsleepAndQueryToWakeUp();
 
         updateColors();
@@ -348,6 +353,30 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
                     }
 
                     isShowingSleepDialog = false;
+                });
+        }
+    }
+
+    private void showPendingReminders()
+    {
+        ReminderManager reminderManager = serena.getReminderManager();
+
+        List<Reminder> pendingReminders = reminderManager.getPendingReminders();
+
+        for (Reminder reminder : pendingReminders)
+        {
+            DialogUtils.showConfirmationDialog(
+                requireContext(),
+                "Reminder",
+                reminder.getText(),
+                isConfirmed ->
+                {
+                    if (isConfirmed)
+                    {
+                        ReminderEditor reminderEditor = reminderManager.getEditor(reminder);
+
+                        reminderEditor.setDone(true);
+                    }
                 });
         }
     }

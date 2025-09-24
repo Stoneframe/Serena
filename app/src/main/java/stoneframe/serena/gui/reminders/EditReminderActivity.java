@@ -57,7 +57,7 @@ public class EditReminderActivity extends EditActivity
         textEditText.setText(reminderEditor.getText());
 
         dateTimeEditText.setInputType(InputType.TYPE_NULL);
-        dateTimeEditText.setOnClickListener(v -> showDatePicker(dateTimeEditText));
+        dateTimeEditText.setOnClickListener(v -> showDatePicker());
     }
 
     @Override
@@ -109,7 +109,7 @@ public class EditReminderActivity extends EditActivity
         reminderEditor.remove();
     }
 
-    private void showDatePicker(EditText dateEditText)
+    private void showDatePicker()
     {
         final Calendar calendar = Calendar.getInstance();
 
@@ -123,13 +123,13 @@ public class EditReminderActivity extends EditActivity
                 calendar.set(Calendar.MONTH, selectedMonth);
                 calendar.set(Calendar.DAY_OF_MONTH, selectedDay);
 
-                showTimePicker(dateEditText, calendar);
-            }, dateTime.getYear(), dateTime.getMonthOfYear(), dateTime.getDayOfMonth());
+                showTimePicker(calendar);
+            }, dateTime.getYear(), dateTime.getMonthOfYear() - 1, dateTime.getDayOfMonth());
 
         datePickerDialog.show();
     }
 
-    private void showTimePicker(EditText dateTimeEditText, Calendar calendar)
+    private void showTimePicker(Calendar calendar)
     {
         LocalDateTime dateTime = reminderEditor.getDateTime();
 

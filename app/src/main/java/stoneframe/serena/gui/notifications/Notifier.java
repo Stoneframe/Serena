@@ -101,7 +101,7 @@ public class Notifier
         }
     }
 
-    private static void scheduleAlarm(Context context, LocalDateTime serena, Class<?> clazz)
+    private static void scheduleAlarm(Context context, LocalDateTime triggerDateTime, Class<?> clazz)
     {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
             context,
@@ -110,8 +110,6 @@ public class Notifier
             PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
 
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-
-        LocalDateTime triggerDateTime = serena;
 
         if (triggerDateTime != null)
         {

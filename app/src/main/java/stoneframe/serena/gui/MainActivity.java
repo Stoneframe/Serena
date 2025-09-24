@@ -208,7 +208,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Notifier.setupNotificationChannels(this);
         Notifier.scheduleAlarm(this, serena);
 
-
         editStorageLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             this::editStorageCallback);

@@ -368,17 +368,21 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
             DialogUtils.showConfirmationDialog(
                 requireContext(),
                 "Reminder",
-                reminder.getText(),
+                reminder.getText() + "\r\n\r\nAcknowledge?",
                 isConfirmed ->
                 {
+                    ReminderEditor reminderEditor = reminderManager.getEditor(reminder);
+
                     if (isConfirmed)
                     {
-                        ReminderEditor reminderEditor = reminderManager.getEditor(reminder);
-
                         reminderEditor.setDone(true);
-
-                        Notifier.showReminderNotification(requireContext(), serena, false);
                     }
+                    else
+                    {
+                        reminderEditor.setDateTime(reminderEditor.getDateTime().plusMinutes(10));
+                    }
+
+                    Notifier.showReminderNotification(requireContext(), serena, false);
                 });
         }
     }

@@ -17,5 +17,4 @@ public class ReminderNotifierReceiver extends NotifierReceiver
         Notifier.showReminderNotification(context, serena, true);
         Notifier.scheduleReminderAlarm(context, serena);
     }
-
 }

@@ -3,10 +3,8 @@ package stoneframe.serena.gui.reminders;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.text.InputType;
-import android.widget.DatePicker;
 import android.widget.EditText;
 
-import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 
@@ -114,9 +112,8 @@ public class EditReminderActivity extends EditActivity
     private void showDatePicker(EditText dateEditText)
     {
         final Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        final LocalDateTime dateTime = reminderEditor.getDateTime();
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(
             this,
@@ -127,15 +124,14 @@ public class EditReminderActivity extends EditActivity
                 calendar.set(Calendar.DAY_OF_MONTH, selectedDay);
 
                 showTimePicker(dateEditText, calendar);
-            }, year, month, day);
+            }, dateTime.getYear(), dateTime.getMonthOfYear(), dateTime.getDayOfMonth());
 
         datePickerDialog.show();
     }
 
     private void showTimePicker(EditText dateTimeEditText, Calendar calendar)
     {
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
+        LocalDateTime dateTime = reminderEditor.getDateTime();
 
         TimePickerDialog timePickerDialog = new TimePickerDialog(
             this,
@@ -144,7 +140,7 @@ public class EditReminderActivity extends EditActivity
                 calendar.set(Calendar.HOUR_OF_DAY, selectedHour);
                 calendar.set(Calendar.MINUTE, selectedMinute);
 
-                String dateTime = String.format(
+                String dateTimeStr = String.format(
                     Locale.getDefault(),
                     "%04d-%02d-%02d %02d:%02d",
                     calendar.get(Calendar.YEAR),
@@ -153,8 +149,8 @@ public class EditReminderActivity extends EditActivity
                     calendar.get(Calendar.HOUR_OF_DAY),
                     calendar.get(Calendar.MINUTE));
 
-                dateTimeEditText.setText(dateTime);
-            }, hour, minute, true);
+                dateTimeEditText.setText(dateTimeStr);
+            }, dateTime.getHourOfDay(), dateTime.getMinuteOfHour(), true);
 
         timePickerDialog.show();
     }

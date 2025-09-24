@@ -97,6 +97,6 @@ public class AllRemindersFragment extends Fragment
     {
         reminderListAdapter.notifyDataSetChanged();
 
-        Notifier.scheduleAlarm(requireContext(), serena);
+        Notifier.scheduleReminderAlarm(requireContext(), serena);
     }
 }

@@ -6,18 +6,18 @@ import android.content.Intent;
 
 import androidx.annotation.NonNull;
 
-import stoneframe.serena.gui.GlobalState;
-import stoneframe.serena.storages.json.SimpleChoreSelectorConverter;
-import stoneframe.serena.storages.json.WeeklyEffortTrackerConverter;
 import stoneframe.serena.Serena;
 import stoneframe.serena.Storage;
 import stoneframe.serena.chores.choreselectors.SimpleChoreSelector;
 import stoneframe.serena.chores.efforttrackers.WeeklyEffortTracker;
+import stoneframe.serena.gui.GlobalState;
 import stoneframe.serena.storages.JsonConverter;
 import stoneframe.serena.storages.SharedPreferencesStorage;
+import stoneframe.serena.storages.json.SimpleChoreSelectorConverter;
+import stoneframe.serena.storages.json.WeeklyEffortTrackerConverter;
 import stoneframe.serena.timeservices.RealTimeService;
 
-public class NotifierReceiver extends BroadcastReceiver
+public class ReminderNotifierReceiver extends BroadcastReceiver
 {
     @Override
     public void onReceive(Context context, Intent intent)
@@ -26,8 +26,8 @@ public class NotifierReceiver extends BroadcastReceiver
 
         serena.notifyChange();
 
-        Notifier.showNotifications(context, serena);
-        Notifier.scheduleAlarm(context, serena);
+        Notifier.showReminderNotification(context, serena, true);
+        Notifier.scheduleReminderAlarm(context, serena);
     }
 
     @NonNull

@@ -77,6 +77,8 @@ public class ReminderManager
 
     public List<Reminder> getPendingReminders()
     {
+        removeDoneReminders();
+
         return container.get().reminders.stream()
             .filter(r -> !r.getDateTime().isAfter(timeService.getNow()))
             .sorted(Comparator.comparing(Reminder::getDateTime))

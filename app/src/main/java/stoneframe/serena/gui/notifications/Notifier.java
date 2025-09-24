@@ -30,15 +30,64 @@ public class Notifier
     public static final String ROUTINES_CHANNEL_ID = "Serena_Routines_v4";
     public static final String REMINDERS_CHANNEL_ID = "Serena_Reminders_v1";
 
-    private static final SerenaAlarm alarm = new SerenaAlarm();
-
     private static final List<SerenaNotificationChannel> channels = Arrays.asList(
         new SerenaNotificationChannel(ROUTINES_CHANNEL_ID, "Routines", "Routine"),
         new SerenaNotificationChannel(REMINDERS_CHANNEL_ID, "Reminders", "Reminder"));
 
     public static void scheduleAlarm(Context context, Serena serena)
     {
-        alarm.scheduleAlarm(context, getNextAlarmTime(serena));
+        scheduleRoutineAlarm(context, serena);
+        scheduleReminderAlarm(context,serena);
+    }
+
+    public static void scheduleRoutineAlarm(Context context, Serena serena)
+    {
+        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+            context,
+            0,
+            new Intent(context, RoutineNotifierReceiver.class),
+            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+
+        LocalDateTime triggerDateTime = serena.getRoutineManager().getNextProcedureTime();
+
+        if (triggerDateTime != null)
+        {
+            alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                triggerDateTime.toDateTime().getMillis(),
+                pendingIntent);
+        }
+        else
+        {
+            alarmManager.cancel(pendingIntent);
+        }
+    }
+
+    public static void scheduleReminderAlarm(Context context, Serena serena)
+    {
+        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+            context,
+            0,
+            new Intent(context, ReminderNotifierReceiver.class),
+            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+
+        LocalDateTime triggerDateTime = serena.getReminderManager().getNextReminderTime();
+
+        if (triggerDateTime != null)
+        {
+            alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                triggerDateTime.toDateTime().getMillis(),
+                pendingIntent);
+        }
+        else
+        {
+            alarmManager.cancel(pendingIntent);
+        }
     }
 
     public static void setupNotificationChannels(Context context)
@@ -47,31 +96,7 @@ public class Notifier
         clearUnusedChannels(context);
     }
 
-    public static void showNotifications(Context context, Serena serena)
-    {
-        handleNotifications(context, serena, true);
-    }
-
-    public static void updateNotification(Context context, Serena serena)
-    {
-        handleNotifications(context, serena, false);
-    }
-
-    private static void handleNotifications(Context context, Serena serena, boolean splash)
-    {
-        showRoutineNotification(context, serena, splash);
-        showReminderNotification(context, serena, splash);
-    }
-
-    private static LocalDateTime getNextAlarmTime(Serena serena)
-    {
-        LocalDateTime nextReminderTime = serena.getReminderManager().getNextReminderTime();
-        LocalDateTime nextProcedureTime = serena.getRoutineManager().getNextProcedureTime();
-
-        return DateUtils.min(nextReminderTime, nextProcedureTime);
-    }
-
-    private static void showRoutineNotification(Context context, Serena serena, boolean splash)
+    public static void showRoutineNotification(Context context, Serena serena, boolean splash)
     {
         SerenaNotificationChannel channel = getChannel(ROUTINES_CHANNEL_ID);
 
@@ -91,7 +116,7 @@ public class Notifier
         }
     }
 
-    private static void showReminderNotification(Context context, Serena serena, boolean splash)
+    public static void showReminderNotification(Context context, Serena serena, boolean splash)
     {
         SerenaNotificationChannel channel = getChannel(REMINDERS_CHANNEL_ID);
 
@@ -132,35 +157,6 @@ public class Notifier
     private static SerenaNotificationChannel getChannel(String channelId)
     {
         return channels.stream().filter(c -> c.getChannelId().equals(channelId)).findFirst().get();
-    }
-
-    private static class SerenaAlarm
-    {
-        public void scheduleAlarm(Context context, LocalDateTime triggerDateTime)
-        {
-            AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-
-            if (triggerDateTime != null)
-            {
-                alarmManager.setExactAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    triggerDateTime.toDateTime().getMillis(),
-                    getPendingIntent(context));
-            }
-            else
-            {
-                alarmManager.cancel(getPendingIntent(context));
-            }
-        }
-
-        private static PendingIntent getPendingIntent(Context context)
-        {
-            return PendingIntent.getBroadcast(
-                context,
-                0,
-                new Intent(context, NotifierReceiver.class),
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
-        }
     }
 
     private static class SerenaNotificationChannel

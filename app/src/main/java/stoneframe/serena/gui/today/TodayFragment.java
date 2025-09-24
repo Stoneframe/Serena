@@ -221,7 +221,7 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
 
                     procedureAdapter.notifyDataSetChanged();
 
-                    Notifier.updateNotification(getContext(), serena);
+                    Notifier.showRoutineNotification(getContext(), serena, false);
                 }));
 
         ImageButton refreshChoresButton = rootView.findViewById(R.id.refreshChoresButton);
@@ -376,6 +376,8 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
                         ReminderEditor reminderEditor = reminderManager.getEditor(reminder);
 
                         reminderEditor.setDone(true);
+
+                        Notifier.showReminderNotification(requireContext(), serena, false);
                     }
                 });
         }
@@ -467,7 +469,7 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
         procedureRemovals.remove(procedure);
         routineManager.procedureDone(procedure);
         procedureAdapter.notifyDataSetChanged();
-        Notifier.updateNotification(getContext(), serena);
+        Notifier.showRoutineNotification(getContext(), serena, false);
         serena.save();
     }
 

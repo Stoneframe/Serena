@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 import stoneframe.serena.R;
 import stoneframe.serena.Serena;
 import stoneframe.serena.gui.MainActivity;
-import stoneframe.serena.gui.util.DateUtils;
 import stoneframe.serena.reminders.Reminder;
 import stoneframe.serena.routines.PendingProcedure;
 
@@ -37,57 +36,23 @@ public class Notifier
     public static void scheduleAlarm(Context context, Serena serena)
     {
         scheduleRoutineAlarm(context, serena);
-        scheduleReminderAlarm(context,serena);
+        scheduleReminderAlarm(context, serena);
     }
 
     public static void scheduleRoutineAlarm(Context context, Serena serena)
     {
-        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+        scheduleAlarm(
             context,
-            0,
-            new Intent(context, RoutineNotifierReceiver.class),
-            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
-
-        LocalDateTime triggerDateTime = serena.getRoutineManager().getNextProcedureTime();
-
-        if (triggerDateTime != null)
-        {
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                triggerDateTime.toDateTime().getMillis(),
-                pendingIntent);
-        }
-        else
-        {
-            alarmManager.cancel(pendingIntent);
-        }
+            serena.getRoutineManager().getNextProcedureTime(),
+            RoutineNotifierReceiver.class);
     }
 
     public static void scheduleReminderAlarm(Context context, Serena serena)
     {
-        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+        scheduleAlarm(
             context,
-            0,
-            new Intent(context, ReminderNotifierReceiver.class),
-            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
-
-        LocalDateTime triggerDateTime = serena.getReminderManager().getNextReminderTime();
-
-        if (triggerDateTime != null)
-        {
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                triggerDateTime.toDateTime().getMillis(),
-                pendingIntent);
-        }
-        else
-        {
-            alarmManager.cancel(pendingIntent);
-        }
+            serena.getReminderManager().getNextReminderTime(),
+            ReminderNotifierReceiver.class);
     }
 
     public static void setupNotificationChannels(Context context)
@@ -133,6 +98,31 @@ public class Notifier
                 .collect(Collectors.joining(System.lineSeparator()));
 
             channel.show(context, notificationText, splash);
+        }
+    }
+
+    private static void scheduleAlarm(Context context, LocalDateTime serena, Class<?> clazz)
+    {
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+            context,
+            0,
+            new Intent(context, clazz),
+            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+
+        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+
+        LocalDateTime triggerDateTime = serena;
+
+        if (triggerDateTime != null)
+        {
+            alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                triggerDateTime.toDateTime().getMillis(),
+                pendingIntent);
+        }
+        else
+        {
+            alarmManager.cancel(pendingIntent);
         }
     }
 

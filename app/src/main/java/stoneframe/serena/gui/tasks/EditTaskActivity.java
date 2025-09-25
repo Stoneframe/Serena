@@ -9,6 +9,7 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.text.InputType;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -196,22 +197,40 @@ public class EditTaskActivity extends EditActivity
             RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
 
         speakButton = findViewById(R.id.speakButton);
-        speakButton.setOnClickListener(v ->
+        speakButton.setOnClickListener(new View.OnClickListener()
         {
-            if (!SpeechRecognizer.isRecognitionAvailable(this))
+            @Override
+            public void onClick(View v)
             {
-                Toast.makeText(
-                    this,
-                    "Speech recognition is not available on this device",
-                    Toast.LENGTH_LONG).show();
+                if (!SpeechRecognizer.isRecognitionAvailable(EditTaskActivity.this))
+                {
+                    Toast.makeText(
+                        EditTaskActivity.this,
+                        "Speech recognition is not available on this device",
+                        Toast.LENGTH_LONG).show();
+                }
+                else if (!hasMicrophonePermission())
+                {
+                    requestMicrophonePermission();
+                }
+                else
+                {
+                    speechRecognizer.startListening(speechRecognizerIntent);
+                }
             }
-            else if (!hasMicrophonePermission())
+
+            private boolean hasMicrophonePermission()
             {
-                requestMicrophonePermission();
+                return ContextCompat.checkSelfPermission(EditTaskActivity.this, Manifest.permission.RECORD_AUDIO)
+                    == PackageManager.PERMISSION_GRANTED;
             }
-            else
+
+            private void requestMicrophonePermission()
             {
-                speechRecognizer.startListening(speechRecognizerIntent);
+                ActivityCompat.requestPermissions(
+                    EditTaskActivity.this,
+                    new String[]{Manifest.permission.RECORD_AUDIO},
+                    1);
             }
         });
 
@@ -304,20 +323,6 @@ public class EditTaskActivity extends EditActivity
             @Override
             public void onEvent(int eventType, Bundle params) {}
         });
-    }
-
-    private boolean hasMicrophonePermission()
-    {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
-            == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestMicrophonePermission()
-    {
-        ActivityCompat.requestPermissions(
-            this,
-            new String[]{Manifest.permission.RECORD_AUDIO},
-            1);
     }
 
     private String capitalizeFirstLetter(String text)

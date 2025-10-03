@@ -47,7 +47,7 @@ public class ReminderManager
 
     public void snooze(Reminder reminder)
     {
-        reminder.snooze();
+        reminder.setDateTime(timeService.getNow().plusMinutes(10));
     }
 
     public boolean containsReminder(Reminder reminder)

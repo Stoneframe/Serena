@@ -66,11 +66,6 @@ public class ReminderEditor extends Editor<ReminderEditor.ReminderEditorListener
         return isDoneProperty.getValue();
     }
 
-    public void setDone(boolean isDone)
-    {
-        isDoneProperty.setValue(isDone);
-    }
-
     public void save()
     {
         reminder.save();

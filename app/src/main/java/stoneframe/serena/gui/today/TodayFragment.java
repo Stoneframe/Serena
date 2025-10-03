@@ -371,15 +371,13 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
                 reminder.getText() + "\r\n\r\nAcknowledge?",
                 isConfirmed ->
                 {
-                    ReminderEditor reminderEditor = reminderManager.getEditor(reminder);
-
                     if (isConfirmed)
                     {
-                        reminderEditor.setDone(true);
+                        reminderManager.complete(reminder);
                     }
                     else
                     {
-                        reminderEditor.setDateTime(reminderEditor.getDateTime().plusMinutes(10));
+                        reminderManager.snooze(reminder);
                     }
 
                     Notifier.showReminderNotification(requireContext(), serena, false);

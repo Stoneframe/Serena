@@ -40,9 +40,4 @@ public class Reminder extends Revertible<ReminderData>
     {
         data().isDone = isDone;
     }
-
-    public void snooze()
-    {
-        data().dateTime = data().dateTime.plusMinutes(10);
-    }
 }

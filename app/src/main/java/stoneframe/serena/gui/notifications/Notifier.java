@@ -27,11 +27,14 @@ import stoneframe.serena.routines.PendingProcedure;
 public class Notifier
 {
     public static final String ROUTINES_CHANNEL_ID = "Serena_Routines_v4";
-    public static final String REMINDERS_CHANNEL_ID = "Serena_Reminders_v1";
+    public static final String REMINDERS_CHANNEL_ID = "Serena_Reminders_v2";
+
+    private static final long[] THREE_SHORT = {0, 250, 125, 250, 125, 250};
+    private static final long[] ONE_LONG_TWO_SHORT = {0, 750, 125, 250, 125, 250};
 
     private static final List<SerenaNotificationChannel> channels = Arrays.asList(
-        new SerenaNotificationChannel(ROUTINES_CHANNEL_ID, "Routines", "Routine"),
-        new SerenaNotificationChannel(REMINDERS_CHANNEL_ID, "Reminders", "Reminder"));
+        new SerenaNotificationChannel(ROUTINES_CHANNEL_ID, "Routines", "Routine", THREE_SHORT),
+        new SerenaNotificationChannel(REMINDERS_CHANNEL_ID, "Reminders", "Reminder", ONE_LONG_TWO_SHORT));
 
     public static void scheduleAlarm(Context context, Serena serena)
     {
@@ -152,12 +155,18 @@ public class Notifier
         private final String channelId;
         private final String name;
         private final String subText;
+        private final long[] vibrationPattern;
 
-        private SerenaNotificationChannel(String channelId, String name, String subText)
+        private SerenaNotificationChannel(
+            String channelId,
+            String name,
+            String subText,
+            long[] vibrationPattern)
         {
             this.channelId = channelId;
             this.name = name;
             this.subText = subText;
+            this.vibrationPattern = vibrationPattern;
         }
 
         public String getChannelId()
@@ -180,7 +189,7 @@ public class Notifier
                 NotificationManager.IMPORTANCE_HIGH);
 
             channel.enableVibration(true);
-            channel.setVibrationPattern(new long[]{0, 250, 125, 250, 125, 250});
+            channel.setVibrationPattern(vibrationPattern);
             notificationManager.cancel(channelId.hashCode());
             notificationManager.createNotificationChannel(channel);
         }
@@ -218,7 +227,7 @@ public class Notifier
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(
                 context,
-                ROUTINES_CHANNEL_ID)
+                channelId)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentText(contentText)
                 .setSubText(subText)

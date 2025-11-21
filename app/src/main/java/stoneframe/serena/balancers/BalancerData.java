@@ -18,6 +18,7 @@ class BalancerData
     int changePerInterval;
     int intervalType;
 
+    int okThreshold;
     Integer maxValue;
     Integer minValue;
 
@@ -34,6 +35,7 @@ class BalancerData
         LocalDate startDate,
         int changePerInterval,
         int intervalType,
+        int okThreshold,
         Integer maxValue,
         Integer minValue,
         boolean clearInputOnAdd,
@@ -46,6 +48,7 @@ class BalancerData
         this.startDate = startDate;
         this.changePerInterval = changePerInterval;
         this.intervalType = intervalType;
+        this.okThreshold = okThreshold;
         this.maxValue = maxValue;
         this.minValue = minValue;
         this.clearInputOnAdd = clearInputOnAdd;

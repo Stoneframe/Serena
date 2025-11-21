@@ -16,6 +16,7 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
     private final PropertyUtil<String> unitProperty;
     private final PropertyUtil<Integer> changePerIntervalProperty;
     private final PropertyUtil<Integer> intervalTypeProperty;
+    private final PropertyUtil<Integer> okThresholdProperty;
     private final PropertyUtil<Boolean> isClearInputEnabledProperty;
     private final PropertyUtil<Boolean> isQuickAllowableProperty;
     private final PropertyUtil<Boolean> isEnabledProperty;
@@ -31,6 +32,7 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
         unitProperty = getUnitProperty();
         changePerIntervalProperty = getChangePerIntervalProperty();
         intervalTypeProperty = getIntervalTypeProperty();
+        okThresholdProperty = getOkThresholdProperty();
         isClearInputEnabledProperty = getIsClearInputEnabledProperty();
         isQuickAllowableProperty = getIsQuickAllowableProperty();
         isEnabledProperty = getIsEnabledProperty();
@@ -84,6 +86,16 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
     public void setIntervalType(int intervalType)
     {
         intervalTypeProperty.setValue(intervalType);
+    }
+
+    public int getOkThreshold()
+    {
+        return okThresholdProperty.getValue();
+    }
+
+    public void setOkThreshold(int threshold)
+    {
+        okThresholdProperty.setValue(threshold);
     }
 
     public boolean hasMaxValue()
@@ -267,6 +279,14 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
             v -> notifyListeners(BalanceEditorListener::intervalTypeChanged));
     }
 
+    private PropertyUtil<Integer> getOkThresholdProperty()
+    {
+        return new PropertyUtil<>(
+            balancer::getOkThreshold,
+            balancer::setOkThreshold,
+            v -> notifyListeners(BalanceEditorListener::okThresholdChanged));
+    }
+
     private @NonNull PropertyUtil<Boolean> getIsClearInputEnabledProperty()
     {
         return new PropertyUtil<>(
@@ -306,6 +326,8 @@ public class BalancerEditor extends Editor<BalancerEditor.BalanceEditorListener>
         void changePerIntervalChanged();
 
         void intervalTypeChanged();
+
+        void okThresholdChanged();
 
         void transactionTypesChanged();
 

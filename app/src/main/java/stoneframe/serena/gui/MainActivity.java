@@ -312,7 +312,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         BalancerManager balancerManager = serena.getBalancerManager();
 
         balancerImageView.setColorFilter(
-            balancerManager.isAhead() ? Color.GREEN : Color.RED,
+            balancerManager.isAboveThreshold() ? Color.GREEN : Color.RED,
             PorterDuff.Mode.SRC_IN);
     }
 

@@ -168,6 +168,12 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
     }
 
     @Override
+    public void okThresholdChanged()
+    {
+
+    }
+
+    @Override
     public void transactionTypesChanged()
     {
         transactionTypeAdapter.notifyDataSetChanged();
@@ -521,6 +527,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void showSettingsDialog()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -533,6 +540,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         EditText editTextUnit = dialogView.findViewById(R.id.editTextUnit);
         EditText editTextChangePerInterval = dialogView.findViewById(R.id.editTextTransactionPerInterval);
         Spinner spinnerIntervalType = dialogView.findViewById(R.id.spinnerIntervalType);
+        EditText editTextOkThreshold = dialogView.findViewById(R.id.editTextOkThreshold);
         EditText editTextMaxValue = dialogView.findViewById(R.id.editTextMaxValue);
         EditText editTextMinValue = dialogView.findViewById(R.id.editTextMinValue);
         CheckBox checkBoxClearInput = dialogView.findViewById(R.id.checkBoxClearInput);
@@ -567,6 +575,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         editTextChangePerInterval.setText(String.valueOf(balancerEditor.getChangePerInterval()));
         spinnerIntervalType.setAdapter(intervalTypeAdapter);
         spinnerIntervalType.setSelection(intervalTypeAdapter.getPosition(balancerEditor.getIntervalType()));
+        editTextOkThreshold.setText(Integer.toString(balancerEditor.getOkThreshold()));
         editTextMaxValue.setText(balancerEditor.hasMaxValue()
             ? Integer.toString(balancerEditor.getMaxValue())
             : "");
@@ -590,6 +599,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
                 balancerEditor.setEnabled(checkBoxIsEnabled.isChecked());
                 balancerEditor.setName(editTextName.getText().toString().trim());
                 balancerEditor.setUnit(editTextUnit.getText().toString().trim());
+                balancerEditor.setOkThreshold(getIntegerValueOrDefault(editTextOkThreshold, 0));
                 balancerEditor.setMaxValue(getIntegerValue(editTextMaxValue));
                 balancerEditor.setMinValue(getIntegerValue(editTextMinValue));
                 balancerEditor.setAllowQuick(checkBoxAllowQuick.isChecked());
@@ -632,6 +642,13 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         return EditTextCriteria.isValidInteger(editText)
             ? Integer.parseInt(editText.getText().toString())
             : null;
+    }
+
+    private static int getIntegerValueOrDefault(EditText editText, int defaultValue)
+    {
+        return EditTextCriteria.isValidInteger(editText)
+            ? Integer.parseInt(editText.getText().toString())
+            : defaultValue;
     }
 
     @SuppressLint("SetTextI18n")

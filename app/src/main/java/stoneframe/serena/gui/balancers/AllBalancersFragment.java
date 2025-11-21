@@ -226,7 +226,7 @@ public class AllBalancersFragment extends Fragment
                 return COUNTER;
             case Balancer.LIMITER:
             case Balancer.ENHANCER:
-                return balancer.isAhead(LocalDateTime.now()) ? POSITIVE : NEGATIVE;
+                return balancer.isAboveThreshold(LocalDateTime.now()) ? POSITIVE : NEGATIVE;
             default:
                 return DISABLED;
         }

@@ -34,6 +34,7 @@ public class Balancer extends Revertible<BalancerData>
             startDate,
             changePerInterval,
             Balancer.DAILY,
+            0,
             null,
             null,
             false,
@@ -106,6 +107,11 @@ public class Balancer extends Revertible<BalancerData>
         return data().minValue != null ? data().minValue : Integer.MIN_VALUE;
     }
 
+    public int getOkThreshold()
+    {
+        return data().okThreshold;
+    }
+
     public boolean isClearInputEnabled()
     {
         return data().clearInputOnAdd;
@@ -126,19 +132,9 @@ public class Balancer extends Revertible<BalancerData>
         this.data().isEnabled = isEnabled;
     }
 
-    public boolean isAhead(LocalDateTime now)
+    public boolean isAboveThreshold(LocalDateTime now)
     {
-        if (getType() == LIMITER)
-        {
-            return getAvailable(now) >= 0;
-        }
-
-        if (getType() == ENHANCER)
-        {
-            return getAvailable(now) > 0;
-        }
-
-        return true;
+        return getAvailable(now) >= data().okThreshold;
     }
 
     public LocalDateTime getTimeToBoundary(LocalDateTime now)
@@ -179,6 +175,11 @@ public class Balancer extends Revertible<BalancerData>
     void setIntervalType(LocalDateTime now, int intervalType)
     {
         setPropertyAffectingAvailable(now, () -> data().intervalType = intervalType);
+    }
+
+    void setOkThreshold(int threshold)
+    {
+        data().okThreshold = threshold;
     }
 
     void setMaxValue(LocalDateTime now, Integer maxValue)

@@ -67,6 +67,12 @@ public class BalancerEnabledCriteria extends EnableCriteria
             }
 
             @Override
+            public void okThresholdChanged()
+            {
+
+            }
+
+            @Override
             public void transactionTypesChanged()
             {
 

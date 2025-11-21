@@ -26,12 +26,12 @@ public class BalancerManager
             .collect(Collectors.toList());
     }
 
-    public boolean isAhead()
+    public boolean isAboveThreshold()
     {
         return getContainer().balancers.stream()
             .filter(Balancer::isEnabled)
             .filter(b -> b.getType() != Balancer.COUNTER)
-            .allMatch(b -> b.isAhead(timeService.getNow()));
+            .allMatch(b -> b.isAboveThreshold(timeService.getNow()));
     }
 
     public BalancerEditor getBalancerEditor(Balancer balancer)

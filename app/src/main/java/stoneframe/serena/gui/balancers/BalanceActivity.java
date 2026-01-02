@@ -294,8 +294,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         favoritesList.setAdapter(favoritesListAdapter);
         favoritesList.setOnItemClickListener((adapterView, view, position, id) ->
         {
-            TransactionType transactionType =
-                (TransactionType)favoritesList.getItemAtPosition(position);
+            TransactionType transactionType = (TransactionType)favoritesList.getItemAtPosition(position);
 
             String value = Integer.toString(transactionType.getAmount());
 
@@ -314,6 +313,25 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
 
                     addTransaction(transactionType);
                 });
+        });
+        favoritesList.setOnItemLongClickListener((parent, view, position, id) ->
+        {
+            CustomTransactionType transactionType = (CustomTransactionType)favoritesList.getItemAtPosition(position);
+
+            DialogUtils.showConfirmationDialog(
+                BalanceActivity.this,
+                "Remove favorite",
+                "Do you want to remove " + transactionType.getName() + " from favorites?",
+                isConfirmed ->
+                {
+                    if (!isConfirmed) return;
+
+                    balancerEditor.setFavorite(transactionType, false);
+
+                    serena.save();
+                });
+
+            return true;
         });
 
         buttonNewTransactionType.setOnClickListener(v -> addTransactionType());

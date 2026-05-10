@@ -1,6 +1,7 @@
 package stoneframe.serena.gui.sleep;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.graphics.Color;
@@ -50,6 +51,7 @@ public class SleepFragment extends Fragment
 
     private TextView percentTextView;
     private Button toggleButton;
+    private Button settingsButton;
 
     private EditText startSessionEditText;
     private EditText endSessionEditText;
@@ -77,6 +79,7 @@ public class SleepFragment extends Fragment
 
         percentTextView = rootView.findViewById(R.id.percentTextView);
         toggleButton = rootView.findViewById(R.id.toggleButton);
+        settingsButton = rootView.findViewById(R.id.settingsButton);
 
         startSessionEditText = rootView.findViewById(R.id.startSessionEditText);
         endSessionEditText = rootView.findViewById(R.id.endSessionEditText);
@@ -95,6 +98,8 @@ public class SleepFragment extends Fragment
 
             updateComponents();
         });
+
+        settingsButton.setOnClickListener(v -> showSettingsDialog());
 
         startSessionEditText.setOnClickListener(v -> showDatePicker(startSessionEditText));
         endSessionEditText.setOnClickListener(v -> showDatePicker(endSessionEditText));
@@ -128,6 +133,104 @@ public class SleepFragment extends Fragment
         updateComponents();
 
         return rootView;
+    }
+
+    private void showSettingsDialog()
+    {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_sleep_settings, null);
+
+        EditText minHoursEditText = dialogView.findViewById(R.id.minHoursSleepEditText);
+        EditText minMinutesEditText = dialogView.findViewById(R.id.minMinutesSleepEditText);
+        EditText maxHoursEditText = dialogView.findViewById(R.id.maxHoursSleepEditText);
+        EditText maxMinutesEditText = dialogView.findViewById(R.id.maxMinutesSleepEditText);
+        Button cancelButton = dialogView.findViewById(R.id.cancelButton);
+        Button okButton = dialogView.findViewById(R.id.okButton);
+
+        setTimeSpan(minHoursEditText, minMinutesEditText, sleepManager.getMinHoursSleepPerDay());
+        setTimeSpan(maxHoursEditText, maxMinutesEditText, sleepManager.getMaxHoursSleepPerDay());
+
+        AlertDialog dialog = new AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create();
+
+        cancelButton.setOnClickListener(v -> dialog.dismiss());
+        okButton.setOnClickListener(v ->
+        {
+            Double minHours = getTimeSpanHours(minHoursEditText, minMinutesEditText);
+            Double maxHours = getTimeSpanHours(maxHoursEditText, maxMinutesEditText);
+
+            if (minHours == null)
+            {
+                setTimeSpanError(minHoursEditText, minMinutesEditText);
+                return;
+            }
+
+            if (maxHours == null)
+            {
+                setTimeSpanError(maxHoursEditText, maxMinutesEditText);
+                return;
+            }
+
+            try
+            {
+                sleepManager.setSleepRange(minHours, maxHours);
+            }
+            catch (IllegalArgumentException e)
+            {
+                maxHoursEditText.setError(e.getMessage());
+                return;
+            }
+
+            dialog.dismiss();
+            updateComponents();
+        });
+
+        dialog.show();
+    }
+
+    @Nullable
+    private Double getTimeSpanHours(EditText hoursEditText, EditText minutesEditText)
+    {
+        Integer hours = getInteger(hoursEditText);
+        Integer minutes = getInteger(minutesEditText);
+
+        if (hours == null || minutes == null || minutes < 0 || minutes > 59)
+        {
+            return null;
+        }
+
+        return hours + minutes / 60d;
+    }
+
+    @Nullable
+    private Integer getInteger(EditText editText)
+    {
+        try
+        {
+            String value = editText.getText().toString().trim();
+
+            return value.isEmpty()
+                ? null
+                : Integer.parseInt(value);
+        }
+        catch (NumberFormatException e)
+        {
+            return null;
+        }
+    }
+
+    private void setTimeSpan(EditText hoursEditText, EditText minutesEditText, double hours)
+    {
+        int totalMinutes = (int)Math.round(hours * 60d);
+
+        hoursEditText.setText(String.format(Locale.getDefault(), "%d", totalMinutes / 60));
+        minutesEditText.setText(String.format(Locale.getDefault(), "%02d", totalMinutes % 60));
+    }
+
+    private void setTimeSpanError(EditText hoursEditText, EditText minutesEditText)
+    {
+        hoursEditText.setError("Enter hours");
+        minutesEditText.setError("Enter minutes 0-59");
     }
 
     private void showDatePicker(EditText dateEditText)

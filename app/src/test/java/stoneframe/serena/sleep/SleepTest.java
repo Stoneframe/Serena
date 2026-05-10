@@ -45,16 +45,16 @@ public class SleepTest
     }
 
     @Test
-    public void getPercent_sleepSevenHours_percentIs3AtEndOfDay()
+    public void getPercent_sleepSevenHours_percentIsZeroAtEndOfDay()
     {
         sleep.toggle(now.plusHours(0));
         sleep.toggle(now.plusHours(7));
 
-        assertEquals(3, sleep.getPercent(now.plusHours(24)));
+        assertEquals(0, sleep.getPercent(now.plusHours(24)));
     }
 
     @Test
-    public void getPercent_sleepEightHours_percentIsTenAtEndOfDay()
+    public void getPercent_sleepEightHours_percentIs100AtEndOfDay()
     {
         sleep.toggle(now.plusHours(0));
         sleep.toggle(now.plusHours(8));
@@ -75,7 +75,7 @@ public class SleepTest
     }
 
     @Test
-    public void getPercent_sleepSevenHoursForThreeDays_percentIs3AtEndOfDay()
+    public void getPercent_sleepSevenHoursForThreeDays_percentIsZeroAtEndOfDay()
     {
         sleep.toggle(now.plusDays(0).plusHours(0));
         sleep.toggle(now.plusDays(0).plusHours(7));
@@ -86,7 +86,7 @@ public class SleepTest
         sleep.toggle(now.plusDays(2).plusHours(0));
         sleep.toggle(now.plusDays(2).plusHours(7));
 
-        assertEquals(3, sleep.getPercent(now.plusDays(3)));
+        assertEquals(0, sleep.getPercent(now.plusDays(3)));
     }
 
     @Test
@@ -105,7 +105,7 @@ public class SleepTest
     }
 
     @Test
-    public void getPercent_sleepEightHoursForTwoDaysThenSevenForOneDay_percentIs67AtEndOfDay()
+    public void getPercent_sleepEightHoursForTwoDaysThenSevenForOneDay_percentIs66AtEndOfDay()
     {
         sleep.toggle(now.plusDays(0).plusHours(0));
         sleep.toggle(now.plusDays(0).plusHours(8));
@@ -116,11 +116,11 @@ public class SleepTest
         sleep.toggle(now.plusDays(2).plusHours(0));
         sleep.toggle(now.plusDays(2).plusHours(7));
 
-        assertEquals(67, sleep.getPercent(now.plusDays(3)));
+        assertEquals(66, sleep.getPercent(now.plusDays(3)));
     }
 
     @Test
-    public void getPercent_sleepEightHoursForTwoDaysThenSevenForTwoDay_percentIs35AtEndOfDay()
+    public void getPercent_sleepEightHoursForTwoDaysThenSevenForTwoDay_percentIs33AtEndOfDay()
     {
         sleep.toggle(now.plusDays(0).plusHours(0));
         sleep.toggle(now.plusDays(0).plusHours(8));
@@ -134,11 +134,11 @@ public class SleepTest
         sleep.toggle(now.plusDays(3).plusHours(0));
         sleep.toggle(now.plusDays(3).plusHours(7));
 
-        assertEquals(35, sleep.getPercent(now.plusDays(4)));
+        assertEquals(33, sleep.getPercent(now.plusDays(4)));
     }
 
     @Test
-    public void getPercent_sleepEightHoursForTwoDaysThenSevenForThreeDay_percentIs3AtEndOfDay()
+    public void getPercent_sleepEightHoursForTwoDaysThenSevenForThreeDay_percentIsZeroAtEndOfDay()
     {
         sleep.toggle(now.plusDays(0).plusHours(0));
         sleep.toggle(now.plusDays(0).plusHours(8));
@@ -155,7 +155,30 @@ public class SleepTest
         sleep.toggle(now.plusDays(4).plusHours(0));
         sleep.toggle(now.plusDays(4).plusHours(7));
 
-        assertEquals(3, sleep.getPercent(now.plusDays(5)));
+        assertEquals(0, sleep.getPercent(now.plusDays(5)));
+    }
+
+    @Test
+    public void getPercent_customSleepRange_scoreUsesConfiguredRange()
+    {
+        sleep.setSleepRange(6d, 10d);
+
+        sleep.toggle(now.plusHours(0));
+        sleep.toggle(now.plusHours(8));
+
+        assertEquals(50, sleep.getPercent(now.plusHours(24)));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void setSleepRange_minBelowZero_throws()
+    {
+        sleep.setSleepRange(-1d, 8d);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void setSleepRange_maxSameAsMin_throws()
+    {
+        sleep.setSleepRange(7d, 7d);
     }
 
     @Test

@@ -33,6 +33,21 @@ public class SleepManager
         return container.get().sleep.getState();
     }
 
+    public double getMinHoursSleepPerDay()
+    {
+        return container.get().sleep.getMinHoursSleepPerDay();
+    }
+
+    public double getMaxHoursSleepPerDay()
+    {
+        return container.get().sleep.getMaxHoursSleepPerDay();
+    }
+
+    public void setSleepRange(double minHoursPerDay, double maxHoursPerDay)
+    {
+        container.get().sleep.setSleepRange(minHoursPerDay, maxHoursPerDay);
+    }
+
     public boolean isAhead()
     {
         return container.get().sleep.getPercent(timeService.getNow()) >= 60;

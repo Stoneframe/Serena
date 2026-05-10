@@ -13,16 +13,16 @@ public class Sleep
     public static final int AWAKE = 1;
     public static final int ASLEEP = 2;
 
-    private static final double EXPECTED_HOURS_SLEEP = 8d;
-
-    private static final int MAX_VALUE = 100;
-    private static final int MIN_VALUE = 87;
+    private static final double DEFAULT_MIN_HOURS_SLEEP_PER_DAY = 7d;
+    private static final double DEFAULT_MAX_HOURS_SLEEP_PER_DAY = 8d;
 
     private final List<SleepSession> sleepSessions = new LinkedList<>();
 
     private boolean isEnabled;
     private LocalDateTime startDateTime;
     private int state;
+    private double minHoursSleepPerDay;
+    private double maxHoursSleepPerDay;
 
     private LocalDateTime startSleep;
 
@@ -31,6 +31,8 @@ public class Sleep
         isEnabled = false;
         startDateTime = now;
         state = AWAKE;
+        minHoursSleepPerDay = DEFAULT_MIN_HOURS_SLEEP_PER_DAY;
+        maxHoursSleepPerDay = DEFAULT_MAX_HOURS_SLEEP_PER_DAY;
     }
 
     boolean isEnabled()
@@ -48,19 +50,52 @@ public class Sleep
         return state;
     }
 
+    double getMinHoursSleepPerDay()
+    {
+        normalizeSleepRange();
+
+        return minHoursSleepPerDay;
+    }
+
+    double getMaxHoursSleepPerDay()
+    {
+        normalizeSleepRange();
+
+        return maxHoursSleepPerDay;
+    }
+
+    void setSleepRange(double minHoursSleepPerDay, double maxHoursSleepPerDay)
+    {
+        validateSleepRange(minHoursSleepPerDay, maxHoursSleepPerDay);
+
+        this.minHoursSleepPerDay = minHoursSleepPerDay;
+        this.maxHoursSleepPerDay = maxHoursSleepPerDay;
+    }
+
     int getPercent(LocalDateTime now)
     {
+        normalizeSleepRange();
+
         if (startDateTime.isBefore(now.minusDays(3)))
         {
             startDateTime = now.minusDays(3);
         }
 
-        double percentOfExpectedSleepTimePerDay = getMinutesSleptLastThreeDays() / getExpectedMinutesToSleepEveryThreeDays(now) * 100;
+        int elapsedMinutes = Minutes.minutesBetween(startDateTime, now).getMinutes();
 
-        if (percentOfExpectedSleepTimePerDay > MAX_VALUE) return 100;
-        if (percentOfExpectedSleepTimePerDay < MIN_VALUE) return 0;
+        if (elapsedMinutes <= 0)
+        {
+            return 0;
+        }
 
-        return (int)((percentOfExpectedSleepTimePerDay - MIN_VALUE) / (MAX_VALUE - MIN_VALUE) * 100);
+        int minutesSlept = getMinutesSleptLastThreeDays();
+        double minExpectedMinutes = getExpectedMinutesToSleep(now, minHoursSleepPerDay);
+        double maxExpectedMinutes = getExpectedMinutesToSleep(now, maxHoursSleepPerDay);
+
+        if (minutesSlept >= maxExpectedMinutes) return 100;
+        if (minutesSlept <= minExpectedMinutes) return 0;
+
+        return (int)((minutesSlept - minExpectedMinutes) / (maxExpectedMinutes - minExpectedMinutes) * 100);
     }
 
     void toggle(LocalDateTime now)
@@ -109,13 +144,53 @@ public class Sleep
         startSleep = null;
     }
 
-    private double getExpectedMinutesToSleepEveryThreeDays(LocalDateTime now)
+    private double getExpectedMinutesToSleep(LocalDateTime now, double hoursSleepPerDay)
     {
-        double fractionOfDayToSleep = EXPECTED_HOURS_SLEEP / 24d;
+        double fractionOfDayToSleep = hoursSleepPerDay / 24d;
 
         return Minutes
             .minutesBetween(startDateTime, now)
             .getMinutes() * fractionOfDayToSleep;
+    }
+
+    private void normalizeSleepRange()
+    {
+        if (!isValidSleepRange(minHoursSleepPerDay, maxHoursSleepPerDay))
+        {
+            minHoursSleepPerDay = DEFAULT_MIN_HOURS_SLEEP_PER_DAY;
+            maxHoursSleepPerDay = DEFAULT_MAX_HOURS_SLEEP_PER_DAY;
+        }
+    }
+
+    private static void validateSleepRange(double minHoursSleepPerDay, double maxHoursSleepPerDay)
+    {
+        if (!isFinite(minHoursSleepPerDay) || !isFinite(maxHoursSleepPerDay))
+        {
+            throw new IllegalArgumentException("Sleep hours must be valid numbers.");
+        }
+
+        if (minHoursSleepPerDay < 0d)
+        {
+            throw new IllegalArgumentException("Minimum sleep hours must be zero or greater.");
+        }
+
+        if (maxHoursSleepPerDay <= minHoursSleepPerDay)
+        {
+            throw new IllegalArgumentException("Maximum sleep hours must be greater than minimum sleep hours.");
+        }
+    }
+
+    private static boolean isValidSleepRange(double minHoursSleepPerDay, double maxHoursSleepPerDay)
+    {
+        return isFinite(minHoursSleepPerDay)
+            && isFinite(maxHoursSleepPerDay)
+            && minHoursSleepPerDay >= 0d
+            && maxHoursSleepPerDay > minHoursSleepPerDay;
+    }
+
+    private static boolean isFinite(double value)
+    {
+        return !Double.isNaN(value) && !Double.isInfinite(value);
     }
 
     private int getMinutesSleptLastThreeDays()

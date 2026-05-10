@@ -13,6 +13,8 @@ public class Sleep
     public static final int AWAKE = 1;
     public static final int ASLEEP = 2;
 
+    private static final double EXPECTED_HOURS_SLEEP = 8d;
+
     private static final int MAX_VALUE = 100;
     private static final int MIN_VALUE = 87;
 
@@ -53,17 +55,12 @@ public class Sleep
             startDateTime = now.minusDays(3);
         }
 
-        double expectedMinutesSlept = Minutes
-            .minutesBetween(startDateTime, now)
-            .getMinutes() * (8d / 24d);
-        int minuteSlept = getMinutesSleptLastThreeDays();
+        double percentOfExpectedSleepTimePerDay = getMinutesSleptLastThreeDays() / getExpectedMinutesToSleepEveryThreeDays(now) * 100;
 
-        double value = minuteSlept / expectedMinutesSlept * 100;
+        if (percentOfExpectedSleepTimePerDay > MAX_VALUE) return 100;
+        if (percentOfExpectedSleepTimePerDay < MIN_VALUE) return 0;
 
-        if (value > MAX_VALUE) return 100;
-        if (value < MIN_VALUE) return 0;
-
-        return (int)((value - MIN_VALUE) / (MAX_VALUE - MIN_VALUE) * 100);
+        return (int)((percentOfExpectedSleepTimePerDay - MIN_VALUE) / (MAX_VALUE - MIN_VALUE) * 100);
     }
 
     void toggle(LocalDateTime now)
@@ -110,6 +107,15 @@ public class Sleep
         sleepSessions.add(session);
 
         startSleep = null;
+    }
+
+    private double getExpectedMinutesToSleepEveryThreeDays(LocalDateTime now)
+    {
+        double fractionOfDayToSleep = EXPECTED_HOURS_SLEEP / 24d;
+
+        return Minutes
+            .minutesBetween(startDateTime, now)
+            .getMinutes() * fractionOfDayToSleep;
     }
 
     private int getMinutesSleptLastThreeDays()

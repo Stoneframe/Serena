@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,7 +20,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import org.joda.time.LocalDateTime;
-import org.joda.time.Minutes;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -30,7 +30,6 @@ import stoneframe.serena.R;
 import stoneframe.serena.Serena;
 import stoneframe.serena.gui.GlobalState;
 import stoneframe.serena.gui.MainActivity;
-import stoneframe.serena.gui.util.enable.BooleanCriteria;
 import stoneframe.serena.gui.util.enable.ButtonEnabledLink;
 import stoneframe.serena.gui.util.enable.EditTextCriteria;
 import stoneframe.serena.sleep.Sleep;
@@ -43,20 +42,13 @@ public class SleepFragment extends Fragment
     private Serena serena;
     private SleepManager sleepManager;
 
-    private CheckBox enableCheckbox;
-
-    private TextView sessionStartTimeTextView;
-    private TextView sessionStopTimeTextView;
-    private TextView sessionTotalTimeTextView;
-
     private TextView percentTextView;
+    private TextView rangeTextView;
+    private TextView stateTextView;
     private Button toggleButton;
     private Button settingsButton;
-
-    private EditText startSessionEditText;
-    private EditText endSessionEditText;
     private Button addSessionButton;
-    private ButtonEnabledLink addSessionButtonEnableLink;
+    private Button previousSessionsButton;
 
     @Nullable
     @Override
@@ -71,26 +63,13 @@ public class SleepFragment extends Fragment
 
         View rootView = inflater.inflate(R.layout.fragment_sleep, container, false);
 
-        enableCheckbox = rootView.findViewById(R.id.enableCheckbox);
-
-        sessionStartTimeTextView = rootView.findViewById(R.id.sessionStartTimeTextView);
-        sessionStopTimeTextView = rootView.findViewById(R.id.sessionStopTimeTextView);
-        sessionTotalTimeTextView = rootView.findViewById(R.id.sessionTotalTimeTextView);
-
         percentTextView = rootView.findViewById(R.id.percentTextView);
+        rangeTextView = rootView.findViewById(R.id.rangeTextView);
+        stateTextView = rootView.findViewById(R.id.stateTextView);
         toggleButton = rootView.findViewById(R.id.toggleButton);
         settingsButton = rootView.findViewById(R.id.settingsButton);
-
-        startSessionEditText = rootView.findViewById(R.id.startSessionEditText);
-        endSessionEditText = rootView.findViewById(R.id.endSessionEditText);
         addSessionButton = rootView.findViewById(R.id.addSessionButton);
-
-        enableCheckbox.setOnCheckedChangeListener((buttonView, isChecked) ->
-        {
-            sleepManager.setEnabled(isChecked);
-
-            updateComponents();
-        });
+        previousSessionsButton = rootView.findViewById(R.id.previousSessionsButton);
 
         toggleButton.setOnClickListener(v ->
         {
@@ -100,45 +79,85 @@ public class SleepFragment extends Fragment
         });
 
         settingsButton.setOnClickListener(v -> showSettingsDialog());
-
-        startSessionEditText.setOnClickListener(v -> showDatePicker(startSessionEditText));
-        endSessionEditText.setOnClickListener(v -> showDatePicker(endSessionEditText));
-
-        addSessionButton.setEnabled(false);
-        addSessionButton.setOnClickListener(v ->
-        {
-            DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
-
-            LocalDateTime start = LocalDateTime.parse(
-                startSessionEditText.getText().toString(),
-                formatter);
-            LocalDateTime end = LocalDateTime.parse(
-                endSessionEditText.getText().toString(),
-                formatter);
-
-            sleepManager.addSession(start, end);
-
-            startSessionEditText.getText().clear();
-            endSessionEditText.getText().clear();
-
-            updateComponents();
-        });
-
-        addSessionButtonEnableLink = new ButtonEnabledLink(
-            addSessionButton,
-            new EditTextCriteria(startSessionEditText, EditTextCriteria.IS_NOT_EMPTY),
-            new EditTextCriteria(endSessionEditText, EditTextCriteria.IS_NOT_EMPTY),
-            new BooleanCriteria(sleepManager::isEnabled));
+        addSessionButton.setOnClickListener(v -> showAddSessionDialog());
+        previousSessionsButton.setOnClickListener(v -> startActivity(
+            new Intent(requireContext(), PreviousSleepSessionsActivity.class)));
 
         updateComponents();
 
         return rootView;
     }
 
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        if (sleepManager != null)
+        {
+            updateComponents();
+        }
+    }
+
+    private void showAddSessionDialog()
+    {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit_sleep_session, null);
+
+        EditText startEditText = dialogView.findViewById(R.id.startEditText);
+        EditText stopEditText = dialogView.findViewById(R.id.stopEditText);
+        Button cancelButton = dialogView.findViewById(R.id.cancelButton);
+        Button removeButton = dialogView.findViewById(R.id.removeButton);
+        Button addButton = dialogView.findViewById(R.id.saveButton);
+
+        removeButton.setVisibility(View.GONE);
+        addButton.setText("Add");
+        startEditText.setOnClickListener(v -> showDatePicker(startEditText));
+        stopEditText.setOnClickListener(v -> showDatePicker(stopEditText));
+
+        new ButtonEnabledLink(
+            addButton,
+            new EditTextCriteria(startEditText, EditTextCriteria.IS_NOT_EMPTY),
+            new EditTextCriteria(stopEditText, EditTextCriteria.IS_NOT_EMPTY));
+
+        AlertDialog dialog = new AlertDialog.Builder(requireContext())
+            .setTitle("Add sleep session")
+            .setView(dialogView)
+            .create();
+
+        cancelButton.setOnClickListener(v -> dialog.dismiss());
+        addButton.setOnClickListener(v ->
+        {
+            DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
+            LocalDateTime start = LocalDateTime.parse(
+                startEditText.getText().toString(),
+                formatter);
+            LocalDateTime stop = LocalDateTime.parse(
+                stopEditText.getText().toString(),
+                formatter);
+
+            try
+            {
+                sleepManager.addSession(start, stop);
+            }
+            catch (IllegalArgumentException e)
+            {
+                stopEditText.setError(e.getMessage());
+                return;
+            }
+
+            serena.save();
+            dialog.dismiss();
+            updateComponents();
+        });
+
+        dialog.show();
+    }
+
     private void showSettingsDialog()
     {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_sleep_settings, null);
 
+        CheckBox enableCheckbox = dialogView.findViewById(R.id.enableCheckbox);
         EditText minHoursEditText = dialogView.findViewById(R.id.minHoursSleepEditText);
         EditText minMinutesEditText = dialogView.findViewById(R.id.minMinutesSleepEditText);
         EditText maxHoursEditText = dialogView.findViewById(R.id.maxHoursSleepEditText);
@@ -146,6 +165,7 @@ public class SleepFragment extends Fragment
         Button cancelButton = dialogView.findViewById(R.id.cancelButton);
         Button okButton = dialogView.findViewById(R.id.okButton);
 
+        enableCheckbox.setChecked(sleepManager.isEnabled());
         setTimeSpan(minHoursEditText, minMinutesEditText, sleepManager.getMinHoursSleepPerDay());
         setTimeSpan(maxHoursEditText, maxMinutesEditText, sleepManager.getMaxHoursSleepPerDay());
 
@@ -174,6 +194,7 @@ public class SleepFragment extends Fragment
             try
             {
                 sleepManager.setSleepRange(minHours, maxHours);
+                sleepManager.setEnabled(enableCheckbox.isChecked());
             }
             catch (IllegalArgumentException e)
             {
@@ -283,18 +304,12 @@ public class SleepFragment extends Fragment
 
     private void updateComponents()
     {
-        updateIsEnabled();
-        updatePreviousSession();
         updatePercentText();
         updatePercentTextColor();
+        updateRangeText();
         updateToggleButtonText();
         updateBedIcon();
         updateComponentEnabled();
-    }
-
-    private void updateIsEnabled()
-    {
-        enableCheckbox.setChecked(sleepManager.isEnabled());
     }
 
     private void updateComponentEnabled()
@@ -302,42 +317,8 @@ public class SleepFragment extends Fragment
         boolean isEnabled = sleepManager.isEnabled();
 
         toggleButton.setEnabled(isEnabled);
-        startSessionEditText.setEnabled(isEnabled);
-        endSessionEditText.setEnabled(isEnabled);
-        addSessionButtonEnableLink.criteriaValueChanged();
-    }
-
-    private void updatePreviousSession()
-    {
-        Sleep.SleepSession session = sleepManager.getPreviousSession();
-
-        if (session == null)
-        {
-            return;
-        }
-
-        if (sleepManager.isEnabled())
-        {
-            sessionStartTimeTextView.setText(session.getStartTime().toString("yyyy-MM-dd HH:mm"));
-            sessionStopTimeTextView.setText(session.getStopTime().toString("yyyy-MM-dd HH:mm"));
-            sessionTotalTimeTextView.setText(formatMinutes(session.getSleepTime()));
-        }
-        else
-        {
-            sessionStartTimeTextView.setText("");
-            sessionStopTimeTextView.setText("");
-            sessionTotalTimeTextView.setText("");
-        }
-
-    }
-
-    private String formatMinutes(Minutes minutes)
-    {
-        int totalMinutes = minutes.getMinutes();
-        int hours = totalMinutes / 60;
-        int remainingMinutes = totalMinutes % 60;
-
-        return String.format(Locale.getDefault(), "%02d:%02d", hours, remainingMinutes);
+        addSessionButton.setEnabled(isEnabled);
+        previousSessionsButton.setEnabled(isEnabled);
     }
 
     private void updatePercentText()
@@ -352,21 +333,48 @@ public class SleepFragment extends Fragment
         }
     }
 
+    private void updateRangeText()
+    {
+        if (sleepManager.isEnabled())
+        {
+            rangeTextView.setText(String.format(
+                Locale.getDefault(),
+                "Target range: %s - %s",
+                formatHours(sleepManager.getMinHoursSleepPerDay()),
+                formatHours(sleepManager.getMaxHoursSleepPerDay())));
+        }
+        else
+        {
+            rangeTextView.setText("");
+        }
+    }
+
+    private String formatHours(double hours)
+    {
+        int totalMinutes = (int)Math.round(hours * 60d);
+
+        return String.format(
+            Locale.getDefault(),
+            "%dh %02dm",
+            totalMinutes / 60,
+            totalMinutes % 60);
+    }
+
     private void updatePercentTextColor()
     {
         if (!sleepManager.isEnabled())
         {
-            percentTextView.setTextColor(Color.GRAY);
+            percentTextView.setTextColor(Color.rgb(150, 164, 174));
             return;
         }
 
         if (sleepManager.isAhead())
         {
-            percentTextView.setTextColor(Color.GREEN);
+            percentTextView.setTextColor(Color.rgb(128, 203, 196));
         }
         else
         {
-            percentTextView.setTextColor(Color.RED);
+            percentTextView.setTextColor(Color.rgb(255, 171, 145));
         }
     }
 
@@ -374,11 +382,13 @@ public class SleepFragment extends Fragment
     {
         if (sleepManager.getState() == Sleep.AWAKE)
         {
-            toggleButton.setText("AWAKE");
+            stateTextView.setText("Awake");
+            toggleButton.setText("Start sleep");
         }
         else
         {
-            toggleButton.setText("ASLEEP");
+            stateTextView.setText("Asleep");
+            toggleButton.setText("Stop sleep");
         }
     }
 

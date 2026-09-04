@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Minutes;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -75,11 +76,7 @@ public class Sleep
     int getPercent(LocalDateTime now)
     {
         normalizeSleepRange();
-
-        if (startDateTime.isBefore(now.minusDays(3)))
-        {
-            startDateTime = now.minusDays(3);
-        }
+        pruneSessions(now);
 
         int elapsedMinutes = Minutes.minutesBetween(startDateTime, now).getMinutes();
 
@@ -112,18 +109,48 @@ public class Sleep
 
     void addSession(LocalDateTime start, LocalDateTime end)
     {
+        validateSessionTimes(start, end);
+
         sleepSessions.add(new SleepSession(start, end));
     }
 
     @Nullable
-    SleepSession getPreviousSession()
+    SleepSession getPreviousSession(LocalDateTime now)
     {
+        pruneSessions(now);
+
         if (sleepSessions.isEmpty())
         {
             return null;
         }
 
         return sleepSessions.get(sleepSessions.size() - 1);
+    }
+
+    List<SleepSession> getSessions(LocalDateTime now)
+    {
+        pruneSessions(now);
+
+        return new ArrayList<>(sleepSessions);
+    }
+
+    void updateSession(SleepSession session, LocalDateTime start, LocalDateTime stop)
+    {
+        validateSessionTimes(start, stop);
+
+        int index = sleepSessions.indexOf(session);
+
+        if (index < 0)
+        {
+            throw new IllegalArgumentException("Sleep session was not found.");
+        }
+
+        sleepSessions.set(index, new SleepSession(start, stop));
+    }
+
+    void removeSession(SleepSession session)
+    {
+        sleepSessions.remove(session);
     }
 
     private void startSleep(LocalDateTime now)
@@ -195,11 +222,27 @@ public class Sleep
 
     private int getMinutesSleptLastThreeDays()
     {
-        sleepSessions.removeIf(s -> s.isPassed(startDateTime));
-
         return sleepSessions.stream()
             .mapToInt(s -> s.getMinutes(startDateTime))
             .sum();
+    }
+
+    private void pruneSessions(LocalDateTime now)
+    {
+        if (startDateTime.isBefore(now.minusDays(3)))
+        {
+            startDateTime = now.minusDays(3);
+        }
+
+        sleepSessions.removeIf(s -> s.isPassed(startDateTime));
+    }
+
+    private static void validateSessionTimes(LocalDateTime start, LocalDateTime stop)
+    {
+        if (start == null || stop == null || !stop.isAfter(start))
+        {
+            throw new IllegalArgumentException("Stop time must be after start time.");
+        }
     }
 
     public static class SleepSession

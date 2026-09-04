@@ -2,6 +2,7 @@ package stoneframe.serena.sleep;
 
 import org.joda.time.LocalDateTime;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import stoneframe.serena.timeservices.TimeService;
@@ -65,11 +66,29 @@ public class SleepManager
 
     public Sleep.SleepSession getPreviousSession()
     {
-        return container.get().sleep.getPreviousSession();
+        return container.get().sleep.getPreviousSession(timeService.getNow());
+    }
+
+    public List<Sleep.SleepSession> getSessions()
+    {
+        return container.get().sleep.getSessions(timeService.getNow());
     }
 
     public void addSession(LocalDateTime start, LocalDateTime end)
     {
         container.get().sleep.addSession(start, end);
+    }
+
+    public void updateSession(
+        Sleep.SleepSession session,
+        LocalDateTime start,
+        LocalDateTime stop)
+    {
+        container.get().sleep.updateSession(session, start, stop);
+    }
+
+    public void removeSession(Sleep.SleepSession session)
+    {
+        container.get().sleep.removeSession(session);
     }
 }

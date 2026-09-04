@@ -365,24 +365,34 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
 
         for (Reminder reminder : pendingReminders)
         {
-            DialogUtils.showConfirmationDialog(
-                requireContext(),
-                "Reminder",
-                reminder.getText() + "\r\n\r\nAcknowledge?",
-                isConfirmed ->
-                {
-                    if (isConfirmed)
-                    {
-                        reminderManager.complete(reminder);
-                    }
-                    else
-                    {
-                        reminderManager.snooze(reminder);
-                    }
-
-                    Notifier.showReminderNotification(requireContext(), serena, false);
-                });
+            new AlertDialog.Builder(requireContext())
+                .setTitle("Reminder")
+                .setMessage(reminder.getText())
+                .setPositiveButton("Done", (dialog, which) ->
+                    handleReminder(reminderManager, reminder, true))
+                .setNegativeButton("Snooze", (dialog, which) ->
+                    handleReminder(reminderManager, reminder, false))
+                .show();
         }
+    }
+
+    private void handleReminder(
+        ReminderManager reminderManager,
+        Reminder reminder,
+        boolean isDone)
+    {
+        if (isDone)
+        {
+            reminderManager.complete(reminder);
+        }
+        else
+        {
+            reminderManager.snooze(reminder);
+        }
+
+        serena.save();
+        Notifier.showReminderNotification(requireContext(), serena, false);
+        Notifier.scheduleReminderAlarm(requireContext(), serena);
     }
 
     private void completePendingRemovals(HashMap<?, Runnable> pendingRemovalsMap)

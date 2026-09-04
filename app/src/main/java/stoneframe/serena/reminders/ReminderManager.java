@@ -11,6 +11,8 @@ import stoneframe.serena.timeservices.TimeService;
 
 public class ReminderManager
 {
+    private static final int SNOOZE_MINUTES = 9;
+
     private final Supplier<ReminderContainer> container;
 
     private final TimeService timeService;
@@ -47,7 +49,7 @@ public class ReminderManager
 
     public void snooze(Reminder reminder)
     {
-        reminder.setDateTime(timeService.getNow().plusMinutes(10));
+        reminder.setDateTime(timeService.getNow().plusMinutes(SNOOZE_MINUTES));
     }
 
     public boolean containsReminder(Reminder reminder)

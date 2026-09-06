@@ -133,6 +133,9 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
 
             AlertDialog alert = builder.create();
             alert.show();
+            DialogUtils.addButtonStartSpacing(
+                requireContext(),
+                alert.getButton(AlertDialog.BUTTON_POSITIVE));
 
             return true;
         });
@@ -203,6 +206,9 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
 
             AlertDialog alert = builder.create();
             alert.show();
+            DialogUtils.addButtonStartSpacing(
+                requireContext(),
+                alert.getButton(AlertDialog.BUTTON_POSITIVE));
 
             return true;
         });

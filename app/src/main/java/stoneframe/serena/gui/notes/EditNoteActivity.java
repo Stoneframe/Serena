@@ -133,6 +133,8 @@ public class EditNoteActivity extends EditActivity
         noteEditor.setGroup((NoteGroupView)groupSpinner.getSelectedItem());
         noteEditor.save();
 
+        titleEditText.setText(noteEditor.getTitle());
+
         return false;
     }
 

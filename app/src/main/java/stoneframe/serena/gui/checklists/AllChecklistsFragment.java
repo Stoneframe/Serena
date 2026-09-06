@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -25,6 +26,7 @@ import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
 import stoneframe.serena.Serena;
 import stoneframe.serena.checklists.Checklist;
 import stoneframe.serena.checklists.ChecklistManager;
+import stoneframe.serena.gui.util.DialogUtils;
 
 public class AllChecklistsFragment extends Fragment
 {
@@ -97,7 +99,16 @@ public class AllChecklistsFragment extends Fragment
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Create checklist");
-        builder.setView(checklistNameText);
+
+        int horizontalInset = getResources().getDimensionPixelSize(R.dimen.space_lg);
+        FrameLayout inputContainer = new FrameLayout(requireContext());
+        inputContainer.setPadding(horizontalInset, 0, horizontalInset, 0);
+        inputContainer.addView(
+            checklistNameText,
+            new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        builder.setView(inputContainer);
 
         builder.setPositiveButton("OK", (dialog, which) ->
         {
@@ -111,6 +122,11 @@ public class AllChecklistsFragment extends Fragment
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+
+        Button okButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        DialogUtils.addButtonStartSpacing(requireContext(), okButton);
+        DialogUtils.alignButtonEndWithDialogContent(requireContext(), okButton);
+        DialogUtils.styleAsPrimaryButton(requireContext(), okButton);
     }
 
     private void openChecklistActivity()

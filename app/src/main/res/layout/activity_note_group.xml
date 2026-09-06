@@ -3,18 +3,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/app_background"
     android:orientation="vertical"
     android:padding="16dp"
     tools:context=".gui.notes.EditNoteGroupActivity">
 
-    <EditText
-        android:id="@+id/nameEditText"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Name"
-        android:inputType="textCapSentences"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:layout_height="match_parent"
+        android:layout_above="@+id/cancelButton"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/space_sm">
+
+        <EditText
+            android:id="@+id/nameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Name"
+            android:inputType="textCapSentences"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </ScrollView>
 
     <Button
         android:id="@+id/cancelButton"
@@ -26,6 +36,7 @@
         tools:ignore="ButtonOrder" />
 
     <Button
+        style="@style/Widget.Serena.Button.Primary"
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

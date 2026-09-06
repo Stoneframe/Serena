@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import org.joda.time.LocalDateTime;
@@ -364,17 +364,20 @@ public class SleepFragment extends Fragment
     {
         if (!sleepManager.isEnabled())
         {
-            percentTextView.setTextColor(Color.rgb(150, 164, 174));
+            percentTextView.setTextColor(
+                ContextCompat.getColor(requireContext(), R.color.text_disabled));
             return;
         }
 
         if (sleepManager.isAhead())
         {
-            percentTextView.setTextColor(Color.rgb(128, 203, 196));
+            percentTextView.setTextColor(
+                ContextCompat.getColor(requireContext(), R.color.status_success_on_dark));
         }
         else
         {
-            percentTextView.setTextColor(Color.rgb(255, 171, 145));
+            percentTextView.setTextColor(
+                ContextCompat.getColor(requireContext(), R.color.status_error_on_dark));
         }
     }
 

@@ -4,6 +4,10 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="remove_transaction_type">Remove transaction type</string>
+    <string name="edit_transaction_type">Edit transaction type</string>
+    <string name="new_transaction_type">New transaction type</string>
+    <string name="note_group">Note group</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

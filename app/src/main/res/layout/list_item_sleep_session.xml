@@ -19,7 +19,7 @@
             android:id="@+id/startTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#263238"
+            android:textColor="@color/text_primary"
             android:textSize="17sp" />
 
         <TextView
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textColor="#6D7B83"
+            android:textColor="@color/text_secondary"
             android:textSize="15sp" />
 
     </LinearLayout>
@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:textColor="#2E7D6B"
+        android:textColor="@color/brand_primary"
         android:textSize="18sp"
         android:textStyle="bold" />
 

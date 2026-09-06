@@ -24,7 +24,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="No previous sessions"
-            android:textColor="#6D7B83"
+            android:textColor="@color/text_secondary"
             android:textSize="18sp" />
 
     </FrameLayout>
@@ -36,6 +36,6 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/bg_sleep_secondary_button"
         android:text="Done"
-        android:textColor="#2E7D6B" />
+        android:textColor="@color/brand_primary" />
 
 </LinearLayout>

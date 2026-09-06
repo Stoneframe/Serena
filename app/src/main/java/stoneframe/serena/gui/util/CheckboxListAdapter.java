@@ -1,7 +1,6 @@
 package stoneframe.serena.gui.util;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import java.util.List;
 import java.util.function.Function;
@@ -96,7 +96,9 @@ public class CheckboxListAdapter<T> extends BaseAdapter
         String bottomText = bottomTextFunction.apply(item);
 
         holder.mainTextView.setText(mainText);
-        holder.mainTextView.setTextColor(isChecked ? Color.LTGRAY : Color.BLACK);
+        holder.mainTextView.setTextColor(ContextCompat.getColor(
+            context,
+            isChecked ? R.color.text_disabled : R.color.text_primary));
         holder.checkBox.setChecked(isChecked);
         holder.checkBox.setTag(holder);
 
@@ -124,7 +126,9 @@ public class CheckboxListAdapter<T> extends BaseAdapter
     {
         Holder holder = (Holder)view.getTag();
 
-        holder.mainTextView.setTextColor(isCheckedFunction.apply(holder.item) ? Color.LTGRAY : Color.BLACK);
+        holder.mainTextView.setTextColor(ContextCompat.getColor(
+            context,
+            isCheckedFunction.apply(holder.item) ? R.color.text_disabled : R.color.text_primary));
 
         notifyCheckboxCheckedChanged(holder);
         notifyDataSetChanged();

@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:labelFor="@id/startEditText"
         android:text="Start"
-        android:textColor="#263238" />
+        android:textColor="@color/text_primary" />
 
     <EditText
         android:id="@+id/startEditText"
@@ -19,8 +19,8 @@
         android:clickable="true"
         android:focusable="false"
         android:importantForAutofill="no"
-        android:minHeight="48dp"
-        android:textColor="#263238" />
+        android:minHeight="@dimen/input_control_height"
+        android:textColor="@color/text_primary" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -28,7 +28,7 @@
         android:layout_marginTop="12dp"
         android:labelFor="@id/stopEditText"
         android:text="Stop"
-        android:textColor="#263238" />
+        android:textColor="@color/text_primary" />
 
     <EditText
         android:id="@+id/stopEditText"
@@ -37,8 +37,8 @@
         android:clickable="true"
         android:focusable="false"
         android:importantForAutofill="no"
-        android:minHeight="48dp"
-        android:textColor="#263238" />
+        android:minHeight="@dimen/input_control_height"
+        android:textColor="@color/text_primary" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -54,20 +54,22 @@
             android:layout_weight="1"
             android:background="@drawable/bg_sleep_secondary_button"
             android:text="Cancel"
-            android:textColor="#2E7D6B" />
+            android:textColor="@color/brand_primary" />
 
         <Button
+            style="@style/Widget.Serena.Button.Danger"
             android:id="@+id/removeButton"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginStart="6dp"
             android:layout_marginEnd="6dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_sleep_secondary_button"
+            android:background="@drawable/bg_button_danger"
             android:text="Remove"
-            android:textColor="#B3261E" />
+            android:textColor="@color/status_error" />
 
         <Button
+            style="@style/Widget.Serena.Button.Primary"
             android:id="@+id/saveButton"
             android:layout_width="0dp"
             android:layout_height="48dp"
@@ -75,7 +77,7 @@
             android:layout_weight="1"
             android:background="@drawable/bg_sleep_primary_button"
             android:text="Save"
-            android:textColor="#FFFFFF" />
+            android:textColor="@color/on_brand" />
 
     </LinearLayout>
 

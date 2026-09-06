@@ -2,9 +2,13 @@ package stoneframe.serena.gui.util;
 
 import android.content.Context;
 
+import androidx.annotation.DimenRes;
+
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+import stoneframe.serena.R;
 
 public class SimpleListAdapterBuilder<T>
 {
@@ -17,6 +21,8 @@ public class SimpleListAdapterBuilder<T>
 
     private Function<T, Integer> backgroundColorFunction;
     private Function<T, Integer> borderColorFunction;
+    private boolean showItemCard = true;
+    private @DimenRes int minimumItemHeight = R.dimen.control_min_height;
 
     public SimpleListAdapterBuilder(
         Context context,
@@ -56,6 +62,20 @@ public class SimpleListAdapterBuilder<T>
         return this;
     }
 
+    public SimpleListAdapterBuilder<T> withoutItemCard()
+    {
+        showItemCard = false;
+
+        return this;
+    }
+
+    public SimpleListAdapterBuilder<T> withMinimumItemHeight(@DimenRes int minimumItemHeight)
+    {
+        this.minimumItemHeight = minimumItemHeight;
+
+        return this;
+    }
+
     public SimpleListAdapter<T> create()
     {
         return new SimpleListAdapter<>(
@@ -65,6 +85,8 @@ public class SimpleListAdapterBuilder<T>
             secondaryTextFunction,
             bottomTextFunction,
             backgroundColorFunction,
-            borderColorFunction);
+            borderColorFunction,
+            showItemCard,
+            minimumItemHeight);
     }
 }

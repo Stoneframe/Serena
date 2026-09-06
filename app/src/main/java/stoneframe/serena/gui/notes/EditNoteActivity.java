@@ -80,6 +80,7 @@ public class EditNoteActivity extends EditActivity
             this,
             () -> serena.getNoteManager().getAllGroups(),
             NoteGroupView::getName)
+            .withoutItemCard()
             .create();
 
         int index = serena.getNoteManager().getAllGroups().indexOf(noteEditor.getGroup());

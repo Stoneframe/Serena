@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,7 +25,7 @@
                 android:layout_height="32dp"
                 android:contentDescription="Sleep"
                 android:src="@drawable/ic_bed"
-                android:tint="#263238" />
+                app:tint="@color/brand_primary" />
 
             <TextView
                 android:layout_width="0dp"
@@ -32,7 +33,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
                 android:text="Sleep"
-                android:textColor="#263238"
+                android:textColor="@color/text_primary"
                 android:textSize="28sp"
                 android:textStyle="bold" />
 
@@ -43,7 +44,7 @@
                 android:background="@drawable/bg_sleep_secondary_button"
                 android:minWidth="104dp"
                 android:text="Settings"
-                android:textColor="#2E7D6B" />
+                android:textColor="@color/brand_primary" />
 
         </LinearLayout>
 
@@ -59,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Sleep score"
-                android:textColor="#B9D6D0"
+                android:textColor="@color/surface_secondary"
                 android:textSize="16sp" />
 
             <TextView
@@ -68,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="0 %"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/on_brand"
                 android:textSize="82sp"
                 android:textStyle="bold" />
 
@@ -77,7 +78,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="#B9D6D0"
+                android:textColor="@color/surface_secondary"
                 android:textSize="16sp" />
 
         </LinearLayout>
@@ -88,20 +89,20 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:textColor="#263238"
+            android:textColor="@color/text_primary"
             android:textSize="30sp"
             android:textStyle="bold" />
 
         <Button
+            style="@style/Widget.Serena.Button.Primary"
             android:id="@+id/toggleButton"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_sleep_primary_button"
             android:minHeight="72dp"
             android:text="Start sleep"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/on_brand"
             android:textSize="26sp"
             android:textStyle="bold" />
 
@@ -112,7 +113,7 @@
             android:layout_marginTop="24dp"
             android:background="@drawable/bg_sleep_secondary_button"
             android:text="Add session"
-            android:textColor="#2E7D6B" />
+            android:textColor="@color/brand_primary" />
 
         <Button
             android:id="@+id/previousSessionsButton"
@@ -121,7 +122,7 @@
             android:layout_marginTop="16dp"
             android:background="@drawable/bg_sleep_secondary_button"
             android:text="Previous sessions"
-            android:textColor="#2E7D6B" />
+            android:textColor="@color/brand_primary" />
 
     </LinearLayout>
 

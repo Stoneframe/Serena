@@ -4,6 +4,7 @@
     android:id="@+id/activity_edit_chore"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/app_background"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -14,7 +15,8 @@
         android:id="@+id/routine"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="70dp"
+        android:layout_above="@+id/cancelButton"
+        android:layout_marginBottom="@dimen/space_sm"
         android:orientation="vertical">
 
         <LinearLayout
@@ -30,6 +32,7 @@
                 android:text="Name:" />
 
             <EditText
+                style="@style/Widget.Serena.EditText.Compact"
                 android:id="@+id/nameTextEdit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -49,21 +52,34 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/proceduresTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Procedures" />
-
-        <ExpandableListView
-            android:id="@+id/week_procedure_list"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:divider="@android:color/darker_gray"
-            android:dividerHeight="0.5dp"
-            android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft" />
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_surface_card"
+            android:elevation="@dimen/card_elevation"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_section_header"
+                android:padding="10dp"
+                android:text="Week"
+                android:textColor="@color/on_brand"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <ExpandableListView
+                android:id="@+id/week_procedure_list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:divider="@color/outline"
+                android:dividerHeight="1dp"
+                android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -82,15 +98,17 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_gravity="end"
+        android:layout_marginEnd="8dp"
         android:layout_toStartOf="@id/saveButton"
         android:text="ADD..." />
 
     <Button
+        style="@style/Widget.Serena.Button.Primary"
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:text="SAVE" />
+        android:text="Save" />
 
 </RelativeLayout>

@@ -17,7 +17,7 @@
             <EditText
                 android:id="@+id/editText"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="@dimen/input_control_height"
                 android:background="@drawable/border_black"
                 android:hint="Description"
                 android:inputType="textCapSentences"
@@ -41,10 +41,12 @@
                     android:id="@+id/buttonCancel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:text="Cancel" />
 
                 <Button
+                    style="@style/Widget.Serena.Button.Primary"
                     android:id="@+id/buttonSave"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

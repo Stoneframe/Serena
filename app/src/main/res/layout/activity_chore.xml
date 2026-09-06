@@ -4,21 +4,25 @@
     android:id="@+id/activity_edit_chore"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/app_background"
     android:padding="@dimen/activity_vertical_margin"
     tools:context="stoneframe.serena.gui.chores.EditChoreActivity">
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/cancelButton"
         android:layout_alignParentTop="true"
-        android:fillViewport="true">
+        android:layout_marginBottom="@dimen/space_sm"
+        android:background="@drawable/bg_surface_card"
+        android:clipToOutline="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="16dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -26,14 +30,19 @@
                 android:orientation="vertical"
                 android:paddingBottom="10dp">
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:gravity="bottom"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/choreDescriptionTextView"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:layout_weight="1"
                         android:labelFor="@+id/choreDescriptionEditText"
                         android:text="Description" />
 
@@ -41,10 +50,9 @@
                         android:id="@+id/enableCheckbox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
                         android:text="Enable" />
 
-                </RelativeLayout>
+                </LinearLayout>
 
                 <EditText
                     android:id="@+id/choreDescriptionEditText"
@@ -53,7 +61,7 @@
                     android:importantForAutofill="no"
                     android:inputType="textCapSentences"
                     android:maxLines="1"
-                    android:minHeight="48dp"
+                    android:minHeight="@dimen/input_control_height"
                     android:nextFocusDown="@+id/priorityEditText" />
 
             </LinearLayout>
@@ -68,6 +76,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/space_sm"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
@@ -84,7 +93,7 @@
                         android:layout_height="wrap_content"
                         android:importantForAutofill="no"
                         android:inputType="number"
-                        android:minHeight="48dp"
+                        android:minHeight="@dimen/input_control_height"
                         android:nextFocusDown="@+id/effortEditText" />
                 </LinearLayout>
 
@@ -107,7 +116,7 @@
                         android:layout_height="wrap_content"
                         android:importantForAutofill="no"
                         android:inputType="number"
-                        android:minHeight="48dp" />
+                        android:minHeight="@dimen/input_control_height" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -115,14 +124,37 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:labelFor="@+id/repetitionTypeSpinner"
                 android:paddingTop="30dp"
                 android:text="Repetition type" />
 
-            <Spinner
-                android:id="@+id/repetitionTypeSpinner"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="5dp" />
+                android:layout_height="@dimen/input_control_height"
+                android:layout_marginBottom="@dimen/space_sm"
+                android:addStatesFromChildren="true"
+                android:background="@drawable/bg_input">
+
+                <Spinner
+                    android:id="@+id/repetitionTypeSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="44dp"
+                    android:spinnerMode="dropdown" />
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="12dp"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_arrow_drop_down" />
+
+            </FrameLayout>
 
             <!-- Interval Repetition START -->
             <LinearLayout
@@ -151,7 +183,7 @@
                         android:focusable="false"
                         android:importantForAutofill="no"
                         android:inputType="datetime"
-                        android:minHeight="48dp" />
+                        android:minHeight="@dimen/input_control_height" />
 
                 </LinearLayout>
 
@@ -165,6 +197,7 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/space_sm"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
@@ -178,10 +211,9 @@
                         <EditText
                             android:id="@+id/intervalLengthEditText"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="@dimen/input_control_height"
                             android:importantForAutofill="no"
-                            android:inputType="number"
-                            android:minHeight="48dp" />
+                            android:inputType="number" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -197,11 +229,32 @@
                             android:labelFor="@+id/intervalUnitSpinner"
                             android:text="Interval Unit" />
 
-                        <Spinner
-                            android:id="@+id/intervalUnitSpinner"
+                        <FrameLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="48dp" />
+                            android:layout_height="@dimen/input_control_height"
+                            android:addStatesFromChildren="true"
+                            android:background="@drawable/bg_input">
+
+                            <Spinner
+                                android:id="@+id/intervalUnitSpinner"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@android:color/transparent"
+                                android:paddingStart="12dp"
+                                android:paddingEnd="44dp"
+                                android:spinnerMode="dropdown" />
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="end|center_vertical"
+                                android:layout_marginEnd="12dp"
+                                android:clickable="false"
+                                android:focusable="false"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_arrow_drop_down" />
+
+                        </FrameLayout>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -301,6 +354,7 @@
         tools:ignore="ButtonOrder" />
 
     <Button
+        style="@style/Widget.Serena.Button.Primary"
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

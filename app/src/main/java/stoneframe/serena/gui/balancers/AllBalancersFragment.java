@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -13,9 +12,12 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.ColorRes;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import org.joda.time.LocalDateTime;
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 
 import stoneframe.serena.R;
 import stoneframe.serena.gui.GlobalState;
+import stoneframe.serena.gui.util.DialogUtils;
 import stoneframe.serena.gui.util.enable.ButtonEnabledLink;
 import stoneframe.serena.gui.util.enable.EditTextCriteria;
 import stoneframe.serena.gui.util.SimpleListAdapter;
@@ -35,20 +38,6 @@ import stoneframe.serena.balancers.BalancerManager;
 
 public class AllBalancersFragment extends Fragment
 {
-    private static final int LIGHT_GREEN = Color.parseColor("#c3fab6");
-    private static final int LIGHT_GRAY = Color.parseColor("#e6e3e3");
-    private static final int LIGHT_RED = Color.parseColor("#ffc4c4");
-    private static final int LIGHT_YELLOW = Color.parseColor("#fff08c");
-    private static final int DARK_GREEN = Color.parseColor("#018a26");
-    private static final int DARK_GRAY = Color.parseColor("#7e807e");
-    private static final int DARK_RED = Color.parseColor("#ff0505");
-    private static final int DARK_YELLOW = Color.parseColor("#ff8c00");
-
-    private static final Pair<Integer, Integer> POSITIVE = new Pair<>(LIGHT_GREEN, DARK_GREEN);
-    private static final Pair<Integer, Integer> NEGATIVE = new Pair<>(LIGHT_RED, DARK_RED);
-    private static final Pair<Integer, Integer> COUNTER = new Pair<>(LIGHT_YELLOW, DARK_YELLOW);
-    private static final Pair<Integer, Integer> DISABLED = new Pair<>(LIGHT_GRAY, DARK_GRAY);
-
     private SimpleListAdapter<Balancer> balancerListAdapter;
 
     private GlobalState globalState;
@@ -101,8 +90,13 @@ public class AllBalancersFragment extends Fragment
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
 
+            Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+            DialogUtils.addButtonStartSpacing(requireContext(), okButton);
+            DialogUtils.alignButtonEndWithDialogContent(requireContext(), okButton);
+            DialogUtils.styleAsPrimaryButton(requireContext(), okButton);
+
             new ButtonEnabledLink(
-                alertDialog.getButton(DialogInterface.BUTTON_POSITIVE),
+                okButton,
                 new EditTextCriteria(balancerNameText, EditTextCriteria.IS_NOT_EMPTY));
         });
 
@@ -122,7 +116,16 @@ public class AllBalancersFragment extends Fragment
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Create balancer");
-        builder.setView(balancerNameText);
+
+        int horizontalInset = getResources().getDimensionPixelSize(R.dimen.space_lg);
+        FrameLayout inputContainer = new FrameLayout(requireContext());
+        inputContainer.setPadding(horizontalInset, 0, horizontalInset, 0);
+        inputContainer.addView(
+            balancerNameText,
+            new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        builder.setView(inputContainer);
 
         builder.setPositiveButton("OK", (dialog, which) ->
         {
@@ -218,18 +221,36 @@ public class AllBalancersFragment extends Fragment
 
     private Pair<Integer, Integer> getColor(Balancer balancer)
     {
-        if (!balancer.isEnabled()) return DISABLED;
+        if (!balancer.isEnabled())
+        {
+            return colorPair(R.color.status_disabled_container, R.color.status_disabled);
+        }
 
         switch (balancer.getType())
         {
             case Balancer.COUNTER:
-                return COUNTER;
+                return colorPair(R.color.status_warning_container, R.color.status_warning);
             case Balancer.LIMITER:
             case Balancer.ENHANCER:
-                return balancer.isAboveThreshold(LocalDateTime.now()) ? POSITIVE : NEGATIVE;
+                return balancer.isAboveThreshold(LocalDateTime.now())
+                    ? colorPair(
+                        R.color.balancer_success_container,
+                        R.color.balancer_success)
+                    : colorPair(
+                        R.color.balancer_error_container,
+                        R.color.balancer_error);
             default:
-                return DISABLED;
+                return colorPair(R.color.status_disabled_container, R.color.status_disabled);
         }
+    }
+
+    private Pair<Integer, Integer> colorPair(
+        @ColorRes int backgroundColor,
+        @ColorRes int borderColor)
+    {
+        return new Pair<>(
+            ContextCompat.getColor(requireContext(), backgroundColor),
+            ContextCompat.getColor(requireContext(), borderColor));
     }
 
     private static class BalancerComparator implements Comparator<Balancer>

@@ -1,12 +1,12 @@
 package stoneframe.serena.gui.routines;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import org.joda.time.LocalDate;
 
@@ -78,8 +78,8 @@ public class RoutineOverviewActivity extends AppCompatActivity
             p -> p.getProcedure().getDescription())
             .withSecondaryTextFunction(p -> p.getProcedure().getTime().toString("HH:mm"))
             .withBottomTextFunction(p -> p.getRoutine().getName())
-            .withBackgroundColorFunction(RoutineOverviewActivity::getBackgroundColor)
-            .withBorderColorFunction(RoutineOverviewActivity::getBorderColor)
+            .withBackgroundColorFunction(this::getBackgroundColor)
+            .withBorderColorFunction(this::getBorderColor)
             .create();
 
         daysProceduresList.setAdapter(daysProceduresListAdapter);
@@ -95,14 +95,18 @@ public class RoutineOverviewActivity extends AppCompatActivity
             .collect(Collectors.toList());
     }
 
-    private static int getBackgroundColor(RoutineProcedureLink link)
+    private int getBackgroundColor(RoutineProcedureLink link)
     {
-        return link.isDone() ? Color.parseColor("#bdfaa7") : Color.parseColor("#edece6");
+        return ContextCompat.getColor(
+            this,
+            link.isDone() ? R.color.status_success_container : R.color.surface);
     }
 
-    private static int getBorderColor(RoutineProcedureLink link)
+    private int getBorderColor(RoutineProcedureLink link)
     {
-        return link.isDone() ? Color.parseColor("#42f700") : Color.parseColor("#6e6e6e");
+        return ContextCompat.getColor(
+            this,
+            link.isDone() ? R.color.status_success : R.color.outline);
     }
 
     public class RoutineProcedureLink implements Comparable<RoutineProcedureLink>

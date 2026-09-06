@@ -1,6 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <!-- Brand colors deliberately avoid green and red; those colors remain semantic. -->
+    <color name="brand_primary">#294A6D</color>
+    <color name="brand_primary_dark">#1D354E</color>
+    <color name="brand_accent">#4F78A5</color>
+    <color name="brand_accent_pressed">#365F8B</color>
+    <color name="on_brand">#FFFFFF</color>
+    <color name="on_brand_disabled">#99FFFFFF</color>
+
+    <color name="app_background">#F3F6F9</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_secondary">#E8EEF4</color>
+    <color name="surface_pressed">#DCE6EF</color>
+    <color name="text_primary">#1D2935</color>
+    <color name="text_secondary">#607080</color>
+    <color name="text_disabled">#9AA6B2</color>
+    <color name="outline">#CCD6E0</color>
+    <color name="outline_strong">#8796A5</color>
+
+    <color name="status_success">#087E3B</color>
+    <color name="status_success_container">#DDF6E4</color>
+    <color name="status_success_on_dark">#55E879</color>
+    <color name="status_error">#C62828</color>
+    <color name="status_error_container">#FFE4E1</color>
+    <color name="status_error_on_dark">#FF7A70</color>
+    <color name="status_warning">#946200</color>
+    <color name="status_warning_container">#FFF3CD</color>
+    <color name="status_disabled">#7A8793</color>
+    <color name="status_disabled_container">#E7EBEF</color>
+
+    <!-- More vivid status colors for the large Balancer overview cards. -->
+    <color name="balancer_success">#00A63E</color>
+    <color name="balancer_success_container">#B8F5C8</color>
+    <color name="balancer_error">#E00000</color>
+    <color name="balancer_error_container">#FFC7C7</color>
+
+    <!-- Compatibility aliases used by existing theme attributes. -->
+    <color name="colorPrimary">@color/brand_primary</color>
+    <color name="colorPrimaryDark">@color/brand_primary_dark</color>
+    <color name="colorAccent">@color/brand_accent</color>
 </resources>

@@ -4,6 +4,7 @@
     android:id="@+id/activity_edit_reminder"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/app_background"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -13,15 +14,18 @@
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/cancelButton"
         android:layout_alignParentTop="true"
-        android:fillViewport="true">
+        android:layout_marginBottom="@dimen/space_sm"
+        android:background="@drawable/bg_surface_card"
+        android:clipToOutline="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="16dp">
 
             <!-- Text Section -->
             <LinearLayout
@@ -40,6 +44,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <EditText
@@ -50,7 +55,7 @@
                         android:importantForAutofill="no"
                         android:inputType="textCapSentences"
                         android:maxLines="1"
-                        android:minHeight="48dp" />
+                        android:minHeight="@dimen/input_control_height" />
 
                     <ImageButton
                         android:id="@+id/speakButton"
@@ -84,7 +89,7 @@
                     android:focusable="false"
                     android:importantForAutofill="no"
                     android:inputType="date"
-                    android:minHeight="48dp" />
+                    android:minHeight="@dimen/input_control_height" />
             </LinearLayout>
 
         </LinearLayout>
@@ -101,6 +106,7 @@
         tools:ignore="ButtonOrder" />
 
     <Button
+        style="@style/Widget.Serena.Button.Primary"
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

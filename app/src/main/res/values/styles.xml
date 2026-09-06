@@ -1,20 +1,213 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimaryVariant">@color/brand_primary_dark</item>
+        <item name="colorSecondary">@color/brand_accent</item>
+        <item name="colorSecondaryVariant">@color/brand_accent_pressed</item>
+        <item name="colorOnPrimary">@color/on_brand</item>
+        <item name="colorOnSecondary">@color/on_brand</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorError">@color/status_error</item>
+        <item name="colorOnError">@color/on_brand</item>
+        <item name="android:colorBackground">@color/app_background</item>
+        <item name="android:windowBackground">@color/app_background</item>
+        <item name="android:navigationBarColor">@color/brand_primary_dark</item>
+        <item name="android:statusBarColor">@color/brand_primary_dark</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:fontFamily">sans</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:textViewStyle">@style/Widget.Serena.TextView</item>
+        <item name="imageButtonStyle">@style/Widget.Serena.ImageButton</item>
+        <item name="android:imageButtonStyle">@style/Widget.Serena.ImageButton</item>
+        <item name="actionBarStyle">@style/Widget.Serena.ActionBar</item>
+        <item name="buttonStyle">@style/Widget.Serena.Button.Secondary</item>
+        <item name="materialButtonStyle">@style/Widget.Serena.Button.Secondary</item>
+        <item name="android:buttonStyle">@style/Widget.Serena.Button.Secondary</item>
+        <item name="editTextStyle">@style/Widget.Serena.EditText</item>
+        <item name="android:editTextStyle">@style/Widget.Serena.EditText</item>
+        <item name="checkboxStyle">@style/Widget.Serena.CheckBox</item>
+        <item name="android:checkboxStyle">@style/Widget.Serena.CheckBox</item>
+        <item name="radioButtonStyle">@style/Widget.Serena.RadioButton</item>
+        <item name="android:radioButtonStyle">@style/Widget.Serena.RadioButton</item>
+        <item name="spinnerStyle">@style/Widget.Serena.Spinner</item>
+        <item name="android:spinnerStyle">@style/Widget.Serena.Spinner</item>
+        <item name="android:listViewStyle">@style/Widget.Serena.ListView</item>
     </style>
 
-    <!--<style name="AppTheme.NoActionBar">-->
-    <!--<item name="windowActionBar">false</item>-->
-    <!--<item name="windowNoTitle">true</item>-->
-    <!--</style>-->
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Widget.Serena.ActionBar" parent="Widget.MaterialComponents.ActionBar.Primary">
+        <item name="background">@color/brand_primary</item>
+        <item name="titleTextStyle">@style/TextAppearance.Serena.ActionBar</item>
+    </style>
+
+    <style name="TextAppearance.Serena.ActionBar" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textColor">@color/on_brand</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.Serena.ScreenTitle" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.Serena.SectionTitle" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.Serena.Body" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextAppearance.Serena.Supporting" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Widget.Serena.Button.Secondary" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="backgroundTint">@color/button_secondary_background</item>
+        <item name="strokeColor">@color/button_secondary_stroke</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cornerRadius">@dimen/corner_small</item>
+        <item name="android:textColor">@color/button_secondary_text</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:minHeight">@dimen/control_min_height</item>
+        <item name="android:minWidth">64dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <style name="Widget.Serena.Button.Primary" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/button_primary_background</item>
+        <item name="cornerRadius">@dimen/corner_small</item>
+        <item name="android:textColor">@color/button_primary_text</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:minHeight">@dimen/control_min_height</item>
+        <item name="android:minWidth">64dp</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <style name="Widget.Serena.Button.Danger" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="backgroundTint">@color/button_secondary_background</item>
+        <item name="strokeColor">@color/status_error</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cornerRadius">@dimen/corner_small</item>
+        <item name="android:textColor">@color/button_danger_text</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:minHeight">@dimen/control_min_height</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <style name="Widget.Serena.Button.Icon.Secondary" parent="Widget.Serena.Button.Secondary">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">0dp</item>
+        <item name="iconSize">24dp</item>
+    </style>
+
+    <style name="Widget.Serena.Button.Icon.Danger" parent="Widget.Serena.Button.Danger">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">0dp</item>
+        <item name="iconSize">24dp</item>
+    </style>
+
+    <style name="Widget.Serena.Button.Text" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/brand_primary</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Widget.Serena.EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/bg_input</item>
+        <item name="android:backgroundTint">@null</item>
+        <item name="backgroundTint">@null</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textColorHint">@color/text_secondary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:minHeight">@dimen/input_control_height</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+
+    <style name="Widget.Serena.EditText.Compact" parent="Widget.Serena.EditText">
+        <item name="android:minHeight">@dimen/input_control_height</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
+    </style>
+
+    <style name="Widget.Serena.TextView" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Widget.Serena.ImageButton" parent="Widget.AppCompat.ImageButton">
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:tint">@color/brand_primary</item>
+        <item name="android:minWidth">@dimen/control_min_height</item>
+        <item name="android:minHeight">@dimen/control_min_height</item>
+        <item name="android:padding">12dp</item>
+    </style>
+
+    <style name="Widget.Serena.CheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="buttonTint">@color/checkable_tint</item>
+        <item name="android:buttonTint">@color/checkable_tint</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:minHeight">@dimen/control_min_height</item>
+    </style>
+
+    <style name="Widget.Serena.RadioButton" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="buttonTint">@color/checkable_tint</item>
+        <item name="android:buttonTint">@color/checkable_tint</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:minHeight">@dimen/control_min_height</item>
+    </style>
+
+    <style name="Widget.Serena.Spinner" parent="Widget.AppCompat.Spinner.Underlined">
+        <item name="android:backgroundTint">@color/brand_accent</item>
+        <item name="backgroundTint">@color/brand_accent</item>
+        <item name="android:minHeight">@dimen/input_control_height</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+    </style>
+
+    <style name="Widget.Serena.ListView" parent="Widget.AppCompat.ListView">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:divider">@android:color/transparent</item>
+        <item name="android:dividerHeight">8dp</item>
+        <item name="android:clipToPadding">false</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+    </style>
 
 </resources>

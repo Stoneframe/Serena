@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="10dp">
+    android:background="@color/app_background"
+    android:paddingTop="10dp">
 
     <Button
         android:id="@+id/backButton"
@@ -23,7 +24,7 @@
         android:gravity="center"
         android:inputType="date"
         android:padding="10dp"
-        android:textColor="#000000"
+        android:textColor="@color/text_primary"
         android:textSize="30sp" />
 
     <Button
@@ -44,6 +45,7 @@
         android:padding="10dp" />
 
     <Button
+        style="@style/Widget.Serena.Button.Primary"
         android:id="@+id/doneButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

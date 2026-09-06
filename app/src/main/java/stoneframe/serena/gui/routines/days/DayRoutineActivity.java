@@ -7,8 +7,7 @@ import java.util.stream.Collectors;
 
 import stoneframe.serena.R;
 import stoneframe.serena.gui.routines.EditRoutineActivity;
-import stoneframe.serena.gui.util.SimpleListAdapter;
-import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
+import stoneframe.serena.gui.routines.util.ProcedureListAdapter;
 import stoneframe.serena.routines.DayRoutine;
 import stoneframe.serena.routines.DayRoutineEditor;
 import stoneframe.serena.routines.Procedure;
@@ -17,7 +16,7 @@ public class DayRoutineActivity extends EditRoutineActivity<DayRoutine, DayRouti
 {
     private final DayRoutineEditorListener listener = new DayRoutineEditorListener();
 
-    private SimpleListAdapter<Procedure> procedureListAdapter;
+    private ProcedureListAdapter procedureListAdapter;
     private ListView procedureListView;
 
     @Override
@@ -47,11 +46,9 @@ public class DayRoutineActivity extends EditRoutineActivity<DayRoutine, DayRouti
     @Override
     protected void createSpecialisedActivity()
     {
-        procedureListAdapter = new SimpleListAdapterBuilder<>(
+        procedureListAdapter = new ProcedureListAdapter(
             this,
-            () -> routineEditor.getAllProcedures().stream().sorted().collect(Collectors.toList()),
-            Procedure::toString)
-            .create();
+            () -> routineEditor.getAllProcedures().stream().sorted().collect(Collectors.toList()));
 
         procedureListView = findViewById(R.id.procedures);
         procedureListView.setAdapter(procedureListAdapter);

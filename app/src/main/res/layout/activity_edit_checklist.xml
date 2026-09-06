@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/app_background">
 
     <EditText
         android:id="@+id/nameEditText"
@@ -11,6 +12,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="@dimen/space_sm"
         android:hint="Enter Text"
         android:textSize="25sp" />
 
@@ -21,6 +23,7 @@
         android:layout_above="@+id/addItemButton"
         android:layout_below="@+id/nameEditText"
         android:layout_marginStart="20dp"
+        android:layout_marginBottom="@dimen/space_sm"
         android:layout_marginEnd="20dp" />
 
     <Button
@@ -45,6 +48,7 @@
         android:text="Add item..." />
 
     <Button
+        style="@style/Widget.Serena.Button.Primary"
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

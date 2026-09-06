@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckedTextView;
 
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -21,6 +22,7 @@ public class SimpleCheckboxListAdapter<T> extends BaseAdapter
     private final Context context;
     private final Supplier<List<T>> listFunction;
     private final Function<T, String> textFunction;
+    private final int itemLayoutResource;
 
     private final List<T> checkedItems = new LinkedList<>();
 
@@ -29,9 +31,19 @@ public class SimpleCheckboxListAdapter<T> extends BaseAdapter
         Supplier<List<T>> listFunction,
         Function<T, String> textFunction)
     {
+        this(context, listFunction, textFunction, android.R.layout.simple_list_item_checked);
+    }
+
+    public SimpleCheckboxListAdapter(
+        @NonNull Context context,
+        Supplier<List<T>> listFunction,
+        Function<T, String> textFunction,
+        @LayoutRes int itemLayoutResource)
+    {
         this.context = context;
         this.listFunction = listFunction;
         this.textFunction = textFunction;
+        this.itemLayoutResource = itemLayoutResource;
 
         notifyDataSetChanged();
     }
@@ -65,7 +77,7 @@ public class SimpleCheckboxListAdapter<T> extends BaseAdapter
         {
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             CheckedTextView checkedTextView = (CheckedTextView)inflater.inflate(
-                android.R.layout.simple_list_item_checked,
+                itemLayoutResource,
                 parent,
                 false);
 

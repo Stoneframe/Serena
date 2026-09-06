@@ -131,11 +131,12 @@
             android:text="Cancel" />
 
         <Button
+            style="@style/Widget.Serena.Button.Primary"
             android:id="@+id/okButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="OK" />
+            android:text="Save" />
 
     </LinearLayout>
 

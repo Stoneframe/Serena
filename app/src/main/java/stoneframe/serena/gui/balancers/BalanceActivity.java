@@ -23,6 +23,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,6 +46,8 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
 {
     private TextView textViewName;
     private TextView textViewTransactionAvailable;
+    private TextView textViewAmountUnit;
+    private TextView textViewEmptyFavorites;
 
     private Spinner spinnerTransactionType;
     private EditText editTextAmount;
@@ -62,6 +65,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
 
     private Serena serena;
 
+    private Balancer balancer;
     private BalancerEditor balancerEditor;
 
     @Override
@@ -119,7 +123,8 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
     public void unitChanged()
     {
         updateAvailable();
-        updateHint();
+        updateAmountUnit();
+        favoritesListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -153,6 +158,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
     public void isEnabledChanged(boolean isEnabled)
     {
         updateActivityEnabled();
+        updateAvailable();
     }
 
     @Override
@@ -170,7 +176,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
     @Override
     public void okThresholdChanged()
     {
-
+        updateAvailable();
     }
 
     @Override
@@ -230,7 +236,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
 
         setTitle("Balancer");
 
-        Balancer balancer = GlobalState.getInstance().getActiveBalancer();
+        balancer = GlobalState.getInstance().getActiveBalancer();
 
         serena = GlobalState.getInstance().getSerena();
 
@@ -239,6 +245,8 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         textViewName = findViewById(R.id.textViewName);
 
         textViewTransactionAvailable = findViewById(R.id.textViewTransactionAvailable);
+        textViewAmountUnit = findViewById(R.id.textViewAmountUnit);
+        textViewEmptyFavorites = findViewById(R.id.textViewEmptyFavorites);
         spinnerTransactionType = findViewById(R.id.spinnerTransactionType);
         editTextAmount = findViewById(R.id.editTextAmount);
 
@@ -256,6 +264,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
             this,
             balancerEditor::getTransactionTypes,
             TransactionType::getName)
+            .withoutItemCard()
             .create();
 
         spinnerTransactionType.setAdapter(transactionTypeAdapter);
@@ -289,8 +298,11 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
             this,
             () -> getFavoriteTransactionTypes(balancer),
             TransactionType::getName)
-            .withSecondaryTextFunction(t -> Integer.toString(t.getAmount()))
+            .withSecondaryTextFunction(this::formatTransactionAmount)
+            .withoutItemCard()
+            .withMinimumItemHeight(R.dimen.input_control_height)
             .create();
+        favoritesList.setEmptyView(textViewEmptyFavorites);
         favoritesList.setAdapter(favoritesListAdapter);
         favoritesList.setOnItemClickListener((adapterView, view, position, id) ->
         {
@@ -356,7 +368,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
 
         updateName();
         updateAvailable();
-        updateHint();
+        updateAmountUnit();
         updateActivityEnabled();
     }
 
@@ -366,6 +378,15 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
             .stream()
             .filter(TransactionType::isFavorite)
             .collect(Collectors.toList());
+    }
+
+    private String formatTransactionAmount(TransactionType transactionType)
+    {
+        String unit = balancerEditor.getUnit().trim();
+
+        return unit.isEmpty()
+            ? Integer.toString(transactionType.getAmount())
+            : String.format("%s %s", transactionType.getAmount(), unit);
     }
 
     private void addTransactionType()
@@ -512,17 +533,42 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
         }
         else
         {
-            textViewTransactionAvailable.setText(
-                String.format("%s %s", balancerEditor.getAvailable(), balancerEditor.getUnit()));
+            String unit = balancerEditor.getUnit().trim();
+            textViewTransactionAvailable.setText(unit.isEmpty()
+                ? Integer.toString(balancerEditor.getAvailable())
+                : String.format("%s %s", balancerEditor.getAvailable(), unit));
         }
 
+        textViewTransactionAvailable.setContentDescription(
+            "Available: " + textViewTransactionAvailable.getText());
+        textViewTransactionAvailable.setTextColor(getAvailableColor());
     }
 
-    private void updateHint()
+    private int getAvailableColor()
     {
-        String hint = balancerEditor.getUnit().isEmpty() ? "amount" : balancerEditor.getUnit();
+        if (!balancerEditor.isEnabled())
+        {
+            return ContextCompat.getColor(this, R.color.status_disabled);
+        }
 
-        editTextAmount.setHint(hint);
+        if (balancer.getType() == Balancer.COUNTER)
+        {
+            return ContextCompat.getColor(this, R.color.status_warning);
+        }
+
+        return ContextCompat.getColor(
+            this,
+            balancerEditor.getAvailable() >= balancerEditor.getOkThreshold()
+                ? R.color.status_success
+                : R.color.status_error);
+    }
+
+    private void updateAmountUnit()
+    {
+        String unit = balancerEditor.getUnit().trim();
+
+        textViewAmountUnit.setText(unit);
+        textViewAmountUnit.setVisibility(unit.isEmpty() ? View.GONE : View.VISIBLE);
     }
 
     private void updateActivityEnabled()

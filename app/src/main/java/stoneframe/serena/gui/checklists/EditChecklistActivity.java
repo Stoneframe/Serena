@@ -2,13 +2,14 @@ package stoneframe.serena.gui.checklists;
 
 import android.app.AlertDialog;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -33,8 +34,8 @@ public class EditChecklistActivity extends EditActivity
 {
     private final ChecklistEditorListener listener = new ChecklistEditorListener();
 
-    private final ColorDrawable editBackground = new ColorDrawable(Color.parseColor("#AECCE4"));
-    private final ColorDrawable deleteBackground = new ColorDrawable(Color.parseColor("#FF8164"));
+    private ColorDrawable editBackground;
+    private ColorDrawable deleteBackground;
 
     private RecyclerAdapter<ChecklistItem> checklistItemsAdapter;
 
@@ -69,6 +70,9 @@ public class EditChecklistActivity extends EditActivity
     @Override
     protected void createActivity()
     {
+        editBackground = new ColorDrawable(ContextCompat.getColor(this, R.color.brand_accent));
+        deleteBackground = new ColorDrawable(ContextCompat.getColor(this, R.color.status_error));
+
         Checklist checklist = globalState.getActiveChecklist();
 
         checklistEditor = serena.getChecklistManager().getChecklistEditor(checklist);
@@ -164,6 +168,10 @@ public class EditChecklistActivity extends EditActivity
 
         Button okButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
 
+        DialogUtils.addButtonStartSpacing(this, okButton);
+        DialogUtils.alignButtonEndWithDialogContent(this, okButton);
+        DialogUtils.styleAsPrimaryButton(this, okButton);
+
         new ButtonEnabledLink(
             okButton,
             new EditTextCriteria(checklistItemDescriptionText, EditTextCriteria.IS_NOT_EMPTY));
@@ -177,7 +185,16 @@ public class EditChecklistActivity extends EditActivity
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Checklist item");
-        builder.setView(checklistItemDescriptionText);
+
+        int horizontalInset = getResources().getDimensionPixelSize(R.dimen.space_lg);
+        FrameLayout inputContainer = new FrameLayout(this);
+        inputContainer.setPadding(horizontalInset, 0, horizontalInset, 0);
+        inputContainer.addView(
+            checklistItemDescriptionText,
+            new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        builder.setView(inputContainer);
 
         builder.setPositiveButton("OK", (dialog, which) ->
         {

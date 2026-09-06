@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.database.DataSetObserver;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -95,7 +94,8 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
         procedureAdapter = new SimpleCheckboxListAdapter<>(
             requireContext(),
             routineManager::getFirstPendingProcedures,
-            PendingProcedure::toString);
+            PendingProcedure::toString,
+            R.layout.list_item_today_checked);
         procedureAdapter.registerDataSetObserver(new TodayDataSetObserver());
         ListView procedureListView = rootView.findViewById(R.id.todays_routines);
         procedureListView.setAdapter(procedureAdapter);
@@ -104,7 +104,8 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
         choreAdapter = new SimpleCheckboxListAdapter<>(
             requireContext(),
             choreManager::getTodaysChores,
-            Chore::getDescription);
+            Chore::getDescription,
+            R.layout.list_item_today_checked);
         choreAdapter.registerDataSetObserver(new TodayDataSetObserver());
         ListView choreListView = rootView.findViewById(R.id.todays_chores);
         choreListView.setAdapter(choreAdapter);
@@ -139,7 +140,8 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
         taskAdapter = new SimpleCheckboxListAdapter<>(
             requireContext(),
             taskManager::getTodaysTasks,
-            Task::getDescription);
+            Task::getDescription,
+            R.layout.list_item_today_checked);
         taskAdapter.registerDataSetObserver(new TodayDataSetObserver());
         ListView taskListView = rootView.findViewById(R.id.todays_tasks);
         taskListView.setAdapter(taskAdapter);
@@ -510,17 +512,15 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
 
     private void updateColorsOf(ListAdapter adapter, TextView textView)
     {
-        final int darkGreen = Color.parseColor("#228C22");
-
         RelativeLayout parent = (RelativeLayout)textView.getParent();
 
         if (adapter.isEmpty())
         {
-            parent.setBackgroundColor(darkGreen);
+            parent.setBackgroundResource(R.drawable.bg_section_header_success);
         }
         else
         {
-            parent.setBackgroundColor(Color.BLACK);
+            parent.setBackgroundResource(R.drawable.bg_section_header);
         }
     }
 

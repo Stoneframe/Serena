@@ -37,21 +37,43 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".gui.chores.EditChoreActivity" />
-        <activity android:name=".gui.tasks.EditTaskActivity" />
+        <activity
+            android:name=".gui.chores.EditChoreActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".gui.tasks.EditTaskActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".gui.routines.RoutineOverviewActivity" />
-        <activity android:name=".gui.routines.days.DayRoutineActivity" />
-        <activity android:name=".gui.routines.weeks.WeekRoutineActivity" />
-        <activity android:name=".gui.routines.fortnights.FortnightRoutineActivity" />
+        <activity
+            android:name=".gui.routines.days.DayRoutineActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".gui.routines.weeks.WeekRoutineActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".gui.routines.fortnights.FortnightRoutineActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".gui.checklists.ChecklistActivity" />
-        <activity android:name=".gui.checklists.EditChecklistActivity" />
-        <activity android:name=".gui.chores.EffortActivity" />
-        <activity android:name=".gui.StorageActivity" />
-        <activity android:name=".gui.balancers.BalanceActivity" />
+        <activity
+            android:name=".gui.checklists.EditChecklistActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".gui.chores.EffortActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".gui.StorageActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".gui.balancers.BalanceActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".gui.sleep.PreviousSleepSessionsActivity" />
-        <activity android:name=".gui.notes.EditNoteActivity" />
+        <activity
+            android:name=".gui.notes.EditNoteActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".gui.notes.AllNoteGroupsActivity" />
-        <activity android:name=".gui.reminders.EditReminderActivity" />
+        <activity
+            android:name=".gui.reminders.EditReminderActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".gui.notes.EditNoteGroupActivity"
             android:windowSoftInputMode="adjustResize" />

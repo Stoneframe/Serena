@@ -4,6 +4,7 @@
     android:id="@+id/activity_storage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/app_background"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -15,6 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/save_button"
+        android:layout_marginBottom="@dimen/space_sm"
         android:inputType="textMultiLine" />
 
     <Button
@@ -31,11 +33,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginStart="@dimen/space_sm"
         android:layout_toRightOf="@+id/paste_button"
         android:onClick="onCopyClick"
         android:text="Copy" />
 
     <Button
+        style="@style/Widget.Serena.Button.Primary"
         android:id="@+id/save_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

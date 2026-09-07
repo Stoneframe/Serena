@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:fillViewport="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
 
     <CheckBox
         android:id="@+id/checkBoxIsEnabled"
@@ -69,16 +73,38 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:labelFor="@+id/spinnerIntervalType"
             android:text="Select interval type:"
             android:textSize="18sp" />
 
-        <Spinner
-            android:id="@+id/spinnerIntervalType"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/input_control_height"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="8dp"
-            android:textSize="15sp" />
+            android:addStatesFromChildren="true"
+            android:background="@drawable/bg_input">
+
+            <Spinner
+                android:id="@+id/spinnerIntervalType"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:paddingStart="12dp"
+                android:paddingEnd="44dp"
+                android:spinnerMode="dropdown" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="12dp"
+                android:clickable="false"
+                android:focusable="false"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_arrow_drop_down" />
+
+        </FrameLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -160,4 +186,6 @@
 
     </LinearLayout>
 
-</RelativeLayout>
+    </RelativeLayout>
+
+</ScrollView>

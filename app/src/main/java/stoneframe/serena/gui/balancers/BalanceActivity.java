@@ -631,6 +631,7 @@ public class BalanceActivity extends AppCompatActivity implements BalancerEditor
                         throw new IllegalStateException("Unknown interval type: " + v);
                 }
             })
+            .withoutItemCard()
             .create();
 
         checkBoxIsEnabled.setChecked(balancerEditor.isEnabled());

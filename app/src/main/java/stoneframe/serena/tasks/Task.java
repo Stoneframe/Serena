@@ -2,12 +2,15 @@ package stoneframe.serena.tasks;
 
 import androidx.annotation.NonNull;
 
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 
 import stoneframe.serena.util.Revertible;
 
 public class Task extends Revertible<TaskData>
 {
+    static final LocalDate MAXIMUM_DEADLINE = new LocalDate(Long.MAX_VALUE, DateTimeZone.UTC);
+
     Task(String description, LocalDate deadline, LocalDate ignoreBefore)
     {
         super(new TaskData(
@@ -23,14 +26,34 @@ public class Task extends Revertible<TaskData>
         return data().description;
     }
 
+    void setDescription(String description)
+    {
+        data().description = description;
+    }
+
     public LocalDate getDeadline()
     {
-        return data().deadline == null ? new LocalDate(Long.MIN_VALUE) : data().deadline;
+        return data().deadline;
+    }
+
+    void setDeadline(LocalDate deadline)
+    {
+        data().deadline = deadline;
+    }
+
+    public boolean hasDeadline()
+    {
+        return !MAXIMUM_DEADLINE.equals(getDeadline());
     }
 
     public LocalDate getIgnoreBefore()
     {
         return data().ignoreBefore == null ? new LocalDate(-292275055, 1, 1) : data().ignoreBefore;
+    }
+
+    void setIgnoreBefore(LocalDate ignoreBefore)
+    {
+        data().ignoreBefore = ignoreBefore;
     }
 
     public boolean isDone()
@@ -43,19 +66,11 @@ public class Task extends Revertible<TaskData>
         return data().completed;
     }
 
-    void setDescription(String description)
+    @NonNull
+    @Override
+    public String toString()
     {
-        data().description = description;
-    }
-
-    void setDeadline(LocalDate deadline)
-    {
-        data().deadline = deadline;
-    }
-
-    void setIgnoreBefore(LocalDate ignoreBefore)
-    {
-        data().ignoreBefore = ignoreBefore;
+        return data().description;
     }
 
     void setDone(boolean done, LocalDate now)
@@ -64,10 +79,4 @@ public class Task extends Revertible<TaskData>
         data().completed = done ? now : null;
     }
 
-    @NonNull
-    @Override
-    public String toString()
-    {
-        return data().description;
-    }
 }

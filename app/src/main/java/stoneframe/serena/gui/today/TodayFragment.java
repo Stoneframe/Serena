@@ -198,7 +198,11 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
 
                     DatePicker datePicker = datePickerDialog.getDatePicker();
                     datePicker.setMinDate(LocalDate.now().toDateTimeAtStartOfDay().getMillis());
-                    datePicker.setMaxDate(task.getDeadline().toDateTimeAtStartOfDay().getMillis());
+
+                    if (task.hasDeadline())
+                    {
+                        datePicker.setMaxDate(task.getDeadline().toDateTimeAtStartOfDay().getMillis());
+                    }
 
                     datePickerDialog.show();
                 })

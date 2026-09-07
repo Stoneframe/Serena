@@ -1,6 +1,7 @@
 package stoneframe.serena.tasks;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.joda.time.LocalDate;
 
@@ -40,14 +41,16 @@ public class TaskEditor extends Editor<TaskEditor.TaskEditorListener>
         descriptionProperty.setValue(description);
     }
 
-    public LocalDate getDeadline()
+    public @Nullable LocalDate getDeadline()
     {
-        return deadlineProperty.getValue();
+        LocalDate deadline = deadlineProperty.getValue();
+
+        return Task.MAXIMUM_DEADLINE.equals(deadline) ? null : deadline;
     }
 
-    public void setDeadline(LocalDate deadline)
+    public void setDeadline(@Nullable LocalDate deadline)
     {
-        deadlineProperty.setValue(deadline);
+        deadlineProperty.setValue(deadline == null ? Task.MAXIMUM_DEADLINE : deadline);
     }
 
     public LocalDate getIgnoreBefore()

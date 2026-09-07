@@ -70,6 +70,7 @@ public class TaskManager
         }
 
         getContainer().maximumNumberOfTasksPerDay = maximumNumberOfTasksPerDay;
+        getContainer().numberOfTasksCompletedToday = 0;
     }
 
     public void incrementNumberOfTasksCompletedToday()
@@ -86,7 +87,7 @@ public class TaskManager
 
     public Task createTask()
     {
-        return new Task("", timeService.getToday(), timeService.getToday());
+        return new Task("", Task.MAXIMUM_DEADLINE, timeService.getToday());
     }
 
     public void complete(Task task)
@@ -196,7 +197,7 @@ public class TaskManager
     {
         LocalDate urgentDeadlineCutoff = today.plusWeeks(1);
 
-        return task.getDeadline().isBefore(urgentDeadlineCutoff);
+        return task.hasDeadline() && task.getDeadline().isBefore(urgentDeadlineCutoff);
     }
 
     @NonNull

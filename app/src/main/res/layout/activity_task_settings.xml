@@ -22,9 +22,11 @@
             android:text="Limit tasks per day" />
 
         <TextView
+            android:id="@+id/maximumTasksTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_md"
+            android:layout_marginStart="@dimen/space_lg"
+            android:layout_marginTop="@dimen/space_sm"
             android:labelFor="@+id/maximumTasksEditText"
             android:text="Maximum tasks per day" />
 
@@ -32,6 +34,7 @@
             android:id="@+id/maximumTasksEditText"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_lg"
             android:autofillHints=""
             android:inputType="number"
             tools:ignore="LabelFor" />

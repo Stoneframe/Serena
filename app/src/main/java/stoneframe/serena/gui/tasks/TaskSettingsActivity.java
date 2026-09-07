@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import stoneframe.serena.R;
 import stoneframe.serena.Serena;
@@ -20,6 +22,7 @@ public class TaskSettingsActivity extends AppCompatActivity
 {
     private CheckBox limitTasksCheckBox;
     private EditText maximumTasksEditText;
+    private TextView maximumTasksTextView;
 
     private Button cancelButton;
     private Button saveButton;
@@ -38,6 +41,7 @@ public class TaskSettingsActivity extends AppCompatActivity
 
         limitTasksCheckBox = findViewById(R.id.limitTasksCheckBox);
         maximumTasksEditText = findViewById(R.id.maximumTasksEditText);
+        maximumTasksTextView = findViewById(R.id.maximumTasksTextView);
 
         cancelButton = findViewById(R.id.cancelButton);
         saveButton = findViewById(R.id.saveButton);
@@ -46,14 +50,15 @@ public class TaskSettingsActivity extends AppCompatActivity
         boolean isLimited = maximumNumberOfTasks != null;
 
         limitTasksCheckBox.setChecked(isLimited);
-        maximumTasksEditText.setEnabled(isLimited);
 
         if (isLimited)
         {
             maximumTasksEditText.setText(Integer.toString(maximumNumberOfTasks));
         }
 
-        limitTasksCheckBox.setOnClickListener(v -> maximumTasksEditText.setEnabled(limitTasksCheckBox.isChecked()));
+        updateMaximumTasksControls();
+
+        limitTasksCheckBox.setOnClickListener(v -> updateMaximumTasksControls());
 
         cancelButton.setOnClickListener(v -> onCancelClick());
         saveButton.setOnClickListener(v -> onSaveClick());
@@ -107,6 +112,23 @@ public class TaskSettingsActivity extends AppCompatActivity
         catch (NumberFormatException e)
         {
             return false;
+        }
+    }
+
+    private void updateMaximumTasksControls()
+    {
+        boolean isLimited = limitTasksCheckBox.isChecked();
+
+        maximumTasksEditText.setEnabled(isLimited);
+
+        if (isLimited)
+        {
+            maximumTasksTextView.setTextColor(ContextCompat.getColor(this, R.color.text_primary));
+        }
+        else
+        {
+            maximumTasksTextView.setTextColor(ContextCompat.getColor(this, R.color.text_disabled));
+            maximumTasksEditText.setText("");
         }
     }
 }

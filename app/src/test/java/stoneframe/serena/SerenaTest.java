@@ -1,11 +1,13 @@
 package stoneframe.serena;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.junit.Before;
@@ -254,6 +256,87 @@ public class SerenaTest
     {
         addTask("Task");
         assertAllTasksEquals(false, "Task");
+    }
+
+    @Test
+    public void createTask_newTask_hasNoDeadline()
+    {
+        Task task = serena.getTaskManager().createTask();
+
+        assertFalse(task.hasDeadline());
+        assertEquals(new LocalDate(Long.MAX_VALUE, DateTimeZone.UTC), task.getDeadline());
+        assertEquals(null, serena.getTaskManager().getTaskEditor(task).getDeadline());
+    }
+
+    @Test
+    public void setDeadline_null_clearsDeadline()
+    {
+        Task task = serena.getTaskManager().createTask();
+        TaskEditor taskEditor = serena.getTaskManager().getTaskEditor(task);
+
+        taskEditor.setDeadline(TODAY.plusDays(1));
+        assertTrue(task.hasDeadline());
+
+        taskEditor.setDeadline(null);
+        assertFalse(task.hasDeadline());
+        assertEquals(new LocalDate(Long.MAX_VALUE, DateTimeZone.UTC), task.getDeadline());
+        assertEquals(null, taskEditor.getDeadline());
+    }
+
+    @Test
+    public void setDeadline_nullWhenAlreadyUnset_doesNotNotifyListener()
+    {
+        Task task = serena.getTaskManager().createTask();
+        TaskEditor taskEditor = serena.getTaskManager().getTaskEditor(task);
+        int[] numberOfDeadlineChanges = {0};
+
+        taskEditor.addListener(new TaskEditor.TaskEditorListener()
+        {
+            @Override
+            public void descriptionChanged()
+            {
+            }
+
+            @Override
+            public void deadlineChanged()
+            {
+                numberOfDeadlineChanges[0]++;
+            }
+
+            @Override
+            public void ignoreBeforeChanged()
+            {
+            }
+
+            @Override
+            public void isDoneChanged()
+            {
+            }
+        });
+
+        taskEditor.setDeadline(null);
+
+        assertEquals(0, numberOfDeadlineChanges[0]);
+    }
+
+    @Test
+    public void getAllTasks_taskWithoutDeadline_sortsLast()
+    {
+        addTask("No Deadline");
+        addTask("Later Deadline", TODAY.plusDays(10));
+        addTask("Sooner Deadline", TODAY.plusDays(5));
+
+        assertAllTasksEquals(false, "Sooner Deadline", "Later Deadline", "No Deadline");
+    }
+
+    @Test
+    public void getTodaysTasks_taskWithoutDeadline_doesNotBypassLimit()
+    {
+        serena.getTaskManager().setMaximumNumberOfTasksPerDay(1);
+        addTask("No Deadline");
+        addTask("Dated Task", TODAY.plusDays(10));
+
+        assertTodaysTasksEquals("Dated Task");
     }
 
     @Test

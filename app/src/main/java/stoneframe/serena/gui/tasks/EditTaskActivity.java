@@ -1,6 +1,7 @@
 package stoneframe.serena.gui.tasks;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.text.InputType;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -14,7 +15,6 @@ import stoneframe.serena.gui.EditActivity;
 import stoneframe.serena.gui.util.SpeechRecognizerUtil;
 import stoneframe.serena.gui.util.enable.EditTextCriteria;
 import stoneframe.serena.gui.util.enable.EnableCriteria;
-import stoneframe.serena.tasks.Task;
 import stoneframe.serena.tasks.TaskEditor;
 
 public class EditTaskActivity extends EditActivity
@@ -52,12 +52,10 @@ public class EditTaskActivity extends EditActivity
     @Override
     protected void createActivity()
     {
-        Task task = globalState.getActiveTask();
+        taskEditor = serena.getTaskManager().getTaskEditor(globalState.getActiveTask());
 
-        taskEditor = serena.getTaskManager().getTaskEditor(task);
-
-        deadline = taskEditor.getDeadline();
         ignoreBefore = taskEditor.getIgnoreBefore();
+        deadline = taskEditor.getDeadline();
 
         descriptionEditText = findViewById(R.id.taskDescriptionEditText);
         deadlineEditText = findViewById(R.id.deadlineEditText);
@@ -66,7 +64,7 @@ public class EditTaskActivity extends EditActivity
         speakButton = findViewById(R.id.speakButton);
 
         descriptionEditText.setText(taskEditor.getDescription());
-        deadlineEditText.setText(deadline.toString("yyyy-MM-dd"));
+        deadlineEditText.setText(deadline == null ? "" : deadline.toString("yyyy-MM-dd"));
         ignoreBeforeEditText.setText(ignoreBefore.toString("yyyy-MM-dd"));
         isDoneCheckBox.setChecked(taskEditor.isDone());
 
@@ -132,6 +130,10 @@ public class EditTaskActivity extends EditActivity
 
     private void showDeadlineDatePickerDialog()
     {
+        LocalDate initialDeadline = deadline == null
+            ? getInitialDeadline(ignoreBefore)
+            : deadline;
+
         DatePickerDialog deadlinePickerDialog = new DatePickerDialog(
             this,
             (view, year, month, dayOfMonth) ->
@@ -145,12 +147,21 @@ public class EditTaskActivity extends EditActivity
                     ignoreBeforeEditText.setText(ignoreBefore.toString("yyyy-MM-dd"));
                 }
             },
-            deadline.getYear(),
-            deadline.getMonthOfYear() - 1,
-            deadline.getDayOfMonth());
+            initialDeadline.getYear(),
+            initialDeadline.getMonthOfYear() - 1,
+            initialDeadline.getDayOfMonth());
 
         DatePicker datePicker = deadlinePickerDialog.getDatePicker();
         datePicker.setMinDate(LocalDate.now().toDateTimeAtStartOfDay().getMillis());
+
+        deadlinePickerDialog.setButton(
+            DialogInterface.BUTTON_NEUTRAL,
+            "Clear",
+            (dialog, which) ->
+            {
+                deadline = null;
+                deadlineEditText.setText("");
+            });
 
         deadlinePickerDialog.show();
     }
@@ -170,8 +181,19 @@ public class EditTaskActivity extends EditActivity
 
         DatePicker datePicker = ignoreBeforePickerDialog.getDatePicker();
         datePicker.setMinDate(LocalDate.now().toDateTimeAtStartOfDay().getMillis());
-        datePicker.setMaxDate(deadline.toDateTimeAtStartOfDay().getMillis());
+
+        if (deadline != null)
+        {
+            datePicker.setMaxDate(deadline.toDateTimeAtStartOfDay().getMillis());
+        }
 
         ignoreBeforePickerDialog.show();
+    }
+
+    private static LocalDate getInitialDeadline(LocalDate ignoreBefore)
+    {
+        LocalDate today = LocalDate.now();
+
+        return ignoreBefore.isAfter(today) ? ignoreBefore : today;
     }
 }

@@ -78,6 +78,10 @@ public class AllTasksFragment extends Fragment
             startTaskEditor(task, EditTaskActivity.ACTION_ADD);
         });
 
+        Button settingsButton = rootView.findViewById(R.id.settings_button);
+        settingsButton.setOnClickListener(v ->
+            startActivity(new Intent(getActivity(), TaskSettingsActivity.class)));
+
         editTaskLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             this::editTaskCallback);

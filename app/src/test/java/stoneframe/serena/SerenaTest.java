@@ -300,6 +300,119 @@ public class SerenaTest
     }
 
     @Test
+    public void getTodaysTasks_withLimit_returnsTasksUpToLimit()
+    {
+        serena.getTaskManager().setMaximumNumberOfTasksPerDay(2);
+        addTask("A Task", TODAY.plusDays(10));
+        addTask("B Task", TODAY.plusDays(11));
+        addTask("C Task", TODAY.plusDays(12));
+
+        assertTodaysTasksEquals("A Task", "B Task");
+    }
+
+    @Test
+    public void getTodaysTasks_completedTask_doesNotAddReplacementTask()
+    {
+        serena.getTaskManager().setMaximumNumberOfTasksPerDay(2);
+        addTask("A Task", TODAY.plusDays(10));
+        addTask("B Task", TODAY.plusDays(11));
+        addTask("C Task", TODAY.plusDays(12));
+
+        completeTask("A Task");
+
+        assertTodaysTasksEquals("B Task");
+    }
+
+    @Test
+    public void getTodaysTasks_undoCompletion_restoresDailySlot()
+    {
+        serena.getTaskManager().setMaximumNumberOfTasksPerDay(2);
+        addTask("A Task", TODAY.plusDays(10));
+        addTask("B Task", TODAY.plusDays(11));
+        addTask("C Task", TODAY.plusDays(12));
+        completeTask("A Task");
+
+        serena.getTaskManager().undo(getTask("A Task"));
+
+        assertTodaysTasksEquals("A Task", "B Task");
+    }
+
+    @Test
+    public void getTodaysTasks_nextDay_resetsCompletionCount()
+    {
+        serena.getTaskManager().setMaximumNumberOfTasksPerDay(2);
+        addTask("A Task", TODAY.plusDays(10));
+        addTask("B Task", TODAY.plusDays(11));
+        addTask("C Task", TODAY.plusDays(12));
+        completeTask("A Task");
+        assertTodaysTasksEquals("B Task");
+
+        timeService.setNow(TODAY.plusDays(1).toLocalDateTime(LocalTime.MIDNIGHT));
+
+        assertTodaysTasksEquals("B Task", "C Task");
+    }
+
+    @Test
+    public void getTodaysTasks_urgentTasks_exceedLimitButExactlySevenDaysDoesNot()
+    {
+        serena.getTaskManager().setMaximumNumberOfTasksPerDay(1);
+        addTask("Urgent A", TODAY.plusDays(5));
+        addTask("Urgent B", TODAY.plusDays(6));
+        addTask("Seven Days", TODAY.plusDays(7));
+
+        assertTodaysTasksEquals("Urgent A", "Urgent B");
+    }
+
+    @Test
+    public void getTodaysTasks_urgentTasksWithinLimit_useConfiguredSlots()
+    {
+        serena.getTaskManager().setMaximumNumberOfTasksPerDay(5);
+        addTask("Urgent A", TODAY.plusDays(3));
+        addTask("Urgent B", TODAY.plusDays(4));
+        addTask("Urgent C", TODAY.plusDays(5));
+        addTask("Later A", TODAY.plusDays(10));
+        addTask("Later B", TODAY.plusDays(11));
+        addTask("Later C", TODAY.plusDays(12));
+
+        assertTodaysTasksEquals(
+            "Urgent A", "Urgent B", "Urgent C", "Later A", "Later B");
+    }
+
+    @Test
+    public void getTodaysTasks_taskEditorCompletesAndUndoesTask_updatesDailySlots()
+    {
+        serena.getTaskManager().setMaximumNumberOfTasksPerDay(2);
+        addTask("A Task", TODAY.plusDays(10));
+        addTask("B Task", TODAY.plusDays(11));
+        addTask("C Task", TODAY.plusDays(12));
+        TaskEditor taskEditor = serena.getTaskManager().getTaskEditor(getTask("A Task"));
+
+        taskEditor.setDone(true);
+        assertTodaysTasksEquals("B Task");
+
+        taskEditor.setDone(false);
+        assertTodaysTasksEquals("A Task", "B Task");
+    }
+
+    @Test
+    public void incrementNumberOfTasksCompletedToday_consumesDailySlot()
+    {
+        serena.getTaskManager().setMaximumNumberOfTasksPerDay(2);
+        addTask("A Task", TODAY.plusDays(10));
+        addTask("B Task", TODAY.plusDays(11));
+
+        serena.getTaskManager().incrementNumberOfTasksCompletedToday();
+
+        assertTodaysTasksEquals("A Task");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void setMaximumNumberOfTasksPerDay_zero_throwsException()
+    {
+        serena.getTaskManager().setMaximumNumberOfTasksPerDay(0);
+    }
+
+    @Test
     public void getAllRoutines_noRoutinesAdded_returnEmptyList()
     {
         assertAllRoutinesIsEmpty();

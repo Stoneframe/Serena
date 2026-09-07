@@ -43,6 +43,10 @@
         <activity
             android:name=".gui.tasks.EditTaskActivity"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".gui.tasks.TaskSettingsActivity"
+            android:label="Task settings"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".gui.routines.RoutineOverviewActivity" />
         <activity
             android:name=".gui.routines.days.DayRoutineActivity"

@@ -1,9 +1,11 @@
 package stoneframe.serena.tasks;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.joda.time.LocalDate;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -42,11 +44,39 @@ public class TaskManager
 
         removeOldCompletedTasks(today);
 
-        return getContainer().tasks.stream()
-            .filter(t -> !t.isDone())
-            .filter(t -> t.getIgnoreBefore().isBefore(today) || t.getIgnoreBefore().isEqual(today))
-            .sorted(getTaskComparator())
-            .collect(Collectors.toList());
+        List<Task> selectedTasks = new ArrayList<>();
+
+        for (Task task : getAllEligibleTasks(today))
+        {
+            if (isUrgent(task, today) || selectedTasks.size() < getRemainingNumberOfTasksToday())
+            {
+                selectedTasks.add(task);
+            }
+        }
+
+        return selectedTasks;
+    }
+
+    public @Nullable Integer getMaximumNumberOfTasksPerDay()
+    {
+        return getContainer().maximumNumberOfTasksPerDay;
+    }
+
+    public void setMaximumNumberOfTasksPerDay(@Nullable Integer maximumNumberOfTasksPerDay)
+    {
+        if (maximumNumberOfTasksPerDay != null && maximumNumberOfTasksPerDay < 1)
+        {
+            throw new IllegalArgumentException("Maximum number of tasks must be at least 1.");
+        }
+
+        getContainer().maximumNumberOfTasksPerDay = maximumNumberOfTasksPerDay;
+    }
+
+    public void incrementNumberOfTasksCompletedToday()
+    {
+        resetCompletionCountIfDateChanged();
+
+        getContainer().numberOfTasksCompletedToday++;
     }
 
     public TaskEditor getTaskEditor(Task task)
@@ -61,11 +91,28 @@ public class TaskManager
 
     public void complete(Task task)
     {
+        if (task.isDone())
+        {
+            return;
+        }
+
         task.setDone(true, timeService.getToday());
+
+        incrementNumberOfTasksCompletedToday();
     }
 
     public void undo(Task task)
     {
+        if (!task.isDone())
+        {
+            return;
+        }
+
+        if (timeService.getToday().equals(task.getCompleted()))
+        {
+            decrementNumberOfTasksCompletedToday();
+        }
+
         task.setDone(false, null);
     }
 
@@ -89,9 +136,67 @@ public class TaskManager
         getContainer().tasks.removeIf(isCompletedOverOneWeekAgo(today));
     }
 
+    private int getNumberOfTasksCompletedToday()
+    {
+        resetCompletionCountIfDateChanged();
+
+        return getContainer().numberOfTasksCompletedToday;
+    }
+
+    private void decrementNumberOfTasksCompletedToday()
+    {
+        resetCompletionCountIfDateChanged();
+
+        if (getContainer().numberOfTasksCompletedToday == 0)
+        {
+            return;
+        }
+
+        getContainer().numberOfTasksCompletedToday--;
+    }
+
+    private void resetCompletionCountIfDateChanged()
+    {
+        LocalDate today = timeService.getToday();
+
+        if (!today.equals(getContainer().taskCompletionCountDate))
+        {
+            getContainer().taskCompletionCountDate = today;
+            getContainer().numberOfTasksCompletedToday = 0;
+        }
+    }
+
     private static @NonNull Predicate<Task> isCompletedOverOneWeekAgo(LocalDate today)
     {
         return t -> t.isDone() && t.getCompleted().plusWeeks(1).isBefore(today);
+    }
+
+    private @NonNull List<Task> getAllEligibleTasks(LocalDate today)
+    {
+        return getContainer().tasks.stream()
+            .filter(t -> !t.isDone())
+            .filter(t -> t.getIgnoreBefore().isBefore(today) || t.getIgnoreBefore().isEqual(today))
+            .sorted(getTaskComparator())
+            .collect(Collectors.toList());
+    }
+
+    private int getRemainingNumberOfTasksToday()
+    {
+        Integer maxNumberOfTasksToday = getMaximumNumberOfTasksPerDay();
+
+        if (maxNumberOfTasksToday == null)
+        {
+            maxNumberOfTasksToday = Integer.MAX_VALUE;
+        }
+
+        return Math.max(0, maxNumberOfTasksToday - getNumberOfTasksCompletedToday());
+    }
+
+    private static boolean isUrgent(Task task, LocalDate today)
+    {
+        LocalDate urgentDeadlineCutoff = today.plusWeeks(1);
+
+        return task.getDeadline().isBefore(urgentDeadlineCutoff);
     }
 
     @NonNull

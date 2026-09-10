@@ -210,7 +210,7 @@
             android:layout_height="match_parent"
             android:divider="@color/outline"
             android:dividerHeight="1dp"
-            android:listSelector="@color/surface_pressed" />
+            android:listSelector="@drawable/favorite_item_selector" />
 
         <TextView
             android:id="@+id/textViewEmptyFavorites"

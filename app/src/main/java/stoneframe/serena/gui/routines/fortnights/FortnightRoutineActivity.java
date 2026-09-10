@@ -16,6 +16,7 @@ import java.util.List;
 import stoneframe.serena.R;
 import stoneframe.serena.gui.routines.EditRoutineActivity;
 import stoneframe.serena.gui.routines.util.WeekExpandableListAdaptor;
+import stoneframe.serena.gui.util.DialogUtils;
 import stoneframe.serena.routines.FortnightRoutine;
 import stoneframe.serena.routines.FortnightRoutineEditor;
 import stoneframe.serena.routines.Procedure;
@@ -247,6 +248,9 @@ public class FortnightRoutineActivity extends EditRoutineActivity<FortnightRouti
 
         AlertDialog alert = builder.create();
         alert.show();
+        DialogUtils.addButtonStartSpacing(
+            this,
+            alert.getButton(AlertDialog.BUTTON_POSITIVE));
     }
 
     private void removeProcedure(int week, int weekDay, Procedure procedure)

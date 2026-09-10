@@ -8,6 +8,7 @@ import java.util.List;
 import stoneframe.serena.R;
 import stoneframe.serena.gui.routines.EditRoutineActivity;
 import stoneframe.serena.gui.routines.util.WeekExpandableListAdaptor;
+import stoneframe.serena.gui.util.DialogUtils;
 import stoneframe.serena.routines.Procedure;
 import stoneframe.serena.routines.WeekRoutine;
 import stoneframe.serena.routines.WeekRoutineEditor;
@@ -167,6 +168,9 @@ public class WeekRoutineActivity extends EditRoutineActivity<WeekRoutine, WeekRo
 
         AlertDialog alert = builder.create();
         alert.show();
+        DialogUtils.addButtonStartSpacing(
+            this,
+            alert.getButton(AlertDialog.BUTTON_POSITIVE));
     }
 
     private void removeProcedure(int weekDay, Procedure procedure)

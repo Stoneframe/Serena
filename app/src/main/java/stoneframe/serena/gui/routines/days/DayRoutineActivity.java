@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import stoneframe.serena.R;
 import stoneframe.serena.gui.routines.EditRoutineActivity;
 import stoneframe.serena.gui.routines.util.ProcedureListAdapter;
+import stoneframe.serena.gui.util.DialogUtils;
 import stoneframe.serena.routines.DayRoutine;
 import stoneframe.serena.routines.DayRoutineEditor;
 import stoneframe.serena.routines.Procedure;
@@ -103,6 +104,9 @@ public class DayRoutineActivity extends EditRoutineActivity<DayRoutine, DayRouti
 
         AlertDialog alert = builder.create();
         alert.show();
+        DialogUtils.addButtonStartSpacing(
+            this,
+            alert.getButton(AlertDialog.BUTTON_POSITIVE));
 
         return true;
     }

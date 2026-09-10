@@ -47,12 +47,18 @@
         android:orientation="horizontal">
 
         <Button
+            style="@style/Widget.Serena.Button.Secondary"
             android:id="@+id/cancelButton"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="44dp"
             android:layout_marginEnd="6dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_sleep_secondary_button"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:minWidth="0dp"
+            android:minHeight="44dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
             android:text="Cancel"
             android:textColor="@color/brand_primary" />
 
@@ -60,11 +66,16 @@
             style="@style/Widget.Serena.Button.Danger"
             android:id="@+id/removeButton"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="44dp"
             android:layout_marginStart="6dp"
             android:layout_marginEnd="6dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_button_danger"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:minWidth="0dp"
+            android:minHeight="44dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
             android:text="Remove"
             android:textColor="@color/status_error" />
 
@@ -72,10 +83,16 @@
             style="@style/Widget.Serena.Button.Primary"
             android:id="@+id/saveButton"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="44dp"
             android:layout_marginStart="6dp"
             android:layout_weight="1"
             android:background="@drawable/bg_sleep_primary_button"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:minWidth="0dp"
+            android:minHeight="44dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
             android:text="Save"
             android:textColor="@color/on_brand" />
 

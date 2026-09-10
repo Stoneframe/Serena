@@ -226,12 +226,12 @@ public class PreviousSleepSessionsActivity extends AppCompatActivity
             }
 
             Sleep.SleepSession session = getItem(position);
-            TextView startTextView = convertView.findViewById(R.id.startTextView);
-            TextView stopTextView = convertView.findViewById(R.id.stopTextView);
+            TextView startTimeTextView = convertView.findViewById(R.id.startTimeTextView);
+            TextView stopTimeTextView = convertView.findViewById(R.id.stopTimeTextView);
             TextView durationTextView = convertView.findViewById(R.id.durationTextView);
 
-            startTextView.setText("Start: " + formatDateTime(session.getStartTime()));
-            stopTextView.setText("Stop: " + formatDateTime(session.getStopTime()));
+            startTimeTextView.setText(formatDateTime(session.getStartTime()));
+            stopTimeTextView.setText(formatDateTime(session.getStopTime()));
             durationTextView.setText(formatMinutes(session.getSleepTime()));
 
             return convertView;

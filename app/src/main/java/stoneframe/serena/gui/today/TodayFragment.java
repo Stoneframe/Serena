@@ -393,6 +393,9 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
             reminderDialogs.add(alert);
 
             alert.show();
+            DialogUtils.addButtonStartSpacing(
+                requireContext(),
+                alert.getButton(AlertDialog.BUTTON_POSITIVE));
         }
     }
 

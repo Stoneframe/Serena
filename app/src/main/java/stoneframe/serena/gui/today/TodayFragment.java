@@ -25,6 +25,7 @@ import androidx.fragment.app.Fragment;
 
 import org.joda.time.LocalDate;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +42,6 @@ import stoneframe.serena.SerenaChangedListener;
 import stoneframe.serena.chores.Chore;
 import stoneframe.serena.chores.ChoreManager;
 import stoneframe.serena.reminders.Reminder;
-import stoneframe.serena.reminders.ReminderEditor;
 import stoneframe.serena.reminders.ReminderManager;
 import stoneframe.serena.routines.PendingProcedure;
 import stoneframe.serena.routines.RoutineManager;
@@ -56,6 +56,8 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
     private final HashMap<PendingProcedure, Runnable> procedureRemovals = new HashMap<>();
     private final HashMap<Chore, Runnable> choreRemovals = new HashMap<>();
     private final HashMap<Task, Runnable> taskRemovals = new HashMap<>();
+
+    private final List<AlertDialog> reminderDialogs = new ArrayList<>();
 
     private final Handler handler = new Handler();
 
@@ -311,6 +313,8 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
 
         serena.removeChangedListener(this);
 
+        dismissReminderDialogs();
+
         completePendingRemovals(procedureRemovals);
         completePendingRemovals(choreRemovals);
         completePendingRemovals(taskRemovals);
@@ -377,15 +381,25 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
 
         for (Reminder reminder : pendingReminders)
         {
-            new AlertDialog.Builder(requireContext())
+            AlertDialog alert = new AlertDialog.Builder(requireContext())
                 .setTitle("Reminder")
                 .setMessage(reminder.getText())
                 .setPositiveButton("Done", (dialog, which) ->
                     handleReminder(reminderManager, reminder, true))
                 .setNegativeButton("Snooze", (dialog, which) ->
                     handleReminder(reminderManager, reminder, false))
-                .show();
+                .create();
+
+            reminderDialogs.add(alert);
+
+            alert.show();
         }
+    }
+
+    private void dismissReminderDialogs()
+    {
+        reminderDialogs.forEach(AlertDialog::dismiss);
+        reminderDialogs.clear();
     }
 
     private void handleReminder(

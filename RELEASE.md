@@ -6,16 +6,23 @@ remain local and are never committed.
 
 ## One-time local signing setup
 
-1. Copy `keystore.properties.example` to `keystore.properties`.
-2. Set `storeFile`, `storePassword`, `keyAlias`, and `keyPassword`.
-3. Keep the keystore and `keystore.properties` outside version control.
-4. Ensure the machine has a writable Gradle cache. If Gradle reports an inaccessible
+1. Create a local `keystore.properties` file with these keys:
+
+   ```properties
+   storeFile=path/to/serena-release.keystore
+   storePassword=your-store-password
+   keyAlias=your-key-alias
+   keyPassword=your-key-password
+   ```
+
+2. Keep the keystore and `keystore.properties` outside version control.
+3. Ensure the machine has a writable Gradle cache. If Gradle reports an inaccessible
    wrapper lock, set `GRADLE_USER_HOME` to a writable local cache directory before running the release script.
 
 ## Prepare a release
 
-Commit the release tooling (`.gitignore`, `RELEASE.md`, the signing template,
-and `scripts/release.ps1`) before preparing the release. Leave `app/build.gradle`
+Commit the release tooling (`.gitignore`, `RELEASE.md`, and `scripts/release.ps1`)
+before preparing the release. Leave `app/build.gradle`
 and `CHANGELOG.md` as the release changes for finalization. The script intentionally
 rejects unrelated working-tree changes.
 

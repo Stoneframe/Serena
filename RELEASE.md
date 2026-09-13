@@ -35,8 +35,9 @@ rejects unrelated working-tree changes.
    .\scripts\release.ps1 -VersionName 1.7 -VersionCode 2 -Verify
    ```
 
-The verification mode runs unit tests, builds the signed release APK, checks its
-signature and package metadata, and reports its SHA-256 checksum.
+The verification mode runs unit tests, builds the signed release APK, copies it
+to `app\release\`, checks its signature and package metadata, and reports its
+SHA-256 checksum.
 
 ## Finalize and tag
 
@@ -53,6 +54,7 @@ not push commits or upload the APK.
 
 ## Manual handoff
 
-Install the APK over the previous release and perform the smoke checks for
-reminders, sleep sessions, Today, tasks, Balancers, routines, notes, and data
-migrations. Hand off the verified APK together with the checksum and changelog.
+Install `app\release\Serena-v<version>-release.apk` over the previous release
+and perform the smoke checks for reminders, sleep sessions, Today, tasks,
+Balancers, routines, notes, and data migrations. Hand off the verified APK
+together with the checksum and changelog.

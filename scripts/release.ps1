@@ -20,6 +20,7 @@ $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $buildGradle = Join-Path $repoRoot 'app\build.gradle'
 $changelog = Join-Path $repoRoot 'CHANGELOG.md'
 $keystorePropertiesFile = Join-Path $repoRoot 'keystore.properties'
+$releaseDirectory = Join-Path $repoRoot 'app\release'
 $gradlew = Join-Path $repoRoot 'gradlew.bat'
 $tagName = "Release-$VersionName"
 $releaseCommitMessage = "Release $VersionName"
@@ -164,10 +165,15 @@ function Assert-ReleaseArtifact {
     if ($apkFiles.Count -ne 1) {
         Fail "Expected exactly one signed release APK in $apkDirectory. Remove stale outputs and verify signing configuration."
     }
-    $apk = $apkFiles[0]
-    if ($apk.Name -notmatch [regex]::Escape("Serena-v$VersionName")) {
-        Fail "Release APK has an unexpected name: $($apk.Name)"
+    $builtApk = $apkFiles[0]
+    if ($builtApk.Name -notmatch [regex]::Escape("Serena-v$VersionName")) {
+        Fail "Release APK has an unexpected name: $($builtApk.Name)"
     }
+
+    New-Item -ItemType Directory -Path $releaseDirectory -Force | Out-Null
+    $releaseApkPath = Join-Path $releaseDirectory $builtApk.Name
+    Copy-Item -LiteralPath $builtApk.FullName -Destination $releaseApkPath -Force
+    $apk = Get-Item -LiteralPath $releaseApkPath
 
     $apksigner = Get-BuildTool 'apksigner.bat'
     $aapt = Get-BuildTool 'aapt.exe'

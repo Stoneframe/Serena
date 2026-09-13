@@ -1,12 +1,19 @@
-[CmdletBinding()]
+[CmdletBinding(DefaultParameterSetName = 'Verify')]
 param(
-    [Parameter(Mandatory = $true)]
+    [Parameter(Mandatory = $true, ParameterSetName = 'Prepare')]
+    [Parameter(Mandatory = $true, ParameterSetName = 'Verify')]
+    [Parameter(Mandatory = $true, ParameterSetName = 'Finalize')]
     [ValidatePattern('^\d+\.\d+$')]
     [string]$VersionName,
 
-    [Parameter(Mandatory = $true)]
+    [Parameter(ParameterSetName = 'Prepare')]
+    [Parameter(ParameterSetName = 'Verify')]
+    [Parameter(ParameterSetName = 'Finalize')]
     [ValidateRange(1, 2147483647)]
     [int]$VersionCode,
+
+    [Parameter(Mandatory = $true, ParameterSetName = 'Prepare')]
+    [switch]$Prepare,
 
     [Parameter(Mandatory = $true, ParameterSetName = 'Verify')]
     [switch]$Verify,
@@ -43,6 +50,90 @@ function Get-GitOutput([string[]]$Arguments) {
         Fail "Git command failed: git $($Arguments -join ' ')"
     }
     return @($output)
+}
+
+function Get-AppMetadata {
+    $gradleText = Get-Content -LiteralPath $buildGradle -Raw
+    $versionNameMatch = [regex]::Match($gradleText, 'versionName\s+["'']([^"'']+)["'']')
+    $versionCodeMatch = [regex]::Match($gradleText, 'versionCode\s+(\d+)')
+    if (-not $versionNameMatch.Success -or -not $versionCodeMatch.Success) {
+        Fail 'Could not read versionName and versionCode from app/build.gradle.'
+    }
+
+    return [pscustomobject]@{
+        VersionName = $versionNameMatch.Groups[1].Value
+        VersionCode = [int]$versionCodeMatch.Groups[1].Value
+    }
+}
+
+function Set-AppMetadata([string]$NewVersionName, [int]$NewVersionCode) {
+    $gradleText = Get-Content -LiteralPath $buildGradle -Raw
+    $versionNamePattern = '(?m)^([ \t]*versionName[ \t]+["''])([^"'']+)(["''][ \t]*)(\r?)$'
+    $versionCodePattern = '(?m)^([ \t]*versionCode[ \t]+)\d+([ \t]*)(\r?)$'
+    if ([regex]::Matches($gradleText, $versionNamePattern).Count -ne 1) {
+        Fail 'Expected exactly one versionName line in app/build.gradle.'
+    }
+    if ([regex]::Matches($gradleText, $versionCodePattern).Count -ne 1) {
+        Fail 'Expected exactly one versionCode line in app/build.gradle.'
+    }
+
+    $updatedText = [regex]::Replace(
+            $gradleText,
+            $versionNamePattern,
+            '${1}' + $NewVersionName + '${3}${4}',
+            1
+    )
+    $updatedText = [regex]::Replace(
+            $updatedText,
+            $versionCodePattern,
+            '${1}' + $NewVersionCode + '${2}${3}',
+            1
+    )
+    [System.IO.File]::WriteAllText(
+            $buildGradle,
+            $updatedText,
+            [System.Text.UTF8Encoding]::new($false)
+    )
+}
+
+function Add-ChangelogEntry([string]$NewVersionName) {
+    $changelogText = Get-Content -LiteralPath $changelog -Raw
+    $headingPattern = "(?m)^##\s+$([regex]::Escape($NewVersionName))(\s|$)"
+    if ([regex]::IsMatch($changelogText, $headingPattern)) {
+        Fail "CHANGELOG.md already contains an entry for version $NewVersionName."
+    }
+
+    $firstLineEnd = $changelogText.IndexOf("`n")
+    if ($firstLineEnd -lt 0 -or $changelogText.Substring(0, $firstLineEnd).Trim("`r") -ne '# Changelog') {
+        Fail 'CHANGELOG.md must begin with a # Changelog heading.'
+    }
+
+    $lineEnding = if ($changelogText.Contains("`r`n")) { "`r`n" } else { "`n" }
+    $date = Get-Date -Format 'yyyy-MM-dd'
+    $entry = @(
+        "## $NewVersionName - $date",
+        '',
+        '### Added',
+        '',
+        '- TODO: describe additions.',
+        '',
+        '### Changed',
+        '',
+        '- TODO: describe changes.',
+        '',
+        '### Fixed',
+        '',
+        '- TODO: describe fixes.',
+        ''
+    ) -join $lineEnding
+    $entry = $lineEnding + $entry + $lineEnding
+    $insertAt = $firstLineEnd + 1
+    $updatedText = $changelogText.Substring(0, $insertAt) + $entry + $changelogText.Substring($insertAt)
+    [System.IO.File]::WriteAllText(
+            $changelog,
+            $updatedText,
+            [System.Text.UTF8Encoding]::new($false)
+    )
 }
 
 function Invoke-Gradle([string[]]$Tasks) {
@@ -105,15 +196,13 @@ function Assert-WorkingTree {
     }
 }
 
-function Assert-ReleaseMetadata {
-    $gradleText = Get-Content -LiteralPath $buildGradle -Raw
-    $versionNameMatch = [regex]::Match($gradleText, 'versionName\s+["'']([^"'']+)["'']')
-    $versionCodeMatch = [regex]::Match($gradleText, 'versionCode\s+(\d+)')
-    if (-not $versionNameMatch.Success -or $versionNameMatch.Groups[1].Value -ne $VersionName) {
+function Assert-ReleaseMetadata([int]$ExpectedVersionCode) {
+    $metadata = Get-AppMetadata
+    if ($metadata.VersionName -ne $VersionName) {
         Fail "app/build.gradle must set versionName to $VersionName."
     }
-    if (-not $versionCodeMatch.Success -or [int]$versionCodeMatch.Groups[1].Value -ne $VersionCode) {
-        Fail "app/build.gradle must set versionCode to $VersionCode."
+    if ($metadata.VersionCode -ne $ExpectedVersionCode) {
+        Fail "app/build.gradle must set versionCode to $ExpectedVersionCode."
     }
 
     if (-not (Test-Path -LiteralPath $changelog)) {
@@ -122,6 +211,9 @@ function Assert-ReleaseMetadata {
     $headingPattern = "^##\s+$([regex]::Escape($VersionName))(\s|$)"
     if (-not (Select-String -LiteralPath $changelog -Pattern $headingPattern -Quiet)) {
         Fail "CHANGELOG.md must contain a heading for version $VersionName."
+    }
+    if (Select-String -LiteralPath $changelog -Pattern 'TODO: describe' -Quiet) {
+        Fail 'Replace the generated TODO changelog entries before verification.'
     }
 }
 
@@ -158,7 +250,7 @@ function Assert-NoExistingTag {
     }
 }
 
-function Assert-ReleaseArtifact {
+function Assert-ReleaseArtifact([int]$ExpectedVersionCode) {
     $apkDirectory = Join-Path $repoRoot 'app\build\outputs\apk\release'
     $apkFiles = @(Get-ChildItem -LiteralPath $apkDirectory -File -Filter '*.apk' -ErrorAction SilentlyContinue |
         Where-Object { $_.Name -notmatch '-unsigned\.apk$' })
@@ -191,9 +283,9 @@ function Assert-ReleaseArtifact {
         Fail "Could not read APK metadata: $($apk.FullName)"
     }
     $packageLine = $badging | Select-Object -First 1
-    $metadataPattern = "name='stoneframe\.chorelist'.*versionCode='$VersionCode'.*versionName='$([regex]::Escape($VersionName))'"
+    $metadataPattern = "name='stoneframe\.chorelist'.*versionCode='$ExpectedVersionCode'.*versionName='$([regex]::Escape($VersionName))'"
     if ($packageLine -notmatch $metadataPattern) {
-        Fail "APK metadata does not match stoneframe.chorelist/$VersionName ($VersionCode): $packageLine"
+        Fail "APK metadata does not match stoneframe.chorelist/$VersionName ($ExpectedVersionCode): $packageLine"
     }
 
     $hash = Get-FileHash -LiteralPath $apk.FullName -Algorithm SHA256
@@ -207,14 +299,47 @@ if ($branch -ne 'master') {
 }
 
 Assert-WorkingTree
-Assert-ReleaseMetadata
-Assert-SigningProperties
 Assert-NoExistingTag
 
+$currentMetadata = Get-AppMetadata
+if ($Prepare) {
+    if ($currentMetadata.VersionName -eq $VersionName) {
+        Fail "Version $VersionName is already configured in app/build.gradle."
+    }
+
+    $newVersionCode = if ($PSBoundParameters.ContainsKey('VersionCode')) {
+        $VersionCode
+    }
+    else {
+        $currentMetadata.VersionCode + 1
+    }
+    if ($newVersionCode -le $currentMetadata.VersionCode) {
+        Fail "The new versionCode ($newVersionCode) must be greater than the current versionCode ($($currentMetadata.VersionCode))."
+    }
+
+    Set-AppMetadata -NewVersionName $VersionName -NewVersionCode $newVersionCode
+    Add-ChangelogEntry -NewVersionName $VersionName
+    Write-Output "Prepared version $VersionName with versionCode $newVersionCode."
+    Write-Output 'Review CHANGELOG.md, then run -Verify.'
+    exit 0
+}
+
+$expectedVersionCode = if ($PSBoundParameters.ContainsKey('VersionCode')) {
+    if ($VersionCode -ne $currentMetadata.VersionCode) {
+        Fail "VersionCode argument $VersionCode does not match app/build.gradle ($($currentMetadata.VersionCode))."
+    }
+    $VersionCode
+}
+else {
+    $currentMetadata.VersionCode
+}
+
+Assert-ReleaseMetadata -ExpectedVersionCode $expectedVersionCode
+Assert-SigningProperties
 Invoke-Git @('diff', '--check', '--', 'app/build.gradle', 'CHANGELOG.md')
 Invoke-Gradle @('test')
 Invoke-Gradle @('assembleRelease')
-Assert-ReleaseArtifact
+Assert-ReleaseArtifact -ExpectedVersionCode $expectedVersionCode
 
 if ($Finalize) {
     Invoke-Git @('add', '--', 'app/build.gradle', 'CHANGELOG.md')

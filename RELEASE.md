@@ -27,12 +27,22 @@ and `CHANGELOG.md` as the release changes for finalization. The script intention
 rejects unrelated working-tree changes.
 
 1. Finish and review the changes intended for the release.
-2. Update `versionName`, `versionCode`, and the matching section in `CHANGELOG.md`.
-3. Confirm the working tree contains no unrelated changes.
-4. From `master`, run:
+2. From `master`, prepare the next version. For example:
 
    ```powershell
-   .\scripts\release.ps1 -VersionName 1.7 -VersionCode 2 -Verify
+   .\scripts\release.ps1 -Prepare -VersionName 1.8
+   ```
+
+   This increments `versionCode`, updates `versionName`, and adds a dated
+   changelog skeleton. Review the generated changes and replace all TODO entries.
+   Pass `-VersionCode <number>` only when an external build has a higher code
+   than the repository.
+
+3. Confirm the working tree contains no unrelated changes.
+4. Verify the release:
+
+   ```powershell
+   .\scripts\release.ps1 -VersionName 1.8 -Verify
    ```
 
 The verification mode runs unit tests, builds the signed release APK, copies it
@@ -44,12 +54,12 @@ SHA-256 checksum.
 After verification succeeds, run:
 
 ```powershell
-.\scripts\release.ps1 -VersionName 1.7 -VersionCode 2 -Finalize
+.\scripts\release.ps1 -VersionName 1.8 -Finalize
 git push origin master
-git push origin Release-1.7
+git push origin Release-1.8
 ```
 
-Finalization creates the release commit and lightweight `Release-1.7` tag. It does
+Finalization creates the release commit and lightweight `Release-1.8` tag. It does
 not push commits or upload the APK.
 
 ## Manual handoff

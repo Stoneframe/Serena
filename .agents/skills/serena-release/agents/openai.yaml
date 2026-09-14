@@ -1,0 +1,4 @@
+interface:
+  display_name: "Serena Release"
+  short_description: "Prepare, verify, and finalize Serena Android releases"
+  default_prompt: "Use $serena-release to guide the Serena Android release workflow."

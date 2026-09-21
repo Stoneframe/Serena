@@ -152,7 +152,7 @@
         <item name="backgroundTint">@null</item>
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:textColorHint">@color/text_secondary</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textAppearance">@style/TextAppearance.Serena.Body</item>
         <item name="android:minHeight">@dimen/input_control_height</item>
         <item name="android:paddingStart">12dp</item>
         <item name="android:paddingTop">8dp</item>
@@ -168,7 +168,7 @@
 
     <style name="Widget.Serena.TextView" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/text_primary</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textAppearance">@style/TextAppearance.Serena.Body</item>
     </style>
 
     <style name="Widget.Serena.ImageButton" parent="Widget.AppCompat.ImageButton">

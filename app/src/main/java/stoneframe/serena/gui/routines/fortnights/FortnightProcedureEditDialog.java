@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import stoneframe.serena.R;
-import stoneframe.serena.gui.util.TimePickerHeaderStyler;
 import stoneframe.serena.gui.util.enable.ButtonEnabledLink;
 import stoneframe.serena.gui.util.enable.EditTextCriteria;
 import stoneframe.serena.routines.Procedure;
@@ -200,8 +199,6 @@ public class FortnightProcedureEditDialog
             timePicker.setHour(0);
             timePicker.setMinute(0);
         }
-
-        TimePickerHeaderStyler.balanceHeaderValues(timePicker);
 
         builder.setTitle(dialogName);
 

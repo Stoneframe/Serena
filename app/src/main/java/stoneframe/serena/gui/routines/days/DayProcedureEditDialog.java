@@ -11,7 +11,6 @@ import android.widget.TimePicker;
 import org.joda.time.LocalTime;
 
 import stoneframe.serena.R;
-import stoneframe.serena.gui.util.TimePickerHeaderStyler;
 import stoneframe.serena.gui.util.enable.ButtonEnabledLink;
 import stoneframe.serena.gui.util.enable.EditTextCriteria;
 import stoneframe.serena.routines.Procedure;
@@ -90,8 +89,6 @@ public class DayProcedureEditDialog
             timePicker.setHour(0);
             timePicker.setMinute(0);
         }
-
-        TimePickerHeaderStyler.balanceHeaderValues(timePicker);
 
         if (initialDescription != null)
         {

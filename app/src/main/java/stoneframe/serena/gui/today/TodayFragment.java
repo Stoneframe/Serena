@@ -518,7 +518,7 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
     {
         choreRemovals.remove(chore);
         choreManager.complete(chore);
-        choreAdapter.notifyDataSetChanged();
+        choreAdapter.setUnchecked(chore);
         serena.save();
     }
 

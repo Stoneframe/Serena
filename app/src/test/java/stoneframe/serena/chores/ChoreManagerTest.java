@@ -72,6 +72,64 @@ public class ChoreManagerTest
     }
 
     @Test
+    public void skip_dueChore_doesNotSpendEffort()
+    {
+        // ARRANGE
+        SimpleEffortTracker effortTracker = new SimpleEffortTracker(10);
+        context.setEffortTracker(effortTracker);
+
+        Chore chore = createChore("Skipped", 1, 3, TODAY, true);
+
+        context.setCurrentTime(TODAY);
+
+        // ACT
+        boolean wasSkipped = choreManager.skip(chore);
+
+        // ASSERT
+        assertTrue(wasSkipped);
+        assertEquals(10, choreManager.getRemainingEffort());
+    }
+
+    @Test
+    public void postpone_dueChore_doesNotSpendEffortAndHidesChore()
+    {
+        // ARRANGE
+        SimpleEffortTracker effortTracker = new SimpleEffortTracker(10);
+        context.setEffortTracker(effortTracker);
+
+        Chore chore = createChore("Postponed", 1, 3, TODAY, true);
+
+        context.setCurrentTime(TODAY);
+
+        // ACT
+        boolean wasPostponed = choreManager.postpone(chore);
+
+        // ASSERT
+        assertTrue(wasPostponed);
+        assertEquals(10, choreManager.getRemainingEffort());
+        assertTrue(choreManager.getTodaysChores().isEmpty());
+    }
+
+    @Test
+    public void skip_afterTargetCompletes_rejectsWithoutMutation()
+    {
+        // ARRANGE
+        Chore chore = createChore("Completed target", 1, 1, TODAY, true);
+
+        context.setCurrentTime(TODAY);
+
+        choreManager.complete(chore);
+        LocalDate nextAfterCompletion = chore.getNext();
+
+        // ACT
+        boolean wasSkipped = choreManager.skip(chore);
+
+        // ASSERT
+        assertFalse(wasSkipped);
+        assertEquals(nextAfterCompletion, chore.getNext());
+    }
+
+    @Test
     public void postpone_afterListOrderChanges_targetsOriginalChore()
     {
         // ARRANGE

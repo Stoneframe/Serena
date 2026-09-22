@@ -121,6 +121,11 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
                 return true;
             }
 
+            if (choreRemovals.containsKey(chore))
+            {
+                return true;
+            }
+
             View dialogRootView = rootView;
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

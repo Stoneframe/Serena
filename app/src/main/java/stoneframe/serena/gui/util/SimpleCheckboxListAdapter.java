@@ -60,6 +60,17 @@ public class SimpleCheckboxListAdapter<T> extends BaseAdapter
         return listFunction.get().get(position);
     }
 
+    @Nullable
+    public T getBoundItem(@Nullable View row)
+    {
+        if (row == null || row.getTag() == null || row.getTag().getClass() != Holder.class)
+        {
+            return null;
+        }
+
+        return ((Holder)row.getTag()).item;
+    }
+
     @Override
     public long getItemId(int position)
     {

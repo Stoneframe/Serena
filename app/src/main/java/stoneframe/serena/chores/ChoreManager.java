@@ -78,14 +78,32 @@ public class ChoreManager
         chore.reschedule(timeService.getToday());
     }
 
-    public void skip(Chore chore)
+    public boolean skip(Chore chore)
     {
-        chore.reschedule(timeService.getToday());
+        LocalDate today = timeService.getToday();
+
+        if (!isValidChoreAndDueToday(chore, today))
+        {
+            return false;
+        }
+
+        chore.reschedule(today);
+
+        return true;
     }
 
-    public void postpone(Chore chore)
+    public boolean postpone(Chore chore)
     {
-        chore.postpone(timeService.getToday());
+        LocalDate today = timeService.getToday();
+
+        if (!isValidChoreAndDueToday(chore, today))
+        {
+            return false;
+        }
+
+        chore.postpone(today);
+
+        return true;
     }
 
     @Override
@@ -118,6 +136,18 @@ public class ChoreManager
             .filter(Chore::isEnabled)
             .filter(c -> c.isTimeToDo(today))
             .collect(Collectors.toList());
+    }
+
+    private boolean isValidChoreAndDueToday(Chore chore, LocalDate today)
+    {
+        if (chore == null)
+        {
+            return false;
+        }
+
+        boolean isCurrentChore = getContainer().chores.stream().anyMatch(c -> c == chore);
+
+        return isCurrentChore && chore.isEnabled() && chore.isTimeToDo(today);
     }
 
     private int getEffortSpent(Chore chore)

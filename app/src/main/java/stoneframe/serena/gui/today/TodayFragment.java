@@ -114,22 +114,43 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
         choreListView.setOnItemClickListener((p, v, position, i) -> onChoreClicked(position));
         choreListView.setOnItemLongClickListener((parent, view, position, id) ->
         {
+            Chore chore = choreAdapter.getBoundItem(view);
+
+            if (chore == null)
+            {
+                return true;
+            }
+
+            View dialogRootView = rootView;
+
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setMessage("Do you want to skip or postpone this chore?")
                 .setCancelable(false)
                 .setPositiveButton("Skip", (dialog, skipButtonId) ->
                 {
-                    Chore chore = choreManager.getTodaysChores().get(position);
-                    choreManager.skip(chore);
-                    choreAdapter.notifyDataSetChanged();
-                    serena.save();
+                    if (getView() != dialogRootView || !isResumed())
+                    {
+                        return;
+                    }
+
+                    if (choreManager.skip(chore))
+                    {
+                        choreAdapter.notifyDataSetChanged();
+                        serena.save();
+                    }
                 })
                 .setNegativeButton("Postpone", (dialog, postponeButtonId) ->
                 {
-                    Chore chore = choreManager.getTodaysChores().get(position);
-                    choreManager.postpone(chore);
-                    choreAdapter.notifyDataSetChanged();
-                    serena.save();
+                    if (getView() != dialogRootView || !isResumed())
+                    {
+                        return;
+                    }
+
+                    if (choreManager.postpone(chore))
+                    {
+                        choreAdapter.notifyDataSetChanged();
+                        serena.save();
+                    }
                 })
                 .setNeutralButton("Cancel", (dialog, cancelButtonId) -> dialog.cancel());
 

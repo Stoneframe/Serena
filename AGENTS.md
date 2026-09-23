@@ -6,6 +6,12 @@
 - Before proposing changes, inspect the relevant implementation, tests, configuration, documentation,
   and Git status. Prefer observed behavior and tests over implementation, configuration, documentation,
   comments, and assumptions, in that order. Point out conflicts with the requested assumptions.
+- Before introducing new code, abstractions, helpers, utilities, patterns, or dependencies, search the
+  existing codebase for equivalent or closely related functionality. Prefer reusing or extending
+  established solutions when they are appropriate. Do not force reuse when the existing solution is
+  unsuitable; the goal is to discover before inventing.
+- When planning a change, identify relevant existing patterns and components that can be reused or
+  extended.
 - For non-trivial changes, state the current behavior, intended change, affected components, risks,
   and verification approach before editing.
 - Write plans so that a lower-capability model can execute them without relying on unstated context:

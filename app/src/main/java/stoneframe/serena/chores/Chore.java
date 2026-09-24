@@ -63,14 +63,13 @@ public class Chore extends Revertible<ChoreData>
     @Override
     public boolean equals(Object obj)
     {
-        if (!(obj instanceof Chore))
-        {
-            return false;
-        }
+        return this == obj;
+    }
 
-        Chore other = (Chore)obj;
-
-        return data().description.equals(other.data().description);
+    @Override
+    public int hashCode()
+    {
+        return System.identityHashCode(this);
     }
 
     @NonNull

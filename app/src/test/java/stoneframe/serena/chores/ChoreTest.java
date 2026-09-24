@@ -1,10 +1,14 @@
 package stoneframe.serena.chores;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import stoneframe.serena.mocks.TestContext;
 
@@ -238,6 +242,28 @@ public class ChoreTest
 
         // ASSERT
         assertEquals(january13Year5, chore.getNext());
+    }
+
+    @Test
+    public void duplicateDescriptions_areIndependentHashMapKeysAndRenamesDoNotChangeLookup()
+    {
+        // ARRANGE
+        Chore firstChore = createChore(new LocalDate(2024, 1, 1), 1, IntervalRepetition.DAYS);
+        Chore secondChore = createChore(new LocalDate(2024, 1, 1), 1, IntervalRepetition.DAYS);
+
+        Map<Chore, String> pendingOperations = new HashMap<>();
+
+        // ACT
+        pendingOperations.put(firstChore, "first");
+        pendingOperations.put(secondChore, "second");
+
+        choreManager.getChoreEditor(firstChore).setDescription("Renamed");
+
+        // ASSERT
+        assertNotEquals(firstChore, secondChore);
+        assertEquals(2, pendingOperations.size());
+        assertEquals("first", pendingOperations.get(firstChore));
+        assertEquals("second", pendingOperations.get(secondChore));
     }
 
     private Chore createChore(LocalDate next, int intervalLength, int intervalUnit)

@@ -355,6 +355,22 @@ public class ChoreManagerTest
         assertEquals(replacementNext, replacement.getNext());
     }
 
+    @Test
+    public void remove_duplicateDescriptionChore_removesOnlySelectedChore()
+    {
+        // ARRANGE
+        Chore firstChore = createChore("Same description", 1, 1, TODAY, true);
+        Chore secondChore = createChore("Same description", 2, 1, TODAY, true);
+
+        // ACT
+        choreManager.getChoreEditor(secondChore).remove();
+
+        // ASSERT
+        assertTrue(choreManager.containsChore(firstChore));
+        assertFalse(choreManager.containsChore(secondChore));
+        assertEquals(Arrays.asList(firstChore), choreManager.getAllChores());
+    }
+
     private ChoreContainer createContainer()
     {
         return new ChoreContainer(new SimpleEffortTracker(10), new SimpleChoreSelector());

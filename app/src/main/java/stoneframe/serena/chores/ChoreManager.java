@@ -154,26 +154,29 @@ public class ChoreManager
     {
         List<Chore> todaysChores = getTodaysChores();
 
-        if (todaysChores.size() <= 1 || !isLastChoreInList(chore, todaysChores))
+        if (!isLastChoreInList(chore, todaysChores))
         {
             return chore.getEffort();
         }
 
-        return getEffortTracker().getTodaysEffort(timeService.getToday()) - getSumOfEffortExceptLast(
-            todaysChores);
+        return getLastChoreEffort(chore, todaysChores);
+    }
+
+    private int getLastChoreEffort(Chore chore, List<Chore> todaysChores)
+    {
+        int todaysEffort = getEffortTracker().getTodaysEffort(timeService.getToday());
+
+        return Math.max(0, Math.min(chore.getEffort(), todaysEffort - getSumOfEffortExceptLast(todaysChores)));
     }
 
     private static boolean isLastChoreInList(Chore chore, List<Chore> todaysChores)
     {
-        Chore lastChoreInList = todaysChores.get(todaysChores.size() - 1);
-
-        return lastChoreInList.equals(chore);
+        return !todaysChores.isEmpty() && todaysChores.get(todaysChores.size() - 1).equals(chore);
     }
 
     private static int getSumOfEffortExceptLast(List<Chore> todaysChores)
     {
-        return todaysChores.stream()
-            .limit(todaysChores.size() - 1)
+        return todaysChores.subList(0, todaysChores.size() - 1).stream()
             .mapToInt(Chore::getEffort)
             .sum();
     }

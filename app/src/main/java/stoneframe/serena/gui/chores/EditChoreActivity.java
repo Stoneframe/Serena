@@ -134,7 +134,7 @@ public class EditChoreActivity extends EditActivity
             {
                 new EditTextCriteria(descriptionEditText, EditTextCriteria.IS_NOT_EMPTY),
                 new EditTextCriteria(priorityEditText, EditTextCriteria.IS_NOT_EMPTY),
-                new EditTextCriteria(effortEditText, EditTextCriteria.IS_NOT_EMPTY),
+                new EditTextCriteria(effortEditText, EditTextCriteria.IS_VALID_NON_NEGATIVE_INT),
             };
 
         return Stream.concat(

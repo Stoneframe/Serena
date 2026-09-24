@@ -9,6 +9,7 @@ import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -49,6 +50,107 @@ public class ChoreManagerTest
 
         // ASSERT
         assertEquals(Arrays.asList(chore2, chore1), todaysChores);
+    }
+
+    @Test
+    public void complete_twoEligibleChoresInReverseOrder_spendsEachChoresEffort()
+    {
+        // ARRANGE
+        RecordingEffortTracker effortTracker = new RecordingEffortTracker(10);
+        context.setEffortTracker(effortTracker);
+
+        Chore firstChore = createChore("First", 1, 3, TODAY, true);
+        Chore secondChore = createChore("Second", 2, 4, TODAY, true);
+
+        context.setCurrentTime(TODAY);
+
+        // ACT
+        choreManager.complete(secondChore);
+        choreManager.complete(firstChore);
+
+        // ASSERT
+        assertEquals(Arrays.asList(4, 3), effortTracker.getSpentEfforts());
+        assertEquals(3, choreManager.getRemainingEffort());
+    }
+
+    @Test
+    public void complete_lastChoreBeforeEarlierChores_spendsAvailableResidual()
+    {
+        // ARRANGE
+        RecordingEffortTracker effortTracker = new RecordingEffortTracker(10);
+        context.setEffortTracker(effortTracker);
+
+        Chore firstChore = createChore("First", 1, 3, TODAY, true);
+        Chore lastChore = createChore("Last", 2, 8, TODAY, true);
+
+        context.setCurrentTime(TODAY);
+
+        // ACT
+        choreManager.complete(lastChore);
+
+        // ASSERT
+        assertEquals(Arrays.asList(7), effortTracker.getSpentEfforts());
+        assertEquals(3, choreManager.getRemainingEffort());
+    }
+
+    @Test
+    public void complete_lastChoreAfterEarlierChoreWhenEffortExceedsRemaining_spendsOnlyResidual()
+    {
+        // ARRANGE
+        RecordingEffortTracker effortTracker = new RecordingEffortTracker(10);
+        context.setEffortTracker(effortTracker);
+
+        Chore firstChore = createChore("First", 1, 3, TODAY, true);
+        Chore lastChore = createChore("Last", 2, 8, TODAY, true);
+
+        context.setCurrentTime(TODAY);
+
+        // ACT
+        choreManager.complete(firstChore);
+        choreManager.complete(lastChore);
+
+        // ASSERT
+        assertEquals(Arrays.asList(3, 7), effortTracker.getSpentEfforts());
+        assertEquals(0, choreManager.getRemainingEffort());
+    }
+
+    @Test
+    public void complete_lastChoreWhenDisplayedEffortEqualsRemaining_spendsFullEffort()
+    {
+        // ARRANGE
+        RecordingEffortTracker effortTracker = new RecordingEffortTracker(10);
+        context.setEffortTracker(effortTracker);
+
+        Chore firstChore = createChore("First", 1, 3, TODAY, true);
+        Chore lastChore = createChore("Last", 2, 7, TODAY, true);
+
+        context.setCurrentTime(TODAY);
+
+        // ACT
+        choreManager.complete(lastChore);
+
+        // ASSERT
+        assertEquals(Arrays.asList(7), effortTracker.getSpentEfforts());
+        assertEquals(3, choreManager.getRemainingEffort());
+    }
+
+    @Test
+    public void complete_onlyChoreWhenEffortExceedsRemaining_spendsOnlyRemainingEffort()
+    {
+        // ARRANGE
+        RecordingEffortTracker effortTracker = new RecordingEffortTracker(7);
+        context.setEffortTracker(effortTracker);
+
+        Chore chore = createChore("Only chore", 1, 8, TODAY, true);
+
+        context.setCurrentTime(TODAY);
+
+        // ACT
+        choreManager.complete(chore);
+
+        // ASSERT
+        assertEquals(Arrays.asList(7), effortTracker.getSpentEfforts());
+        assertEquals(0, choreManager.getRemainingEffort());
     }
 
     @Test
@@ -256,6 +358,42 @@ public class ChoreManagerTest
     private ChoreContainer createContainer()
     {
         return new ChoreContainer(new SimpleEffortTracker(10), new SimpleChoreSelector());
+    }
+
+    private static class RecordingEffortTracker implements EffortTracker
+    {
+        private final SimpleEffortTracker effortTracker;
+
+        private final List<Integer> spentEfforts = new ArrayList<>();
+
+        RecordingEffortTracker(int effort)
+        {
+            effortTracker = new SimpleEffortTracker(effort);
+        }
+
+        @Override
+        public int getTodaysEffort(LocalDate today)
+        {
+            return effortTracker.getTodaysEffort(today);
+        }
+
+        @Override
+        public void spend(int effort)
+        {
+            spentEfforts.add(effort);
+            effortTracker.spend(effort);
+        }
+
+        @Override
+        public void reset(LocalDate today)
+        {
+            effortTracker.reset(today);
+        }
+
+        public List<Integer> getSpentEfforts()
+        {
+            return spentEfforts;
+        }
     }
 
     private Chore createChore(ChoreManager manager, String description, LocalDate next)

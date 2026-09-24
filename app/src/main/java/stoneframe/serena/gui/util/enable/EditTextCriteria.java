@@ -10,6 +10,7 @@ public class EditTextCriteria extends EnableCriteria
 {
     public static final Predicate<EditText> IS_NOT_EMPTY = EditTextCriteria::isNotEmpty;
     public static final Predicate<EditText> IS_VALID_INT = EditTextCriteria::isValidInteger;
+    public static final Predicate<EditText> IS_VALID_NON_NEGATIVE_INT = EditTextCriteria::isValidNonNegativeInteger;
 
     private final EditText editText;
     private final Predicate<EditText> criteria;
@@ -31,6 +32,23 @@ public class EditTextCriteria extends EnableCriteria
         {
             Integer.parseInt(e.getText().toString());
             return true;
+        }
+        catch (NumberFormatException ex)
+        {
+            return false;
+        }
+    }
+
+    public static boolean isValidNonNegativeInteger(EditText e)
+    {
+        return isValidNonNegativeInteger(e.getText().toString());
+    }
+
+    static boolean isValidNonNegativeInteger(String value)
+    {
+        try
+        {
+            return Integer.parseInt(value) >= 0;
         }
         catch (NumberFormatException ex)
         {

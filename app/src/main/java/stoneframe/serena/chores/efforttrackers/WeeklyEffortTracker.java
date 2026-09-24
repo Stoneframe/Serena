@@ -124,7 +124,7 @@ public class WeeklyEffortTracker implements EffortTracker
         this.sun = sun;
         if (previous.getDayOfWeek() == DateTimeConstants.SUNDAY)
         {
-            remaining = mon;
+            remaining = sun;
         }
     }
 

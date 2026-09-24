@@ -10,6 +10,14 @@
   existing codebase for equivalent or closely related functionality. Prefer reusing or extending
   established solutions when they are appropriate. Do not force reuse when the existing solution is
   unsuitable; the goal is to discover before inventing.
+- Prefer short, focused methods. Aim for roughly 5 substantive logical lines where this can be achieved
+  naturally, excluding blank lines and lines containing only braces; a statement or expression that
+  wraps across multiple visual/editor lines counts as one logical line. Treat 5 lines as a guideline,
+  not a hard limit: methods may exceed it when keeping the logic together improves readability,
+  cohesion, or maintainability. Do not extract helper methods solely to satisfy the line count; extract
+  methods when they represent a meaningful operation, responsibility, or abstraction. Methods exceeding
+  roughly 10–15 substantive logical lines should prompt consideration of whether meaningful
+  responsibilities can be extracted. Readability and cohesion take precedence over line count.
 - When planning a change, identify relevant existing patterns and components that can be reused or
   extended.
 - For non-trivial changes, state the current behavior, intended change, affected components, risks,

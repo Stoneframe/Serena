@@ -306,8 +306,6 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
     {
         super.onStart();
 
-        serena.addChangedListener(this);
-
         procedureAdapter.notifyDataSetChanged();
         choreAdapter.notifyDataSetChanged();
         taskAdapter.notifyDataSetChanged();

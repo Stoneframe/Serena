@@ -18,8 +18,13 @@
   name the relevant files, concrete steps, assumptions, edge cases, and verification commands.
 - Make the smallest sufficient conceptual change. Preserve behavior outside the request and unrelated
   user changes. Avoid unrelated refactoring, renaming, formatting, abstractions, or dependency changes.
-- After implementing, actively look for incorrect assumptions, regressions, boundary cases, state and
-  concurrency problems, and missing tests. Fix discovered problems and verify again.
+- After implementing substantial or high-risk changes—especially persistence or schema, lifecycle,
+  concurrency, security, release, or user-data changes—begin a separate second-pass review objective,
+  preferably in a fresh prompt or turn. Ignore the original plan and inspect the resulting diff as if it
+  were written by another developer. Look for incorrect assumptions, unnecessarily broad changes,
+  regressions, boundary cases, state and concurrency problems, and missing tests. Add targeted regression
+  tests when a discovered failure is meaningfully testable; otherwise use the most appropriate
+  verification. Fix the issues and rerun relevant verification.
 - Review the final diff and explain verification limits. Do not claim completion solely from reading code.
 
 ## Repository map and conventions

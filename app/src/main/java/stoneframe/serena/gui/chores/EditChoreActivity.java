@@ -293,7 +293,7 @@ public class EditChoreActivity extends EditActivity
                 new ViewGroupCriteria(intervalRepetitionView, c -> true),
                 new EditTextCriteria(
                     intervalLengthEditText,
-                    e -> !isVisible() || EditTextCriteria.isValidInteger(e)),
+                    e -> !isVisible() || EditTextCriteria.isValidPositiveInteger(e)),
             };
         }
 

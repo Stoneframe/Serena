@@ -2,6 +2,7 @@ package stoneframe.serena.chores;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.fail;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -242,6 +243,55 @@ public class ChoreTest
 
         // ASSERT
         assertEquals(january13Year5, chore.getNext());
+    }
+
+    @Test
+    public void setIntervalLength_zeroOrNegative_throwsAndKeepsPreviousValue()
+    {
+        Chore chore = createChore(new LocalDate(2024, 1, 1), 1, IntervalRepetition.DAYS);
+        IntervalRepetition repetition = (IntervalRepetition)chore.getRepetition();
+
+        for (int invalidLength : new int[]{0, -1})
+        {
+            try
+            {
+                repetition.setIntervalLength(invalidLength);
+                fail("Expected invalid interval length to be rejected.");
+            }
+            catch (IllegalArgumentException expected)
+            {
+                assertEquals(1, repetition.getIntervalLength());
+            }
+        }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void reschedule_zeroStoredInterval_throwsInsteadOfLooping()
+    {
+        Chore chore = new Chore(
+            "Invalid interval",
+            1,
+            1,
+            new LocalDate(2024, 1, 1),
+            0,
+            IntervalRepetition.DAYS);
+
+        chore.reschedule(new LocalDate(2024, 1, 1));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void reschedule_weeklyRecurrenceWithoutSelectedDays_throwsInsteadOfLooping()
+    {
+        Chore chore = new Chore(
+            "No weekdays",
+            1,
+            1,
+            new LocalDate(2024, 1, 1),
+            1,
+            IntervalRepetition.DAYS);
+        chore.setRepetitionType(Repetition.DaysInWeek);
+
+        chore.reschedule(new LocalDate(2024, 1, 1));
     }
 
     @Test

@@ -27,4 +27,17 @@ public class EditTextCriteriaTest
         assertFalse(EditTextCriteria.isValidNonNegativeInteger("not a number"));
         assertFalse(EditTextCriteria.isValidNonNegativeInteger("2147483648"));
     }
+
+    @Test
+    public void isValidPositiveInteger_zeroAndNegativeValue_areFalse()
+    {
+        assertFalse(EditTextCriteria.isValidPositiveInteger("0"));
+        assertFalse(EditTextCriteria.isValidPositiveInteger("-1"));
+    }
+
+    @Test
+    public void isValidPositiveInteger_positiveValue_isTrue()
+    {
+        assertTrue(EditTextCriteria.isValidPositiveInteger("1"));
+    }
 }

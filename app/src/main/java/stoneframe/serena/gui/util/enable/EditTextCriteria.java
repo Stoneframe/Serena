@@ -56,6 +56,23 @@ public class EditTextCriteria extends EnableCriteria
         }
     }
 
+    public static boolean isValidPositiveInteger(EditText e)
+    {
+        return isValidPositiveInteger(e.getText().toString());
+    }
+
+    static boolean isValidPositiveInteger(String value)
+    {
+        try
+        {
+            return Integer.parseInt(value) > 0;
+        }
+        catch (NumberFormatException ex)
+        {
+            return false;
+        }
+    }
+
     @Override
     protected boolean isValid()
     {

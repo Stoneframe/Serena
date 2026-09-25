@@ -41,6 +41,11 @@ public class IntervalRepetition extends Repetition
 
     public void setIntervalLength(int intervalLength)
     {
+        if (intervalLength <= 0)
+        {
+            throw new IllegalArgumentException("Interval length must be positive.");
+        }
+
         data.intervalLength = intervalLength;
     }
 

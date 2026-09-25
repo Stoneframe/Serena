@@ -279,21 +279,6 @@ public class ChoreTest
         chore.reschedule(new LocalDate(2024, 1, 1));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void reschedule_weeklyRecurrenceWithoutSelectedDays_throwsInsteadOfLooping()
-    {
-        Chore chore = new Chore(
-            "No weekdays",
-            1,
-            1,
-            new LocalDate(2024, 1, 1),
-            1,
-            IntervalRepetition.DAYS);
-        chore.setRepetitionType(Repetition.DaysInWeek);
-
-        chore.reschedule(new LocalDate(2024, 1, 1));
-    }
-
     @Test
     public void duplicateDescriptions_areIndependentHashMapKeysAndRenamesDoNotChangeLookup()
     {

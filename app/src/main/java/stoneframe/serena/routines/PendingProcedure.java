@@ -8,11 +8,13 @@ import java.util.Objects;
 
 public class PendingProcedure implements Comparable<PendingProcedure>
 {
+    private final Routine<?> routine;
     private final Procedure procedure;
     private final LocalDateTime dateTime;
 
-    PendingProcedure(Procedure procedure, LocalDateTime dateTime)
+    PendingProcedure(Routine<?> routine, Procedure procedure, LocalDateTime dateTime)
     {
+        this.routine = routine;
         this.procedure = procedure;
         this.dateTime = dateTime;
     }
@@ -42,14 +44,15 @@ public class PendingProcedure implements Comparable<PendingProcedure>
 
         PendingProcedure other = (PendingProcedure)obj;
 
-        return Objects.equals(this.procedure.getDescription(), other.procedure.getDescription())
+        return this.routine == other.routine
+            && this.procedure == other.procedure
             && Objects.equals(this.dateTime, other.dateTime);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(procedure.getDescription(), dateTime);
+        return Objects.hash(System.identityHashCode(procedure), dateTime);
     }
 
     @NonNull
@@ -57,6 +60,11 @@ public class PendingProcedure implements Comparable<PendingProcedure>
     public String toString()
     {
         return procedure.toString();
+    }
+
+    Routine<?> getRoutine()
+    {
+        return routine;
     }
 
     Procedure getProcedure()

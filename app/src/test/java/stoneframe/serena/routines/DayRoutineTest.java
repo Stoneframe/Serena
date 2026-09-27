@@ -1,6 +1,8 @@
 package stoneframe.serena.routines;
 
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -76,5 +78,50 @@ public class DayRoutineTest
         LocalDateTime nextProcedureTime = routineManager.getNextProcedureTime();
 
         assertEquals(today.toLocalDateTime(new LocalTime(23, 0)), nextProcedureTime);
+    }
+
+    @Test
+    public void procedureDone_equalProceduresInDifferentRoutines_completesOwningRoutine()
+    {
+        // ARRANGE
+        DayRoutine firstRoutine = routineManager.createDayRoutine();
+        Procedure firstProcedure = new Procedure("Same procedure", new LocalTime(9, 0));
+        DayRoutineEditor firstEditor = routineManager.getDayRoutineEditor(firstRoutine);
+        firstEditor.addProcedure(firstProcedure);
+        firstEditor.save();
+
+        DayRoutine secondRoutine = routineManager.createDayRoutine();
+        Procedure secondProcedure = new Procedure("Same procedure", new LocalTime(9, 0));
+        DayRoutineEditor secondEditor = routineManager.getDayRoutineEditor(secondRoutine);
+        secondEditor.addProcedure(secondProcedure);
+        secondEditor.save();
+
+        context.setCurrentTime(today.toLocalDateTime(new LocalTime(10, 0)));
+
+        PendingProcedure firstPendingProcedure = routineManager.getFirstPendingProcedures().stream()
+            .filter(p -> p.getProcedure() == firstProcedure)
+            .findFirst()
+            .get();
+        PendingProcedure secondPendingProcedure = routineManager.getFirstPendingProcedures().stream()
+            .filter(p -> p.getProcedure() == secondProcedure)
+            .findFirst()
+            .get();
+
+        assertFalse(firstPendingProcedure.equals(secondPendingProcedure));
+
+        PendingProcedure refreshedSecondPendingProcedure = routineManager.getPendingProcedures().stream()
+            .filter(p -> p.getProcedure() == secondProcedure)
+            .findFirst()
+            .get();
+
+        assertEquals(secondPendingProcedure, refreshedSecondPendingProcedure);
+        assertEquals(secondPendingProcedure.hashCode(), refreshedSecondPendingProcedure.hashCode());
+
+        // ACT
+        routineManager.procedureDone(secondPendingProcedure);
+
+        // ASSERT
+        assertTrue(secondRoutine.isDone(today, secondProcedure));
+        assertFalse(firstRoutine.isDone(today, firstProcedure));
     }
 }

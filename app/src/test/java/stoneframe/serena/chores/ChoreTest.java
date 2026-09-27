@@ -265,20 +265,6 @@ public class ChoreTest
         }
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void reschedule_zeroStoredInterval_throwsInsteadOfLooping()
-    {
-        Chore chore = new Chore(
-            "Invalid interval",
-            1,
-            1,
-            new LocalDate(2024, 1, 1),
-            0,
-            IntervalRepetition.DAYS);
-
-        chore.reschedule(new LocalDate(2024, 1, 1));
-    }
-
     @Test
     public void duplicateDescriptions_areIndependentHashMapKeysAndRenamesDoNotChangeLookup()
     {

@@ -70,6 +70,7 @@ public class Day
     }
 
     public List<PendingProcedure> getPendingProceduresBetween(
+        Routine<?> routine,
         LocalDateTime start,
         LocalDateTime end)
     {
@@ -88,6 +89,7 @@ public class Day
                     }
 
                     PendingProcedure pendingProcedure = new PendingProcedure(
+                        routine,
                         p,
                         i.toLocalDate().toLocalDateTime(p.getTime()));
 

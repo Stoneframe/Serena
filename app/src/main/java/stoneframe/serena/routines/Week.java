@@ -115,18 +115,19 @@ public class Week
     }
 
     public List<PendingProcedure> getPendingProceduresBetween(
+        Routine<?> routine,
         LocalDateTime start,
         LocalDateTime end)
     {
         return this
             .concat(
-                getWeekDay(DateTimeConstants.MONDAY).getPendingProceduresBetween(start, end),
-                getWeekDay(DateTimeConstants.TUESDAY).getPendingProceduresBetween(start, end),
-                getWeekDay(DateTimeConstants.WEDNESDAY).getPendingProceduresBetween(start, end),
-                getWeekDay(DateTimeConstants.THURSDAY).getPendingProceduresBetween(start, end),
-                getWeekDay(DateTimeConstants.FRIDAY).getPendingProceduresBetween(start, end),
-                getWeekDay(DateTimeConstants.SATURDAY).getPendingProceduresBetween(start, end),
-                getWeekDay(DateTimeConstants.SUNDAY).getPendingProceduresBetween(start, end))
+                getWeekDay(DateTimeConstants.MONDAY).getPendingProceduresBetween(routine, start, end),
+                getWeekDay(DateTimeConstants.TUESDAY).getPendingProceduresBetween(routine, start, end),
+                getWeekDay(DateTimeConstants.WEDNESDAY).getPendingProceduresBetween(routine, start, end),
+                getWeekDay(DateTimeConstants.THURSDAY).getPendingProceduresBetween(routine, start, end),
+                getWeekDay(DateTimeConstants.FRIDAY).getPendingProceduresBetween(routine, start, end),
+                getWeekDay(DateTimeConstants.SATURDAY).getPendingProceduresBetween(routine, start, end),
+                getWeekDay(DateTimeConstants.SUNDAY).getPendingProceduresBetween(routine, start, end))
             .sorted()
             .collect(Collectors.toList());
     }

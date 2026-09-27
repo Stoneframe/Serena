@@ -29,7 +29,7 @@ public class WeekRoutine extends Routine<WeekRoutineData>
     @Override
     List<PendingProcedure> getPendingProcedures(LocalDateTime now)
     {
-        return data().week.getPendingProceduresBetween(data().lastCompleted, now);
+        return data().week.getPendingProceduresBetween(this, data().lastCompleted, now);
     }
 
     @Nullable

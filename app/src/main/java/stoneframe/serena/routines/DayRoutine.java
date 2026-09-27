@@ -38,6 +38,7 @@ public class DayRoutine extends Routine<DayRoutineData>
                      i = i.plusDays(1))
                 {
                     PendingProcedure pendingProcedure = new PendingProcedure(
+                        this,
                         p,
                         i.toLocalDate().toLocalDateTime(p.getTime()));
 

@@ -12,40 +12,97 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@id/cancelButton"
         android:orientation="vertical">
 
-        <CheckBox
-            android:id="@+id/limitTasksCheckBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Limit tasks per day" />
-
-        <TextView
-            android:id="@+id/maximumTasksTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_lg"
-            android:layout_marginTop="@dimen/space_sm"
-            android:labelFor="@+id/maximumTasksEditText"
-            android:text="Maximum tasks per day" />
-
-        <EditText
-            android:id="@+id/maximumTasksEditText"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_lg"
-            android:autofillHints=""
-            android:inputType="number"
-            tools:ignore="LabelFor" />
-
-        <TextView
-            style="@style/TextAppearance.Serena.Supporting"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_sm"
-            android:text="Tasks due in fewer than 7 days are always shown." />
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <CheckBox
+                    android:id="@+id/limitTasksCheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Limit tasks per day" />
+
+                <TextView
+                    android:id="@+id/maximumTasksTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_lg"
+                    android:layout_marginTop="@dimen/space_sm"
+                    android:labelFor="@+id/maximumTasksEditText"
+                    android:text="Maximum tasks per day" />
+
+                <EditText
+                    android:id="@+id/maximumTasksEditText"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_lg"
+                    android:autofillHints=""
+                    android:inputType="number"
+                    tools:ignore="LabelFor" />
+
+                <TextView
+                    style="@style/TextAppearance.Serena.Supporting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_sm"
+                    android:text="Tasks due in fewer than 7 days are always shown." />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/space_md"
+                    android:layout_marginBottom="@dimen/space_md"
+                    android:background="@color/outline" />
+
+                <CheckBox
+                    android:id="@+id/smsTaskCreationCheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:saveEnabled="false"
+                    android:text="@string/task_sms_creation" />
+
+                <TextView
+                    android:id="@+id/smsPermissionWarningTextView"
+                    style="@style/TextAppearance.Serena.Supporting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    tools:text="@string/task_sms_permission_unavailable" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_sm"
+                    android:text="@string/task_sms_trusted_sender_help" />
+
+            </LinearLayout>
+        </ScrollView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/trustedSmsSendersList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/space_sm"
+            android:layout_weight="1"
+            android:background="@drawable/bg_surface_card"
+            android:padding="@dimen/space_sm"
+            tools:listitem="@layout/list_item_trusted_sms_sender" />
+
+        <Button
+            android:id="@+id/addTrustedSmsSenderButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/task_sms_add_trusted_number" />
     </LinearLayout>
 
     <Button

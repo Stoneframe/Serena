@@ -14,17 +14,22 @@ Implemented:
 - Deadline text is passed to Joda-Time's `LocalDate.parse()`. An absent or blank deadline produces a `null` deadline without a warning. An unparseable nonempty deadline produces a `null` deadline and a warning flag. Parsed dates are returned, including past dates.
 - The parser returns a `ParsedTask` value containing the description, nullable deadline, and deadline warning flag. It does not create or save a Serena task.
 - `SmsTaskMessageParserTest` covers valid, absent, blank, unpadded, unparseable, impossible, and past deadlines, along with a misplaced hashtag, a missing description, and a null message body.
+- **Tasks > Settings** stores the SMS task creation setting and selected trusted phone numbers, including each selected contact's name. It uses Android's phone-number picker and does not read the full contacts list.
+- Task limit settings and SMS settings are separated by a divider. Trusted numbers appear in a bordered, scrollable list with the contact name, phone number, and a bin-icon remove button. An exact duplicate phone number cannot be added.
+- The SMS setting and trusted senders are included in JSON data. Version 30 migration defaults older data to disabled with no trusted senders.
+- `TaskSmsSettingsTest` and `SmsTaskSettingsStorageTest` cover disabled defaults, sender-list ownership, migrations from versions 27 and 29, and JSON round trips.
+- Checking SMS task creation requests `RECEIVE_SMS`; granting keeps it checked and denying unchecks it. Imported enabled settings remain saved when device permission is absent, with an access warning in Task settings.
 
 Not implemented:
 
 - SMS broadcast reception, multipart filtering, trusted-sender matching, and phone-number normalization.
-- Task settings, trusted-contact selection and persistence, task creation and saving, sender attribution, notifications, and task-list refresh.
+- Task creation and saving, sender attribution, notifications, and task-list refresh.
 
 ## Setup and trusted senders
 
 SMS task creation is off by default and is configured from **Tasks > Settings**. The user selects one or more specific phone numbers from the device's contacts and can remove them at any time. If a contact has multiple numbers, each trusted number is selected separately. Trust is attached to the selected number, not the contact name; changing a number requires selecting the new number.
 
-The enabled state and trusted numbers are included in Serena's JSON export and are restored exactly when that data is imported. This can enable SMS task creation with the imported trusted numbers. Backups created before this feature default to disabled with no trusted numbers. Settings changes take effect when the user presses Save; Cancel discards the pending changes. Android's `RECEIVE_SMS` permission is per device and is not included in Serena data, so a restored setting does not import messages until permission is granted on that device.
+The enabled state and trusted numbers are included in Serena's JSON export and are restored exactly when that data is imported. This can enable SMS task creation with the imported trusted numbers. Backups created before this feature default to disabled with no trusted numbers. Settings changes take effect when the user presses Save; Cancel discards the pending changes. Uncommitted SMS setting and trusted-sender edits are not restored if Task settings is recreated. Android's `RECEIVE_SMS` permission is per device and is not included in Serena data, so a restored setting does not import messages until permission is granted on that device.
 
 Enabling the feature requires Android's `RECEIVE_SMS` permission. If permission is denied or later revoked, Serena does not import messages and explains that SMS access is unavailable in Task settings.
 

@@ -73,6 +73,30 @@ public class TaskManager
         getContainer().numberOfTasksCompletedToday = 0;
     }
 
+    public boolean isSmsTaskCreationEnabled()
+    {
+        return getContainer().smsTaskCreationEnabled;
+    }
+
+    @NonNull
+    public List<TrustedSmsSender> getTrustedSmsSenders()
+    {
+        List<TrustedSmsSender> trustedSmsSenders = getContainer().trustedSmsSenders;
+
+        if (trustedSmsSenders == null)
+        {
+            return Collections.emptyList();
+        }
+
+        return Collections.unmodifiableList(new ArrayList<>(trustedSmsSenders));
+    }
+
+    public void setSmsTaskSettings(boolean isEnabled, @NonNull List<TrustedSmsSender> trustedSmsSenders)
+    {
+        getContainer().smsTaskCreationEnabled = isEnabled;
+        getContainer().trustedSmsSenders = new ArrayList<>(trustedSmsSenders);
+    }
+
     public void incrementNumberOfTasksCompletedToday()
     {
         resetCompletionCountIfDateChanged();

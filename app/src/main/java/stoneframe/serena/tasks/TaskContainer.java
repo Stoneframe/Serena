@@ -12,4 +12,7 @@ public class TaskContainer
     Integer maximumNumberOfTasksPerDay;
     int numberOfTasksCompletedToday;
     LocalDate taskCompletionCountDate;
+
+    boolean smsTaskCreationEnabled;
+    List<TrustedSmsSender> trustedSmsSenders = new LinkedList<>();
 }

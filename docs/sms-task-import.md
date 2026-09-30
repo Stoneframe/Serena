@@ -19,10 +19,12 @@ Implemented:
 - The SMS setting and trusted senders are included in JSON data. Version 30 migration defaults older data to disabled with no trusted senders.
 - `TaskSmsSettingsTest` and `SmsTaskSettingsStorageTest` cover disabled defaults, sender-list ownership, migrations from versions 27 and 29, and JSON round trips.
 - Checking SMS task creation requests `RECEIVE_SMS`; granting keeps it checked and denying unchecks it. Imported enabled settings remain saved when device permission is absent, with an access warning in Task settings.
+- `TrustedSmsSenderMatcher` uses libphonenumber 9.0.40 to normalize complete, valid phone numbers to E.164 and returns the first saved sender whose number matches. Internal normalization requires non-null phone numbers; trusted entries require non-null senders and phone numbers. A null originating number returns no match. Missing or unsupported country codes use the `ZZ` region fallback.
+- `TrustedSmsSenderMatcherTest` covers regional and international forms, missing and unsupported country codes, padded lowercase country codes, invalid inputs, suffix-only nonmatches, equivalent saved entries, null originating numbers, and matching without a contact name.
 
 Not implemented:
 
-- SMS broadcast reception, multipart filtering, trusted-sender matching, and phone-number normalization.
+- SMS broadcast reception, multipart filtering, and connection of the sender matcher to incoming messages.
 - Task creation and saving, sender attribution, notifications, and task-list refresh.
 
 ## Setup and trusted senders
@@ -33,7 +35,7 @@ The enabled state and trusted numbers are included in Serena's JSON export and a
 
 Enabling the feature requires Android's `RECEIVE_SMS` permission. If permission is denied or later revoked, Serena does not import messages and explains that SMS access is unavailable in Task settings.
 
-At receipt, Serena normalizes and compares the complete originating phone number with trusted numbers using the device's country context. It does not trust a matching display name or a partial number. If a number cannot be normalized unambiguously, the message is treated as untrusted. Only a matching sender proceeds to message-format parsing.
+`TrustedSmsSenderMatcher` normalizes and compares complete originating and trusted phone numbers as E.164 values. National numbers require a supported ISO country code; without one, international numbers with a `+` prefix can match, including formatting such as `(+46) 70 123 45 67`. If multiple saved entries normalize to the same number, the first saved entry is returned. Invalid numbers, alphabetic sender IDs, and numbers with extensions return no match. SMS broadcast reception does not yet call the matcher. The matcher does not use display names or partial numbers.
 
 ## Message format
 

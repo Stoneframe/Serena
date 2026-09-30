@@ -51,6 +51,7 @@ android {
 }
 
 repositories {
+    mavenCentral()
     maven { url 'https://github.com/gkopff/gson-jodatime-serialisers' }
 }
 
@@ -70,6 +71,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.3.2'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.activity:activity:1.8.0'
+    implementation 'com.googlecode.libphonenumber:libphonenumber:9.0.40'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'junit:junit:4.13.2'
 }

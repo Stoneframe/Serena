@@ -17,6 +17,7 @@ public class TaskEditor extends Editor<TaskEditor.TaskEditorListener>
     private final PropertyUtil<LocalDate> deadlineProperty;
     private final PropertyUtil<LocalDate> ignoreBeforeProperty;
     private final PropertyUtil<Boolean> isDoneProperty;
+    private final PropertyUtil<String> senderNameProperty;
 
     public TaskEditor(TaskManager taskManager, Task task, TimeService timeService)
     {
@@ -29,6 +30,7 @@ public class TaskEditor extends Editor<TaskEditor.TaskEditorListener>
         deadlineProperty = getDeadlineProperty();
         ignoreBeforeProperty = getIgnoreBeforeProperty();
         isDoneProperty = getIsDoneProperty();
+        senderNameProperty = getSenderNameProperty();
     }
 
     public String getDescription()
@@ -71,6 +73,17 @@ public class TaskEditor extends Editor<TaskEditor.TaskEditorListener>
     public void setDone(boolean isDone)
     {
         isDoneProperty.setValue(isDone);
+    }
+
+    @Nullable
+    public String getSenderName()
+    {
+        return senderNameProperty.getValue();
+    }
+
+    public void setSenderName(@Nullable String senderName)
+    {
+        senderNameProperty.setValue(senderName);
     }
 
     public void save()
@@ -131,6 +144,14 @@ public class TaskEditor extends Editor<TaskEditor.TaskEditorListener>
             v -> notifyListeners(TaskEditorListener::isDoneChanged));
     }
 
+    private PropertyUtil<String> getSenderNameProperty()
+    {
+        return new PropertyUtil<>(
+            task::getSenderName,
+            task::setSenderName,
+            v -> notifyListeners(TaskEditorListener::senderNameChanged));
+    }
+
     public interface TaskEditorListener
     {
         void descriptionChanged();
@@ -140,5 +161,7 @@ public class TaskEditor extends Editor<TaskEditor.TaskEditorListener>
         void ignoreBeforeChanged();
 
         void isDoneChanged();
+
+        void senderNameChanged();
     }
 }

@@ -1,6 +1,7 @@
 package stoneframe.serena.tasks;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
@@ -29,6 +30,17 @@ public class Task extends Revertible<TaskData>
     void setDescription(String description)
     {
         data().description = description;
+    }
+
+    @Nullable
+    public String getSenderName()
+    {
+        return data().senderName;
+    }
+
+    void setSenderName(@Nullable String senderName)
+    {
+        data().senderName = senderName;
     }
 
     public LocalDate getDeadline()

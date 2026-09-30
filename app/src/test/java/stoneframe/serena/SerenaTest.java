@@ -312,6 +312,11 @@ public class SerenaTest
             public void isDoneChanged()
             {
             }
+
+            @Override
+            public void senderNameChanged()
+            {
+            }
         });
 
         taskEditor.setDeadline(null);

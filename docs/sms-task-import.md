@@ -21,11 +21,13 @@ Implemented:
 - Checking SMS task creation requests `RECEIVE_SMS`; granting keeps it checked and denying unchecks it. Imported enabled settings remain saved when device permission is absent, with an access warning in Task settings.
 - `TrustedSmsSenderMatcher` uses libphonenumber 9.0.40 to normalize complete, valid phone numbers to E.164 and returns the first saved sender whose number matches. Internal normalization requires non-null phone numbers; trusted entries require non-null senders and phone numbers. A null originating number returns no match. Missing or unsupported country codes use the `ZZ` region fallback.
 - `TrustedSmsSenderMatcherTest` covers regional and international forms, missing and unsupported country codes, padded lowercase country codes, invalid inputs, suffix-only nonmatches, equivalent saved entries, null originating numbers, and matching without a contact name.
+- Tasks store an optional `senderName` snapshot, exposed through `Task` and set or cleared through `TaskEditor`. `TaskEditor` also exposes a `senderNameChanged()` listener callback. Names are stored verbatim; `null` means no attribution. Attribution is included in JSON and in-memory checkpoints. Manual tasks and older task data without the field have no attribution; storage remains at version 30.
+- `TaskSenderAttributionTest` and `TaskSenderAttributionStorageTest` cover attribution updates, ordinary task edits, trusted-sender replacement, checkpoint restoration, JSON round trips, and loading version-29 and version-30 tasks without attribution.
 
 Not implemented:
 
 - SMS broadcast reception, multipart filtering, and connection of the sender matcher to incoming messages.
-- Task creation and saving, sender attribution, notifications, and task-list refresh.
+- Task creation and saving from SMS, assigning sender attribution during import, displaying attribution in All Tasks, notifications, and task-list refresh.
 
 ## Setup and trusted senders
 

@@ -46,7 +46,7 @@ public class AllTasksFragment extends Fragment
         taskAdapter = new CheckboxListAdapter<>(
             requireContext(),
             taskManager::getAllTasks,
-            Task::getDescription,
+            this::getTaskMainText,
             Task::isDone,
             t -> t.hasDeadline() ? String.format("Deadline: %s", t.getDeadline()) : "Deadline: None");
         taskAdapter.setCheckboxChangedListener((task, isChecked) ->
@@ -95,6 +95,18 @@ public class AllTasksFragment extends Fragment
         super.onStart();
 
         taskAdapter.notifyDataSetChanged();
+    }
+
+    private String getTaskMainText(Task task)
+    {
+        String senderName = task.getSenderName();
+
+        if (senderName == null || senderName.trim().isEmpty())
+        {
+            return task.getDescription();
+        }
+
+        return getString(R.string.task_description_from, task.getDescription(), senderName);
     }
 
     private void startTaskEditor(Task task, int action)

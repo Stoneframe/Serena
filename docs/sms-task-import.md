@@ -23,11 +23,12 @@ Implemented:
 - `TrustedSmsSenderMatcherTest` covers regional and international forms, missing and unsupported country codes, padded lowercase country codes, invalid inputs, suffix-only nonmatches, equivalent saved entries, null originating numbers, and matching without a contact name.
 - Tasks store an optional `senderName` snapshot, exposed through `Task` and set or cleared through `TaskEditor`. `TaskEditor` also exposes a `senderNameChanged()` listener callback. Names are stored verbatim; `null` means no attribution. Attribution is included in JSON and in-memory checkpoints. Manual tasks and older task data without the field have no attribution; storage remains at version 30.
 - `TaskSenderAttributionTest` and `TaskSenderAttributionStorageTest` cover attribution updates, ordinary task edits, trusted-sender replacement, checkpoint restoration, JSON round trips, and loading version-29 and version-30 tasks without attribution.
+- All Tasks appends sender attribution to the main description, for example `Buy milk (from: Ada)`. Null, empty, or whitespace-only sender names add no suffix; other names are displayed verbatim. Deadline text remains below the description. Today and the task editor show the description without attribution.
 
 Not implemented:
 
 - SMS broadcast reception, multipart filtering, and connection of the sender matcher to incoming messages.
-- Task creation and saving from SMS, assigning sender attribution during import, displaying attribution in All Tasks, notifications, and task-list refresh.
+- Task creation and saving from SMS, assigning sender attribution during import, notifications, and task-list refresh.
 
 ## Setup and trusted senders
 

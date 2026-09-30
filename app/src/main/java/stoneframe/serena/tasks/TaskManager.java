@@ -97,6 +97,40 @@ public class TaskManager
         getContainer().trustedSmsSenders = new ArrayList<>(trustedSmsSenders);
     }
 
+    /**
+     * Adds an accepted decoded single-part SMS to memory, or returns null without importing it.
+     */
+    @Nullable
+    public SmsTaskImportResult importSmsTask(
+        @Nullable String originatingNumber,
+        @Nullable String messageBody,
+        @Nullable String countryIso)
+    {
+        if (!isSmsTaskCreationEnabled())
+        {
+            return null;
+        }
+
+        TrustedSmsSender sender = TrustedSmsSenderMatcher.findMatch(
+            originatingNumber,
+            getTrustedSmsSenders(),
+            countryIso);
+
+        if (sender == null)
+        {
+            return null;
+        }
+
+        SmsTaskMessageParser.ParsedTask parsedTask = SmsTaskMessageParser.parse(messageBody);
+
+        if (parsedTask == null)
+        {
+            return null;
+        }
+
+        return createImportedTask(sender, parsedTask);
+    }
+
     public void incrementNumberOfTasksCompletedToday()
     {
         resetCompletionCountIfDateChanged();
@@ -154,6 +188,22 @@ public class TaskManager
     void removeTask(Task task)
     {
         getContainer().tasks.remove(task);
+    }
+
+    private SmsTaskImportResult createImportedTask(
+        @NonNull TrustedSmsSender sender,
+        @NonNull SmsTaskMessageParser.ParsedTask parsedTask)
+    {
+        Task task = createTask();
+
+        TaskEditor editor = getTaskEditor(task);
+
+        editor.setDescription(parsedTask.getDescription());
+        editor.setDeadline(parsedTask.getDeadline());
+        editor.setSenderName(sender.getContactName());
+        editor.save();
+
+        return new SmsTaskImportResult(task, parsedTask.isDeadlineUnreadable());
     }
 
     private void removeOldCompletedTasks(LocalDate today)
@@ -248,5 +298,28 @@ public class TaskManager
     private TaskContainer getContainer()
     {
         return container.get();
+    }
+
+    public static final class SmsTaskImportResult
+    {
+        private final Task task;
+        private final boolean deadlineUnreadable;
+
+        private SmsTaskImportResult(@NonNull Task task, boolean deadlineUnreadable)
+        {
+            this.task = task;
+            this.deadlineUnreadable = deadlineUnreadable;
+        }
+
+        @NonNull
+        public Task getTask()
+        {
+            return task;
+        }
+
+        public boolean isDeadlineUnreadable()
+        {
+            return deadlineUnreadable;
+        }
     }
 }

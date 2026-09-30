@@ -26,11 +26,14 @@ Implemented:
 - All Tasks appends sender attribution to the main description, for example `Buy milk (from: Ada)`. Null, empty, or whitespace-only sender names add no suffix; other names are displayed verbatim. Deadline text remains below the description. Today and the task editor show the description without attribution.
 - `TaskManager.importSmsTask()` accepts an already decoded single-part message, checks the enabled setting and sender trust, then parses the body and uses the task editor to add an incomplete task to the current in-memory container. The task receives the parsed description and deadline, the current local date as its ignore-before date, and a snapshot of the matched sender's contact name. The result contains the added task and deadline-warning flag; disabled, unmatched, or rejected messages return `null` without changing task data. Repeated accepted messages create separate tasks, and daily task limits do not restrict creation. The operation does not save to storage or refresh the UI.
 - `TaskSmsImportTest` contains 14 tests covering rejection without mutation, task defaults, deadline warnings, sender matching and attribution, repeated messages, daily limits, container replacement, and clock changes. Each test has one Arrange, Act, and Assert section.
+- `SmsTaskReceiver` receives `SMS_RECEIVED` broadcasts through a manifest receiver requiring `BROADCAST_SMS` from the sender. It checks `RECEIVE_SMS`, requires exactly one PDU, and decodes it through Android's SMS API. PDU extras are read with the typed `IntentCompat.getSerializableExtra()` API; `isSmsReceptionAllowed()` and `isSinglePartPdu()` check reception eligibility and PDU input. Multipart broadcasts, unrelated actions, malformed extras or PDUs, unsupported formats, and unsuccessful decoding are ignored before loading Serena. The receiver passes the originating number, body, and network country code to `TaskManager.importSmsTask()`, then calls `Serena.save()` once for an accepted import. It does not save rejected imports. When network country information is unavailable, the matcher uses its existing region fallback.
+- `GlobalState.getOrLoadSerena()` reuses the active Serena instance or loads and publishes one after a successful load. The SMS receiver and `NotifierReceiver` use this shared initialization path; `MainActivity` reuses the published instance when opened afterward.
+- `SmsTaskReceiverTest` contains 14 Android instrumentation tests covering accepted and rejected imports, saving and reloading, sender attribution, preserved existing and unsaved tasks, repeated messages, multipart and malformed broadcasts, denied permission, shared initialization, notification-receiver reuse, and failed loading. Tests use separate preference files and one Arrange, Act, and Assert section each.
+- On an API-30 emulator, real SMS delivery was checked with Serena open, backgrounded, and without a running process. Reload checks confirmed saved task counts, preserved existing tasks, and sender attribution. Real two-part SMS messages and messages delivered after permission revocation added no tasks. Verification used an isolated application ID and a temporary JUnit instrumentation runner; the configured `AndroidJUnitRunner` is absent from the current test APK.
 
 Not implemented:
 
-- SMS broadcast reception, multipart filtering, and connection of the sender matcher to incoming messages.
-- Connecting SMS reception to task import, saving imported tasks to storage, notifications, and task-list refresh.
+- New-task notifications, deadline-warning notifications, and live task-list refresh after SMS import.
 
 ## Setup and trusted senders
 
@@ -40,7 +43,7 @@ The enabled state and trusted numbers are included in Serena's JSON export and a
 
 Enabling the feature requires Android's `RECEIVE_SMS` permission. If permission is denied or later revoked, Serena does not import messages and explains that SMS access is unavailable in Task settings.
 
-`TrustedSmsSenderMatcher` normalizes and compares complete originating and trusted phone numbers as E.164 values. National numbers require a supported ISO country code; without one, international numbers with a `+` prefix can match, including formatting such as `(+46) 70 123 45 67`. If multiple saved entries normalize to the same number, the first saved entry is returned. Invalid numbers, alphabetic sender IDs, and numbers with extensions return no match. SMS broadcast reception does not yet call the matcher. The matcher does not use display names or partial numbers.
+`TrustedSmsSenderMatcher` normalizes and compares complete originating and trusted phone numbers as E.164 values. National numbers require a supported ISO country code; without one, international numbers with a `+` prefix can match, including formatting such as `(+46) 70 123 45 67`. If multiple saved entries normalize to the same number, the first saved entry is returned. Invalid numbers, alphabetic sender IDs, and numbers with extensions return no match. SMS broadcast reception calls the matcher through `TaskManager.importSmsTask()`. The matcher does not use display names or partial numbers.
 
 ## Message format
 

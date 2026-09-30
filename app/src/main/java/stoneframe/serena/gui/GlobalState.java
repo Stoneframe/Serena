@@ -2,15 +2,26 @@ package stoneframe.serena.gui;
 
 import android.app.Application;
 
+import androidx.annotation.MainThread;
+import androidx.annotation.NonNull;
+
 import stoneframe.serena.Serena;
+import stoneframe.serena.Storage;
 import stoneframe.serena.balancers.Balancer;
 import stoneframe.serena.checklists.Checklist;
 import stoneframe.serena.chores.Chore;
+import stoneframe.serena.chores.choreselectors.SimpleChoreSelector;
+import stoneframe.serena.chores.efforttrackers.WeeklyEffortTracker;
 import stoneframe.serena.notes.NoteGroupView;
 import stoneframe.serena.notes.NoteView;
 import stoneframe.serena.reminders.Reminder;
 import stoneframe.serena.routines.Routine;
+import stoneframe.serena.storages.JsonConverter;
+import stoneframe.serena.storages.SharedPreferencesStorage;
+import stoneframe.serena.storages.json.SimpleChoreSelectorConverter;
+import stoneframe.serena.storages.json.WeeklyEffortTrackerConverter;
 import stoneframe.serena.tasks.Task;
+import stoneframe.serena.timeservices.RealTimeService;
 
 public class GlobalState extends Application
 {
@@ -46,6 +57,35 @@ public class GlobalState extends Application
     public Serena getSerena()
     {
         return serena;
+    }
+
+    @MainThread
+    @NonNull
+    public Serena getOrLoadSerena()
+    {
+        if (serena == null)
+        {
+            Serena loadedSerena = createSerena();
+            loadedSerena.load();
+            serena = loadedSerena;
+        }
+
+        return serena;
+    }
+
+    private Serena createSerena()
+    {
+        Storage storage = new SharedPreferencesStorage(
+            this,
+            new JsonConverter(
+                new SimpleChoreSelectorConverter(),
+                new WeeklyEffortTrackerConverter()));
+
+        return new Serena(
+            storage,
+            new RealTimeService(),
+            new WeeklyEffortTracker(10, 10, 10, 10, 10, 30, 30),
+            new SimpleChoreSelector());
     }
 
     public void setSerena(Serena serena)

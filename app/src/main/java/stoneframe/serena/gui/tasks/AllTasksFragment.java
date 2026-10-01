@@ -17,10 +17,11 @@ import stoneframe.serena.R;
 import stoneframe.serena.gui.GlobalState;
 import stoneframe.serena.gui.util.CheckboxListAdapter;
 import stoneframe.serena.Serena;
+import stoneframe.serena.SerenaChangedListener;
 import stoneframe.serena.tasks.Task;
 import stoneframe.serena.tasks.TaskManager;
 
-public class AllTasksFragment extends Fragment
+public class AllTasksFragment extends Fragment implements SerenaChangedListener
 {
     private ActivityResultLauncher<Intent> editTaskLauncher;
 
@@ -94,6 +95,29 @@ public class AllTasksFragment extends Fragment
     {
         super.onStart();
 
+        taskAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        serena.addChangedListener(this);
+        taskAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+
+        serena.removeChangedListener(this);
+    }
+
+    @Override
+    public void onSerenaChanged()
+    {
         taskAdapter.notifyDataSetChanged();
     }
 

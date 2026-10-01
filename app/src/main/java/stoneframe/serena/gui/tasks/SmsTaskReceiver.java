@@ -94,6 +94,7 @@ public class SmsTaskReceiver extends BroadcastReceiver
         if (importResult != null)
         {
             serena.save();
+            serena.notifyChange();
 
             Notifier.showTaskImportNotification(context, importResult.isDeadlineUnreadable());
         }

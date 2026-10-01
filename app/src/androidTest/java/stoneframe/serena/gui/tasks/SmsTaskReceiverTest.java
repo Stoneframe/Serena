@@ -37,6 +37,7 @@ import java.util.UUID;
 import stoneframe.serena.Container;
 import stoneframe.serena.R;
 import stoneframe.serena.Serena;
+import stoneframe.serena.SerenaChangedListener;
 import stoneframe.serena.Storage;
 import stoneframe.serena.chores.choreselectors.SimpleChoreSelector;
 import stoneframe.serena.chores.efforttrackers.WeeklyEffortTracker;
@@ -64,6 +65,9 @@ public class SmsTaskReceiverTest
     private RecordingStorage storage;
     private Serena serena;
     private String preferencesName;
+    private int changeCount;
+    private int saveCountAtChange;
+    private SerenaChangedListener changeListener;
 
     @Before
     public void setUp()
@@ -88,12 +92,19 @@ public class SmsTaskReceiverTest
             addTask("Keep task");
             serena.save();
             storage.saveCount = 0;
+            changeListener = () ->
+            {
+                changeCount++;
+                saveCountAtChange = storage.saveCount;
+            };
+            serena.addChangedListener(changeListener);
         });
     }
 
     @After
     public void tearDown()
     {
+        onMain(() -> serena.removeChangedListener(changeListener));
         cancelTaskNotification();
         targetContext.deleteSharedPreferences(preferencesName);
     }
@@ -112,6 +123,8 @@ public class SmsTaskReceiverTest
         // Assert
         assertEquals(1, storage.saveCount);
         assertEquals(2, reloaded.getTaskManager().getAllTasks().size());
+        assertEquals(1, changeCount);
+        assertEquals(1, saveCountAtChange);
         assertEquals("Keep task", reloaded.getTaskManager().getAllTasks().get(0).getDescription());
         Task task = reloaded.getTaskManager().getAllTasks().get(1);
         assertEquals("Buy milk", task.getDescription());
@@ -228,6 +241,8 @@ public class SmsTaskReceiverTest
 
         // Assert
         assertEquals(2, storage.saveCount);
+        assertEquals(2, changeCount);
+        assertEquals(2, saveCountAtChange);
         assertEquals(3, serena.getTaskManager().getAllTasks().size());
         assertNotSame(serena.getTaskManager().getAllTasks().get(1),
             serena.getTaskManager().getAllTasks().get(2));
@@ -356,6 +371,7 @@ public class SmsTaskReceiverTest
         assertNull(globalState.getSerena());
         assertEquals("{", savedData());
         assertEquals(0, storage.saveCount);
+        assertEquals(0, changeCount);
     }
 
     @Test
@@ -385,6 +401,7 @@ public class SmsTaskReceiverTest
         assertEquals(savedData, savedData());
         assertEquals(1, storage.saveCount);
         assertNull(taskNotification());
+        assertEquals(0, changeCount);
     }
 
     @Test
@@ -404,6 +421,8 @@ public class SmsTaskReceiverTest
         assertEquals(1, storage.saveCount);
         assertEquals(2, reloaded.getTaskManager().getAllTasks().size());
         assertNull(taskNotification());
+        assertEquals(1, changeCount);
+        assertEquals(1, saveCountAtChange);
     }
 
     private Notification awaitTaskNotification()
@@ -456,6 +475,7 @@ public class SmsTaskReceiverTest
 
     private void assertRejected()
     {
+        assertEquals(0, changeCount);
         assertEquals(0, storage.saveCount);
         assertEquals(1, serena.getTaskManager().getAllTasks().size());
         assertEquals("Keep task", serena.getTaskManager().getAllTasks().get(0).getDescription());

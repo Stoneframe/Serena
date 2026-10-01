@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
@@ -54,6 +56,7 @@ public class TaskSettingsActivity extends AppCompatActivity
 
     private ActivityResultLauncher<Intent> contactPickerLauncher;
     private ActivityResultLauncher<String> smsPermissionLauncher;
+    private ActivityResultLauncher<String> notificationPermissionLauncher;
     private TrustedSmsSenderAdapter trustedSmsSenderAdapter;
 
     private boolean isShowingSmsPermissionWarning;
@@ -122,6 +125,10 @@ public class TaskSettingsActivity extends AppCompatActivity
         smsPermissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(),
             this::onSmsPermissionResult);
+
+        notificationPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            this::onNotificationPermissionResult);
     }
 
     private void bindViews()
@@ -171,19 +178,49 @@ public class TaskSettingsActivity extends AppCompatActivity
         if (!hasSmsPermission())
         {
             smsPermissionLauncher.launch(Manifest.permission.RECEIVE_SMS);
+            return;
         }
+
+        requestNotificationPermissionIfNeeded();
     }
 
     private void onSmsPermissionResult(Boolean isGranted)
     {
+        if (!smsTaskCreationCheckBox.isChecked())
+        {
+            return;
+        }
+
         if (Boolean.TRUE.equals(isGranted))
         {
             clearSmsPermissionWarning();
+            requestNotificationPermissionIfNeeded();
             return;
         }
 
         smsTaskCreationCheckBox.setChecked(false);
         showSmsPermissionWarning(R.string.task_sms_permission_denied);
+    }
+
+    private void requestNotificationPermissionIfNeeded()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+            && smsTaskCreationCheckBox.isChecked() && hasSmsPermission()
+            && ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED)
+        {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+        }
+    }
+
+    private void onNotificationPermissionResult(Boolean isGranted)
+    {
+        if (!smsTaskCreationCheckBox.isChecked() || Boolean.TRUE.equals(isGranted))
+        {
+            return;
+        }
+
+        Toast.makeText(this, R.string.task_sms_notification_permission_denied, Toast.LENGTH_LONG).show();
     }
 
     private void pickTrustedSmsSender()

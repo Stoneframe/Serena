@@ -19,6 +19,7 @@
     <string name="task_description_from">%1$s (from: %2$s)</string>
     <string name="task_sms_permission_unavailable">SMS access is unavailable. Turn this setting off and on to request permission.</string>
     <string name="task_sms_permission_denied">SMS access wasn\'t granted. SMS task creation remains off.</string>
+    <string name="task_sms_notification_permission_denied">Tasks will still be added, but notifications are off. You can enable them in Android app settings.</string>
     <string name="task_sms_trusted_sender_help">Only messages from selected phone numbers can create tasks.</string>
     <string name="task_sms_add_trusted_number">Add trusted number</string>
     <string name="task_sms_remove_sender_description">Remove trusted number for %1$s</string>

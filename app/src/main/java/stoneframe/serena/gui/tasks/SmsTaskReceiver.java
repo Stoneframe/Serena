@@ -15,6 +15,7 @@ import androidx.core.content.IntentCompat;
 
 import stoneframe.serena.Serena;
 import stoneframe.serena.gui.GlobalState;
+import stoneframe.serena.gui.notifications.Notifier;
 import stoneframe.serena.tasks.TaskManager;
 
 public class SmsTaskReceiver extends BroadcastReceiver
@@ -82,6 +83,7 @@ public class SmsTaskReceiver extends BroadcastReceiver
     private static void addTaskToSerena(Context context, SmsMessage message)
     {
         GlobalState globalState = (GlobalState)context.getApplicationContext();
+
         Serena serena = globalState.getOrLoadSerena();
 
         TaskManager.SmsTaskImportResult importResult = serena.getTaskManager().importSmsTask(
@@ -92,6 +94,8 @@ public class SmsTaskReceiver extends BroadcastReceiver
         if (importResult != null)
         {
             serena.save();
+
+            Notifier.showTaskImportNotification(context, importResult.isDeadlineUnreadable());
         }
     }
 

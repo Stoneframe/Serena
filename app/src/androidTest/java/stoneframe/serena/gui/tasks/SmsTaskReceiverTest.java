@@ -6,20 +6,25 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 
 import android.Manifest;
+import android.app.Notification;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.provider.Telephony;
+import android.service.notification.StatusBarNotification;
+
+import androidx.core.app.NotificationManagerCompat;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.After;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,11 +35,13 @@ import java.util.Collections;
 import java.util.UUID;
 
 import stoneframe.serena.Container;
+import stoneframe.serena.R;
 import stoneframe.serena.Serena;
 import stoneframe.serena.Storage;
 import stoneframe.serena.chores.choreselectors.SimpleChoreSelector;
 import stoneframe.serena.chores.efforttrackers.WeeklyEffortTracker;
 import stoneframe.serena.gui.GlobalState;
+import stoneframe.serena.gui.notifications.Notifier;
 import stoneframe.serena.gui.notifications.NotifierReceiver;
 import stoneframe.serena.storages.JsonConverter;
 import stoneframe.serena.storages.SharedPreferencesStorage;
@@ -62,6 +69,8 @@ public class SmsTaskReceiverTest
     public void setUp()
     {
         targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        Notifier.setupNotificationChannels(targetContext);
+        cancelTaskNotification();
         preferencesName = "sms-receiver-test-" + UUID.randomUUID();
         globalState = new IsolatedGlobalState(targetContext, preferencesName);
         receiverContext = new ReceiverContext(targetContext, globalState);
@@ -85,6 +94,7 @@ public class SmsTaskReceiverTest
     @After
     public void tearDown()
     {
+        cancelTaskNotification();
         targetContext.deleteSharedPreferences(preferencesName);
     }
 
@@ -108,6 +118,7 @@ public class SmsTaskReceiverTest
         assertEquals("Ada", task.getSenderName());
         assertFalse(task.isDone());
         assertFalse(task.hasDeadline());
+        assertEquals("New task added", awaitTaskNotification().extras.getString(Notification.EXTRA_TEXT));
     }
 
     @Test
@@ -201,6 +212,8 @@ public class SmsTaskReceiverTest
         assertEquals(1, storage.saveCount);
         assertEquals(2, serena.getTaskManager().getAllTasks().size());
         assertFalse(serena.getTaskManager().getAllTasks().get(1).hasDeadline());
+        assertEquals(targetContext.getString(R.string.task_notification_deadline_unreadable),
+            awaitTaskNotification().extras.getString(Notification.EXTRA_TEXT));
     }
 
     @Test
@@ -218,6 +231,9 @@ public class SmsTaskReceiverTest
         assertEquals(3, serena.getTaskManager().getAllTasks().size());
         assertNotSame(serena.getTaskManager().getAllTasks().get(1),
             serena.getTaskManager().getAllTasks().get(2));
+        assertNotNull(awaitTaskNotification());
+        assertEquals(1, NotificationManagerCompat.from(targetContext).getActiveNotifications().stream()
+            .filter(n -> n.getId() == Notifier.TASKS_CHANNEL_ID.hashCode()).count());
     }
 
     @Test
@@ -342,6 +358,88 @@ public class SmsTaskReceiverTest
         assertEquals(0, storage.saveCount);
     }
 
+    @Test
+    public void onReceive_saveFails_doesNotNotify()
+    {
+        // Arrange
+        Intent intent = smsIntent(BODY);
+        String savedData = savedData();
+        storage.failOnSave = true;
+        RuntimeException[] failure = new RuntimeException[1];
+
+        // Act
+        onMain(() ->
+        {
+            try
+            {
+                new SmsTaskReceiver().onReceive(receiverContext, intent);
+            }
+            catch (RuntimeException e)
+            {
+                failure[0] = e;
+            }
+        });
+
+        // Assert
+        assertNotNull(failure[0]);
+        assertEquals(savedData, savedData());
+        assertEquals(1, storage.saveCount);
+        assertNull(taskNotification());
+    }
+
+    @Test
+    public void onReceive_notificationPermissionDenied_stillSavesTask()
+    {
+        // Arrange
+        Assume.assumeTrue(Build.VERSION.SDK_INT >= 33);
+        receiverContext.notificationPermissionGranted = false;
+        Intent intent = smsIntent(BODY);
+
+        // Act
+        receive(intent);
+        onMain(() -> globalState.setSerena(null));
+        Serena reloaded = loadSerena();
+
+        // Assert
+        assertEquals(1, storage.saveCount);
+        assertEquals(2, reloaded.getTaskManager().getAllTasks().size());
+        assertNull(taskNotification());
+    }
+
+    private Notification awaitTaskNotification()
+    {
+        long deadline = android.os.SystemClock.elapsedRealtime() + 3000;
+        Notification notification;
+
+        while ((notification = taskNotification()) == null
+            && android.os.SystemClock.elapsedRealtime() < deadline)
+        {
+            android.os.SystemClock.sleep(20);
+        }
+
+        assertNotNull(notification);
+        return notification;
+    }
+
+    private void cancelTaskNotification()
+    {
+        NotificationManagerCompat.from(targetContext).cancel(Notifier.TASKS_CHANNEL_ID.hashCode());
+        long deadline = android.os.SystemClock.elapsedRealtime() + 3000;
+        while (taskNotification() != null && android.os.SystemClock.elapsedRealtime() < deadline)
+        {
+            android.os.SystemClock.sleep(20);
+        }
+        assertNull(taskNotification());
+    }
+
+    private Notification taskNotification()
+    {
+        return NotificationManagerCompat.from(targetContext).getActiveNotifications().stream()
+            .filter(n -> n.getId() == Notifier.TASKS_CHANNEL_ID.hashCode())
+            .map(StatusBarNotification::getNotification)
+            .findFirst().orElse(null);
+    }
+
     private void configureSms(boolean enabled, String trustedNumber)
     {
         serena.getTaskManager().setSmsTaskSettings(enabled,
@@ -361,6 +459,7 @@ public class SmsTaskReceiverTest
         assertEquals(0, storage.saveCount);
         assertEquals(1, serena.getTaskManager().getAllTasks().size());
         assertEquals("Keep task", serena.getTaskManager().getAllTasks().get(0).getDescription());
+        assertNull(taskNotification());
     }
 
     private Serena loadSerena()
@@ -431,6 +530,7 @@ public class SmsTaskReceiverTest
     {
         private final GlobalState globalState;
         private boolean smsPermissionGranted = true;
+        private boolean notificationPermissionGranted = true;
 
         private ReceiverContext(Context context, GlobalState globalState)
         {
@@ -452,6 +552,11 @@ public class SmsTaskReceiverTest
                 return smsPermissionGranted ? PackageManager.PERMISSION_GRANTED : PackageManager.PERMISSION_DENIED;
             }
 
+            if (Manifest.permission.POST_NOTIFICATIONS.equals(permission))
+            {
+                return notificationPermissionGranted ? PackageManager.PERMISSION_GRANTED : PackageManager.PERMISSION_DENIED;
+            }
+
             return super.checkPermission(permission, pid, uid);
         }
 
@@ -466,6 +571,7 @@ public class SmsTaskReceiverTest
     {
         private final Storage delegate;
         private int saveCount;
+        private boolean failOnSave;
 
         private RecordingStorage(Storage delegate)
         {
@@ -482,6 +588,10 @@ public class SmsTaskReceiverTest
         public void save(Container container)
         {
             saveCount++;
+            if (failOnSave)
+            {
+                throw new IllegalStateException("Synthetic save failure");
+            }
             delegate.save(container);
         }
 

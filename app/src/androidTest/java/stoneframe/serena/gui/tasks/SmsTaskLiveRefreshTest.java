@@ -210,7 +210,8 @@ public class SmsTaskLiveRefreshTest
     private void openFragment(int destination, int listId)
     {
         activity = (MainActivity)instrumentation.startActivitySync(new Intent(context, MainActivity.class)
-            .putExtra("fragment", destination).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            .putExtra("fragment", destination)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
         instrumentation.waitForIdleSync();
         onMain(() ->
         {

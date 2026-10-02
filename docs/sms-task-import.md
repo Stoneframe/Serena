@@ -1,10 +1,10 @@
-# SMS task creation
+# SMS and RCS task creation
 
 ## Purpose
 
-SMS task creation lets someone add a task to a Serena user's list by sending that user a specially formatted phone SMS. Serena creates the task automatically when SMS task creation is enabled and the sender's phone number is trusted.
+The intended feature lets someone add a task to a Serena user's list by sending that user a specially formatted SMS or RCS message. Serena creates the task automatically when task creation from messages is enabled and the sender's phone number is trusted.
 
-This feature handles new, single-part phone SMS messages only. It does not scan the inbox, reply to the sender, or handle multipart SMS, MMS, RCS, or messages from chat apps.
+End-to-end RCS support is not implemented. A standalone Google Messages notification decoder is implemented but is not connected to task importing. The active implementation handles new, single-part phone SMS messages only. It does not scan the inbox, reply to the sender, or import multipart SMS, MMS, RCS, or messages from chat apps.
 
 ## Implementation status
 
@@ -42,7 +42,28 @@ Implemented:
 - Android 13 / API-33 verification on 2026-10-02 passed five Task settings permission flows: SMS denial, notification denial after SMS approval, approval of both permissions, SMS access already granted, and both permissions already granted. The actual Android dialogs confirmed SMS-before-notification ordering and no notification request after SMS denial. Notification denial showed the explanatory message and left SMS creation checked. Permission callbacks left settings unsaved until Save. With both permissions already granted, enabling showed no permission dialog.
 - Synthetic SMS messages delivered through the API-33 emulator modem verified saved sender attribution and one All Tasks adapter refresh after notification denial and approval. Denial suppressed notification posting; approval posted the generic notification, whose pending intent opened All Tasks with the saved attributed task. All 24 receiver, notification, and list-refresh instrumentation tests passed on API 33 with no skips. Verification used an isolated application ID and temporary instrumentation runners; the test APK build passed. `SmsTaskLiveRefreshTest` now opens each list in a fresh activity task.
 
-No implementation items remain listed for this feature. Android 13 notification permission behavior has been verified on an API-33 emulator; physical-device verification has not been performed.
+SMS implementation is complete; RCS notification reception and import integration remain outstanding. Android 13 notification permission behavior has been verified on an API-33 emulator; physical-device verification has not been performed.
+
+### Message notification decoding
+
+- `MessageNotificationDecoder.decode()` uses the existing AndroidX `MessagingStyle` extraction API and returns an immutable list of decoded message values containing the originating phone number, message body, and timestamp.
+- It accepts notifications from `com.google.android.apps.messaging` for one-to-one conversations. Null input, notification summaries, group conversations, unsupported styles, and malformed notification data return an empty list.
+- Current qualifying messages are returned in their supplied order. Historic messages, attachments, blank text, and outgoing messages are excluded. A null sender or a matching nonempty sender URI/key on the conversation's user identifies an outgoing message; display names are not used for identity matching.
+- Senders must expose a nonempty `tel:` URI. The decoder extracts its decoded payload and copies message text verbatim, including newlines and Unicode. Phone-number validation, trusted-number matching, and command parsing remain in the existing SMS importer components.
+- `MessageNotificationDecoderTest` uses synthetic notifications to cover extraction, ordering, rejection paths, malformed extras, text snapshots, and immutable output. Each test has one Arrange, Act, and Assert section.
+- API-30 verification on 2026-10-02 passed all 19 decoder instrumentation tests with no skips, including AndroidX and framework-built notifications. Verification used an isolated application ID and temporary runner. All 226 JVM tests passed; debug and test APK builds passed, and Android lint reported zero errors and 361 warnings. Real Google Messages notification metadata has not been verified.
+- The decoder does not create or save tasks, receive notification callbacks, request access, distinguish SMS from RCS, or prevent duplicate imports.
+
+## Planned RCS support
+
+- Automatically create tasks from incoming RCS text messages when message task creation is enabled and the sender's phone number is trusted.
+- Use the same `#Serena` tag, description, optional deadline, and deadline handling as SMS messages.
+- Match the sender against the existing trusted phone numbers and save the matched contact name as the task's `senderName` snapshot. A display name alone does not establish trust.
+- Use the existing task creation, saving, list refresh, and task notification behavior. Notification denial must not prevent task creation.
+
+Notification-based reception is the selected implementation direction, beginning with the standalone Google Messages decoder. Notification listener access, availability of the sender's telephone URI on real devices, transport selection, and duplicate prevention remain outstanding. Integration will reuse `TaskManager.importSmsTask()` and the existing load, save, list refresh, and notification paths where suitable. Android's IMS single registration APIs require a privileged, preinstalled app with the default SMS role. [Android IMS single registration](https://source.android.com/docs/core/connect/ims-single-registration)
+
+The remaining setup and behavior sections describe the current SMS implementation.
 
 ## Setup and trusted senders
 
@@ -104,12 +125,18 @@ Android 13 and later may require the user to grant `POST_NOTIFICATIONS`. Task se
 
 ## Acceptance criteria
 
-- A valid single-part message from a trusted number creates one incomplete task with the sender's contact name and optional deadline.
+Current SMS acceptance criteria:
+
+- A valid single-part SMS from a trusted number creates one incomplete task with the sender's contact name and optional deadline.
 - When notifications are allowed, a message with no deadline creates a task without a deadline and receives the generic notification.
 - When notifications are allowed, a message with an invalid calendar date creates a task without a deadline and receives the deadline warning notification.
 - A valid past deadline is retained, and extra lines after the deadline are ignored.
-- A multipart message, an untrusted number, a disabled feature, a missing permission, a missing hashtag, or an empty task description creates no task.
+- A multipart SMS, an untrusted number, a disabled feature, a missing permission, a missing hashtag, or an empty task description creates no task.
 - Removing a trusted number prevents later messages from that number from creating tasks.
 - Task settings take effect on Save, are discarded on Cancel, and restore exactly from Serena JSON when imported.
 - A task received while Serena is open, backgrounded, or not running uses Serena's best-effort save path and can be viewed after returning to the app in ordinary operation; notification denial does not prevent the save attempt.
 - Sender attribution appears in All Tasks only. Existing manually created tasks remain without sender attribution and remain readable from saved data.
+
+Planned RCS acceptance criterion:
+
+- When message task creation is enabled and the required RCS access is available, a valid RCS text message from a trusted phone number creates one incomplete task with the sender's contact name and optional deadline, saves it, refreshes visible task lists, and posts the existing task notification when notifications are allowed.

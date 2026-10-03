@@ -46,7 +46,8 @@ public class JsonConverter
             new UpgradeScriptVersion26(),
             new UpgradeScriptVersion27(),
             new UpgradeScriptVersion28(),
-            new UpgradeScriptVersion29())
+            new UpgradeScriptVersion29(),
+            new UpgradeScriptVersion30())
         .collect(Collectors.toMap(UpgradeScript::getVersion, s -> s));
 
     private final ChoreSelectorConverter choreSelectorConverter;

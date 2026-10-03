@@ -7,6 +7,26 @@
     <string name="remove_transaction_type">Remove transaction type</string>
     <string name="edit_transaction_type">Edit transaction type</string>
     <string name="new_transaction_type">New transaction type</string>
+    <string name="task_sms_creation">Create tasks from SMS</string>
+    <string name="notification_channel_routines">Routines</string>
+    <string name="notification_subtext_routine">Routine</string>
+    <string name="notification_channel_reminders">Reminders</string>
+    <string name="notification_subtext_reminder">Reminder</string>
+    <string name="notification_channel_tasks">Tasks</string>
+    <string name="notification_subtext_task">Task</string>
+    <string name="task_notification_added">New task added</string>
+    <string name="task_notification_deadline_unreadable">New task added, but its deadline could not be read.</string>
+    <string name="task_description_from">%1$s (from: %2$s)</string>
+    <string name="task_sms_permission_unavailable">SMS access is unavailable. Turn this setting off and on to request permission.</string>
+    <string name="task_sms_permission_denied">SMS access wasn\'t granted. SMS task creation remains off.</string>
+    <string name="task_sms_notification_permission_denied">Tasks will still be added, but notifications are off. You can enable them in Android app settings.</string>
+    <string name="task_sms_trusted_sender_help">Only messages from selected phone numbers can create tasks.</string>
+    <string name="task_sms_add_trusted_number">Add trusted number</string>
+    <string name="task_sms_remove_sender_description">Remove trusted number for %1$s</string>
+    <string name="task_sms_no_contacts_app">No contacts app is available to select a phone number.</string>
+    <string name="task_sms_phone_number_unreadable">The selected phone number could not be read.</string>
+    <string name="task_sms_contact_needs_name_and_number">The selected contact needs a name and phone number.</string>
+    <string name="task_sms_number_already_trusted">That phone number is already trusted.</string>
     <string name="note_group">Note group</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

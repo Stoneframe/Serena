@@ -112,7 +112,7 @@ public class RoutineManager
     public void procedureDone(PendingProcedure procedure)
     {
         Routine<?> routine = getContainer().routines.stream()
-            .filter(r -> r.getAllProcedures().contains(procedure.getProcedure()))
+            .filter(r -> r.equals(procedure.getRoutine()))
             .findFirst()
             .orElse(null);
 

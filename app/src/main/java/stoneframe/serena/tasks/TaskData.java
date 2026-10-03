@@ -5,6 +5,7 @@ import org.joda.time.LocalDate;
 class TaskData
 {
     String description;
+    String senderName;
     LocalDate deadline;
     LocalDate ignoreBefore;
     LocalDate completed;

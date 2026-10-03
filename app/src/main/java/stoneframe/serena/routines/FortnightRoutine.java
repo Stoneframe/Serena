@@ -73,10 +73,12 @@ public class FortnightRoutine extends Routine<FortnightRoutineData>
     List<PendingProcedure> getPendingProcedures(LocalDateTime now)
     {
         List<PendingProcedure> week1PendingProcedures = data().week1.getPendingProceduresBetween(
+            this,
             data().lastCompleted,
             now);
 
         List<PendingProcedure> week2PendingProcedures = data().week2.getPendingProceduresBetween(
+            this,
             data().lastCompleted,
             now);
 

@@ -41,10 +41,8 @@ public class TrustedSmsSenderAdapter extends RecyclerView.Adapter<TrustedSmsSend
     {
         TrustedSmsSender sender = senders.get(position);
 
-        holder.senderTextView.setText(holder.itemView.getContext().getString(
-            R.string.task_sms_sender_format,
-            sender.getContactName(),
-            sender.getPhoneNumber()));
+        holder.senderTextView.setText(sender.getContactName());
+        holder.phoneNumberTextView.setText(sender.getPhoneNumber());
         holder.removeButton.setContentDescription(holder.itemView.getContext().getString(
             R.string.task_sms_remove_sender_description,
             sender.getContactName()));
@@ -60,12 +58,14 @@ public class TrustedSmsSenderAdapter extends RecyclerView.Adapter<TrustedSmsSend
     static class ViewHolder extends RecyclerView.ViewHolder
     {
         final TextView senderTextView;
+        final TextView phoneNumberTextView;
         final ImageButton removeButton;
 
         ViewHolder(View itemView)
         {
             super(itemView);
             senderTextView = itemView.findViewById(R.id.trustedSmsSenderTextView);
+            phoneNumberTextView = itemView.findViewById(R.id.trustedSmsSenderPhoneNumberTextView);
             removeButton = itemView.findViewById(R.id.removeTrustedSmsSenderButton);
         }
     }

@@ -2,132 +2,93 @@
 
 ## Working rules
 
-- Follow **Inspect → Plan → Implement → Verify**, scaling each phase to the task's complexity and risk.
-- Before proposing changes, inspect the relevant implementation, tests, configuration, documentation,
-  and Git status. Prefer observed behavior and tests over implementation, configuration, documentation,
-  comments, and assumptions, in that order. Point out conflicts with the requested assumptions.
-- Before introducing new code, abstractions, helpers, utilities, patterns, or dependencies, search the
-  existing codebase for equivalent or closely related functionality. Prefer reusing or extending
-  established solutions when they are appropriate. Do not force reuse when the existing solution is
-  unsuitable; the goal is to discover before inventing.
-- Prefer short, focused methods. Aim for roughly 5 substantive logical lines where this can be achieved
-  naturally, excluding blank lines and lines containing only braces; a statement or expression that
-  wraps across multiple visual/editor lines counts as one logical line. Treat 5 lines as a guideline,
-  not a hard limit: methods may exceed it when keeping the logic together improves readability,
-  cohesion, or maintainability. Do not extract helper methods solely to satisfy the line count; extract
-  methods when they represent a meaningful operation, responsibility, or abstraction. Methods exceeding
-  roughly 10–15 substantive logical lines should prompt consideration of whether meaningful
-  responsibilities can be extracted. Readability and cohesion take precedence over line count.
-- When planning a change, identify relevant existing patterns and components that can be reused or
-  extended.
-- For non-trivial changes, state the current behavior, intended change, affected components, risks,
-  and verification approach before editing.
-- Write plans so that a lower-capability model can execute them without relying on unstated context:
-  name the relevant files, concrete steps, assumptions, edge cases, and verification commands.
-- Make the smallest sufficient conceptual change. Preserve behavior outside the request and unrelated
-  user changes. Avoid unrelated refactoring, renaming, formatting, abstractions, or dependency changes.
-- After implementing substantial or high-risk changes—especially persistence or schema, lifecycle,
-  concurrency, security, release, or user-data changes—begin a separate second-pass review objective,
-  preferably in a fresh prompt or turn. Ignore the original plan and inspect the resulting diff as if it
-  were written by another developer. Look for incorrect assumptions, unnecessarily broad changes,
-  regressions, boundary cases, state and concurrency problems, and missing tests. Add targeted regression
-  tests when a discovered failure is meaningfully testable; otherwise use the most appropriate
-  verification. Fix the issues and rerun relevant verification.
-- Review the final diff and explain verification limits. Do not claim completion solely from reading code.
+- Follow **Inspect → Plan → Implement → Verify** for each task or iterative step, scaling each phase
+  to its complexity and risk. Small changes can still carry high risk.
+- Start with Git status, affected code, and relevant tests/callers. For bounded, low-risk changes, stop
+  inspection once behavior, a suitable existing pattern, and verification are clear. Expand for unresolved
+  coupling or risk. Prefer behavior/tests, implementation, configuration, documentation, comments, then
+  assumptions; point out conflicting evidence.
+- Record starting working-tree status and pre-existing edits in affected files, including untracked files,
+  so the current step's changes can be reviewed separately. Preserve all pre-existing work.
+- Check for nested `AGENTS.md` files when entering a subtree; read applicable root-to-target instructions,
+  with the most specific governing conflicts. Repeat discovery when the target or instruction files change.
+- Reuse findings from earlier steps in the conversation when still applicable. Check current affected code
+  before editing; repeat broader inspection when changes, failures, or new evidence invalidate findings.
+- Search for existing functionality and patterns before introducing code, helpers, abstractions, or
+  dependencies. Reuse or extend suitable solutions.
+- For a small step, a 1–3 sentence plan covering the change, affected files, verification, and any material
+  risk is sufficient; trivial changes may use an implicit plan. For complex/high-risk work, also state
+  current behavior and relevant edge cases. Create detailed execution plans only when explicitly requested
+  or transferring implementation to another agent; include concrete steps, assumptions, and verification
+  commands. Routine completion reports need no additional plan. Proceed with an authorized step without
+  a separate plan-approval pause.
+- Make the smallest sufficient conceptual change. Preserve unrelated behavior and user edits; avoid
+  unrelated refactoring, renaming, formatting, abstractions, or dependency changes.
+- Prefer short, focused methods, aiming for roughly 5 substantive logical lines when natural.
+  Wrapped statements count once; blank and brace-only lines do not count. Extract meaningful
+  responsibilities, never solely to meet a length target; readability and cohesion take precedence.
+- Use `rg` and scoped searches; widen only when needed. Batch independent reads/searches and keep output
+  focused. Read only applicable documentation sections; reuse unchanged instructions and findings.
+- For release work, use the [serena-release skill](.agents/skills/serena-release/SKILL.md).
+- Keep keystores, `keystore.properties`, credentials, and local SDK configuration out of version control
+  and secrets out of logs/responses. Preserve ignored local configuration.
 
-## Repository map and conventions
+## Iterative feature work
 
-- Before working in a subdirectory, search for more specific nested `AGENTS.md` files. Read all
-  applicable instruction files from the repository root toward the target; the most specific file
-  governs its subtree when instructions conflict.
-- Keep production code in the single `app` module, under `app/src/main/java/stoneframe/serena/`.
-  Feature packages contain domain managers, editors, and models; `gui/` contains Android screens,
-  adapters, and notification handling; `storages/` contains persistence, with JSON adapters in
-  `storages/json/` and migrations in `storages/versions/`; `timeservices/` supplies the clock seam.
-- Keep XML layouts, styles, strings, and other resources under `app/src/main/res/`, and component and
-  permission declarations in `app/src/main/AndroidManifest.xml`.
-- Put JVM tests under `app/src/test/java/stoneframe/serena/`, mirroring production packages.
-  Reuse the handwritten doubles and fixtures in `mocks/` where suitable. Use the existing JUnit 4 setup.
-- Follow [docs/code-style.md](docs/code-style.md) for Java, tests, XML, Groovy, and Markdown.
-  Apply its required rules to new and substantially changed code; treat explicitly labeled
-  recommendations as guidance. Preserve surrounding legacy conventions outside the change.
-- Consult [docs/architecture.md](docs/architecture.md) for component relationships and risk areas.
-  Treat its findings and verification results as a dated analysis; check current code before relying
-  on them. Do not interpret its improvement proposals as authorization to expand a task.
-- Inspect `app/build.gradle`, root Gradle files, and `gradle/wrapper/` for current build configuration.
-  Do not infer language settings from local IDE defaults or edit generated build outputs.
+- Use the feature description as context and the requested step as scope. Consider feature compatibility
+  without producing a full implementation plan unless requested.
+- When asked to suggest the next step, inspect and propose one cohesive, independently reviewable change;
+  do not edit files or routinely run builds/test suites. Run checks when needed to resolve uncertainty
+  affecting the proposal. When asked to implement it, plan, implement, and verify that step, then stop for review.
+- Keep the step complete and verifiable. Do not implement later steps or add speculative scaffolding.
 
-## Architecture, persistence, and state
+## Project guidance
 
-- Extend the existing Java managers/editors and XML Views approach unless the task requires a broader
-  architectural change. Trace the affected screen, manager/editor, persistence, and notification paths.
-- Account for the shared mutable `Container` owned by `Serena`. Managers resolve feature containers
-  through suppliers; selected entities and editors can retain stale references after `Serena.load()`.
-  Do not assume query methods are side-effect free or returned model objects are isolated copies.
-- Distinguish editor/model checkpoints from persistence: `Revertible.save()` records an in-memory
-  checkpoint, while `Serena.save()` delegates to storage. Verify Save, Cancel, refresh, and alarm
-  rescheduling behavior at the affected call sites; do not assume a manager mutation persists itself.
-- Preserve stored-data compatibility. `SharedPreferencesStorage` serializes the whole aggregate as
-  JSON, and Gson field names, including private fields, can form part of the schema. Do not rename
-  persisted fields, change sentinel values, or restructure models as style cleanup.
-- When changing the schema, inspect `JsonConverter` and its ordered migration registration. Test
-  representative older inputs through the affected migration chain, current-data round trips, and
-  preservation of user data. An isolated upgrade-script test does not verify the complete chain.
-- For import/replacement changes, test malformed and unsupported inputs and ensure failure preserves
-  the last usable saved data. Never use real user data as a destructive test fixture.
-- Use the existing `TimeService` seam for new time-dependent domain behavior and deterministic test
-  dates. Check relevant date boundaries, recurrence, time-zone/DST conversion, and clock changes.
-- For lifecycle or notification changes, consider backgrounding, recreation, process loss, cold receiver
-  entry, permissions, and alarm recovery where relevant. `GlobalState` selections are process-local;
-  they are not durable restoration state. Pair listener registration and callback/resource cleanup.
-- Before moving model or storage operations off the main thread, define state ownership and write
-  ordering; do not assume the shared graph is thread-safe.
+- When locating components or adding files, follow the
+  [repository structure](docs/project-guide.md#repository-structure).
+- For build setup, compatibility, verification commands, or reports, use the
+  [build and verification guide](docs/project-guide.md#build-and-verification).
+- Follow applicable required rules in [docs/code-style.md](docs/code-style.md) for new/substantially changed
+  code; recommendations are guidance. Preserve surrounding legacy conventions.
+- Use [docs/architecture.md](docs/architecture.md) to resolve unclear component boundaries or state ownership.
+  Verify relevant dated findings against current code; its proposals do not authorize broader work.
 
-## Build and verification commands
+## State invariants
 
-Run commands from the repository root using the checked-in wrapper. These examples use PowerShell;
-use `./gradlew` in a POSIX shell. Provide a compatible JDK, Android SDK, and writable Gradle cache.
+- `Serena` owns a shared mutable `Container`; managers use suppliers, but selections/editors may retain
+  stale references after `Serena.load()`. Queries may mutate state; returned models are not necessarily copies.
+- `Revertible.save()` creates an in-memory checkpoint; `Serena.save()` persists through storage.
+  Manager mutations need not persist.
+- Preserve stored-data compatibility: `SharedPreferencesStorage` serializes the whole aggregate, and Gson
+  fields, including private fields, may be schema. Do not rename persisted fields, alter sentinels,
+  or restructure models for style.
+- For saving/editing, schema, import/replacement, time, lifecycle, notification, or concurrency changes,
+  follow the applicable sections of [docs/state-safety.md](docs/state-safety.md).
 
-| Purpose | Command |
-| --- | --- |
-| Debug JVM unit tests | `.\gradlew.bat :app:testDebugUnitTest --console=plain` |
-| One test class | `.\gradlew.bat :app:testDebugUnitTest --tests "stoneframe.serena.reminders.ReminderManagerTest" --console=plain` |
-| Debug APK | `.\gradlew.bat :app:assembleDebug --console=plain` |
-| Android lint | `.\gradlew.bat :app:lintDebug --console=plain` |
-| Tracked diff whitespace | `git diff --check` |
+## Verification
 
-- Choose checks appropriate to the change: relevant unit tests for domain logic, a debug build for
-  code/resource integration, and lint for Android-facing changes. For documentation-only edits,
-  verify accuracy, links, commands, and the diff; an application rebuild is usually unnecessary.
-- Use `--offline` only when dependencies are cached. Report environment failures separately from
-  code failures. Do not change dependencies or signing configuration merely to bypass a local failure.
-- Inspect unit-test results under `app/build/test-results/testDebugUnitTest/` and lint reports under
-  `app/build/reports/`. Distinguish cached/up-to-date results and dry runs from freshly executed checks.
-- Do not treat JVM tests as proof of Android persistence, lifecycle, or alarm behavior: `MockStorage.save()`
-  is a no-op. Perform relevant device/emulator checks, or explicitly report that they remain unverified.
-
-## Releases and secrets
-
-- Follow [RELEASE.md](RELEASE.md) and use [scripts/release.ps1](scripts/release.ps1) for release work.
-  Consult the repository's [serena-release skill](.agents/skills/serena-release/SKILL.md) when preparing,
-  verifying, finalizing, tagging, or handing off a release.
-- Use `.\scripts\release.ps1 -Verify -VersionName <major.minor>` after replacing the placeholder with
-  the intended release version. The script requires `master`, matching version/changelog metadata,
-  no unrelated working-tree changes, an unused release tag, and local signing/build tools.
-- Expect release verification to run `test` and `assembleRelease`, copy the signed APK to `app/release/`,
-  verify its signature and metadata, and report a checksum. It is not the everyday debug-build command.
-- Use `-Prepare` for release metadata and changelog preparation; replace generated changelog TODOs.
-  Use `-Finalize` only within requested release finalization: it creates a commit and tag. It does not
-  push or upload the APK. Do not bump versions, tag, or publish as part of unrelated work.
-- Keep keystores, `keystore.properties`, credentials, and local SDK configuration out of version control.
-  Do not print signing secrets in logs or responses. Preserve ignored local configuration.
+- Choose the smallest checks that can catch the likely failure: affected test classes for local domain
+  behavior, a debug build for Android code/resource integration, and lint for relevant Android concerns.
+  Documentation-only changes need accuracy, links, commands, and diff checks, without app builds/tests.
+- Broaden verification for shared behavior, failures, unresolved integration risk, or feature completion.
+  Do not defer necessary high-risk checks. Reuse successful results while code, tests, configuration,
+  dependencies, and environment remain unchanged; rerun when edits or new evidence invalidate them.
+  Combine compatible Gradle tasks in one invocation.
+- Test relevant boundaries/failure paths and add useful regression coverage. Fix findings and rerun
+  affected checks. After substantial or high-risk changes (persistence/schema, lifecycle, concurrency,
+  security, release, user data), perform a separate critical review of the resulting diff, independent
+  of the plan, for assumptions, scope, regressions, state/concurrency errors, and missing tests.
+- Separate environment failures from code failures; do not change dependencies or signing merely
+  to bypass them. Distinguish fresh checks from cached/up-to-date results and dry runs.
+- JVM tests do not prove Android persistence, lifecycle, or alarms: `MockStorage.save()` is a no-op.
+  Perform relevant device/emulator checks or report them as unverified.
 
 ## Before handing off
 
-- Review every changed file and the final diff. Do not remove unrelated user edits; preserve overlapping
-  work and report it when it affects the task. Include untracked files in review because ordinary
-  `git diff` and `git diff --check` do not include them.
-- Check relevant failure paths and boundaries, not just the expected case. Confirm fixes with tests
-  that would catch the original problem where practical.
-- Report what changed, what checks ran and their results, and what could not be verified. Separate
-  observed evidence from inference, and call out remaining risks or blockers without claiming success.
+- Review each file changed in the current step against its starting state, including untracked files;
+  ordinary `git diff` and `git diff --check` omit untracked files. Inspect earlier changes when they overlap
+  or affect correctness; review the cumulative feature diff at completion. If no reliable starting state
+  is available, review the complete affected diff. Remove unrelated changes you introduced and report
+  relevant overlapping work.
+- Briefly report what changed, verification/results, and limits or blockers. Distinguish observations
+  from inference; do not claim completion solely from reading code.

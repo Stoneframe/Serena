@@ -56,18 +56,18 @@ public abstract class Routine<T extends RoutineData> extends Revertible<T>
         return !procedureDateTime.isAfter(data().lastCompleted);
     }
 
-    PendingProcedure getPendingProcedure(LocalDateTime now)
+    ProcedureOccurrence getPendingProcedure(LocalDateTime now)
     {
         return getPendingProcedures(now).stream().findFirst().orElse(null);
     }
 
-    abstract List<PendingProcedure> getPendingProcedures(LocalDateTime now);
+    abstract List<ProcedureOccurrence> getPendingProcedures(LocalDateTime now);
 
     abstract LocalDateTime getNextProcedureTime(LocalDateTime now);
 
     abstract List<Procedure> getProceduresForDate(LocalDate date);
 
-    abstract void procedureDone(PendingProcedure procedure);
+    abstract void procedureDone(ProcedureOccurrence procedure);
 
     void reset(LocalDateTime now)
     {

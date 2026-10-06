@@ -43,7 +43,7 @@ import stoneframe.serena.chores.Chore;
 import stoneframe.serena.chores.ChoreManager;
 import stoneframe.serena.reminders.Reminder;
 import stoneframe.serena.reminders.ReminderManager;
-import stoneframe.serena.routines.PendingProcedure;
+import stoneframe.serena.routines.ProcedureOccurrence;
 import stoneframe.serena.routines.RoutineManager;
 import stoneframe.serena.sleep.Sleep;
 import stoneframe.serena.sleep.SleepManager;
@@ -53,7 +53,7 @@ import stoneframe.serena.tasks.TaskManager;
 
 public class TodayFragment extends Fragment implements SerenaChangedListener
 {
-    private final HashMap<PendingProcedure, Runnable> procedureRemovals = new HashMap<>();
+    private final HashMap<ProcedureOccurrence, Runnable> procedureRemovals = new HashMap<>();
     private final HashMap<Chore, Runnable> choreRemovals = new HashMap<>();
     private final HashMap<Task, Runnable> taskRemovals = new HashMap<>();
 
@@ -63,7 +63,7 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
 
     private ActivityResultLauncher<Intent> editTaskLauncher;
 
-    private SimpleCheckboxListAdapter<PendingProcedure> procedureAdapter;
+    private SimpleCheckboxListAdapter<ProcedureOccurrence> procedureAdapter;
     private SimpleCheckboxListAdapter<Chore> choreAdapter;
     private SimpleCheckboxListAdapter<Task> taskAdapter;
 
@@ -96,7 +96,7 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
         procedureAdapter = new SimpleCheckboxListAdapter<>(
             requireContext(),
             routineManager::getFirstPendingProcedures,
-            PendingProcedure::toString,
+            ProcedureOccurrence::toString,
             R.layout.list_item_today_checked);
         procedureAdapter.registerDataSetObserver(new TodayDataSetObserver());
         ListView procedureListView = rootView.findViewById(R.id.todays_routines);
@@ -463,7 +463,7 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
 
     private synchronized void onProcedureClicked(int position)
     {
-        PendingProcedure procedure = (PendingProcedure)procedureAdapter.getItem(position);
+        ProcedureOccurrence procedure = (ProcedureOccurrence)procedureAdapter.getItem(position);
         if (procedureRemovals.containsKey(procedure))
         {
             procedureAdapter.setUnchecked(procedure);
@@ -529,7 +529,7 @@ public class TodayFragment extends Fragment implements SerenaChangedListener
         }
     }
 
-    private synchronized void removeProcedure(PendingProcedure procedure)
+    private synchronized void removeProcedure(ProcedureOccurrence procedure)
     {
         procedureRemovals.remove(procedure);
         routineManager.procedureDone(procedure);

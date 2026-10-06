@@ -1,6 +1,7 @@
 package stoneframe.serena.routines;
 
-import android.util.Pair;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -63,14 +64,14 @@ public class RoutineManager
             .collect(Collectors.toList());
     }
 
-    public List<Pair<Procedure, Routine<?>>> getProceduresForDate(LocalDate date)
+    public List<ProcedureOccurrence> getProceduresForDate(LocalDate date)
     {
         return getContainer().routines.stream()
             .filter(Routine::isEnabled)
             .flatMap(r -> r.getProceduresForDate(date)
                 .stream()
-                .map(p -> new Pair<Procedure, Routine<?>>(p, r)))
-            .sorted(Comparator.comparing(p -> p.first))
+                .map(p -> new ProcedureOccurrence(r, p, date.toLocalDateTime(p.getTime()))))
+            .sorted()
             .collect(Collectors.toList());
     }
 
@@ -90,7 +91,7 @@ public class RoutineManager
             .orElse(null);
     }
 
-    public List<PendingProcedure> getPendingProcedures()
+    public List<ProcedureOccurrence> getPendingProcedures()
     {
         return getContainer().routines.stream()
             .filter(Routine::isEnabled)
@@ -99,7 +100,7 @@ public class RoutineManager
             .collect(Collectors.toList());
     }
 
-    public List<PendingProcedure> getFirstPendingProcedures()
+    public List<ProcedureOccurrence> getFirstPendingProcedures()
     {
         return getContainer().routines.stream()
             .filter(Routine::isEnabled)
@@ -109,17 +110,20 @@ public class RoutineManager
             .collect(Collectors.toList());
     }
 
-    public void procedureDone(PendingProcedure procedure)
+    public void procedureDone(@NonNull ProcedureOccurrence occurrence)
     {
-        Routine<?> routine = getContainer().routines.stream()
-            .filter(r -> r.equals(procedure.getRoutine()))
-            .findFirst()
-            .orElse(null);
+        Objects.requireNonNull(occurrence);
 
-        assert routine != null;
+        Routine<?> routine = getRoutine(occurrence);
 
-        routine.procedureDone(procedure);
+        if (routine == null || occurrence.isDone())
+        {
+            return;
+        }
+
+        routine.procedureDone(occurrence);
     }
+
 
     void addRoutine(Routine<?> routine)
     {
@@ -134,5 +138,14 @@ public class RoutineManager
     private RoutineContainer getContainer()
     {
         return container.get();
+    }
+
+    @Nullable
+    private Routine<?> getRoutine(@NonNull ProcedureOccurrence procedure)
+    {
+        return getContainer().routines.stream()
+            .filter(r -> r.equals(procedure.getRoutine()))
+            .findFirst()
+            .orElse(null);
     }
 }

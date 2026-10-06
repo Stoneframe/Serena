@@ -14,7 +14,7 @@ Reviewed: 2026-09-25. Scope: `RoutineManager`, daily/weekly/fortnightly recurren
 
 **Status:** `procedureDone` finds the active routine containing the exact `Procedure` instance held by the pending occurrence. Completing B therefore updates B, even when A has a value-equal procedure. [Manager lookup](../app/src/main/java/stoneframe/serena/routines/RoutineManager.java#L112), [regression test](../app/src/test/java/stoneframe/serena/routines/DayRoutineTest.java#L84).
 
-**Related UI issue:** Resolved. `PendingProcedure.equals` and `hashCode` use the `Procedure` instance identity and occurrence date/time. Occurrences backed by separate but value-equal procedures stay distinct, and newly created wrappers around the same procedure remain equal across manager queries. [Pending equality](../app/src/main/java/stoneframe/serena/routines/PendingProcedure.java#L37), [Today selection map](../app/src/main/java/stoneframe/serena/gui/today/TodayFragment.java#L464), [checkbox adapter](../app/src/main/java/stoneframe/serena/gui/util/SimpleCheckboxListAdapter.java#L109).
+**Related UI issue:** Resolved. `ProcedureOccurrence.equals` and `hashCode` use the `Procedure` instance identity and occurrence date/time. Occurrences backed by separate but value-equal procedures stay distinct, and newly created wrappers around the same procedure remain equal across manager queries. [Pending equality](../app/src/main/java/stoneframe/serena/routines/ProcedureOccurrence.java#L37), [Today selection map](../app/src/main/java/stoneframe/serena/gui/today/TodayFragment.java#L464), [checkbox adapter](../app/src/main/java/stoneframe/serena/gui/util/SimpleCheckboxListAdapter.java#L109).
 
 ### 2. A daily routine can skip its earliest alarm tomorrow (high)
 

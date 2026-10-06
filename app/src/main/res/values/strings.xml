@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Serena</string>
+    <string name="routine_overview_complete_title">Mark procedure as done?</string>
+    <string name="routine_overview_complete_message">Mark “%1$s” in routine “%2$s”, scheduled for %3$s, as done? All earlier uncompleted occurrences in this routine, including earlier dates, will also be completed. Occurrences at the same scheduled date and time will be completed together.</string>
     <string name="title_activity_main">Serena</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

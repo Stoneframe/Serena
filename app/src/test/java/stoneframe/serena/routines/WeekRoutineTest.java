@@ -79,7 +79,7 @@ public class WeekRoutineTest
     @Test
     public void getPendingProcedures_noProceduresAdded_returnEmptyList()
     {
-        List<PendingProcedure> pendingProcedures = routineManager.getPendingProcedures();
+        List<ProcedureOccurrence> pendingProcedures = routineManager.getPendingProcedures();
 
         assertTrue(pendingProcedures.isEmpty());
     }
@@ -101,7 +101,7 @@ public class WeekRoutineTest
         // ACT
         context.setCurrentTime(today);
 
-        List<PendingProcedure> pendingProcedures = routineManager.getPendingProcedures();
+        List<ProcedureOccurrence> pendingProcedures = routineManager.getPendingProcedures();
 
         // ASSERT
         assertTrue(pendingProcedures.isEmpty());
@@ -124,7 +124,7 @@ public class WeekRoutineTest
         // ACT
         context.setCurrentTime(today.plusDays(2));
 
-        List<PendingProcedure> pendingProcedures = routineManager.getPendingProcedures();
+        List<ProcedureOccurrence> pendingProcedures = routineManager.getPendingProcedures();
 
         // ASSERT
         assertEquals(1, pendingProcedures.size());
@@ -148,7 +148,7 @@ public class WeekRoutineTest
         // ACT
         context.setCurrentTime(today.toLocalDateTime(new LocalTime(10, 0)));
 
-        List<PendingProcedure> pendingProcedures = routineManager.getPendingProcedures();
+        List<ProcedureOccurrence> pendingProcedures = routineManager.getPendingProcedures();
 
         // ASSERT
         assertEquals(1, pendingProcedures.size());
@@ -176,7 +176,7 @@ public class WeekRoutineTest
         // ACT
         context.setCurrentTime(today.plusDays(3));
 
-        List<PendingProcedure> pendingProcedures = routineManager.getPendingProcedures();
+        List<ProcedureOccurrence> pendingProcedures = routineManager.getPendingProcedures();
 
         // ASSERT
         assertEquals(1, pendingProcedures.size());
@@ -204,7 +204,7 @@ public class WeekRoutineTest
         // ACT
         context.setCurrentTime(today.plusDays(6).toLocalDateTime(new LocalTime(0, 0)));
 
-        List<PendingProcedure> pendingProcedures = routineManager.getPendingProcedures();
+        List<ProcedureOccurrence> pendingProcedures = routineManager.getPendingProcedures();
 
         // ASSERT
         assertEquals(2, pendingProcedures.size());
@@ -233,7 +233,7 @@ public class WeekRoutineTest
         // ACT
         context.setCurrentTime(today.plusDays(9));
 
-        List<PendingProcedure> pendingProcedures = routineManager.getPendingProcedures();
+        List<ProcedureOccurrence> pendingProcedures = routineManager.getPendingProcedures();
 
         // ASSERT
         assertEquals(3, pendingProcedures.size());
@@ -259,12 +259,12 @@ public class WeekRoutineTest
         // ACT
         context.setCurrentTime(today.plusDays(2));
 
-        PendingProcedure pendingProcedure = routineManager.getPendingProcedures().get(0);
+        ProcedureOccurrence pendingProcedure = routineManager.getPendingProcedures().get(0);
 
         routineManager.procedureDone(pendingProcedure);
 
         // ASSERT
-        List<PendingProcedure> pendingProcedures = routineManager.getPendingProcedures();
+        List<ProcedureOccurrence> pendingProcedures = routineManager.getPendingProcedures();
 
         assertTrue(pendingProcedures.isEmpty());
     }
@@ -290,12 +290,12 @@ public class WeekRoutineTest
         // ACT
         context.setCurrentTime(today.plusDays(2));
 
-        PendingProcedure pendingProcedure = routineManager.getPendingProcedures().get(0);
+        ProcedureOccurrence pendingProcedure = routineManager.getPendingProcedures().get(0);
 
         routineManager.procedureDone(pendingProcedure);
 
         // ASSERT
-        List<PendingProcedure> pendingProcedures = routineManager.getPendingProcedures();
+        List<ProcedureOccurrence> pendingProcedures = routineManager.getPendingProcedures();
 
         assertEquals(1, pendingProcedures.size());
         assertEquals("Procedure 2", pendingProcedures.get(0).getDescription());

@@ -192,7 +192,7 @@ public class FortnightRoutineTest
         context.setCurrentTime(mondayWeek1);
 
         // ACT
-        List<PendingProcedure> pendingProcedures = routineManager.getPendingProcedures();
+        List<ProcedureOccurrence> pendingProcedures = routineManager.getPendingProcedures();
 
         // ASSERT
         assertTrue(pendingProcedures.isEmpty());
@@ -211,7 +211,7 @@ public class FortnightRoutineTest
         // ACT
         context.setCurrentTime(mondayWeek1);
 
-        List<PendingProcedure> pendingProcedures = routineManager.getPendingProcedures();
+        List<ProcedureOccurrence> pendingProcedures = routineManager.getPendingProcedures();
 
         // ASSERT
         assertTrue(pendingProcedures.isEmpty());
@@ -230,7 +230,7 @@ public class FortnightRoutineTest
         // ACT
         context.setCurrentTime(tuesdayWeek1);
 
-        List<PendingProcedure> pendingProcedures = routineManager.getPendingProcedures();
+        List<ProcedureOccurrence> pendingProcedures = routineManager.getPendingProcedures();
 
         // ASSERT
         assertTrue(pendingProcedures.isEmpty());
@@ -249,7 +249,7 @@ public class FortnightRoutineTest
         // ACT
         context.setCurrentTime(t(mondayWeek1, 10));
 
-        List<PendingProcedure> pendingProcedures = routineManager.getPendingProcedures();
+        List<ProcedureOccurrence> pendingProcedures = routineManager.getPendingProcedures();
 
         // ASSERT
         assertEquals(1, pendingProcedures.size());
@@ -270,7 +270,7 @@ public class FortnightRoutineTest
         // ACT
         context.setCurrentTime(tuesdayWeek2);
 
-        List<PendingProcedure> pendingProcedures = routineManager.getPendingProcedures();
+        List<ProcedureOccurrence> pendingProcedures = routineManager.getPendingProcedures();
 
         // ASSERT
         assertEquals(1, pendingProcedures.size());
@@ -293,7 +293,7 @@ public class FortnightRoutineTest
         // ACT
         context.setCurrentTime(wednesdayWeek2);
 
-        List<PendingProcedure> pendingProcedures = routineManager.getPendingProcedures();
+        List<ProcedureOccurrence> pendingProcedures = routineManager.getPendingProcedures();
 
         // ASSERT
         assertEquals(2, pendingProcedures.size());
@@ -316,7 +316,7 @@ public class FortnightRoutineTest
         // ACT
         context.setCurrentTime(wednesdayWeek3);
 
-        List<PendingProcedure> pendingProcedures = routineManager.getPendingProcedures();
+        List<ProcedureOccurrence> pendingProcedures = routineManager.getPendingProcedures();
 
         // ASSERT
         assertEquals(2, pendingProcedures.size());
@@ -339,7 +339,7 @@ public class FortnightRoutineTest
         // ACT
         context.setCurrentTime(wednesdayWeek1);
 
-        List<PendingProcedure> pendingProcedures = routineManager.getPendingProcedures();
+        List<ProcedureOccurrence> pendingProcedures = routineManager.getPendingProcedures();
 
         // ASSERT
         assertEquals(1, pendingProcedures.size());
@@ -359,12 +359,12 @@ public class FortnightRoutineTest
         // ACT
         context.setCurrentTime(tuesdayWeek1);
 
-        PendingProcedure pendingProcedure = routineManager.getPendingProcedures().get(0);
+        ProcedureOccurrence pendingProcedure = routineManager.getPendingProcedures().get(0);
 
         routineManager.procedureDone(pendingProcedure);
 
         // ASSERT
-        List<PendingProcedure> pendingProcedures = routineManager.getPendingProcedures();
+        List<ProcedureOccurrence> pendingProcedures = routineManager.getPendingProcedures();
 
         assertTrue(pendingProcedures.isEmpty());
     }
@@ -383,12 +383,12 @@ public class FortnightRoutineTest
         // ACT
         context.setCurrentTime(t(mondayWeek1, 15));
 
-        PendingProcedure pendingProcedure = routineManager.getPendingProcedures().get(0);
+        ProcedureOccurrence pendingProcedure = routineManager.getPendingProcedures().get(0);
 
         routineManager.procedureDone(pendingProcedure);
 
         // ASSERT
-        List<PendingProcedure> pendingProcedures = routineManager.getPendingProcedures();
+        List<ProcedureOccurrence> pendingProcedures = routineManager.getPendingProcedures();
 
         assertTrue(pendingProcedures.isEmpty());
     }
@@ -407,12 +407,12 @@ public class FortnightRoutineTest
         // ACT
         context.setCurrentTime(t(mondayWeek1, 21));
 
-        PendingProcedure pendingProcedure = routineManager.getPendingProcedures().get(0);
+        ProcedureOccurrence pendingProcedure = routineManager.getPendingProcedures().get(0);
 
         routineManager.procedureDone(pendingProcedure);
 
         // ASSERT
-        List<PendingProcedure> pendingProcedures = routineManager.getPendingProcedures();
+        List<ProcedureOccurrence> pendingProcedures = routineManager.getPendingProcedures();
 
         assertEquals(1, pendingProcedures.size());
         assertEquals(t(mondayWeek1, 20), pendingProcedures.get(0).getDateTime());
@@ -432,12 +432,12 @@ public class FortnightRoutineTest
         // ACT
         context.setCurrentTime(t(mondayWeek2, 21));
 
-        PendingProcedure pendingProcedure = routineManager.getPendingProcedures().get(0);
+        ProcedureOccurrence pendingProcedure = routineManager.getPendingProcedures().get(0);
 
         routineManager.procedureDone(pendingProcedure);
 
         // ASSERT
-        List<PendingProcedure> pendingProcedures = routineManager.getPendingProcedures();
+        List<ProcedureOccurrence> pendingProcedures = routineManager.getPendingProcedures();
 
         assertEquals(1, pendingProcedures.size());
         assertEquals(t(mondayWeek2, 20), pendingProcedures.get(0).getDateTime());
@@ -458,12 +458,12 @@ public class FortnightRoutineTest
         // ACT
         context.setCurrentTime(t(tuesdayWeek2, 21));
 
-        PendingProcedure pendingProcedure = routineManager.getPendingProcedures().get(0);
+        ProcedureOccurrence pendingProcedure = routineManager.getPendingProcedures().get(0);
 
         routineManager.procedureDone(pendingProcedure);
 
         // ASSERT
-        List<PendingProcedure> pendingProcedures = routineManager.getPendingProcedures();
+        List<ProcedureOccurrence> pendingProcedures = routineManager.getPendingProcedures();
 
         assertEquals(1, pendingProcedures.size());
         assertEquals(t(mondayWeek2, 20), pendingProcedures.get(0).getDateTime());
@@ -484,7 +484,7 @@ public class FortnightRoutineTest
         // ACT
         context.setCurrentTime(t(sundayWeek1, 15));
 
-        PendingProcedure pendingProcedure = routineManager.getPendingProcedures().get(0);
+        ProcedureOccurrence pendingProcedure = routineManager.getPendingProcedures().get(0);
 
         routineManager.procedureDone(pendingProcedure);
 
@@ -508,7 +508,7 @@ public class FortnightRoutineTest
         // ACT
         context.setCurrentTime(t(mondayWeek2, 15));
 
-        PendingProcedure pendingProcedure = routineManager.getPendingProcedures().get(0);
+        ProcedureOccurrence pendingProcedure = routineManager.getPendingProcedures().get(0);
 
         routineManager.procedureDone(pendingProcedure);
 

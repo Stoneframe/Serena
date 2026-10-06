@@ -26,7 +26,7 @@ import stoneframe.serena.R;
 import stoneframe.serena.Serena;
 import stoneframe.serena.gui.MainActivity;
 import stoneframe.serena.reminders.Reminder;
-import stoneframe.serena.routines.PendingProcedure;
+import stoneframe.serena.routines.ProcedureOccurrence;
 
 public class Notifier
 {
@@ -83,7 +83,7 @@ public class Notifier
     {
         SerenaNotificationChannel channel = getChannel(ROUTINES_CHANNEL_ID);
 
-        List<PendingProcedure> procedures = serena.getRoutineManager().getPendingProcedures();
+        List<ProcedureOccurrence> procedures = serena.getRoutineManager().getPendingProcedures();
 
         if (procedures.isEmpty())
         {
@@ -92,7 +92,7 @@ public class Notifier
         else
         {
             String notificationText = procedures.stream()
-                .map(PendingProcedure::toString)
+                .map(ProcedureOccurrence::toString)
                 .collect(Collectors.joining(System.lineSeparator()));
 
             channel.show(context, notificationText, splash);

@@ -6,13 +6,13 @@ import org.joda.time.LocalDateTime;
 
 import java.util.Objects;
 
-public class PendingProcedure implements Comparable<PendingProcedure>
+public class ProcedureOccurrence implements Comparable<ProcedureOccurrence>
 {
     private final Routine<?> routine;
     private final Procedure procedure;
     private final LocalDateTime dateTime;
 
-    PendingProcedure(Routine<?> routine, Procedure procedure, LocalDateTime dateTime)
+    ProcedureOccurrence(Routine<?> routine, Procedure procedure, LocalDateTime dateTime)
     {
         this.routine = routine;
         this.procedure = procedure;
@@ -29,8 +29,13 @@ public class PendingProcedure implements Comparable<PendingProcedure>
         return dateTime;
     }
 
+    public boolean isDone()
+    {
+        return routine.isDone(dateTime.toLocalDate(), procedure);
+    }
+
     @Override
-    public int compareTo(PendingProcedure other)
+    public int compareTo(ProcedureOccurrence other)
     {
         return this.dateTime.compareTo(other.dateTime);
     }
@@ -42,11 +47,16 @@ public class PendingProcedure implements Comparable<PendingProcedure>
 
         if (obj == null || getClass() != obj.getClass()) return false;
 
-        PendingProcedure other = (PendingProcedure)obj;
+        ProcedureOccurrence other = (ProcedureOccurrence)obj;
 
         return this.routine == other.routine
             && this.procedure == other.procedure
             && Objects.equals(this.dateTime, other.dateTime);
+    }
+
+    public Routine<?> getRoutine()
+    {
+        return routine;
     }
 
     @Override
@@ -60,11 +70,6 @@ public class PendingProcedure implements Comparable<PendingProcedure>
     public String toString()
     {
         return procedure.toString();
-    }
-
-    Routine<?> getRoutine()
-    {
-        return routine;
     }
 
     Procedure getProcedure()

@@ -114,7 +114,7 @@ public class Week
         }
     }
 
-    public List<PendingProcedure> getPendingProceduresBetween(
+    public List<ProcedureOccurrence> getPendingProceduresBetween(
         Routine<?> routine,
         LocalDateTime start,
         LocalDateTime end)
@@ -144,11 +144,11 @@ public class Week
     }
 
     @SafeVarargs
-    private final Stream<PendingProcedure> concat(@NonNull List<PendingProcedure>... pendingProcedures)
+    private final Stream<ProcedureOccurrence> concat(@NonNull List<ProcedureOccurrence>... pendingProcedures)
     {
-        Stream<PendingProcedure> stream = Stream.of();
+        Stream<ProcedureOccurrence> stream = Stream.of();
 
-        for (List<PendingProcedure> procedures : pendingProcedures)
+        for (List<ProcedureOccurrence> procedures : pendingProcedures)
         {
             stream = Stream.concat(stream, procedures.stream());
         }

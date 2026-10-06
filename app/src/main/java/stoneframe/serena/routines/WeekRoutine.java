@@ -27,7 +27,7 @@ public class WeekRoutine extends Routine<WeekRoutineData>
     }
 
     @Override
-    List<PendingProcedure> getPendingProcedures(LocalDateTime now)
+    List<ProcedureOccurrence> getPendingProcedures(LocalDateTime now)
     {
         return data().week.getPendingProceduresBetween(this, data().lastCompleted, now);
     }
@@ -47,7 +47,7 @@ public class WeekRoutine extends Routine<WeekRoutineData>
     }
 
     @Override
-    void procedureDone(PendingProcedure procedure)
+    void procedureDone(ProcedureOccurrence procedure)
     {
         data().lastCompleted = procedure.getDateTime();
     }

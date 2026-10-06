@@ -74,4 +74,5 @@ dependencies {
     implementation 'com.googlecode.libphonenumber:libphonenumber:9.0.40'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test:runner:1.6.2'
 }

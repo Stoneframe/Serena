@@ -43,7 +43,7 @@ public class DayRoutineTest
         // ACT
         context.setCurrentTime(today.toLocalDateTime(new LocalTime(10, 0)));
 
-        PendingProcedure pendingProcedure = routineManager.getPendingProcedures().get(0);
+        ProcedureOccurrence pendingProcedure = routineManager.getPendingProcedures().get(0);
 
         routineManager.procedureDone(pendingProcedure);
 
@@ -70,7 +70,7 @@ public class DayRoutineTest
         // ACT
         context.setCurrentTime(today.toLocalDateTime(new LocalTime(20, 0)));
 
-        PendingProcedure pendingProcedure = routineManager.getPendingProcedures().get(0);
+        ProcedureOccurrence pendingProcedure = routineManager.getPendingProcedures().get(0);
 
         routineManager.procedureDone(pendingProcedure);
 
@@ -98,18 +98,18 @@ public class DayRoutineTest
 
         context.setCurrentTime(today.toLocalDateTime(new LocalTime(10, 0)));
 
-        PendingProcedure firstPendingProcedure = routineManager.getFirstPendingProcedures().stream()
+        ProcedureOccurrence firstPendingProcedure = routineManager.getFirstPendingProcedures().stream()
             .filter(p -> p.getProcedure() == firstProcedure)
             .findFirst()
             .get();
-        PendingProcedure secondPendingProcedure = routineManager.getFirstPendingProcedures().stream()
+        ProcedureOccurrence secondPendingProcedure = routineManager.getFirstPendingProcedures().stream()
             .filter(p -> p.getProcedure() == secondProcedure)
             .findFirst()
             .get();
 
         assertFalse(firstPendingProcedure.equals(secondPendingProcedure));
 
-        PendingProcedure refreshedSecondPendingProcedure = routineManager.getPendingProcedures().stream()
+        ProcedureOccurrence refreshedSecondPendingProcedure = routineManager.getPendingProcedures().stream()
             .filter(p -> p.getProcedure() == secondProcedure)
             .findFirst()
             .get();

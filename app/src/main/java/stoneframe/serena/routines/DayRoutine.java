@@ -25,19 +25,19 @@ public class DayRoutine extends Routine<DayRoutineData>
     }
 
     @Override
-    List<PendingProcedure> getPendingProcedures(LocalDateTime now)
+    List<ProcedureOccurrence> getPendingProcedures(LocalDateTime now)
     {
         return data().procedures.stream()
             .flatMap(p ->
             {
-                List<PendingProcedure> pendingProcedures = new LinkedList<>();
+                List<ProcedureOccurrence> pendingProcedures = new LinkedList<>();
 
                 for (LocalDateTime i = data().lastCompleted.toLocalDate()
                     .toLocalDateTime(LocalTime.MIDNIGHT);
                      i.isBefore(now);
                      i = i.plusDays(1))
                 {
-                    PendingProcedure pendingProcedure = new PendingProcedure(
+                    ProcedureOccurrence pendingProcedure = new ProcedureOccurrence(
                         this,
                         p,
                         i.toLocalDate().toLocalDateTime(p.getTime()));
@@ -78,7 +78,7 @@ public class DayRoutine extends Routine<DayRoutineData>
     }
 
     @Override
-    void procedureDone(PendingProcedure procedure)
+    void procedureDone(ProcedureOccurrence procedure)
     {
         data().lastCompleted = procedure.getDateTime();
     }

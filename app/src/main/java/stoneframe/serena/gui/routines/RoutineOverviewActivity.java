@@ -10,15 +10,14 @@ import androidx.core.content.ContextCompat;
 
 import org.joda.time.LocalDate;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import stoneframe.serena.R;
+import stoneframe.serena.Serena;
 import stoneframe.serena.gui.GlobalState;
+import stoneframe.serena.gui.notifications.Notifier;
+import stoneframe.serena.gui.util.DialogUtils;
 import stoneframe.serena.gui.util.SimpleListAdapter;
 import stoneframe.serena.gui.util.SimpleListAdapterBuilder;
-import stoneframe.serena.routines.Procedure;
-import stoneframe.serena.routines.Routine;
+import stoneframe.serena.routines.ProcedureOccurrence;
 import stoneframe.serena.routines.RoutineManager;
 
 public class RoutineOverviewActivity extends AppCompatActivity
@@ -27,11 +26,12 @@ public class RoutineOverviewActivity extends AppCompatActivity
     private Button forwardButton;
     private TextView dateTextView;
 
-    private SimpleListAdapter<RoutineProcedureLink> daysProceduresListAdapter;
+    private SimpleListAdapter<ProcedureOccurrence> daysProceduresListAdapter;
     private ListView daysProceduresList;
 
     private Button doneButton;
 
+    private Serena serena;
     private RoutineManager routineManager;
 
     private LocalDate date;
@@ -41,7 +41,8 @@ public class RoutineOverviewActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
 
-        routineManager = GlobalState.getInstance().getSerena().getRoutineManager();
+        serena = GlobalState.getInstance().getOrLoadSerena();
+        routineManager = serena.getRoutineManager();
 
         date = LocalDate.now();
 
@@ -74,71 +75,64 @@ public class RoutineOverviewActivity extends AppCompatActivity
 
         daysProceduresListAdapter = new SimpleListAdapterBuilder<>(
             this,
-            this::getRoutineProcedures,
-            p -> p.getProcedure().getDescription())
-            .withSecondaryTextFunction(p -> p.getProcedure().getTime().toString("HH:mm"))
+            () -> routineManager.getProceduresForDate(date),
+            ProcedureOccurrence::getDescription)
+            .withSecondaryTextFunction(p -> p.getDateTime().toString("HH:mm"))
             .withBottomTextFunction(p -> p.getRoutine().getName())
             .withBackgroundColorFunction(this::getBackgroundColor)
             .withBorderColorFunction(this::getBorderColor)
             .create();
 
         daysProceduresList.setAdapter(daysProceduresListAdapter);
+        daysProceduresList.setOnItemClickListener((parent, view, position, id) ->
+            confirmProcedureCompletion((ProcedureOccurrence)daysProceduresListAdapter.getItem(position)));
 
         doneButton.setOnClickListener(v -> finish());
     }
 
-    private List<RoutineProcedureLink> getRoutineProcedures()
+    private void confirmProcedureCompletion(ProcedureOccurrence occurrence)
     {
-        return routineManager.getProceduresForDate(date)
-            .stream()
-            .map(p -> new RoutineProcedureLink(p.second, p.first))
-            .collect(Collectors.toList());
+        if (occurrence.isDone())
+        {
+            return;
+        }
+
+        DialogUtils.showConfirmationDialog(
+            this,
+            getString(R.string.routine_overview_complete_title),
+            getString(
+                R.string.routine_overview_complete_message,
+                occurrence.getDescription(),
+                occurrence.getRoutine().getName(),
+                occurrence.getDateTime().toString("yyyy-MM-dd HH:mm")),
+            isConfirmed ->
+            {
+                if (isConfirmed)
+                {
+                    completeProcedure(occurrence);
+                }
+            });
     }
 
-    private int getBackgroundColor(RoutineProcedureLink link)
+    private void completeProcedure(ProcedureOccurrence occurrence)
+    {
+        routineManager.procedureDone(occurrence);
+        serena.save();
+        daysProceduresListAdapter.notifyDataSetChanged();
+        Notifier.showRoutineNotification(this, serena, false);
+    }
+
+    private int getBackgroundColor(ProcedureOccurrence procedure)
     {
         return ContextCompat.getColor(
             this,
-            link.isDone() ? R.color.status_success_container : R.color.surface);
+            procedure.isDone() ? R.color.status_success_container : R.color.surface);
     }
 
-    private int getBorderColor(RoutineProcedureLink link)
+    private int getBorderColor(ProcedureOccurrence procedure)
     {
         return ContextCompat.getColor(
             this,
-            link.isDone() ? R.color.status_success : R.color.outline);
-    }
-
-    public class RoutineProcedureLink implements Comparable<RoutineProcedureLink>
-    {
-        private final Routine<?> routine;
-        private final Procedure procedure;
-
-        public RoutineProcedureLink(Routine<?> routine, Procedure procedure)
-        {
-            this.routine = routine;
-            this.procedure = procedure;
-        }
-
-        public Routine<?> getRoutine()
-        {
-            return routine;
-        }
-
-        public Procedure getProcedure()
-        {
-            return procedure;
-        }
-
-        public boolean isDone()
-        {
-            return routine.isDone(date, procedure);
-        }
-
-        @Override
-        public int compareTo(RoutineProcedureLink other)
-        {
-            return this.procedure.getTime().compareTo(other.procedure.getTime());
-        }
+            procedure.isDone() ? R.color.status_success : R.color.outline);
     }
 }

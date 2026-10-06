@@ -70,14 +70,14 @@ public class FortnightRoutine extends Routine<FortnightRoutineData>
     }
 
     @Override
-    List<PendingProcedure> getPendingProcedures(LocalDateTime now)
+    List<ProcedureOccurrence> getPendingProcedures(LocalDateTime now)
     {
-        List<PendingProcedure> week1PendingProcedures = data().week1.getPendingProceduresBetween(
+        List<ProcedureOccurrence> week1PendingProcedures = data().week1.getPendingProceduresBetween(
             this,
             data().lastCompleted,
             now);
 
-        List<PendingProcedure> week2PendingProcedures = data().week2.getPendingProceduresBetween(
+        List<ProcedureOccurrence> week2PendingProcedures = data().week2.getPendingProceduresBetween(
             this,
             data().lastCompleted,
             now);
@@ -105,7 +105,7 @@ public class FortnightRoutine extends Routine<FortnightRoutineData>
     }
 
     @Override
-    void procedureDone(PendingProcedure procedure)
+    void procedureDone(ProcedureOccurrence procedure)
     {
         data().lastCompleted = procedure.getDateTime();
     }

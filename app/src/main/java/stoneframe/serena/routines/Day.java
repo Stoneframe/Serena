@@ -69,7 +69,7 @@ public class Day
         return nextTime;
     }
 
-    public List<PendingProcedure> getPendingProceduresBetween(
+    public List<ProcedureOccurrence> getPendingProceduresBetween(
         Routine<?> routine,
         LocalDateTime start,
         LocalDateTime end)
@@ -77,7 +77,7 @@ public class Day
         return procedures.stream()
             .flatMap(p ->
             {
-                List<PendingProcedure> pendingProcedures = new LinkedList<>();
+                List<ProcedureOccurrence> pendingProcedures = new LinkedList<>();
 
                 for (LocalDateTime i = startDate.toLocalDateTime(LocalTime.MIDNIGHT);
                      i.isBefore(end);
@@ -88,7 +88,7 @@ public class Day
                         continue;
                     }
 
-                    PendingProcedure pendingProcedure = new PendingProcedure(
+                    ProcedureOccurrence pendingProcedure = new ProcedureOccurrence(
                         routine,
                         p,
                         i.toLocalDate().toLocalDateTime(p.getTime()));

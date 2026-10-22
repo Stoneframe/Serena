@@ -35,6 +35,9 @@
 
 ## Verification
 
+- Do not create or extend tests for code in `stoneframe.serena.gui` or any of its subpackages.
+  This is an exception to the global test-first requirements. Verify changes to this code with
+  appropriate build, lint, or manual checks instead.
 - Choose the smallest checks that can catch the likely failure: affected test classes for local domain
   behavior, a debug build for Android code/resource integration, and lint for relevant Android concerns.
 - Combine compatible Gradle tasks in one invocation.

@@ -10,6 +10,8 @@ import androidx.core.content.ContextCompat;
 
 import org.joda.time.LocalDate;
 
+import java.util.Locale;
+
 import stoneframe.serena.R;
 import stoneframe.serena.Serena;
 import stoneframe.serena.gui.GlobalState;
@@ -24,7 +26,9 @@ public class RoutineOverviewActivity extends AppCompatActivity
 {
     private Button backButton;
     private Button forwardButton;
+    private TextView weekdayTextView;
     private TextView dateTextView;
+    private TextView weekTextView;
 
     private SimpleListAdapter<ProcedureOccurrence> daysProceduresListAdapter;
     private ListView daysProceduresList;
@@ -51,7 +55,9 @@ public class RoutineOverviewActivity extends AppCompatActivity
 
         backButton = findViewById(R.id.backButton);
         forwardButton = findViewById(R.id.forwardButton);
+        weekdayTextView = findViewById(R.id.weekdayTextView);
         dateTextView = findViewById(R.id.dateTextView);
+        weekTextView = findViewById(R.id.weekTextView);
 
         daysProceduresList = findViewById(R.id.daysProceduresList);
 
@@ -60,18 +66,18 @@ public class RoutineOverviewActivity extends AppCompatActivity
         backButton.setOnClickListener(v ->
         {
             date = date.minusDays(1);
-            dateTextView.setText(date.toString("yyyy-MM-dd"));
+            updateDateHeading();
             daysProceduresListAdapter.notifyDataSetChanged();
         });
 
         forwardButton.setOnClickListener(v ->
         {
             date = date.plusDays(1);
-            dateTextView.setText(date.toString("yyyy-MM-dd"));
+            updateDateHeading();
             daysProceduresListAdapter.notifyDataSetChanged();
         });
 
-        dateTextView.setText(date.toString("yyyy-MM-dd"));
+        updateDateHeading();
 
         daysProceduresListAdapter = new SimpleListAdapterBuilder<>(
             this,
@@ -88,6 +94,13 @@ public class RoutineOverviewActivity extends AppCompatActivity
             confirmProcedureCompletion((ProcedureOccurrence)daysProceduresListAdapter.getItem(position)));
 
         doneButton.setOnClickListener(v -> finish());
+    }
+
+    private void updateDateHeading()
+    {
+        weekdayTextView.setText(date.toString("EEEE", Locale.ENGLISH));
+        dateTextView.setText(date.toString("yyyy-MM-dd"));
+        weekTextView.setText(getString(R.string.routine_overview_week, date.getWeekOfWeekyear()));
     }
 
     private void confirmProcedureCompletion(ProcedureOccurrence occurrence)
